@@ -1,0 +1,419 @@
+/*======================
+    404 page
+=======================*/
+
+.page_404 {
+  padding: 40px 0;
+  background: #fff;
+  font-family: "Arvo", serif;
+}
+
+.page_404 img {
+  width: 100%;
+}
+
+.four_zero_four_bg {
+  background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+  height: 400px;
+  background-position: center;
+}
+
+.four_zero_four_bg h1 {
+  font-size: 80px;
+}
+
+.four_zero_four_bg h3 {
+  font-size: 80px;
+}
+
+.link_404 {
+  color: #fff !important;
+  padding: 10px 20px;
+  background: #39ac31;
+  margin: 20px 0;
+  display: inline-block;
+}
+.constant_box_404 {
+  margin-top: -50px;
+}
+
+/*======================
+    NavBar
+=======================*/
+.announcement {
+  font-size: 16px;
+  color: orange;
+}
+
+/*======================
+    App drawer
+=======================*/
+
+/* ==========>  getLeftNavBar */
+/* Sidebar */
+.sidebar1 {
+  position: fixed;
+  top: 20;
+  left: 0;
+  height: 100%;
+  width: 0;
+  background-color: hsl(180, 24%, 33%);
+  overflow-x: hidden;
+  transition: all 0.3s;
+  border-radius: 1px solid red;
+}
+
+.sidebar.active {
+  width: 250px;
+  display: block; /* Show sidebar when active */
+}
+
+.sidebar-header {
+  padding: 10px 40px;
+  background-color: black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sidebar ul.components {
+  padding: 20px 0;
+}
+
+.sidebar ul.components li a {
+  padding: 10px 15px;
+  display: block;
+  color: #343a40;
+}
+
+.sidebar ul.components li a:hover {
+  background-color: #e9ecef;
+}
+
+/* Media Query */
+/* @media (max-width: 991.98px) {
+  #sidebar {
+    display: none;
+  }
+
+  #sidebar.active {
+    display: none;
+  }
+
+  .btn-toggle {
+    display: none;
+  }
+} */
+
+/* *======================> */
+/* rulesPage */
+/* *======================> */
+
+.Rules {
+  text-align: center;
+  background-color: aqua;
+  color: white;
+  background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+  /* position: fixed;
+  width: 100%; */
+}
+/* .container{
+   background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+   display: grid;
+   column-gap: 20px;
+   display: flex;
+   justify-content: center;
+} */
+.bt1 {
+  background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+  height: 30px;
+  width: 70px;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  justify-content: center;
+}
+.bt2 {
+  background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+  height: 30px;
+  width: 70px;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  justify-content: center;
+}
+.para {
+  margin-left: 50px;
+}
+.para1 {
+  margin-left: 90px;
+}
+.toppara {
+  text-align: center;
+}
+.subpara {
+  margin-left: 10px;
+}
+.rulesPage {
+  margin-top: 120px;
+}
+
+/*======================
+    forget password
+=======================*/
+.form-card {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/*======================
+   rules page
+=======================*/
+
+/* *======================> */
+/* hambargerIcon*/
+/* *======================> */
+
+.hambargerIcon {
+  background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+}
+.hambargerIconTop {
+  background: #0d505a;
+  height: 20px;
+  color: white;
+  margin: 8px;
+}
+.leftslidebar {
+  color: #fff;
+}
+
+/*======================
+    bidding section
+=======================*/
+
+.customWidth {
+  width: 90%;
+}
+
+/*======================
+    bet history
+=======================*/
+
+.selectMarket {
+  width: 100%;
+}
+
+/*======================
+hamburgerNavbar
+=======================*/
+
+.animated-coin {
+  width: 10vw;
+  height: 10vw;
+  max-width: 20px;
+  max-height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(to right, red 50%, black 50%);
+  position: relative;
+  animation: rotateCoin 2s infinite linear;
+}
+
+@keyframes rotateCoin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
+
+h1 {
+  font-size: 80px;
+  font-family: sans-serif;
+  text-align: center;
+  position: relative;
+  color: red;
+}
+/*======================
+pagination css
+=======================*/
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.pagination-info {
+  margin-bottom: 10px;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.page-link:hover {
+  background-color: #f0f0f0;
+}
+
+@media only screen and (max-width: 767px) {
+  .pagination-container {
+    padding: 5px;
+  }
+
+  .page-link {
+    padding: 3px 6px;
+  }
+}
+
+.background {
+  min-height: 75vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.background::before {
+  content: "";
+  /* background-image: url('../../asset/suspended.png.png'); */
+  /* background-repeat: no-repeat; */
+  background-size: cover;
+  background-position: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 100px;
+  border: 2px solid aquamarine;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  font-size: larger;
+  /* opacity: 0.3; */
+}
+
+h1 {
+  font-size: 80px;
+  font-family: sans-serif;
+  text-align: center;
+  position: relative;
+  color: red;
+}
+/*======================
+pagination css
+=======================*/
+.pagination-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.pagination-info {
+  margin-bottom: 10px;
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-link {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.page-link:hover {
+  background-color: #f0f0f0;
+}
+
+@media only screen and (max-width: 767px) {
+  .pagination-container {
+    padding: 5px;
+  }
+
+  .page-link {
+    padding: 3px 6px;
+  }
+}
+
+/*======================
+profit and loss 
+=======================*/
+
+.proLossButton {
+  height: 35px;
+  width: 100px;
+  margin: 5px;
+  text-align: center;
+}

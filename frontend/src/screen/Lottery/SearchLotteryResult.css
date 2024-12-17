@@ -1,0 +1,162 @@
+.border-container {
+    display: block;
+    position: relative;
+    padding: 10px 10px;
+    font-size: 0;
+    letter-spacing: normal;
+    overflow: hidden;
+    box-shadow: inset 0 0 35px #176577;
+    gap: 15px;
+    border-radius: 25PX;
+}
+
+
+.border-container::before, .border-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px; 
+}
+.inner-border-container {
+    display: block;
+    position: relative;
+    padding: 5px 5px;
+    font-size: 0;
+    letter-spacing: normal;
+    overflow: hidden;
+    box-shadow: inset 0 0 20px #145665; 
+    margin: 8px; 
+}
+
+
+.inner-border-container::before, .inner-border-container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px; 
+    background-color: #000;
+}
+
+.inner-border-container::before {
+    left: 60px; }
+
+.inner-border-container::after {
+    right: 60px; 
+}
+.inner-border-container .content {
+    display: block;
+    position: relative;
+}
+
+.inner-border-container .content h5 {
+    /* font-size: 14px; */
+    color: black;
+    margin-right: 0px;
+}
+
+.inner-border-container .content h6 {
+    color: black;
+    margin-left: 0px;
+    position: relative;
+    top: 30px;
+    margin-right: 10px;
+}
+
+.border-outer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.border-outer span {
+    position: absolute;
+    width: calc(100% - 60px);
+    height: 1px;
+    border: none;
+    border-top: 2px solid #000;
+}
+
+.border-outer span.top-left {
+    top: 50%;
+    left: 0;
+    width: 1px;
+    height: calc(100% - 60px);
+    transform: translateY(-50%);
+    border-left: 2px solid #000;
+}
+
+.border-outer span.top-right {
+    top: 50%;
+    right: 0;
+    width: 1px;
+    height: calc(100% - 60px);
+    transform: translateY(-50%);
+    border-right: 2px solid #000;
+}
+
+.border-outer span.bottom-left {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top: none;
+    border-bottom: 2px solid #000;
+}
+
+.border-outer span.bottom-right {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+
+.border-accent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.border-accent span {
+    width: 85px;
+    height: 35px;
+    background-color: transparent;
+    border-top-left-radius: 70px;
+    border-top-right-radius: 70px;
+    border: 2px solid #000;
+    border-bottom: 0;
+    position: absolute;
+    transform: rotate(90deg);
+}
+
+.border-accent span.top-left {
+    top: -32px;
+    left: -32px;
+}
+
+.border-accent span.top-right {
+    top: -32px;
+    right: -32px;
+    transform: rotate(-90deg);
+}
+
+.border-accent span.bottom-left {
+    bottom: -32px;
+    left: -32px;
+}
+
+.border-accent span.bottom-right {
+    bottom: -32px;
+    right: -32px;
+    transform: rotate(-90deg);
+}
+.left-text, .right-text {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    padding-left: 10px;
+  }

@@ -1,0 +1,27 @@
+.buy-button {
+    background-color: #4682b4; /* Steel Blue */
+    color: white;
+    font-size: 1.2rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 5px #3b6e91, 0 10px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  .buy-button:active {
+    box-shadow: 0 2px #3b6e91;
+    transform: translateY(3px);
+  }
+  
+  .buy-button:hover {
+    background-color: #366a91;
+    box-shadow: 0 6px #3b6e91, 0 12px 20px rgba(0, 0, 0, 0.4);
+  }
+  
+  .buy-button:focus {
+    outline: none;
+  }
+  

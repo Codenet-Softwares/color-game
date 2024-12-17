@@ -1,0 +1,162 @@
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.sidebar ul li {
+  display: block;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 10px;
+  text-decoration: none;
+  color: #034e52;
+  position: relative;
+  font-weight: 700;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.sidebar ul li.subMenuItems a {
+  display: block;
+  padding: 5px;
+  text-decoration: none;
+  color: black;
+  position: relative;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  background-color: #adc2c7;
+  font-size: small;
+  opacity: 50%;
+  text-indent: 10px;
+}
+
+.sidebar ul li.MenuHead a::after {
+  content: '\2193';
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 0.8em;
+}
+
+.sidebar ul li.subMenuItems a::after {
+  content: ' \2192';
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 0.8em;
+}
+
+.sidebar ul li.subMenuHead a::after {
+  content: ' \2191';
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+.sidebar ul li a:hover {
+  background-color: #2cb3d1;
+  color: white;
+}
+
+.sidebar ul li.subMenuItems a:hover {
+  background-color: #3b3d3d;
+  color: white;
+}
+
+/* lottery section  */
+.lottery-section {
+  position: relative;
+  font-size: 16px;
+  font-weight: bold;
+  color: #2cb3d1;
+  padding: 10px;
+  background-color: #e6f7ff;
+  border-radius: 8px;
+  margin: 10px 0;
+  list-style-type: none;
+  cursor: pointer; /* Change cursor to pointer for better UX */
+  transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.lottery-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Space between text and icon */
+}
+
+.new-tag {
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  background-color: red;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-right: 10px;
+  animation: blink 1s infinite;
+}
+
+.lottery-section:hover {
+  background-color: #cceeff; /* Change background color on hover */
+}
+
+.dropdown-icon {
+  margin-left: 10px; /* Space between text and icon */
+  transition: transform 0.3s; /* Smooth transition for rotation */
+}
+
+.dropdown-icon.active {
+  transform: rotate(180deg); /* Rotate icon when active */
+}
+
+.subMenuItems {
+  padding-left: 20px; /* Indent submenu items for differentiation */
+  list-style-type: none; /* Remove default bullets */
+}
+
+.subMenuHead {
+  padding: 10px 14px;
+  font-size: 15px;
+  color: #444;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #e6f7ff, #fff); /* Light background */
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.subMenuHead:hover {
+  background: linear-gradient(135deg, #ffd700, #ffa500); /* Gold/Orange gradient */
+  color: #333;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow on hover */
+}
+
+/* Draw date icon styling */
+.draw-date-icon {
+  font-size: 18px;
+  color: #ff6347; /* Coral color for a vibrant look */
+}
+
+.lottery-section a::after {
+  content: none !important; /* Prevent any default arrow icon */
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

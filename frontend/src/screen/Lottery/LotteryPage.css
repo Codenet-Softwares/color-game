@@ -1,0 +1,87 @@
+/* General Styles */
+.lottery-page-container {
+  border-left: 8px solid #4682b4;
+  border-right: 8px solid #4682b4;
+  border-radius: 10px;
+  background-color: #f5f9fc;
+}
+
+.lottery-heading {
+  font-size: 2.5rem;
+  color: #3b6e91;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.coming-soon {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ff4500;
+}
+
+.blink {
+  animation: blinker 1s linear infinite;
+  color: #ff6347;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+}
+
+.row.justify-content-center {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px; /* Add space between columns */
+}
+
+.col-lg-3,
+.col-md-4,
+.col-sm-6 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .lottery-page-container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .row.justify-content-center {
+    gap: 10px; /* Reduce gap for smaller screens */
+  }
+}
+/* .carousel-control-prev,
+  .carousel-control-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* background-color: rgba(0, 0, 0, 0.5); Darkened background */
+/* color: black; */
+/* border-radius: 50%; */
+/* } */
+
+/* .carousel-control-prev {
+    left: 0;
+  } */
+
+/* .carousel-control-next {
+    right: 0;
+  } */
