@@ -14,7 +14,7 @@ import {
   liveUsersBet,
   getUsersLiveBetGames
 } from '../controller/admin.controller.js';
-import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateSendBalance, validateRevokeWinningAnnouncement } from '../schema/commonSchema.js';
+import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateSendBalance, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames } from '../schema/commonSchema.js';
 import { string } from '../constructor/string.js';
 
 dotenv.config();
@@ -46,10 +46,9 @@ export const AdminRoute = (app) => {
 
   app.post('/api/revoke-winning-announcement', validateRevokeWinningAnnouncement, customErrorHandler, revokeWinningAnnouncement);
 
-  app.get('/api/live-users-bet/:marketId', liveUsersBet);
+  app.get('/api/live-users-bet/:marketId', validateLiveUsersBet, customErrorHandler, authorize([string.Admin]), liveUsersBet);
 
-  app.get('/api/live-users-bet-games', getUsersLiveBetGames);
-
+  app.get('/api/live-users-bet-games', validateLiveGames, customErrorHandler, authorize([string.Admin]), getUsersLiveBetGames);
 
 };
 

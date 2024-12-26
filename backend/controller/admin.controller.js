@@ -945,8 +945,11 @@ export const checkMarketStatus = async (req, res) => {
 export const liveUsersBet = async (req, res) => {
   try {
     const { marketId } = req.params;
+    const { page = 1, pageSize = 10 } = req.query;
+    const limit = parseInt(pageSize, 10);
+    const offset = (parseInt(page, 10) - 1) * limit;
 
-    const currentOrders = await CurrentOrder.findAll({
+    const { rows: currentOrders, count: totalItems } = await CurrentOrder.findAndCountAll({
       where: { marketId },
       attributes: [
         'userId',
@@ -956,9 +959,12 @@ export const liveUsersBet = async (req, res) => {
         'runnerId',
         'runnerName',
         'rate',
+        'value',
         'type',
         'bidAmount',
       ],
+      limit,
+      offset,
       raw: true,
     });
 
@@ -976,12 +982,28 @@ export const liveUsersBet = async (req, res) => {
       runnerId: order.runnerId,
       runnerName: order.runnerName,
       rate: order.rate,
+      value: order.value,
       type: order.type,
       bidAmount: order.bidAmount,
     }));
 
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const pagination = {
+      page: parseInt(page, 10),
+      pageSize: limit,
+      totalPages,
+      totalItems,
+    }
+
     return res.status(statusCode.success).send(
-      apiResponseSuccess(formattedOrders, true, statusCode.success, "Success")
+      apiResponseSuccess(
+        formattedOrders,
+        true,
+        statusCode.success,
+        "Success",
+        pagination
+      )
     );
   } catch (error) {
     console.error("Error fetching market data:", error);
@@ -993,7 +1015,11 @@ export const liveUsersBet = async (req, res) => {
 
 export const getUsersLiveBetGames = async (req, res) => {
   try {
-    const currentOrders = await CurrentOrder.findAll({
+    const { page = 1, pageSize = 10 } = req.query;
+    const limit = parseInt(pageSize, 10);
+    const offset = (parseInt(page, 10) - 1) * limit;
+
+    const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
       attributes: ["gameId", "gameName", "marketId", "marketName"],
       raw: true,
     });
@@ -1010,26 +1036,36 @@ export const getUsersLiveBetGames = async (req, res) => {
     const uniqueOrders = Array.from(
       new Map(
         currentOrders.map((order) => [
-          `${order.gameId}-${order.marketId}`, 
+          `${order.gameId}-${order.marketId}`,
           order,
         ])
       ).values()
     );
 
-    const liveGames = uniqueOrders.map((order) => ({
+    const paginatedUniqueOrders = uniqueOrders.slice(offset, offset + limit);
+
+    const liveGames = paginatedUniqueOrders.map((order) => ({
       gameId: order.gameId,
       gameName: order.gameName,
       marketId: order.marketId,
       marketName: order.marketName,
     }));
 
+    const totalPages = Math.ceil(uniqueOrders.length / limit);
+
+    const pagination = {
+      page: parseInt(page, 10),
+      pageSize: limit,
+      totalPages,
+      totalItems: uniqueOrders.length, 
+    };
+
     return res
       .status(statusCode.success)
       .send(
-        apiResponseSuccess(liveGames, true, statusCode.success, "Success")
+        apiResponseSuccess(liveGames, true, statusCode.success, "Success", pagination)
       );
   } catch (error) {
-    console.error("Error fetching market data:", error);
     return res
       .status(statusCode.internalServerError)
       .send(

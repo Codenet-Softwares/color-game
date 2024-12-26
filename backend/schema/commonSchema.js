@@ -634,3 +634,32 @@ export const externalResetPasswordSchema = [
     .notEmpty()
     .withMessage("New Password is required")
 ];
+
+export const validateLiveUsersBet = [
+  param("marketId")
+    .isUUID(4)
+    .withMessage("marketId is not valid."),
+  query("page")
+    .optional()
+    .toInt()
+    .isInt({ min: 1 })
+    .withMessage("Page number must be a positive integer."),
+  query("pageSize")
+    .optional()
+    .toInt()
+    .isInt({ min: 1 })
+    .withMessage("Page size must be a positive integer."),
+];
+
+export const validateLiveGames = [
+  query("page")
+    .optional()
+    .toInt()
+    .isInt({ min: 1 })
+    .withMessage("Page number must be a positive integer."),
+  query("pageSize")
+    .optional()
+    .toInt()
+    .isInt({ min: 1 })
+    .withMessage("Page size must be a positive integer."),
+];
