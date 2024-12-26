@@ -942,3 +942,103 @@ export const checkMarketStatus = async (req, res) => {
   }
 };
 
+export const liveUsersBet = async (req, res) => {
+  try {
+    const { marketId } = req.params;
+
+    const currentOrders = await CurrentOrder.findAll({
+      where: { marketId },
+      attributes: [
+        'userId',
+        'userName',
+        'marketId',
+        'marketName',
+        'runnerId',
+        'runnerName',
+        'rate',
+        'type',
+        'bidAmount',
+      ],
+      raw: true,
+    });
+
+    if (currentOrders.length === 0) {
+      return res.status(statusCode.success).send(
+        apiResponseSuccess([], true, statusCode.success, "No orders found for this MarketId")
+      );
+    }
+
+    const formattedOrders = currentOrders.map((order) => ({
+      userId: order.userId,
+      userName: order.userName,
+      marketId: order.marketId,
+      marketName: order.marketName,
+      runnerId: order.runnerId,
+      runnerName: order.runnerName,
+      rate: order.rate,
+      type: order.type,
+      bidAmount: order.bidAmount,
+    }));
+
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(formattedOrders, true, statusCode.success, "Success")
+    );
+  } catch (error) {
+    console.error("Error fetching market data:", error);
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
+  }
+};
+
+export const getUsersLiveBetGames = async (req, res) => {
+  try {
+    const currentOrders = await CurrentOrder.findAll({
+      attributes: ["gameId", "gameName", "marketId", "marketName"],
+      raw: true,
+    });
+
+    if (!currentOrders || currentOrders.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "No data found.")
+        );
+    }
+
+    // Remove duplicates by creating a Map with unique keys based on gameId and marketId
+    const uniqueOrders = Array.from(
+      new Map(
+        currentOrders.map((order) => [
+          `${order.gameId}-${order.marketId}`, 
+          order,
+        ])
+      ).values()
+    );
+
+    const liveGames = uniqueOrders.map((order) => ({
+      gameId: order.gameId,
+      gameName: order.gameName,
+      marketId: order.marketId,
+      marketName: order.marketName,
+    }));
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(liveGames, true, statusCode.success, "Success")
+      );
+  } catch (error) {
+    console.error("Error fetching market data:", error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
