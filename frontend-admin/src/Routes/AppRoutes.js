@@ -14,6 +14,7 @@ import HomePageCarousel from "../Pages/HomePageCarousel";
 import Inactive from "../Components/Inactive/Inactive";
 import MarketVoidPage from "../Pages/MarketVoidPage";
 import WelcomePage from "../Pages/welcomepage/WelcomePage"
+import LiveBetPage from "../Pages/LiveBetPage/LiveBetPage";
 
 
 const AppRoutes = () => {
@@ -113,6 +114,14 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <MarketVoidPage/>
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="liveBet"
+            element={
+              <RequireAuth>
+                <LiveBetPage/>
               </RequireAuth>
             }
           />
