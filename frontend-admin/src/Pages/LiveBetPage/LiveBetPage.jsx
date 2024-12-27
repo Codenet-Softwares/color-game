@@ -1,8 +1,61 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { FaSearch, FaTimes, FaTrashAlt } from "react-icons/fa";
+import SingleCard from '../../Components/common/singleCard';
+import GameService from "../../Services/GameService";
+import { useAuth } from "../../Utils/Auth";
+import { toast } from "react-toastify";
+import Pagination from "../../Components/Pagination";
+import { customErrorHandler } from "../../Utils/helper";
+import { useNavigate } from 'react-router-dom';
+
 
 const LiveBetPage = () => {
+  const auth = useAuth();
+  const [liveBets, setLiveBets] = useState({
+    liveBets: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 10,
+    name: "",
+    totalData: 0,
+  });
+  useEffect(() => {
+    fetchLiveBets();
+  }, [liveBets.currentPage, liveBets.totalEntries, liveBets.name]);
+
+  const fetchLiveBets = () => {
+    GameService.liveBetGame(auth.user, liveBets.currentPage, liveBets.totalEntries, liveBets.name)
+      .then((res) => {
+
+        setLiveBets((prev) => ({
+          ...prev,
+          liveBets: res.data?.data || [],
+          totalPages: res?.data.pagination?.totalPages,
+          totalData: res?.data.pagination?.totalItems,
+        }));
+      })
+      .catch((err) => {
+        toast.error(customErrorHandler(err));
+      });
+  };
+  const handleClearSearch = () => {
+    setLiveBets({ ...liveBets, name: "" })
+  };
+  const handlePageChange = (pageNumber) => {
+    setLiveBets({ ...liveBets, currentPage: pageNumber });
+  };
+  let startIndex = Math.min((Number(liveBets.currentPage) - 1) * Number(liveBets.totalEntries) + 1);
+  let endIndex = Math.min(
+    Number(liveBets.currentPage) * Number(liveBets.totalEntries),
+    Number(liveBets.totalData),
+  );
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate('/live_UserBet');
+  };
+
   return (
     <div className="container my-5 ">
       <div className="card shadow-sm">
@@ -33,33 +86,48 @@ const LiveBetPage = () => {
                 type="text"
                 className="form-control"
                 placeholder="Search by game name or market name..."
+                value={liveBets.name}
+                onChange={(e) =>
+                  setLiveBets({ ...liveBets, name: e.target.value })
+                }
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
                   border: "2px solid #6c757d",
                 }}
               />
-
-              <FaTimes
-                style={{
-                  position: "absolute",
-                  top: "50%",
-                  right: "20px",
-                  transform: "translateY(-50%)",
-                  color: "#6c757d",
-                  cursor: "pointer",
-                }}
-              />
+              {liveBets.name && (
+                <FaTimes
+                  onClick={handleClearSearch}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "20px",
+                    transform: "translateY(-50%)",
+                    color: "#6c757d",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
             </div>
 
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
               <select
                 className="form-select rounded-pill d-inline-block w-auto"
+                value={liveBets.totalEntries}
+
                 style={{
                   borderRadius: "50px",
                   border: "2px solid #6c757d",
+
                 }}
+                onChange={(e) =>
+                  setLiveBets((prev) => ({
+                    ...prev,
+                    totalEntries: parseInt(e.target.value),
+                  }))
+                }
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -71,7 +139,7 @@ const LiveBetPage = () => {
           </div>
 
           {/* Table */}
-          <div
+          <SingleCard
             className=" mb-5 text-center"
             style={{
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
@@ -94,15 +162,39 @@ const LiveBetPage = () => {
                   }}
                 >
                   <tr>
-                    <th style={{ width: "25%" }}>Serial Number</th>
-                    <th style={{ width: "20%" }}>Game Name</th>
-                    <th style={{ width: "20%" }}>Market Name</th>
-                    <th style={{ width: "35%" }}>Action</th>
+                    <th>Serial Number</th>
+                    <th>Game Name</th>
+                    <th>Market Name</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
+                <tbody>
+                  {liveBets.liveBets.map((bet, index) => (
+                    <tr key={bet.gameId}>
+                      <td>{index + 1}</td>
+                      <td>{bet.gameName}</td>
+                      <td>{bet.marketName}</td>
+                      <td>
+                      <button className="btn btn-primary" onClick={handleNavigate}>
+      Live Game
+    </button>                        <button className="btn btn-danger">
+                          <FaTrashAlt />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
               </table>
             </div>
-          </div>
+          </SingleCard>
+          <Pagination
+            currentPage={liveBets.currentPage}
+            totalPages={liveBets.totalPages}
+            handlePageChange={handlePageChange}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalData={liveBets.totalData}
+          />
         </div>
       </div>
     </div>

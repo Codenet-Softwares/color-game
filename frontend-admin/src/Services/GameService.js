@@ -162,7 +162,7 @@ class GameService {
     });
   }
    
-  liveBetList(user,page,pageSize, search){
+  liveBetGame(user,page,pageSize, search){
     return axios({
       method: "GET",
       url:`${API_HOST}/api/live-users-bet-games?page=${page}&pageSize=${pageSize}&search=${search}`,
@@ -172,6 +172,13 @@ class GameService {
     });
   }
 
+  userLiveBetGame(user,page,pageSize, search){
+    return axios({
+      method:"GET",
+      url: `${API_HOST}/` 
+    })
+  }
 }
 
 export default new GameService();
+
