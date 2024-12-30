@@ -125,14 +125,16 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
-          <Route
-            path="/live_UserBet"
-            element={
-              <RequireAuth>
-                <LiveUserBet />
-              </RequireAuth>
-            }
-          />
+     <Route
+  path="/live_UserBet/:marketId"
+  element={
+    <RequireAuth>
+      <LiveUserBet />
+    </RequireAuth>
+  }
+/>
+
+
         </Route>
       </Routes>
     </BrowserRouter>

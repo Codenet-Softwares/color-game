@@ -172,12 +172,16 @@ class GameService {
     });
   }
 
-  userLiveBetGame(user,page,pageSize, search){
+userLiveBetGame(user, marketId, page, pageSize, search) {
     return axios({
-      method:"GET",
-      url: `${API_HOST}/` 
-    })
+      method: "GET",
+      url: `${API_HOST}/api/live-users-bet/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
   }
+  
 }
 
 export default new GameService();

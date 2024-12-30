@@ -52,8 +52,8 @@ const LiveBetPage = () => {
   );
   const navigate = useNavigate();
 
-  const handleNavigate = () => {
-    navigate('/live_UserBet');
+  const handleNavigate = (marketId) => {
+    navigate(`/live_UserBet/${marketId}`);
   };
 
   return (
@@ -66,7 +66,7 @@ const LiveBetPage = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold fs-5">Live Bet</h3>
+          <h3 className="mb-0 fw-bold text-center">Live Bet</h3>
         </div>
         <div className="card-body">
           {/* Search and Entries Selection */}
@@ -175,11 +175,13 @@ const LiveBetPage = () => {
                       <td>{bet.gameName}</td>
                       <td>{bet.marketName}</td>
                       <td>
-                      <button className="btn btn-primary" onClick={handleNavigate}>
-      Live Game
-    </button>                        <button className="btn btn-danger">
-                          <FaTrashAlt />
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => handleNavigate(bet.marketId)}
+                        >
+                          Live Game
                         </button>
+
                       </td>
                     </tr>
                   ))}
