@@ -3,8 +3,8 @@ import { PurhaseLotteryTicketUser } from "../../utils/apiService";
 import { useNavigate } from "react-router-dom";
 import "./SearchLotteryResult.css";
 
-const SearchLotteryResult = ({ responseData, marketId }) => {
-  console.log("====>>>> responseData", marketId);
+const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
+  console.log("====>>>> responseData", responseData);
 
   const navigate = useNavigate();
   const [purchaseResponse, setPurchaseResponse] = useState(null);
@@ -57,9 +57,9 @@ const SearchLotteryResult = ({ responseData, marketId }) => {
       const response = await PurhaseLotteryTicketUser(body); // Use updated body
       console.log("API response:", response);
       setPurchaseResponse(response);
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      setShowSearch(true);
+      
+      
     } catch (error) {
       console.error("Error purchasing ticket:", error);
     } finally {
@@ -67,8 +67,27 @@ const SearchLotteryResult = ({ responseData, marketId }) => {
     }
   };
 
+  const handleBack = () => {
+    setShowSearch(true);
+    // navigate(`/lottery/${marketId}`); 
+  };
+
   return (
     <div className="text-center"  >
+       {/* Back Button */}
+       <div className="text-start ">
+          <button
+            className="btn btn-secondary"
+            onClick={handleBack} 
+            style={{
+              backgroundColor: "#6c757d",
+              padding: "10px 20px",
+              fontWeight: "bold",
+            }}
+          >
+            Back
+          </button>
+        </div>
       <h4 style={{ color: "#4682B4", fontWeight: "bold" }}>Search Results:</h4>
       <div className="mt-3">
         {responseData && responseData.tickets && responseData.tickets.length > 0 ? (
@@ -95,7 +114,7 @@ const SearchLotteryResult = ({ responseData, marketId }) => {
               >
                 {responseData.tickets.map((ticket, index) => {
                   const firstThree = ticket.slice(0, 4);
-                  const lastFour = ticket.slice(-4);
+                  const lastFour = ticket.slice(-5);
                   return (
                     <div
                     key={index}
