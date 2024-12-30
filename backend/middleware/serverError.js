@@ -19,9 +19,10 @@ export const apiResponseSuccess = (data, success, successCode, message, paginati
   };
 };
 
-export const apiResponsePagination = (page, totalPages, totalItems, message) => {
+export const apiResponsePagination = (page, pageSize, totalPages, totalItems, message) => {
   return {
     page: page,
+    pageSize: pageSize,
     totalPages: totalPages,
     totalItems: totalItems,
     message: message,

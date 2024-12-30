@@ -942,3 +942,139 @@ export const checkMarketStatus = async (req, res) => {
   }
 };
 
+export const liveUsersBet = async (req, res) => {
+  try {
+    const { marketId } = req.params;
+    const { page = 1, pageSize = 10 } = req.query;
+    const limit = parseInt(pageSize, 10);
+    const offset = (parseInt(page, 10) - 1) * limit;
+
+    const { rows: currentOrders, count: totalItems } = await CurrentOrder.findAndCountAll({
+      where: { marketId },
+      attributes: [
+        'userId',
+        'userName',
+        'marketId',
+        'marketName',
+        'runnerId',
+        'runnerName',
+        'rate',
+        'value',
+        'type',
+        'bidAmount',
+      ],
+      limit,
+      offset,
+      raw: true,
+    });
+
+    if (currentOrders.length === 0) {
+      return res.status(statusCode.success).send(
+        apiResponseSuccess([], true, statusCode.success, "No orders found for this MarketId")
+      );
+    }
+
+    const formattedOrders = currentOrders.map((order) => ({
+      userId: order.userId,
+      userName: order.userName,
+      marketId: order.marketId,
+      marketName: order.marketName,
+      runnerId: order.runnerId,
+      runnerName: order.runnerName,
+      rate: order.rate,
+      value: order.value,
+      type: order.type,
+      bidAmount: order.bidAmount,
+    }));
+
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const pagination = {
+      page: parseInt(page, 10),
+      pageSize: limit,
+      totalPages,
+      totalItems,
+    }
+
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(
+        formattedOrders,
+        true,
+        statusCode.success,
+        "Success",
+        pagination
+      )
+    );
+  } catch (error) {
+    console.error("Error fetching market data:", error);
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
+  }
+};
+
+export const getUsersLiveBetGames = async (req, res) => {
+  try {
+    const { page = 1, pageSize = 10 } = req.query;
+    const limit = parseInt(pageSize, 10);
+    const offset = (parseInt(page, 10) - 1) * limit;
+
+    const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
+      attributes: ["gameId", "gameName", "marketId", "marketName"],
+      raw: true,
+    });
+
+    if (!currentOrders || currentOrders.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "No data found.")
+        );
+    }
+
+    // Remove duplicates by creating a Map with unique keys based on gameId and marketId
+    const uniqueOrders = Array.from(
+      new Map(
+        currentOrders.map((order) => [
+          `${order.gameId}-${order.marketId}`,
+          order,
+        ])
+      ).values()
+    );
+
+    const paginatedUniqueOrders = uniqueOrders.slice(offset, offset + limit);
+
+    const liveGames = paginatedUniqueOrders.map((order) => ({
+      gameId: order.gameId,
+      gameName: order.gameName,
+      marketId: order.marketId,
+      marketName: order.marketName,
+    }));
+
+    const totalPages = Math.ceil(uniqueOrders.length / limit);
+
+    const pagination = {
+      page: parseInt(page, 10),
+      pageSize: limit,
+      totalPages,
+      totalItems: uniqueOrders.length, 
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(liveGames, true, statusCode.success, "Success", pagination)
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
