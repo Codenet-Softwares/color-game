@@ -162,6 +162,17 @@ const Navside = () => {
             <span className="ms-3">Void Games</span>
           </Link>
         </li>
+        <li className="" >
+          <Link to="/liveBet" className="d-flex align-items-center">
+            <div className="nav_icon_small">
+              <img
+                src="../../.../../../../img/menu-icon/dashboard.svg"
+                alt=""
+              />
+            </div>
+            <span className="ms-3">Live Bet</span>
+          </Link>
+        </li>
 
         {/* Announcement Management */}
         {/* <li className={isAnnouncement ? 'active' : ''}>

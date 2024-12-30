@@ -161,6 +161,16 @@ class GameService {
       },
     });
   }
+   
+  liveBetList(user,page,pageSize, search){
+    return axios({
+      method: "GET",
+      url:`${API_HOST}/api/live-users-bet-games?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers:{
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
 }
 
