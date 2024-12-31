@@ -1192,3 +1192,102 @@ export const getRevokeMarket = async (req, res) => {
       );
   }
 };
+
+export const getDeleteLiveMarket = async (req, res) => {
+  try {
+    const { marketId, userId, price } = req.body;
+    if (!marketId) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "MarketId is required"
+          )
+        );
+    }
+
+    const user = await userSchema.findOne({
+      where: { userId },
+    });
+
+    if (!user || user.length === 0) {
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.notFound,
+            "No matching users found in the database"
+          )
+        );
+    }
+
+    const matchedExposures = user.marketListExposure.filter(
+      (item) => Object.values(item)[0] === price
+    );
+    
+    let totalExposureValue = 0;
+    
+    matchedExposures.forEach((item) => {
+      totalExposureValue += Number(Object.values(item)[0]);
+    });
+    
+    user.balance += totalExposureValue;
+    
+    user.marketListExposure = user.marketListExposure.filter(
+      (item) => Object.values(item)[0] !== price
+    );
+    
+        const dataToSend = {
+          amount: user.balance,
+          userId: user.userId,
+          exposure: totalExposureValue,
+        };
+        const baseURL = process.env.WHITE_LABEL_URL;
+        const response = await axios.post(
+          `${baseURL}/api/admin/extrnal/balance-update`,
+          dataToSend
+        );
+
+        if (!response.data.success) {
+          return res
+            .status(statusCode.badRequest)
+            .send(
+              apiResponseErr(
+                null,
+                false,
+                statusCode.badRequest,
+                "Failed to update balance"
+              )
+            );
+        }
+        await user.save();
+      
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Balances updated successfully and market Deleted"
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
