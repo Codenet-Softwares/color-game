@@ -7,6 +7,7 @@ import sequelize from "../db.js";
 import userSchema from "../models/user.model.js";
 import BetHistory from "../models/betHistory.model.js";
 import { Op } from 'sequelize';
+import axios from "axios";
 
 export const deleteLiveBetMarkets = async (req, res) => {
     const transaction = await sequelize.transaction();
@@ -39,6 +40,18 @@ export const deleteLiveBetMarkets = async (req, res) => {
             }
             return true;
         });
+
+        const dataToSend = {
+            amount: user.balance,
+            userId: userId,
+            exposure: updatedExposure
+        };
+
+        const baseURL = process.env.WHITE_LABEL_URL;
+        await axios.post(
+            `${baseURL}/api/admin/extrnal/balance-update`,
+            dataToSend
+        );
 
         await user.update({
             marketListExposure: updatedExposure,
@@ -88,6 +101,18 @@ export const deleteLiveBetMarkets = async (req, res) => {
                 marketListExposure: user.marketListExposure,
                 balance: user.balance,
             }, { transaction });
+
+            const dataToSend = {
+                amount: user.balance,
+                userId: userId,
+                exposure: Math.abs(totalRunnerBalance)
+            };
+            const baseURL = process.env.WHITE_LABEL_URL;
+            await axios.post(
+                `${baseURL}/api/admin/extrnal/balance-update`,
+                dataToSend
+            );
+
         }
 
         await transaction.commit();

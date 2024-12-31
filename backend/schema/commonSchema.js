@@ -136,11 +136,11 @@ export const createdRateSchema = [
 
 export const adminCreateValidate = [
   body('userName')
-  .notEmpty().withMessage('Username is required')
-  .isString().withMessage('Username must be a string'),
-body('password')
-  .notEmpty().withMessage('Password is required')
-  .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
+    .notEmpty().withMessage('Username is required')
+    .isString().withMessage('Username must be a string'),
+  body('password')
+    .notEmpty().withMessage('Password is required')
+    .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
 ];
 
 export const suspendedMarketSchema = [
@@ -378,7 +378,7 @@ export const betHistorySchema = [
   param("userName")
     .notEmpty()
     .withMessage("Username is required."),
-    param("gameId")
+  param("gameId")
     .notEmpty()
     .withMessage("Game Id is required.")
 ];
@@ -411,7 +411,7 @@ export const marketProfitLossValidate = [
   param("gameId").notEmpty().withMessage("Game ID is required"),
 ];
 
-export const runnerProfitLossValidate= [
+export const runnerProfitLossValidate = [
   param("marketId").notEmpty().withMessage("Market ID is required"),
 ];
 
@@ -435,14 +435,14 @@ export const validateSearchTickets = [
   body('series').notEmpty().withMessage('Series is required').isLength({ min: 1, max: 1 }).withMessage('Series must be a single character'),
   body('number').notEmpty().withMessage('Number is required').isString().isLength({ min: 1 }).withMessage('Number must be a non-empty string'),
   body('sem')
-  .notEmpty()
-  .withMessage('Sem is required')
-  .bail() 
-  .isNumeric()
-  .withMessage('Sem must be a numeric value')
-  .bail() 
-  .isIn([5, 10, 25, 50, 100, 200])
-  .withMessage('Sem must be one of the following values: 5, 10, 25, 50, 100, 200'),
+    .notEmpty()
+    .withMessage('Sem is required')
+    .bail()
+    .isNumeric()
+    .withMessage('Sem must be a numeric value')
+    .bail()
+    .isIn([5, 10, 25, 50, 100, 200])
+    .withMessage('Sem must be one of the following values: 5, 10, 25, 50, 100, 200'),
   body('marketId').notEmpty().withMessage('marketId is required').isUUID().withMessage('MarketId must be a valid UUID'),
 
 ];
@@ -597,22 +597,22 @@ export const validateProfitLossInput = [
     .withMessage("dataType is required.")
     .isIn(["live", "olddata", "backup"])
     .withMessage("Valid values are 'live', 'olddata', or 'backup'."),
-    query("page")
+  query("page")
     .optional()
     .isInt({ min: 1 })
     .withMessage("Page must be a positive integer."),
-    query("limit")
+  query("limit")
     .optional()
     .isInt({ min: 1 })
     .withMessage("Limit must be a positive integer."),
-    
+
 ];
 
 export const validateVoidMarket = [
   body('marketId')
     .notEmpty().withMessage('Market ID is required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
-    body('userId')
+  body('userId')
     .notEmpty().withMessage('userId is required')
     .isUUID().withMessage('userId must be a valid UUID')
 ];
@@ -621,7 +621,7 @@ export const validateRevokeMarket = [
   body('marketId')
     .notEmpty().withMessage('Market ID is required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
-   
+
 ];
 
 export const externalResetPasswordSchema = [
@@ -669,3 +669,26 @@ export const validateBetsAfterWin = [
     .isUUID(4)
     .withMessage("Market Id is not valid."),
 ]
+
+export const validateDeleteLiveBet = [
+  body('marketId')
+    .notEmpty()
+    .withMessage('marketId is required')
+    .isUUID()
+    .withMessage('marketId must be a valid UUID'),
+  body('runnerId')
+    .notEmpty()
+    .withMessage('runnerId is required')
+    .isUUID()
+    .withMessage('runnerId must be a valid UUID'),
+  body('userId')
+    .notEmpty()
+    .withMessage('userId is required')
+    .isUUID()
+    .withMessage('userId must be a valid UUID'),
+  body('betId')
+    .notEmpty()
+    .withMessage('betId is required')
+    .isUUID()
+    .withMessage('betId must be a valid UUID'),
+];
