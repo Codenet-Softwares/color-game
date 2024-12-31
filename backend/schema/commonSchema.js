@@ -663,3 +663,9 @@ export const validateLiveGames = [
     .isInt({ min: 1 })
     .withMessage("Page size must be a positive integer."),
 ];
+
+export const validateBetsAfterWin = [
+  param("marketId")
+    .isUUID(4)
+    .withMessage("Market Id is not valid."),
+]

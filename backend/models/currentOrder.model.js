@@ -74,6 +74,10 @@ CurrentOrder.init(
       type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
     },
+    betId: {
+      type: DataTypes.CHAR(150),
+      allowNull: false,
+    },
   },
   {
     sequelize,

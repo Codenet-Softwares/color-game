@@ -39,6 +39,7 @@ import { externalApisRoute } from './routes/externalApis.route.js';
 import { checkAndManageIndexes } from './helper/indexManager.js';
 import { lotteryRoute } from './routes/lotteryGame.route.js';
 import { voidGameRoute } from './routes/voidGame.route.js';
+import { DeleteRoutes } from './routes/delete.route.js';
 
 
 dotenv.config();
@@ -89,6 +90,7 @@ InactiveGameRoute(app);
 externalApisRoute(app);
 lotteryRoute(app)
 voidGameRoute(app);
+DeleteRoutes(app);
 
 Game.hasMany(Market, { foreignKey: 'gameId', sourceKey: 'gameId' });
 Market.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
