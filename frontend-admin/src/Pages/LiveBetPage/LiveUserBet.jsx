@@ -21,6 +21,8 @@ const LiveUserBet = () => {
     totalData: 0,
   });
 
+
+  console.log("userBets", userBets)
   useEffect(() => {
     if (marketId) fetchLiveUserBet();
   }, [marketId, userBets.currentPage, userBets.totalEntries, userBets.search]);
@@ -45,6 +47,33 @@ const LiveUserBet = () => {
     }
   };
 
+  const handleDelete = async (marketId, runnerId, userId, betId) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this market and bet?");
+  
+    if (!isConfirmed) {
+      return;
+    }
+  
+    console.log("delete", marketId);
+    
+    try {
+      const response = await GameService.DeleteMarket(
+        auth.user,
+        userId,
+        marketId,
+        runnerId,
+        betId,
+      );
+  
+      if (response.status === 200) {
+        toast.success("Market and bet deleted successfully!");
+        fetchLiveUserBet();
+      }
+    } catch (error) {
+      toast.error(customErrorHandler(error));
+    }
+  };
+  
   const handleClearSearch = () => {
     setUserBets((prev) => ({ ...prev, search: "" }));
   };
@@ -53,9 +82,9 @@ const LiveUserBet = () => {
     setUserBets((prev) => ({ ...prev, currentPage: pageNumber }));
   };
 
-  const handleNavigate = (betId) => {
-    navigate(`/bet_details/${betId}`);
-  };
+  // const handleNavigate = (betId) => {
+  //   navigate(`/bet_details/${betId}`);
+  // };
 
   const startIndex = Math.min(
     (userBets.currentPage - 1) * userBets.totalEntries + 1,
@@ -69,36 +98,35 @@ const LiveUserBet = () => {
   const handleNavigation = () => {
     navigate("/liveBet");
   };
+
   return (
     <div className="container my-5">
       <div className="card shadow-lg" style={{ background: "#ADD8E6" }}>
-      <div className="card-header bg-secondary text-white" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-  <div
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      width: "40px",
-      height: "40px",
-      borderRadius: "50%",
-      backgroundColor: "#f0f0f0",
-      color: "#333",
-      fontSize: "20px",
-      cursor: "pointer"
-    }}
-    onClick={handleNavigation}
-  >
-    <FaArrowLeft />
-  </div>
-  <h3 className="mb-0 fw-bold" style={{ flexGrow: 1, textAlign: "center" }}>Live Bets</h3>
-</div>
-
-
+        <div className="card-header bg-secondary text-white" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              backgroundColor: "#f0f0f0",
+              color: "#333",
+              fontSize: "20px",
+              cursor: "pointer",
+            }}
+            onClick={handleNavigation}
+          >
+            <FaArrowLeft />
+          </div>
+          <h3 className="mb-0 fw-bold" style={{ flexGrow: 1, textAlign: "center" }}>Live Bets</h3>
+        </div>
 
         <div className="card-body">
           {/* Search and Entries Selection */}
-          <div className="row mb-4" >
-            <div className="col-md-6 position-relative" >
+          <div className="row mb-4">
+            <div className="col-md-6 position-relative">
               <FaSearch
                 style={{
                   position: "absolute",
@@ -108,7 +136,8 @@ const LiveUserBet = () => {
                   color: "#6c757d",
                   fontSize: "18px",
                 }}
-              />              <input
+              />
+              <input
                 type="text"
                 className="form-control"
                 placeholder="Search by user or market name..."
@@ -172,17 +201,14 @@ const LiveUserBet = () => {
                       <td>{bet.userName}</td>
                       <td>{bet.marketName}</td>
                       <td>{bet.rate}</td>
-                      <td
-                        className={`text-uppercase fw-bold ${bet.type === "back" ? "text-success" : "text-danger"
-                          }`}
-                      >
+                      <td className={`text-uppercase fw-bold ${bet.type === "back" ? "text-success" : "text-danger"}`}>
                         {bet.type}
                       </td>
                       <td>{bet.bidAmount}</td>
                       <td>
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleNavigate(bet.id)}
+                          onClick={() => handleDelete(bet.marketId, bet.runnerId, bet.userId, bet.betId)}
                         >
                           <FaTrashAlt />
                         </button>

@@ -181,7 +181,23 @@ userLiveBetGame(user, marketId, page, pageSize, search) {
       },
     });
   }
-  
+
+DeleteMarket(user, userId,  marketId, runnerId, betId) {
+  return axios({
+    method: "DELETE",
+    url: `${API_HOST}/api/delete-markets`,
+    data: {
+      marketId: marketId,
+      runnerId: runnerId,
+      userId: userId,
+      betId: betId,
+    },
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  });
+}
+
 }
 
 export default new GameService();
