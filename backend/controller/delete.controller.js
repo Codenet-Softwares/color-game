@@ -161,107 +161,153 @@ export const deleteLiveBetMarkets = async (req, res) => {
 // };
 
 
-export const  getMarket = async (req, res) => {
-    try {
+export const getMarket = async (req, res) => {
+  try {
+    let { page = 1, pageSize = 10 } = req.query;
 
-        // Destructure with defaults
-        let { page = 1, pageSize = 10 } = req.query;
+    page = parseInt(page);
+    pageSize = parseInt(pageSize);
 
-        // Ensure the values are integers
-        page = parseInt(page);
-        pageSize = parseInt(pageSize);
-    
-        // Validation: page and pageSize should be positive integers
-        if (page < 1 || pageSize < 1) {
-                return res.status(statusCode.badRequest).send(
-                    apiResponseErr(null, false, statusCode.badRequest, "Invalid pagination parameters")
-                );
-            }
+    const existingMarket = await MarketTrash.findAll({
+      attributes: ["trashMarkets"],
+    });
 
+    const allMarkets = [];
+    existingMarket.forEach((record) => {
+      const markets = record.trashMarkets;
+      if (Array.isArray(markets)) {
+        allMarkets.push(...markets);
+      }
+    });
 
-        const existingMarket = await MarketTrash.findAll({
-            attributes: ["trashMarkets"],
-            });
+    const uniqueMarkets = [
+      ...new Map(
+        allMarkets.map((m) => [
+          m.marketId,
+          { marketId: m.marketId, marketName: m.marketName },
+        ])
+      ).values(),
+    ];
 
-        const allMarkets = [];
-        existingMarket.forEach((record) => {
-            const markets = record.trashMarkets;
-            if (Array.isArray(markets)) {
-                allMarkets.push(...markets);
-            }
-            });
+    const offset = (page - 1) * pageSize;
 
-            const uniqueMarkets = [
-            ...new Map(
-              allMarkets.map((m) => [m.marketId, { marketId: m.marketId, marketName: m.marketName }])
-            ).values(),
-            ];
+    const getAllMarkets = uniqueMarkets.slice(offset, offset + pageSize);
 
-                // Apply pagination
-            const offset = (page - 1) * pageSize;
+    const totalItems = uniqueMarkets.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
 
-            const getallmarkets = uniqueMarkets.slice(offset, offset + pageSize);
+    const paginationData = {
+      page,
+      pageSize,
+      totalPages,
+      totalItems,
+    };
 
-            const totalItems = uniqueMarkets.length;
-            const totalPages = Math.ceil(totalItems / pageSize);
-
-            const paginationData = {
-            page,
-            totalPages,
-            totalItems,
-            };
-
-
-
-        return res.status(statusCode.success).send(apiResponseSuccess(getallmarkets, true, statusCode.success, "Markets fetch successfully", paginationData));
-        
-    } catch (error) {
-        return res.status(statusCode.internalServerError).send(apiResponseErr(null, false,statusCode.internalServerError, error.message))
-        
-    }
-
-}
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          getAllMarkets,
+          true,
+          statusCode.success,
+          "Markets fetch successfully",
+          paginationData
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
 
 //Done 
 
 export const getMarketDetails = async (req, res) => {
-    try {
-        const { marketId } = req.params;
+  try {
 
-        // Fetch the data with corrected query
-        const marketData = await MarketTrash.findAll({
-            attributes: ['trashMarkets'],
-            where: Sequelize.where(
-                Sequelize.json('trashMarkets'),
-                Op.contains,
-                [{ marketId : marketId }]  // Pass marketId correctly
-            )
-        });
+    let { page = 1, pageSize = 10 } = req.query;
 
-        console.log('=========', marketData);
+    page = parseInt(page);
+    pageSize = parseInt(pageSize);
 
-        // Map the fetched data
-        const getData = marketData.map(item => {
-            const trashMarkets = item.trashMarkets;
+    const { marketId } = req.params;
+    const marketData = await MarketTrash.findAll({
+      attributes: ["trashMarkets"],
+      where: Sequelize.where(
+        Sequelize.fn(
+          "JSON_CONTAINS",
+          Sequelize.col("trashMarkets"),
+          JSON.stringify([{ marketId }])
+        ),
+        true
+      ),
+    });
 
-            return trashMarkets.map(data => ({
-                marketName: data.marketName,
-                marketId: data.marketId,
-                runnerName: data.runnerName,
-                runnerId: data.runnerId,
-                userId: data.userId,
-                rate: data.rate,
-                type: data.type,
-                bidAmount: data.bidAmount,
-                value: data.value
-            }));
-        }).flat();
+    const getData = marketData
+      .map((item) => {
+        const trashMarkets = item.trashMarkets;
 
-        return res.status(statusCode.success).send(apiResponseSuccess(getData, true, statusCode.success, "Market details fetched successfully"));
+        const parsedMarkets = Array.isArray(trashMarkets)
+          ? trashMarkets
+          : JSON.parse(trashMarkets);
 
-    } catch (error) {
-        console.log("error....................",error)
-        return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
-    }
+        return parsedMarkets
+          .filter((data) => data.marketId === marketId)
+          .map((data) => ({
+            marketName: data.marketName,
+            marketId: data.marketId,
+            runnerName: data.runnerName,
+            runnerId: data.runnerId,
+            userId: data.userId,
+            rate: data.rate,
+            type: data.type,
+            bidAmount: data.bidAmount,
+            value: data.value,
+          }));
+      })
+      .flat();
+
+    const offset = (page - 1) * pageSize;
+    const getallmarkets = getData.slice(offset, offset + pageSize);
+    const totalItems = getData.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    const paginationData = {
+      page,
+      pageSize,
+      totalPages,
+      totalItems,
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          getallmarkets,
+          true,
+          statusCode.success,
+          "Market details fetched successfully",
+          paginationData
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
 };
-
