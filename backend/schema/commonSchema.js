@@ -692,3 +692,10 @@ export const validateDeleteLiveBet = [
     .isUUID()
     .withMessage('betId must be a valid UUID'),
 ];
+
+
+export const validateTrashMarketId = [
+  param("marketId")
+    .isUUID()
+    .withMessage("Invalid marketId. It should be a valid UUID."),
+];
