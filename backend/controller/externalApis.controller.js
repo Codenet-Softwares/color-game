@@ -1208,6 +1208,9 @@ export const getDeleteLiveMarket = async (req, res) => {
           )
         );
     }
+    const users = await userSchema.findAll({
+      where: { userId },
+    });
 
     const user = await userSchema.findOne({
       where: { userId },
@@ -1225,7 +1228,18 @@ export const getDeleteLiveMarket = async (req, res) => {
           )
         );
     }
+    let exposureValue = 0;
+    for (const user of users) {
+      const totalExposures = user.marketListExposure.filter(
+        (item) => Object.keys(item)[0] === marketId
+      );
 
+      
+
+      for (const exposure of totalExposures) {
+        exposureValue += Number(exposure[marketId]);
+      }
+    }
     const matchedExposures = user.marketListExposure.filter(
       (item) => Object.values(item)[0] === price
     );
@@ -1245,7 +1259,7 @@ export const getDeleteLiveMarket = async (req, res) => {
         const dataToSend = {
           amount: user.balance,
           userId: user.userId,
-          exposure: totalExposureValue,
+          exposure: exposureValue - totalExposureValue,
         };
         const baseURL = process.env.WHITE_LABEL_URL;
         const response = await axios.post(
@@ -1291,3 +1305,8 @@ export const getDeleteLiveMarket = async (req, res) => {
       );
   }
 };
+
+
+
+
+

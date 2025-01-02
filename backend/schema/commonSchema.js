@@ -692,3 +692,14 @@ export const validateDeleteLiveBet = [
     .isUUID()
     .withMessage('betId must be a valid UUID'),
 ];
+
+export const validateDeleteLiveMarket= [
+  body('marketId')
+    .notEmpty().withMessage('Market ID is required')
+    .isUUID().withMessage('Market ID must be a valid UUID'),
+  body('userId')
+    .notEmpty().withMessage('userId is required')
+    .isUUID().withMessage('userId must be a valid UUID'),
+  body('price')
+    .notEmpty().withMessage('price is required')
+];
