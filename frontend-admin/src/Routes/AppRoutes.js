@@ -16,6 +16,9 @@ import MarketVoidPage from "../Pages/MarketVoidPage";
 import WelcomePage from "../Pages/welcomepage/WelcomePage";
 import LiveBetPage from "../Pages/LiveBetPage/LiveBetPage";
 import LiveUserBet from "../Pages/LiveBetPage/LiveUserBet";
+import BetHistoryPage from "../Pages/BetHistory/BetHistoryPage";
+import UserBetHistory from "../Pages/BetHistory/UserBetHistory";
+import DeleteBetHistory from "../Pages/BetHistory/DeleteBetHistory";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -125,16 +128,38 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
-     <Route
-  path="/live_UserBet/:marketId"
-  element={
-    <RequireAuth>
-      <LiveUserBet />
-    </RequireAuth>
-  }
-/>
-
-
+          <Route
+            path="/live_UserBet/:marketId"
+            element={
+              <RequireAuth>
+                <LiveUserBet />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="get-bet-markets-afterWin"
+            element={
+              <RequireAuth>
+                <BetHistoryPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/get-bets-afterWin/:marketId"
+            element={
+              <RequireAuth>
+                <UserBetHistory />
+              </RequireAuth>
+            }
+          />  
+          <Route
+          path="trash"
+          element={
+            <RequireAuth>
+              <DeleteBetHistory/>
+            </RequireAuth>
+          }
+          />        
         </Route>
       </Routes>
     </BrowserRouter>

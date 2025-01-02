@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaSearch, FaTimes, FaTrashAlt } from "react-icons/fa";
-import SingleCard from '../../Components/common/singleCard';
+import SingleCard from "../../Components/common/singleCard";
 import GameService from "../../Services/GameService";
 import { useAuth } from "../../Utils/Auth";
 import { toast } from "react-toastify";
 import Pagination from "../../Components/Pagination";
 import { customErrorHandler } from "../../Utils/helper";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const LiveBetPage = () => {
   const auth = useAuth();
@@ -25,9 +24,13 @@ const LiveBetPage = () => {
   }, [liveBets.currentPage, liveBets.totalEntries, liveBets.name]);
 
   const fetchLiveBets = () => {
-    GameService.liveBetGame(auth.user, liveBets.currentPage, liveBets.totalEntries, liveBets.name)
+    GameService.liveBetGame(
+      auth.user,
+      liveBets.currentPage,
+      liveBets.totalEntries,
+      liveBets.name
+    )
       .then((res) => {
-
         setLiveBets((prev) => ({
           ...prev,
           liveBets: res.data?.data || [],
@@ -40,15 +43,17 @@ const LiveBetPage = () => {
       });
   };
   const handleClearSearch = () => {
-    setLiveBets({ ...liveBets, name: "" })
+    setLiveBets({ ...liveBets, name: "" });
   };
   const handlePageChange = (pageNumber) => {
     setLiveBets({ ...liveBets, currentPage: pageNumber });
   };
-  let startIndex = Math.min((Number(liveBets.currentPage) - 1) * Number(liveBets.totalEntries) + 1);
+  let startIndex = Math.min(
+    (Number(liveBets.currentPage) - 1) * Number(liveBets.totalEntries) + 1
+  );
   let endIndex = Math.min(
     Number(liveBets.currentPage) * Number(liveBets.totalEntries),
-    Number(liveBets.totalData),
+    Number(liveBets.totalData)
   );
   const navigate = useNavigate();
 
@@ -116,11 +121,9 @@ const LiveBetPage = () => {
               <select
                 className="form-select rounded-pill d-inline-block w-auto"
                 value={liveBets.totalEntries}
-
                 style={{
                   borderRadius: "50px",
                   border: "2px solid #6c757d",
-
                 }}
                 onChange={(e) =>
                   setLiveBets((prev) => ({
@@ -181,7 +184,6 @@ const LiveBetPage = () => {
                         >
                           Live Game
                         </button>
-
                       </td>
                     </tr>
                   ))}

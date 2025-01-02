@@ -173,6 +173,28 @@ const Navside = () => {
             <span className="ms-3">Live Bet</span>
           </Link>
         </li>
+        <li className="" >
+          <Link to="/get-bet-markets-afterWin" className="d-flex align-items-center">
+            <div className="nav_icon_small">
+              <img
+                src="../../.../../../../img/menu-icon/dashboard.svg"
+                alt=""
+              />
+            </div>
+            <span className="ms-3">Bet History</span>
+          </Link>
+        </li>
+        <li className="" >
+          <Link to="/trash" className="d-flex align-items-center">
+            <div className="nav_icon_small">
+              <img
+                src="../../.../../../../img/menu-icon/dashboard.svg"
+                alt=""
+              />
+            </div>
+            <span className="ms-3">Trash Bets</span>
+          </Link>
+        </li>
 
         {/* Announcement Management */}
         {/* <li className={isAnnouncement ? 'active' : ''}>
