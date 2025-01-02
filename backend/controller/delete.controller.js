@@ -6,7 +6,7 @@ import MarketTrash from "../models/trash.model.js"
 import sequelize from "../db.js";
 import userSchema from "../models/user.model.js";
 import BetHistory from "../models/betHistory.model.js";
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import axios from "axios";
 
 export const deleteLiveBetMarkets = async (req, res) => {
@@ -159,3 +159,109 @@ export const deleteLiveBetMarkets = async (req, res) => {
 //             );
 //     }
 // };
+
+
+export const  getMarket = async (req, res) => {
+    try {
+
+        // Destructure with defaults
+        let { page = 1, pageSize = 10 } = req.query;
+
+        // Ensure the values are integers
+        page = parseInt(page);
+        pageSize = parseInt(pageSize);
+    
+        // Validation: page and pageSize should be positive integers
+        if (page < 1 || pageSize < 1) {
+                return res.status(statusCode.badRequest).send(
+                    apiResponseErr(null, false, statusCode.badRequest, "Invalid pagination parameters")
+                );
+            }
+
+
+        const existingMarket = await MarketTrash.findAll({
+            attributes: ["trashMarkets"],
+            });
+
+        const allMarkets = [];
+        existingMarket.forEach((record) => {
+            const markets = record.trashMarkets;
+            if (Array.isArray(markets)) {
+                allMarkets.push(...markets);
+            }
+            });
+
+            const uniqueMarkets = [
+            ...new Map(
+              allMarkets.map((m) => [m.marketId, { marketId: m.marketId, marketName: m.marketName }])
+            ).values(),
+            ];
+
+                // Apply pagination
+            const offset = (page - 1) * pageSize;
+
+            const getallmarkets = uniqueMarkets.slice(offset, offset + pageSize);
+
+            const totalItems = uniqueMarkets.length;
+            const totalPages = Math.ceil(totalItems / pageSize);
+
+            const paginationData = {
+            page,
+            totalPages,
+            totalItems,
+            };
+
+
+
+        return res.status(statusCode.success).send(apiResponseSuccess(getallmarkets, true, statusCode.success, "Markets fetch successfully", paginationData));
+        
+    } catch (error) {
+        return res.status(statusCode.internalServerError).send(apiResponseErr(null, false,statusCode.internalServerError, error.message))
+        
+    }
+
+}
+
+//Done 
+
+export const getMarketDetails = async (req, res) => {
+    try {
+        const { marketId } = req.params;
+
+        // Fetch the data with corrected query
+        const marketData = await MarketTrash.findAll({
+            attributes: ['trashMarkets'],
+            where: Sequelize.where(
+                Sequelize.json('trashMarkets'),
+                Op.contains,
+                [{ marketId : marketId }]  // Pass marketId correctly
+            )
+        });
+
+        console.log('=========', marketData);
+
+        // Map the fetched data
+        const getData = marketData.map(item => {
+            const trashMarkets = item.trashMarkets;
+
+            return trashMarkets.map(data => ({
+                marketName: data.marketName,
+                marketId: data.marketId,
+                runnerName: data.runnerName,
+                runnerId: data.runnerId,
+                userId: data.userId,
+                rate: data.rate,
+                type: data.type,
+                bidAmount: data.bidAmount,
+                value: data.value
+            }));
+        }).flat();
+
+        return res.status(statusCode.success).send(apiResponseSuccess(getData, true, statusCode.success, "Market details fetched successfully"));
+
+    } catch (error) {
+        console.log("error....................",error)
+        return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+    }
+};
+
