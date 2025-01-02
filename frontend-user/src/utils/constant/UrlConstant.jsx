@@ -53,6 +53,8 @@ class UrlConstant {
   GetResult=`${this.url_dev}/${this.user}-lottery-results`; 
   getPurchaseMarketTime = `${this.url_dev}/${this.user}/getMarkets`; 
   getUpdateMarketStatus = `${this.url_dev}/update-market-status`;
+  liveUsersBet =`${this.url_dev}/live-users-bet`;
+
 }
 
 const urls = new UrlConstant();

@@ -162,7 +162,7 @@ class GameService {
     });
   }
    
-  liveBetList(user,page,pageSize, search){
+  liveBetGame(user,page,pageSize, search){
     return axios({
       method: "GET",
       url:`${API_HOST}/api/live-users-bet-games?page=${page}&pageSize=${pageSize}&search=${search}`,
@@ -172,6 +172,33 @@ class GameService {
     });
   }
 
+userLiveBetGame(user, marketId, page, pageSize, search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/live-users-bet/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+DeleteMarket(user, userId,  marketId, runnerId, betId) {
+  return axios({
+    method: "DELETE",
+    url: `${API_HOST}/api/delete-markets`,
+    data: {
+      marketId: marketId,
+      runnerId: runnerId,
+      userId: userId,
+      betId: betId,
+    },
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  });
+}
+
 }
 
 export default new GameService();
+
