@@ -155,35 +155,35 @@ sequelize
       console.log(`App is running on - http://localhost:${process.env.PORT || 7000}`);
     });
 
-    cron.schedule('*/2 * * * * *', async () => {
-      try {
-        const markets = await Market.findAll({
-          where: {
-            isActive: true,
-            endTime: { [Op.lte]: moment().utc().toISOString() },
-          },
-        });
+    // cron.schedule('*/2 * * * * *', async () => {
+    //   try {
+    //     const markets = await Market.findAll({
+    //       where: {
+    //         isActive: true,
+    //         endTime: { [Op.lte]: moment().utc().toISOString() },
+    //       },
+    //     });
 
-        const updateMarket = [];
-        for (const market of markets) {
-          market.isActive = false;
-          const response = await market.save();
-          updateMarket.push(JSON.parse(JSON.stringify(response)));
-        }
+    //     const updateMarket = [];
+    //     for (const market of markets) {
+    //       market.isActive = false;
+    //       const response = await market.save();
+    //       updateMarket.push(JSON.parse(JSON.stringify(response)));
+    //     }
 
-        clients.forEach((client) => {
-          try {
-            client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
-          } catch (err) {
-            console.error('[SSE] Error sending data to client:', err);
-          }
-        });
+    //     clients.forEach((client) => {
+    //       try {
+    //         client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
+    //       } catch (err) {
+    //         console.error('[SSE] Error sending data to client:', err);
+    //       }
+    //     });
 
-        console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
-      } catch (error) {
-        console.error('Error checking market statuses:', error);
-      }
-    });
+    //     console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
+    //   } catch (error) {
+    //     console.error('Error checking market statuses:', error);
+    //   }
+    // });
   })
   .catch((err) => {
     console.error('Unable to create tables:', err);
