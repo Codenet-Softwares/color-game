@@ -20,6 +20,7 @@ import { PreviousState } from "../models/previousState.model.js";
 import axios from "axios";
 import CustomError from "../helper/extendError.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
+import { v4 as uuidv4 } from "uuid";
 
 // done
 export const createUser = async (req, res) => {
@@ -1020,6 +1021,7 @@ export const createBid = async (req, res) => {
       user.exposure = exposure;
       user.marketListExposure = marketListExposure;
       await CurrentOrder.create({
+        betId: uuidv4(),
         userId: userId,
         userName: userName,
         gameId: gameId,

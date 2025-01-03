@@ -13,9 +13,12 @@ import ViewUserList from "../Components/User/ViewUserList";
 import HomePageCarousel from "../Pages/HomePageCarousel";
 import Inactive from "../Components/Inactive/Inactive";
 import MarketVoidPage from "../Pages/MarketVoidPage";
-import WelcomePage from "../Pages/welcomepage/WelcomePage"
+import WelcomePage from "../Pages/welcomepage/WelcomePage";
 import LiveBetPage from "../Pages/LiveBetPage/LiveBetPage";
-
+import LiveUserBet from "../Pages/LiveBetPage/LiveUserBet";
+import BetHistoryPage from "../Pages/BetHistory/BetHistoryPage";
+import UserBetHistory from "../Pages/BetHistory/UserBetHistory";
+import DeleteBetHistory from "../Pages/BetHistory/DeleteBetHistory";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -36,7 +39,7 @@ const AppRoutes = () => {
             path="welcome"
             element={
               <RequireAuth>
-                <WelcomePage/>
+                <WelcomePage />
               </RequireAuth>
             }
           />
@@ -113,7 +116,7 @@ const AppRoutes = () => {
             path="voidMarket"
             element={
               <RequireAuth>
-                <MarketVoidPage/>
+                <MarketVoidPage />
               </RequireAuth>
             }
           />
@@ -121,12 +124,42 @@ const AppRoutes = () => {
             path="liveBet"
             element={
               <RequireAuth>
-                <LiveBetPage/>
+                <LiveBetPage />
               </RequireAuth>
             }
           />
-
-
+          <Route
+            path="/live_UserBet/:marketId"
+            element={
+              <RequireAuth>
+                <LiveUserBet />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="get-bet-markets-afterWin"
+            element={
+              <RequireAuth>
+                <BetHistoryPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/get-bets-afterWin/:marketId"
+            element={
+              <RequireAuth>
+                <UserBetHistory />
+              </RequireAuth>
+            }
+          />  
+          <Route
+          path="trash"
+          element={
+            <RequireAuth>
+              <DeleteBetHistory/>
+            </RequireAuth>
+          }
+          />        
         </Route>
       </Routes>
     </BrowserRouter>

@@ -62,8 +62,19 @@ export const purchaseLottery = async (req, res) => {
 
     const user = await userSchema.findOne({ where: { userId }, transaction: t });
     user.balance -= lotteryPrice;
-    const newExposure = { [marketId]: lotteryPrice };
-    user.marketListExposure = [...(marketListExposure || []), newExposure];
+    let updatedMarketListExposure = marketListExposure.map(exposure => {
+      if (exposure.hasOwnProperty(marketId)) {
+        exposure[marketId] += lotteryPrice;
+      }
+      return exposure;
+    });
+
+    if (!updatedMarketListExposure.some(exposure => exposure.hasOwnProperty(marketId))) {
+      const newExposure = { [marketId]: lotteryPrice };
+      updatedMarketListExposure.push(newExposure);
+    }
+
+    user.marketListExposure = updatedMarketListExposure;
     await user.save({ fields: ["balance", "marketListExposure"], transaction: t });
 
     const [rs1, rs2] = await Promise.all([
@@ -102,7 +113,6 @@ export const purchaseLottery = async (req, res) => {
     }
   }
 };
-
 
 export const purchaseHistory = async (req, res) => {
   try {

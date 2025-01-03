@@ -712,6 +712,7 @@ export const afterWining = async (req, res) => {
 
       for (const order of orders) {
         await BetHistory.create({
+          betId: order.betId,
           userId: order.userId,
           userName: order.userName,
           gameId: order.gameId,
@@ -962,6 +963,7 @@ export const liveUsersBet = async (req, res) => {
         'value',
         'type',
         'bidAmount',
+        'betId',
       ],
       limit,
       offset,
@@ -975,6 +977,7 @@ export const liveUsersBet = async (req, res) => {
     }
 
     const formattedOrders = currentOrders.map((order) => ({
+      betId: order.betId,
       userId: order.userId,
       userName: order.userName,
       marketId: order.marketId,
@@ -1057,7 +1060,126 @@ export const getUsersLiveBetGames = async (req, res) => {
       page: parseInt(page, 10),
       pageSize: limit,
       totalPages,
-      totalItems: uniqueOrders.length, 
+      totalItems: uniqueOrders.length,
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(liveGames, true, statusCode.success, "Success", pagination)
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+export const getBetsAfterWin = async (req, res) => {
+  try {
+    const { marketId } = req.params;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const { count, rows } = await BetHistory.findAndCountAll({
+      where: { marketId: marketId },
+      attributes: [
+        "userId",
+        "userName",
+        "gameName",
+        "marketName",
+        "runnerName",
+        "rate",
+        "value",
+        "type",
+        "date",
+        "matchDate",
+        "placeDate",
+      ],
+      limit,
+      offset: (page - 1) * limit,
+    });
+
+    const totalPages = Math.ceil(count / limit);
+    const pageSize = limit;
+    const totalItems = count;
+
+    res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(rows, true, statusCode.success, "Success", {
+          totalPages,
+          pageSize,
+          totalItems,
+          page,
+        })
+      );
+  } catch (error) {
+    res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+export const getBetMarketsAfterWin = async (req, res) => {
+  try {
+    const { page = 1, pageSize = 10 } = req.query;
+    const limit = parseInt(pageSize, 10);
+    const offset = (parseInt(page, 10) - 1) * limit;
+
+    const { rows: betHistoryOrders } = await BetHistory.findAndCountAll({
+      attributes: ["gameId", "gameName", "marketId", "marketName"],
+      raw: true,
+    });
+
+    if (!betHistoryOrders || betHistoryOrders.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "No data found.")
+        );
+    }
+
+    // Remove duplicates by creating a Map with unique keys based on gameId and marketId
+    const uniqueOrders = Array.from(
+      new Map(
+        betHistoryOrders.map((order) => [
+          `${order.gameId}-${order.marketId}`,
+          order,
+        ])
+      ).values()
+    );
+
+    const paginatedUniqueOrders = uniqueOrders.slice(offset, offset + limit);
+
+    const liveGames = paginatedUniqueOrders.map((order) => ({
+      gameId: order.gameId,
+      gameName: order.gameName,
+      marketId: order.marketId,
+      marketName: order.marketName,
+    }));
+
+    const totalPages = Math.ceil(uniqueOrders.length / limit);
+
+    const pagination = {
+      page: parseInt(page, 10),
+      pageSize: limit,
+      totalPages,
+      totalItems: uniqueOrders.length,
     };
 
     return res

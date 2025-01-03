@@ -89,6 +89,10 @@ BetHistory.init(
       allowNull: false,
       defaultValue: false,
     },
+    betId: {
+      type: DataTypes.CHAR(150),
+      allowNull: false,
+    },
   },
   {
     sequelize,
