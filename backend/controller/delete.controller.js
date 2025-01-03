@@ -9,6 +9,9 @@ import BetHistory from "../models/betHistory.model.js";
 import { Op } from 'sequelize';
 import axios from "axios";
 import ProfitLoss from "../models/profitLoss.js";
+import Market from "../models/market.model.js";
+import Runner from "../models/runner.model.js";
+import { PreviousState } from "../models/previousState.model.js";
 
 export const deleteLiveBetMarkets = async (req, res) => {
     const transaction = await sequelize.transaction();
@@ -126,7 +129,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
     }
 };
 
-export const deleteBetMarkets = async (req, res) => {
+export const deleteAfterWinBetMarkets = async (req, res) => {
     const transaction = await sequelize.transaction();
     try {
         const { marketId, runnerId, userId, betId } = req.body;
@@ -143,6 +146,47 @@ export const deleteBetMarkets = async (req, res) => {
 
         await getMarket.destroy({ transaction });
 
+        // **LOGIC TO RETRIEVE REMAINING RUNNER BALANCE:**
+
+        const marketDataRows = await Market.findAll({
+            where: { marketId },
+            include: [
+                {
+                    model: Runner,
+                    required: false,
+                },
+            ],
+        });
+
+        let marketDataObj = {
+            marketId: marketDataRows[0].marketId,
+            marketName: marketDataRows[0].marketName,
+            participants: marketDataRows[0].participants,
+            startTime: marketDataRows[0].startTime,
+            endTime: marketDataRows[0].endTime,
+            announcementResult: marketDataRows[0].announcementResult,
+            isActive: marketDataRows[0].isActive,
+            runners: [],
+        };
+
+        marketDataRows[0].Runners.forEach((runner) => {
+            marketDataObj.runners.push({
+                id: runner.id,
+                runnerName: {
+                    runnerId: runner.runnerId,
+                    name: runner.runnerName,
+                    isWin: runner.isWin,
+                    bal: Math.round(parseFloat(runner.bal)),
+                },
+                rate: [
+                    {
+                        back: runner.back,
+                        lay: runner.lay,
+                    },
+                ],
+            });
+        });
+
         const remainingMarket = await BetHistory.findAll({
             where: {
                 marketId,
@@ -154,55 +198,124 @@ export const deleteBetMarkets = async (req, res) => {
             transaction
         });
 
-        if (remainingMarket.length > 0) {
-            let totalRunnerBalance = 0;
-            remainingMarket.map((market) => {
-                const runnerKey = market.runnerId;
-                let runnerBalance = 0;
+        const userMarketBalance = {
+            userId,
+            marketId,
+            runnerBalance: [],
+        };
 
-                if (market.type === "back") {
-                    if (String(runnerKey) === String(getMarket.runnerId)) {
-                        runnerBalance += Number(market.bidAmount);
+
+        marketDataObj.runners.forEach((runner) => {
+            let runnerBalance = 0;
+            remainingMarket.forEach((order) => {
+                if (order.type === "back") {
+                    if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
+                        runnerBalance += Number(order.bidAmount);
                     } else {
-                        runnerBalance -= Number(market.value);
+                        runnerBalance -= Number(order.value);
                     }
-                } else if (market.type === "lay") {
-                    if (String(runnerKey) === String(getMarket.runnerId)) {
-                        runnerBalance -= Number(market.bidAmount);
+                } else if (order.type === "lay") {
+                    if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
+                        runnerBalance -= Number(order.bidAmount);
                     } else {
-                        runnerBalance += Number(market.value);
+                        runnerBalance += Number(order.value);
                     }
                 }
-
-                // totalRunnerBalance += runnerBalance;
-              
             });
 
-            
+            userMarketBalance.runnerBalance.push({
+                runnerId: runner.runnerName.runnerId,
+                bal: runnerBalance,
+            });
 
-            // await user.update({
-            //     marketListExposure: user.marketListExposure,
-            //     balance: user.balance,
-            // }, { transaction });
+            runner.runnerName.bal = runnerBalance;
+        });
+
+        console.log("userMarketBalance..........01", userMarketBalance)
+
+        const previousStates = await PreviousState.findAll({
+            where: { marketId, runnerId },
+            transaction,
+        });
+
+        for (const prevState of previousStates) {
+            const user = await userSchema.findOne({
+                where: { userId: prevState.userId },
+                transaction,
+            });
+
+            if (user) {
+                const marketListExposure = JSON.parse(prevState.marketListExposure);
+                const allRunnerBalances = JSON.parse(prevState.allRunnerBalances);
+                const runnerBalance = allRunnerBalances[runnerId];
+
+                const marketExposureEntry = marketListExposure.find(
+                    (item) => Object.keys(item)[0] === marketId
+                );
+
+                if (!marketExposureEntry) continue;
+
+                const marketExposureValue = Number(marketExposureEntry[marketId]);
+                console.log("marketExposureValue", marketExposureValue)
+                console.log("marketExposureValue", runnerBalance)
+
+                if (runnerBalance > 0) {
+                    user.balance -= Number(runnerBalance + marketExposureValue);
+                    console.log(" prev user.balance", user.balance)
+
+                } else { 
+                    user.balance -= Number(runnerBalance + marketExposureValue);
+                }
+
+                await user.save({ transaction });
+            }
         }
 
 
-        // const getProfitLoss = await ProfitLoss.findOne({ where: { marketId, runnerId, userId } });
-        // await getProfitLoss.destroy({ transaction })
+        // **LOGIC TO HANDLE WINNING RUNNER:**
+
+        // Fetch the winning runner
+        // Fetch the winning runner from the Runner table
+        const winningRunner = await Runner.findOne({
+            where: { marketId: userMarketBalance.marketId, isWin: 1 },
+            transaction,
+        });
+
+        if (!winningRunner) {
+            console.log("No winning runner found for marketId:", userMarketBalance.marketId);
+            return;
+        }
+
+        // Loop through userMarketBalance.runnerBalance to adjust balance based on winning runner
+        for (const runnerBalance of userMarketBalance.runnerBalance) {
+            if (runnerBalance.runnerId === winningRunner.runnerId) {
+                console.log("Winning runner balance adjustment", runnerBalance);
+
+                const user = await userSchema.findOne({ where: { userId: userMarketBalance.userId }, transaction });
+                if (user) {
+                    // Adjust user balance based on the winning runner's balance
+                    console.log("runnerBalance.bal", runnerBalance.bal);
+
+                    if (runnerBalance.bal < 0) {
+                        user.balance += runnerBalance.bal; // Deduct if negative
+                    } else {
+                        user.balance += runnerBalance.bal; // Add if positive
+                    }
+
+                    console.log("Updated user balance:", user.balance);
+                    await user.save({ transaction });
+                }
+            }
+        }
+
 
         await transaction.commit();
         return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
 
     } catch (error) {
-        res
-            .status(statusCode.internalServerError)
-            .send(
-                apiResponseErr(
-                    null,
-                    false,
-                    statusCode.internalServerError,
-                    error.message,
-                )
-            );
+        await transaction.rollback();
+        res.status(statusCode.internalServerError).send(
+            apiResponseErr(null, false, statusCode.internalServerError, error.message)
+        );
     }
 };
