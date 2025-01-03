@@ -228,9 +228,10 @@ export const getMarket = async (req, res) => {
   }
 };
 
+
 //Done 
 
-export const getMarketDetails = async (req, res) => {
+export const getTrashMarketDetails = async (req, res) => {
   try {
 
     let { page = 1, pageSize = 10 } = req.query;
@@ -267,6 +268,7 @@ export const getMarketDetails = async (req, res) => {
             runnerName: data.runnerName,
             runnerId: data.runnerId,
             userId: data.userId,
+            userName: data.userName,
             rate: data.rate,
             type: data.type,
             bidAmount: data.bidAmount,
