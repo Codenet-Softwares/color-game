@@ -12,8 +12,6 @@ export const DeleteRoutes = (app) => {
     app.get('/api/get-market', authorize([string.Admin]), getMarket);
 
 
-    app.get('/api/get-bet-trash/:marketId', validateTrashMarketId, customErrorHandler, getTrashMarketDetails);
+    app.get('/api/get-bet-trash/:marketId', validateTrashMarketId, customErrorHandler, authorize([string.Admin]), getTrashMarketDetails);
 
 }
-
-// authorize([string.Admin]),
