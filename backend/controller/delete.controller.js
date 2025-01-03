@@ -5,13 +5,13 @@ import CurrentOrder from "../models/currentOrder.model.js"
 import MarketTrash from "../models/trash.model.js"
 import sequelize from "../db.js";
 import userSchema from "../models/user.model.js";
-import BetHistory from "../models/betHistory.model.js";
+// import BetHistory from "../models/betHistory.model.js";
 import { Op } from 'sequelize';
 import axios from "axios";
-import ProfitLoss from "../models/profitLoss.js";
-import Market from "../models/market.model.js";
-import Runner from "../models/runner.model.js";
-import { PreviousState } from "../models/previousState.model.js";
+// import ProfitLoss from "../models/profitLoss.js";
+// import Market from "../models/market.model.js";
+// import Runner from "../models/runner.model.js";
+// import { PreviousState } from "../models/previousState.model.js";
 
 export const deleteLiveBetMarkets = async (req, res) => {
     const transaction = await sequelize.transaction();
@@ -129,193 +129,193 @@ export const deleteLiveBetMarkets = async (req, res) => {
     }
 };
 
-export const deleteAfterWinBetMarkets = async (req, res) => {
-    const transaction = await sequelize.transaction();
-    try {
-        const { marketId, runnerId, userId, betId } = req.body;
+// export const deleteAfterWinBetMarkets = async (req, res) => {
+//     const transaction = await sequelize.transaction();
+//     try {
+//         const { marketId, runnerId, userId, betId } = req.body;
 
-        const getMarket = await BetHistory.findOne({ where: { marketId, runnerId, userId, betId } });
-        if (!getMarket) {
-            return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market not found"))
-        }
+//         const getMarket = await BetHistory.findOne({ where: { marketId, runnerId, userId, betId } });
+//         if (!getMarket) {
+//             return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market not found"))
+//         }
 
-        await MarketTrash.create({
-            trashMarkets: [getMarket.dataValues],
-            trashMarketId: uuidv4(),
-        }, { transaction });
+//         await MarketTrash.create({
+//             trashMarkets: [getMarket.dataValues],
+//             trashMarketId: uuidv4(),
+//         }, { transaction });
 
-        await getMarket.destroy({ transaction });
+//         await getMarket.destroy({ transaction });
 
-        // **LOGIC TO RETRIEVE REMAINING RUNNER BALANCE:**
+//         // **LOGIC TO RETRIEVE REMAINING RUNNER BALANCE:**
 
-        const marketDataRows = await Market.findAll({
-            where: { marketId },
-            include: [
-                {
-                    model: Runner,
-                    required: false,
-                },
-            ],
-        });
+//         const marketDataRows = await Market.findAll({
+//             where: { marketId },
+//             include: [
+//                 {
+//                     model: Runner,
+//                     required: false,
+//                 },
+//             ],
+//         });
 
-        let marketDataObj = {
-            marketId: marketDataRows[0].marketId,
-            marketName: marketDataRows[0].marketName,
-            participants: marketDataRows[0].participants,
-            startTime: marketDataRows[0].startTime,
-            endTime: marketDataRows[0].endTime,
-            announcementResult: marketDataRows[0].announcementResult,
-            isActive: marketDataRows[0].isActive,
-            runners: [],
-        };
+//         let marketDataObj = {
+//             marketId: marketDataRows[0].marketId,
+//             marketName: marketDataRows[0].marketName,
+//             participants: marketDataRows[0].participants,
+//             startTime: marketDataRows[0].startTime,
+//             endTime: marketDataRows[0].endTime,
+//             announcementResult: marketDataRows[0].announcementResult,
+//             isActive: marketDataRows[0].isActive,
+//             runners: [],
+//         };
 
-        marketDataRows[0].Runners.forEach((runner) => {
-            marketDataObj.runners.push({
-                id: runner.id,
-                runnerName: {
-                    runnerId: runner.runnerId,
-                    name: runner.runnerName,
-                    isWin: runner.isWin,
-                    bal: Math.round(parseFloat(runner.bal)),
-                },
-                rate: [
-                    {
-                        back: runner.back,
-                        lay: runner.lay,
-                    },
-                ],
-            });
-        });
+//         marketDataRows[0].Runners.forEach((runner) => {
+//             marketDataObj.runners.push({
+//                 id: runner.id,
+//                 runnerName: {
+//                     runnerId: runner.runnerId,
+//                     name: runner.runnerName,
+//                     isWin: runner.isWin,
+//                     bal: Math.round(parseFloat(runner.bal)),
+//                 },
+//                 rate: [
+//                     {
+//                         back: runner.back,
+//                         lay: runner.lay,
+//                     },
+//                 ],
+//             });
+//         });
 
-        const remainingMarket = await BetHistory.findAll({
-            where: {
-                marketId,
-                [Op.or]: [
-                    { runnerId: runnerId },
-                    { betId: { [Op.ne]: betId } }
-                ]
-            },
-            transaction
-        });
+//         const remainingMarket = await BetHistory.findAll({
+//             where: {
+//                 marketId,
+//                 [Op.or]: [
+//                     { runnerId: runnerId },
+//                     { betId: { [Op.ne]: betId } }
+//                 ]
+//             },
+//             transaction
+//         });
 
-        const userMarketBalance = {
-            userId,
-            marketId,
-            runnerBalance: [],
-        };
-
-
-        marketDataObj.runners.forEach((runner) => {
-            let runnerBalance = 0;
-            remainingMarket.forEach((order) => {
-                if (order.type === "back") {
-                    if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
-                        runnerBalance += Number(order.bidAmount);
-                    } else {
-                        runnerBalance -= Number(order.value);
-                    }
-                } else if (order.type === "lay") {
-                    if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
-                        runnerBalance -= Number(order.bidAmount);
-                    } else {
-                        runnerBalance += Number(order.value);
-                    }
-                }
-            });
-
-            userMarketBalance.runnerBalance.push({
-                runnerId: runner.runnerName.runnerId,
-                bal: runnerBalance,
-            });
-
-            runner.runnerName.bal = runnerBalance;
-        });
-
-        console.log("userMarketBalance..........01", userMarketBalance)
-
-        const previousStates = await PreviousState.findAll({
-            where: { marketId, runnerId },
-            transaction,
-        });
-
-        for (const prevState of previousStates) {
-            const user = await userSchema.findOne({
-                where: { userId: prevState.userId },
-                transaction,
-            });
-
-            if (user) {
-                const marketListExposure = JSON.parse(prevState.marketListExposure);
-                const allRunnerBalances = JSON.parse(prevState.allRunnerBalances);
-                const runnerBalance = allRunnerBalances[runnerId];
-
-                const marketExposureEntry = marketListExposure.find(
-                    (item) => Object.keys(item)[0] === marketId
-                );
-
-                if (!marketExposureEntry) continue;
-
-                const marketExposureValue = Number(marketExposureEntry[marketId]);
-                console.log("marketExposureValue", marketExposureValue)
-                console.log("marketExposureValue", runnerBalance)
-
-                if (runnerBalance > 0) {
-                    user.balance -= Number(runnerBalance + marketExposureValue);
-                    console.log(" prev user.balance", user.balance)
-
-                } else { 
-                    user.balance -= Number(runnerBalance + marketExposureValue);
-                }
-
-                await user.save({ transaction });
-            }
-        }
+//         const userMarketBalance = {
+//             userId,
+//             marketId,
+//             runnerBalance: [],
+//         };
 
 
-        // **LOGIC TO HANDLE WINNING RUNNER:**
+//         marketDataObj.runners.forEach((runner) => {
+//             let runnerBalance = 0;
+//             remainingMarket.forEach((order) => {
+//                 if (order.type === "back") {
+//                     if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
+//                         runnerBalance += Number(order.bidAmount);
+//                     } else {
+//                         runnerBalance -= Number(order.value);
+//                     }
+//                 } else if (order.type === "lay") {
+//                     if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
+//                         runnerBalance -= Number(order.bidAmount);
+//                     } else {
+//                         runnerBalance += Number(order.value);
+//                     }
+//                 }
+//             });
 
-        // Fetch the winning runner
-        // Fetch the winning runner from the Runner table
-        const winningRunner = await Runner.findOne({
-            where: { marketId: userMarketBalance.marketId, isWin: 1 },
-            transaction,
-        });
+//             userMarketBalance.runnerBalance.push({
+//                 runnerId: runner.runnerName.runnerId,
+//                 bal: runnerBalance,
+//             });
 
-        if (!winningRunner) {
-            console.log("No winning runner found for marketId:", userMarketBalance.marketId);
-            return;
-        }
+//             runner.runnerName.bal = runnerBalance;
+//         });
 
-        // Loop through userMarketBalance.runnerBalance to adjust balance based on winning runner
-        for (const runnerBalance of userMarketBalance.runnerBalance) {
-            if (runnerBalance.runnerId === winningRunner.runnerId) {
-                console.log("Winning runner balance adjustment", runnerBalance);
+//         console.log("userMarketBalance..........01", userMarketBalance)
 
-                const user = await userSchema.findOne({ where: { userId: userMarketBalance.userId }, transaction });
-                if (user) {
-                    // Adjust user balance based on the winning runner's balance
-                    console.log("runnerBalance.bal", runnerBalance.bal);
+//         const previousStates = await PreviousState.findAll({
+//             where: { marketId, runnerId },
+//             transaction,
+//         });
 
-                    if (runnerBalance.bal < 0) {
-                        user.balance += runnerBalance.bal; // Deduct if negative
-                    } else {
-                        user.balance += runnerBalance.bal; // Add if positive
-                    }
+//         for (const prevState of previousStates) {
+//             const user = await userSchema.findOne({
+//                 where: { userId: prevState.userId },
+//                 transaction,
+//             });
 
-                    console.log("Updated user balance:", user.balance);
-                    await user.save({ transaction });
-                }
-            }
-        }
+//             if (user) {
+//                 const marketListExposure = JSON.parse(prevState.marketListExposure);
+//                 const allRunnerBalances = JSON.parse(prevState.allRunnerBalances);
+//                 const runnerBalance = allRunnerBalances[runnerId];
+
+//                 const marketExposureEntry = marketListExposure.find(
+//                     (item) => Object.keys(item)[0] === marketId
+//                 );
+
+//                 if (!marketExposureEntry) continue;
+
+//                 const marketExposureValue = Number(marketExposureEntry[marketId]);
+//                 console.log("marketExposureValue", marketExposureValue)
+//                 console.log("marketExposureValue", runnerBalance)
+
+//                 if (runnerBalance > 0) {
+//                     user.balance -= Number(runnerBalance + marketExposureValue);
+//                     console.log(" prev user.balance", user.balance)
+
+//                 } else { 
+//                     user.balance -= Number(runnerBalance + marketExposureValue);
+//                 }
+
+//                 await user.save({ transaction });
+//             }
+//         }
 
 
-        await transaction.commit();
-        return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
+//         // **LOGIC TO HANDLE WINNING RUNNER:**
 
-    } catch (error) {
-        await transaction.rollback();
-        res.status(statusCode.internalServerError).send(
-            apiResponseErr(null, false, statusCode.internalServerError, error.message)
-        );
-    }
-};
+//         // Fetch the winning runner
+//         // Fetch the winning runner from the Runner table
+//         const winningRunner = await Runner.findOne({
+//             where: { marketId: userMarketBalance.marketId, isWin: 1 },
+//             transaction,
+//         });
+
+//         if (!winningRunner) {
+//             console.log("No winning runner found for marketId:", userMarketBalance.marketId);
+//             return;
+//         }
+
+//         // Loop through userMarketBalance.runnerBalance to adjust balance based on winning runner
+//         for (const runnerBalance of userMarketBalance.runnerBalance) {
+//             if (runnerBalance.runnerId === winningRunner.runnerId) {
+//                 console.log("Winning runner balance adjustment", runnerBalance);
+
+//                 const user = await userSchema.findOne({ where: { userId: userMarketBalance.userId }, transaction });
+//                 if (user) {
+//                     // Adjust user balance based on the winning runner's balance
+//                     console.log("runnerBalance.bal", runnerBalance.bal);
+
+//                     if (runnerBalance.bal < 0) {
+//                         user.balance += runnerBalance.bal; // Deduct if negative
+//                     } else {
+//                         user.balance += runnerBalance.bal; // Add if positive
+//                     }
+
+//                     console.log("Updated user balance:", user.balance);
+//                     await user.save({ transaction });
+//                 }
+//             }
+//         }
+
+
+//         await transaction.commit();
+//         return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
+
+//     } catch (error) {
+//         await transaction.rollback();
+//         res.status(statusCode.internalServerError).send(
+//             apiResponseErr(null, false, statusCode.internalServerError, error.message)
+//         );
+//     }
+// };
