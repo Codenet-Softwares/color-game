@@ -227,6 +227,16 @@ return axios({
   },
 });
 }
+
+getBetTrash(user, marketId, page, pageSize) {
+  return axios({
+    method: "GET",
+    url: `${API_HOST}/api/get-bet-trash/${marketId}?page=${page}&pageSize=${pageSize}`,
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  });
+}
 }
 
 export default new GameService();
