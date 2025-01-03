@@ -180,6 +180,17 @@ export const getMarket = async (req, res) => {
       }
     });
 
+
+    if (allMarkets.length === 0) {
+      return apiResponseErr(
+        null,
+        false,
+        statusCode.notFound,
+        "No markets found",
+        res
+      );
+    }
+
     const uniqueMarkets = [
       ...new Map(
         allMarkets.map((m) => [
@@ -233,7 +244,6 @@ export const getMarket = async (req, res) => {
 
 export const getTrashMarketDetails = async (req, res) => {
   try {
-
     let { page = 1, pageSize = 10 } = req.query;
 
     page = parseInt(page);
@@ -255,7 +265,6 @@ export const getTrashMarketDetails = async (req, res) => {
     const getData = marketData
       .map((item) => {
         const trashMarkets = item.trashMarkets;
-
         const parsedMarkets = Array.isArray(trashMarkets)
           ? trashMarkets
           : JSON.parse(trashMarkets);
