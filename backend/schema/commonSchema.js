@@ -702,4 +702,10 @@ export const validateDeleteLiveMarket= [
     .isUUID().withMessage('userId must be a valid UUID'),
   body('price')
     .notEmpty().withMessage('price is required')
+
+
+export const validateTrashMarketId = [
+  param("marketId")
+    .isUUID()
+    .withMessage("Invalid marketId. It should be a valid UUID."),
 ];

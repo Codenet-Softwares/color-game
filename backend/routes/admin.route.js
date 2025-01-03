@@ -13,7 +13,8 @@ import {
   revokeWinningAnnouncement,
   liveUsersBet,
   getUsersLiveBetGames,
-  getBetsAfterWin
+  getBetsAfterWin,
+  getBetMarketsAfterWin
 } from '../controller/admin.controller.js';
 import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateSendBalance, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin } from '../schema/commonSchema.js';
 import { string } from '../constructor/string.js';
@@ -52,6 +53,8 @@ export const AdminRoute = (app) => {
   app.get('/api/live-users-bet-games', validateLiveGames, customErrorHandler, authorize([string.Admin]), getUsersLiveBetGames);
 
   app.get('/api/get-bets-afterWin/:marketId', validateBetsAfterWin, customErrorHandler, authorize([string.Admin]), getBetsAfterWin);
+
+  app.get('/api/get-bet-markets-afterWin', authorize([string.Admin]), getBetMarketsAfterWin);
 
 };
 
