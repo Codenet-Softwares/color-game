@@ -51,7 +51,7 @@ export const voidMarket = async (req, res) => {
 
           for (const order of orders) {
             await BetHistory.create({
-              betId: uuidv4(),
+              betId: order.betId,
               userId: order.userId,
               userName: order.userName,
               gameId: order.gameId,
