@@ -198,6 +198,45 @@ DeleteMarket(user, userId,  marketId, runnerId, betId) {
   });
 }
 
+betHistory(user,page,pageSize,search){
+return axios({
+  method:"GET",
+  url:`${API_HOST}/api/get-bet-markets-afterWin?page=${page}&pageSize=${pageSize}&search=${search}`,
+  headers:{
+    Authorization:`Bearer ${user.token}`,
+  },
+});
+}
+
+winBetHistory(user, marketId, page, pageSize, search){
+return axios({
+  method:"GET",
+  url: `${API_HOST}/api/get-bets-afterWin/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
+  headers:{
+    Authorization:`Bearer ${user.token}`,
+  },
+});
+}
+
+trashLiveBetHistory(user,page, pageSize,search){
+return axios({
+  method:"GET",
+  url:`${API_HOST}/api/get-market?page=${page}&pageSize=${pageSize}&search=${search}`,
+  headers:{
+    Authorization:`Bearer ${user.token}`,
+  },
+});
+}
+
+getBetTrash(user, marketId, page, pageSize) {
+  return axios({
+    method: "GET",
+    url: `${API_HOST}/api/get-bet-trash/${marketId}?page=${page}&pageSize=${pageSize}`,
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  });
+}
 }
 
 export default new GameService();

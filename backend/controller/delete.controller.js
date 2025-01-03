@@ -9,10 +9,12 @@ import userSchema from "../models/user.model.js";
 import BetHistory from "../models/betHistory.model.js";
 import { Op, Sequelize } from 'sequelize';
 import axios from "axios";
+import ProfitLoss from "../models/profitLoss.js";
 // import ProfitLoss from "../models/profitLoss.js";
 // import Market from "../models/market.model.js";
 // import Runner from "../models/runner.model.js";
 // import { PreviousState } from "../models/previousState.model.js";
+
 
 export const deleteLiveBetMarkets = async (req, res) => {
     const transaction = await sequelize.transaction();
@@ -127,6 +129,87 @@ export const deleteLiveBetMarkets = async (req, res) => {
         await transaction.rollback();
         console.error("Error deleting live bet markets:", error);
         return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+    }
+};
+
+export const deleteBetMarkets = async (req, res) => {
+    const transaction = await sequelize.transaction();
+    try {
+        const { marketId, runnerId, userId, betId } = req.body;
+
+        const getMarket = await BetHistory.findOne({ where: { marketId, runnerId, userId, betId } });
+        if (!getMarket) {
+            return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market not found"))
+        }
+
+        await MarketTrash.create({
+            trashMarkets: [getMarket.dataValues],
+            trashMarketId: uuidv4(),
+        }, { transaction });
+
+        await getMarket.destroy({ transaction });
+
+        const remainingMarket = await BetHistory.findAll({
+            where: {
+                marketId,
+                [Op.or]: [
+                    { runnerId: runnerId },
+                    { betId: { [Op.ne]: betId } }
+                ]
+            },
+            transaction
+        });
+
+        if (remainingMarket.length > 0) {
+            let totalRunnerBalance = 0;
+            remainingMarket.map((market) => {
+                const runnerKey = market.runnerId;
+                let runnerBalance = 0;
+
+                if (market.type === "back") {
+                    if (String(runnerKey) === String(getMarket.runnerId)) {
+                        runnerBalance += Number(market.bidAmount);
+                    } else {
+                        runnerBalance -= Number(market.value);
+                    }
+                } else if (market.type === "lay") {
+                    if (String(runnerKey) === String(getMarket.runnerId)) {
+                        runnerBalance -= Number(market.bidAmount);
+                    } else {
+                        runnerBalance += Number(market.value);
+                    }
+                }
+
+                // totalRunnerBalance += runnerBalance;
+              
+            });
+
+            
+
+            // await user.update({
+            //     marketListExposure: user.marketListExposure,
+            //     balance: user.balance,
+            // }, { transaction });
+        }
+
+
+        // const getProfitLoss = await ProfitLoss.findOne({ where: { marketId, runnerId, userId } });
+        // await getProfitLoss.destroy({ transaction })
+
+        await transaction.commit();
+        return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
+
+    } catch (error) {
+        res
+            .status(statusCode.internalServerError)
+            .send(
+                apiResponseErr(
+                    null,
+                    false,
+                    statusCode.internalServerError,
+                    error.message,
+                )
+            );
     }
 };
 
@@ -320,6 +403,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
 //         );
 //     }
 // };
+
 
 export const getMarket = async (req, res) => {
   try {
