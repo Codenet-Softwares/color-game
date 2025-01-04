@@ -566,3 +566,46 @@ export const getTrashMarketDetails = async (req, res) => {
       );
   }
 };
+
+export const deleteMarketTrash = async (req, res) => {
+  try {
+    const {trashMarketId} = req.params
+    const trashData = await MarketTrash.findOne({where: {trashMarketId} });
+
+    if (!trashData) {
+      return res
+      .status(statusCode.badRequest)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.badRequest,
+          'Market trash data not found'
+        )
+      ); 
+    }
+    await MarketTrash.destroy({ where: { trashMarketId } });
+    return res
+    .status(statusCode.success)
+    .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          'Market trash data deleted successfully'
+        )
+      );
+    
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+}
