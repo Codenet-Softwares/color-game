@@ -495,7 +495,7 @@ export const getTrashMarketDetails = async (req, res) => {
 
     const { marketId } = req.params;
     const marketData = await MarketTrash.findAll({
-      attributes: ["trashMarkets"],
+      attributes: ["trashMarkets","trashMarketId"],
       where: Sequelize.where(
         Sequelize.fn(
           "JSON_CONTAINS",
@@ -516,6 +516,7 @@ export const getTrashMarketDetails = async (req, res) => {
         return parsedMarkets
           .filter((data) => data.marketId === marketId)
           .map((data) => ({
+           trashMarketId: item.trashMarketId, 
             marketName: data.marketName,
             marketId: data.marketId,
             runnerName: data.runnerName,
