@@ -237,7 +237,32 @@ getBetTrash(user, marketId, page, pageSize) {
     },
   });
 }
+// DeleteMarket(user, userId,  marketId, runnerId, betId) {
+//   return axios({
+//     method: "DELETE",
+//     url: `${API_HOST}/api/delete-markets`,
+//     data: {
+//       marketId: marketId,
+//       runnerId: runnerId,
+//       userId: userId,
+//       betId: betId,
+//     },
+//     headers: {
+//       Authorization: `Bearer ${user.token}`,
+//     },
+//   });
+// }
+deleteTrashMarket(user, trashMarketId) {
+  return axios({
+    method: "DELETE",
+    url: `${API_HOST}/api/delete-market-trash/${trashMarketId}`,
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+  });
+}
+
+
 }
 
 export default new GameService();
-

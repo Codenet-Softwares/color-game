@@ -10,12 +10,12 @@ const DeleteBetHistory = () => {
   const auth = useAuth();
   const [selectedMarketName, setSelectedMarketName] = useState("");
   const [selectedOption, setSelectedOption] = useState("");
+  const [selectedMarketDetails, setSelectedMarketDetails] = useState([]);
   const [marketHistory, setMarketHistory] = useState({
     markets: [],
     search: "",
   });
-  
-  const [selectedMarketDetails, setSelectedMarketDetails] = useState([]);
+
 
   const fetchMarketHistory = async () => {
     try {
@@ -34,7 +34,28 @@ const DeleteBetHistory = () => {
       toast.error("Failed to fetch market history");
     }
   };
-
+  const deleteMarketTrash = async (trashMarketId) => {
+    try {
+      const response = await GameService.deleteTrashMarket(
+        auth.user,
+        trashMarketId
+      );
+      if (response.data.success) {
+        toast.success(response.data.message);
+        const updatedDetails = selectedMarketDetails.filter(
+          (detail) => detail.trashMarketId !== trashMarketId
+        );
+        setSelectedMarketDetails(updatedDetails);
+        fetchMarketHistory();
+      } else {
+        toast.error("Failed to delete market trash");
+      }
+    } catch (error) {
+      toast.error("Error deleting market trash");
+    }
+  };
+  
+  
   useEffect(() => {
     fetchMarketHistory();
   }, [marketHistory.search]);
@@ -50,7 +71,7 @@ const DeleteBetHistory = () => {
       );
       if (response.data.success) {
         setSelectedMarketDetails(response.data.data || []);
-        
+
       } else {
         toast.error("Failed to fetch market details");
       }
@@ -62,16 +83,17 @@ const DeleteBetHistory = () => {
   const handleDropdownChange = (e) => {
     const marketId = e.target.value;
     setSelectedOption(marketId);
-  
+
     const selectedMarket = marketHistory.markets.find(
       (market) => market.marketId === marketId
     );
     setSelectedMarketName(selectedMarket ? selectedMarket.marketName : "");
-  
+
     if (marketId) {
       fetchMarketDetails(marketId);
     }
   };
+
 
   return (
     <div className="container mt-5">
@@ -115,11 +137,11 @@ const DeleteBetHistory = () => {
           </div>
         </div>
       </div>
-      <GetBetTrash selectedMarketDetails={selectedMarketDetails} 
-            marketName={selectedMarketName}
+      <GetBetTrash selectedMarketDetails={selectedMarketDetails}
+        marketName={selectedMarketName}
+        deleteMarketTrash={deleteMarketTrash}
+        />
 
-      />
-      
     </div>
   );
 };
