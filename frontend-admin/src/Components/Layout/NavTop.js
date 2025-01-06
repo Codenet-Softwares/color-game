@@ -57,7 +57,7 @@ const NavTop = () => {
                 <i className="ti-menu"></i>
               </div>
               <div className="line_icon open_miniSide d-none d-lg-block">
-                <img src="../../../../../../img/line_img.png" alt="" />
+                {/* <img src="../../../../../../img/line_img.png" alt="" /> */}
               </div>
 
               <div className="header_right d-flex justify-content-between align-items-center">

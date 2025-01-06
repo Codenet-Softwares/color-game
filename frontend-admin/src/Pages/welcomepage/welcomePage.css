@@ -13,16 +13,20 @@ html, body {
 .WelcomePage {
   text-align: center;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(to right, #4366da, #feb47b);
-  color: white;
+  background: linear-gradient(to bottom right, #FC1AAA, #0EBBA7);
+  color: black;
   padding: 20px;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  /* min-height: 100vh; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
+  /* justify-content: center; */
 }
-
+.welcome-img{
+  height: 500px;
+  width: 500px;
+  border-radius: 50%;
+}
 .App-header {
   margin-bottom: 20px;
 }

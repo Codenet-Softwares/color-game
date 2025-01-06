@@ -3514,11 +3514,11 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   position: relative;
   border-radius: 0px;
   margin: 0;
-  background: #F6F7FB;
+  /* background: #F6F7FB; */
   border-radius: 0;
   margin: 0;
   border-radius: 0px;
-  border-bottom: 2px solid #E8E8E8;
+  /* border-bottom: 2px solid #E8E8E8; */
 }
 
 /* line 29, G:/admin_project/8 admin/management_html/scss/_header.scss */
@@ -4248,7 +4248,7 @@ table.dataTable {
 
 /************ sidebar css here ************/
 /* line 2, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar {
+/* .sidebar {
   height: 100vh;
   left: 0;
   top: 0;
@@ -4262,15 +4262,109 @@ table.dataTable {
   background: #FFFFFF;
   box-shadow: 0 12px 30px rgba(80, 143, 244, 0.1);
   transition: .3s;
+} */
+/* Add this to your styles.css or similar file */
+
+@import url("https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Dosis", sans-serif;
 }
 
-/* line 18, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar .small_logo {
-  display: none;
+.nav {
+  border-radius: 15px;
+  position: fixed;
+  inset: 75px 0px 20px 20px;
+  width: 100px;
+  min-height: 500px;
+  background:#10B9A7;
+  transition: 0.5s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.nav.open {
+  width: 300px;
+  box-shadow: none;
+}
+
+.nav ul {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  /* margin-bottom: 465px; */
+}
+
+.nav ul li {
+  list-style: none;
+  position: relative;
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0 10px;
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.nav ul li.active {
+  transform: translateX(30px);
+}
+
+.nav ul li a {
+  text-decoration: none;
+  position: relative;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.nav ul li a .icon {
+  position: relative;
+  display: block;
+  min-width: 55px;
+  height: 55px;
+  /* line-height: 60px; */
+  border-radius: 10px;
+  color: #fff;
+  transition: 0.5s;
+}
+
+.nav ul li.active a .icon {
+  color: #009efd;
+  background: var(--color);
+}
+
+.nav ul li a .text {
+  position: relative;
+  padding: 0 15px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  color: #009efd;
+  opacity: 0;
+  visibility: hidden;
+  transition: 0.5s;
+}
+
+.nav.open ul li a .text {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav ul li.active a .text {
+  color: var(--color);
+}
+
 
 @media only screen and (min-width: 992px) and (max-width: 1200px) {
-  /* line 21, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
   .sidebar.hide_vertical_menu {
     left: -20%;
   }
@@ -5177,14 +5271,14 @@ body::-webkit-scrollbar {
 /******** main content css here *********/
 /* line 2, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .main_content {
-  padding-left: 270px;
+  padding-left:150px;
   width: 100%;
   padding-top: 0px !important;
   transition: .5s;
-  position: relative;
-  min-height: 100vh;
-  padding-bottom: 70px;
-  overflow: hidden;
+  /* position: relative; */
+  /* min-height: 100vh; */
+  /* padding-bottom: 70px; */
+  /* overflow: hidden; */
 }
 
 /* line 13, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
