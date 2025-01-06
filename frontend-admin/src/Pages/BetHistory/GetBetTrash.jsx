@@ -1,8 +1,14 @@
 import React, { useState } from "react";
+// import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Pagination from "../../Components/Pagination";
-
-const GetBetTrash = ({ selectedMarketDetails, marketName }) => {
+import GameService from "../../Services/GameService";
+import { toast } from "react-toastify";
+import { useAuth } from "../../Utils/Auth";
+const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) => {
+  const auth = useAuth();
+  // const { trashMarketId } = useParams();
+  // console.log("trashMarketId   Market Trash Id ", trashMarketId)
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalEntries: 10,
@@ -22,6 +28,9 @@ const GetBetTrash = ({ selectedMarketDetails, marketName }) => {
       totalEntries: parseInt(e.target.value, 10),
     });
   };
+  const handleDelete = async (trashMarketId) => {
+    deleteMarketTrash(trashMarketId);
+  };
 
   const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
   const endIndex = Math.min(
@@ -39,7 +48,7 @@ const GetBetTrash = ({ selectedMarketDetails, marketName }) => {
         <h5 className="fw-bold p-3 mt-1 mb-0">Deleted Market Details:</h5>
         <h4
           className="fw-bolder text-decoration-underline mb-0 ms-2"
-          style={{ color: "#000", textShadow:"0 0 10px green, 0 0 15px yellow, 0 0 20px #9601FB" }}
+          style={{ color: "#000", textShadow: "0 0 10px green, 0 0 15px yellow, 0 0 20px #9601FB" }}
         >
           {marketName || "N/A"}
         </h4>
@@ -70,6 +79,7 @@ const GetBetTrash = ({ selectedMarketDetails, marketName }) => {
               <th>Type</th>
               <th>Bid Amount</th>
               <th>Value</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -80,15 +90,23 @@ const GetBetTrash = ({ selectedMarketDetails, marketName }) => {
                   <td>{detail.runnerName}</td>
                   <td>{detail.userName}</td>
                   <td>{detail.rate}</td>
-                  <td>{detail.type}</td>
                   <td
-                    className={`text-uppercase fw-bold ${
-                      detail.type === "back" ? "text-success" : "text-danger"
-                    }`}
+                    className={`text-uppercase fw-bold ${detail.type === "back" ? "text-success" : "text-danger"
+                      }`}
                   >
                     {detail.type}
                   </td>
+                  <td>{detail.bidAmount}</td>
                   <td>{detail.value}</td>
+                  <td>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(detail.trashMarketId)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+
                 </tr>
               ))
             ) : (

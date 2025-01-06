@@ -12,6 +12,7 @@ import { getLotteryRange } from "../../utils/getInitiateState";
 import moment from "moment";
 import CountDownTimerLottery from "../common/CountTimerLottery";
 import { useParams } from "react-router-dom";
+import { FixedSizeGrid as Grid } from "react-window";
 
 const LotteryNewPage = ({ drawId }) => {
   console.log("====>>>> line number 10", drawId);
@@ -44,15 +45,7 @@ const LotteryNewPage = ({ drawId }) => {
   const [setIsTimeUp, setSetIsTimeUp] = useState(false);
   const [isSuspend, setIsSuspend] = useState(false);
   const [priceEach, setPriceEach] = useState("");
-  console.log("===>> marketName", lotteryRange);
-
-  // useEffect(() => {
-  //   if (setIsTimeUp) {
-  //     setIsSuspend(true);
-  //   } else {
-  //     setIsSuspend(false);
-  //   }
-  // }, [setIsTimeUp]);
+  console.log("===>> marketName", marketName);
 
   useEffect(() => {
     if (startTime) {
@@ -91,9 +84,21 @@ const LotteryNewPage = ({ drawId }) => {
             });
 
             // Update the filtered values based on the new market range
-            setFilteredNumbers(generateNumbers(currentMarket.number_start, currentMarket.number_end));
-            setFilteredGroups(generateGroups(currentMarket.group_start, currentMarket.group_end));
-            setFilteredSeries(generateSeries(currentMarket.series_start, currentMarket.series_end));
+            setFilteredNumbers(
+              generateNumbers(
+                currentMarket.number_start,
+                currentMarket.number_end
+              )
+            );
+            setFilteredGroups(
+              generateGroups(currentMarket.group_start, currentMarket.group_end)
+            );
+            setFilteredSeries(
+              generateSeries(
+                currentMarket.series_start,
+                currentMarket.series_end
+              )
+            );
 
             setPriceEach(currentMarket.price || "no price to show");
             setMarketName(currentMarket.marketName || "Unknown Market");
@@ -101,7 +106,7 @@ const LotteryNewPage = ({ drawId }) => {
             const start = moment.utc(currentMarket.start_time);
             const end = moment.utc(currentMarket.end_time);
             console.log("object============>>>>>>>>", start);
-            setIsSuspend(currentMarket.isActive)
+            setIsSuspend(currentMarket.isActive);
             setStartTime(
               moment.utc(currentMarket.start_time).format("YYYY-MM-DD HH:mm")
             );
@@ -301,23 +306,82 @@ const LotteryNewPage = ({ drawId }) => {
     setIsNumberPickerVisible(false);
   };
 
+  // const renderNumberGrid = () => {
+  //   return (
+  //     <div className="calendar-grid">
+  //       {filteredNumbers.length === 0 ? (
+  //         <div className="text-center">No Results</div>
+  //       ) : (
+  //         filteredNumbers.map((num) => (
+  //           <button
+  //             key={num}
+  //             className="calendar-cell"
+  //             onClick={() =>
+  //               handleNumberSelect(num.toString().padStart(5, "0"))
+  //             }
+  //           >
+  //             {num.toString().padStart(5, "0")}
+  //           </button>
+  //         ))
+  //       )}
+  //     </div>
+  //   );
+  // };
+
   const renderNumberGrid = () => {
+    const containerWidth = 320;
+    const columnCount = 3;
+    const rowHeight = 40;
+    const rowCount = Math.ceil(filteredNumbers.length / columnCount);
+
+    const Row = ({ columnIndex, rowIndex, style }) => {
+      const numIndex = rowIndex * columnCount + columnIndex;
+      if (numIndex >= filteredNumbers.length) return null;
+      const num = filteredNumbers[numIndex];
+      return (
+        <div
+          style={{
+            ...style,
+          }}
+          // className="m-1"
+        >
+          <button
+            style={{
+              width: "80%",
+              height: "90%",
+              padding: "10px",
+              backgroundColor: "#e6f7ff",
+              border: "none",
+              cursor: "pointer",
+              borderRadius: "5px",
+              textAlign: "center",
+              fontWeight: "bold",
+              color: "#4682B4",
+              transition: "background-color 0.3s ease",
+            }}
+            onClick={() => handleNumberSelect(num.toString().padStart(5, "0"))}
+          >
+            {num.toString().padStart(5, "0")}
+          </button>
+        </div>
+      );
+    };
+
     return (
-      <div className="calendar-grid">
+      <div className="">
         {filteredNumbers.length === 0 ? (
           <div className="text-center">No Results</div>
         ) : (
-          filteredNumbers.map((num) => (
-            <button
-              key={num}
-              className="calendar-cell"
-              onClick={() =>
-                handleNumberSelect(num.toString().padStart(5, "0"))
-              }
-            >
-              {num.toString().padStart(5, "0")}
-            </button>
-          ))
+          <Grid
+            columnCount={columnCount}
+            columnWidth={containerWidth / columnCount}
+            height={200}
+            rowCount={rowCount}
+            rowHeight={rowHeight}
+            width={containerWidth}
+          >
+            {Row}
+          </Grid>
         )}
       </div>
     );
@@ -336,6 +400,12 @@ const LotteryNewPage = ({ drawId }) => {
       const response = await SearchLotteryTicketUser(requestBody);
       setResponseData(response.data);
       setShowSearch(false);
+      // Reset all input fields after the API call
+      setGroup("");
+      setSeries("");
+      setNumber("");
+      setSem("");
+      setDrawId("");
     } catch (error) {
       console.error("Error:", error);
     }
@@ -434,9 +504,7 @@ const LotteryNewPage = ({ drawId }) => {
                 Search by Sem, Group, Series, or Number
               </p>
               {showCountdown && (
-                <CountDownTimerLottery
-                  endDateTime={endTimeForTimer}
-                />
+                <CountDownTimerLottery endDateTime={endTimeForTimer} />
               )}
             </div>
 
@@ -502,9 +570,7 @@ const LotteryNewPage = ({ drawId }) => {
                   onFocus={() => handleFocus("number")}
                   onChange={handleNumberInputChange}
                 />
-                {isNumberPickerVisible && (
-                  <div className="picker-dropdown">{renderNumberGrid()}</div>
-                )}
+                {isNumberPickerVisible && <div>{renderNumberGrid()}</div>}
               </div>
             </div>
 
@@ -523,7 +589,11 @@ const LotteryNewPage = ({ drawId }) => {
             </div>
           </>
         ) : (
-          <SearchLotteryResult responseData={responseData} marketId={drawId} />
+          <SearchLotteryResult
+            responseData={responseData}
+            marketId={drawId}
+            setShowSearch={setShowSearch}
+          />
         )}
       </div>
     </div>
