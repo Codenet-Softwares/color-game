@@ -275,8 +275,8 @@ export const getMarkets = async (req, res) => {
 
 export const updateBalance = async (req, res) => {
   try {
-    const { userId, prizeAmount, marketId } = req.body;
-    console.log("Received userId:", userId, "Received prizeAmount:", prizeAmount, "Received marketId:", marketId);
+    const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
+    console.log("Received userId:", userId, "Received prizeAmount:", prizeAmount, "Received marketId:", marketId , lotteryPrice);
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
@@ -284,18 +284,26 @@ export const updateBalance = async (req, res) => {
     }
 
     let totalBalanceUpdate = prizeAmount;
-    let exposureValue = 0; 
+    let exposureValue = 0;
 
     if (user.marketListExposure) {
-      const marketExposure = user.marketListExposure.find(exposure => exposure[marketId]);
-      if (marketExposure) {
-        exposureValue = marketExposure[marketId];
-        totalBalanceUpdate += exposureValue;
-        console.log(`Market exposure found for ${marketId}:`, exposureValue);
+      const updatedExposure = user.marketListExposure.map(exposure => {
+        if (exposure[marketId]) {
+          exposureValue = exposure[marketId];
+          const newExposureValue = exposureValue - lotteryPrice;
 
-        user.marketListExposure = user.marketListExposure.filter(exposure => !exposure[marketId]);
-      }
+          if (newExposureValue > 0) {
+            return { [marketId]: newExposureValue };
+          }
+          return null; 
+        }
+        return exposure;
+      }).filter(exposure => exposure !== null);
+
+      user.marketListExposure = updatedExposure;
+      totalBalanceUpdate += lotteryPrice;
     }
+
 
     user.balance += totalBalanceUpdate;
 
