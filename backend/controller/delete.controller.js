@@ -495,7 +495,7 @@ export const getTrashMarketDetails = async (req, res) => {
 
     const { marketId } = req.params;
     const marketData = await MarketTrash.findAll({
-      attributes: ["trashMarkets"],
+      attributes: ["trashMarkets","trashMarketId"],
       where: Sequelize.where(
         Sequelize.fn(
           "JSON_CONTAINS",
@@ -516,6 +516,7 @@ export const getTrashMarketDetails = async (req, res) => {
         return parsedMarkets
           .filter((data) => data.marketId === marketId)
           .map((data) => ({
+           trashMarketId: item.trashMarketId, 
             marketName: data.marketName,
             marketId: data.marketId,
             runnerName: data.runnerName,
@@ -566,3 +567,46 @@ export const getTrashMarketDetails = async (req, res) => {
       );
   }
 };
+
+export const deleteMarketTrash = async (req, res) => {
+  try {
+    const {trashMarketId} = req.params
+    const trashData = await MarketTrash.findOne({where: {trashMarketId} });
+
+    if (!trashData) {
+      return res
+      .status(statusCode.badRequest)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.badRequest,
+          'Market trash data not found'
+        )
+      ); 
+    }
+    await MarketTrash.destroy({ where: { trashMarketId } });
+    return res
+    .status(statusCode.success)
+    .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          'Market trash data deleted successfully'
+        )
+      );
+    
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+}
