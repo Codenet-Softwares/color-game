@@ -287,23 +287,13 @@ export const updateBalance = async (req, res) => {
     let exposureValue = 0;
 
     if (user.marketListExposure) {
-      const updatedExposure = user.marketListExposure.map(exposure => {
-        if (exposure[marketId]) {
-          exposureValue = exposure[marketId];
-          const newExposureValue = exposureValue - lotteryPrice;
-
-          if (newExposureValue > 0) {
-            return { [marketId]: newExposureValue };
-          }
-          return null; 
-        }
-        return exposure;
-      }).filter(exposure => exposure !== null);
-
-      user.marketListExposure = updatedExposure;
-      totalBalanceUpdate += lotteryPrice;
+      const marketExposure = user.marketListExposure.find(exposure => exposure[marketId]);
+      if (marketExposure) {
+        exposureValue = marketExposure[marketId];
+        totalBalanceUpdate += lotteryPrice;
+        user.marketListExposure = user.marketListExposure.filter(exposure => !exposure[marketId]);
+      }
     }
-
 
     user.balance += totalBalanceUpdate;
 
@@ -458,9 +448,9 @@ export const getLotteryBetHistory = async (req, res) => {
       page,
       limit,
     };
-    const response = await axios.post(`${baseURL}/api/lottery-external-bet-history`, 
-      {userId },
-      {params},
+    const response = await axios.post(`${baseURL}/api/lottery-external-bet-history`,
+      { userId },
+      { params },
     );
 
     if (!response.data.success) {
@@ -512,7 +502,7 @@ export const dateWiseMarkets = async (req, res) => {
 export const getAllMarket = async (req, res) => {
   try {
     const token = jwt.sign(
-      { roles: req.user.roles, userId: req.user.userId }, 
+      { roles: req.user.roles, userId: req.user.userId },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "1h" }
     );
