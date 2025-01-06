@@ -275,8 +275,8 @@ export const getMarkets = async (req, res) => {
 
 export const updateBalance = async (req, res) => {
   try {
-    const { userId, prizeAmount, marketId } = req.body;
-    console.log("Received userId:", userId, "Received prizeAmount:", prizeAmount, "Received marketId:", marketId);
+    const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
+    console.log("Received userId:", userId, "Received prizeAmount:", prizeAmount, "Received marketId:", marketId , lotteryPrice);
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
@@ -284,15 +284,13 @@ export const updateBalance = async (req, res) => {
     }
 
     let totalBalanceUpdate = prizeAmount;
-    let exposureValue = 0; 
+    let exposureValue = 0;
 
     if (user.marketListExposure) {
       const marketExposure = user.marketListExposure.find(exposure => exposure[marketId]);
       if (marketExposure) {
         exposureValue = marketExposure[marketId];
-        totalBalanceUpdate += exposureValue;
-        console.log(`Market exposure found for ${marketId}:`, exposureValue);
-
+        totalBalanceUpdate += lotteryPrice;
         user.marketListExposure = user.marketListExposure.filter(exposure => !exposure[marketId]);
       }
     }
@@ -450,9 +448,9 @@ export const getLotteryBetHistory = async (req, res) => {
       page,
       limit,
     };
-    const response = await axios.post(`${baseURL}/api/lottery-external-bet-history`, 
-      {userId },
-      {params},
+    const response = await axios.post(`${baseURL}/api/lottery-external-bet-history`,
+      { userId },
+      { params },
     );
 
     if (!response.data.success) {
@@ -504,7 +502,7 @@ export const dateWiseMarkets = async (req, res) => {
 export const getAllMarket = async (req, res) => {
   try {
     const token = jwt.sign(
-      { roles: req.user.roles, userId: req.user.userId }, 
+      { roles: req.user.roles, userId: req.user.userId },
       process.env.JWT_SECRET_KEY,
       { expiresIn: "1h" }
     );
