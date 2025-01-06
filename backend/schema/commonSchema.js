@@ -703,6 +703,7 @@ export const validateDeleteLiveMarket= [
   body('price')
     .notEmpty().withMessage('price is required')
 
+]
 
 export const validateTrashMarketId = [
   param("marketId")
