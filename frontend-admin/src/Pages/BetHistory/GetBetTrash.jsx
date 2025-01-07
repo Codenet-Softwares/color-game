@@ -77,8 +77,7 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
               <th>User Name</th>
               <th>Rate</th>
               <th>Type</th>
-              <th>Bid Amount</th>
-              <th>Value</th>
+              <th>Stake</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -96,8 +95,8 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
                   >
                     {detail.type}
                   </td>
-                  <td>{detail.bidAmount}</td>
-                  <td>{detail.value}</td>
+                  <td>{Math.round(detail.value)}({Math.round(detail.bidAmount)})</td>
+
                   <td>
                     <button
                       className="btn btn-danger"
