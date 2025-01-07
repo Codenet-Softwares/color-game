@@ -73,10 +73,20 @@ export const voidMarket = async (req, res) => {
             });
           }
 
+          const marketExposure = user.marketListExposure;
+
+          let totalExposure = 0;
+          marketExposure.forEach(market => {
+            const exposure = Object.values(market)[0];
+            totalExposure += exposure;
+          });
+
+          console.log("totalExposure...12012", totalExposure)
+
           const dataToSend = {
             amount: userDetails.balance,
             userId: userDetails.userId,
-            exposure: marketExposureValue
+            exposure: totalExposure
           };
           const baseURL = process.env.WHITE_LABEL_URL
 

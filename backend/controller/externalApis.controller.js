@@ -1002,10 +1002,20 @@ export const getVoidMarket = async (req, res) => {
           (item) => Object.keys(item)[0] !== marketId
         );
 
+        const marketExposure = user.marketListExposure;
+
+        let totalExposure = 0;
+        marketExposure.forEach(market => {
+          const exposure = Object.values(market)[0];
+          totalExposure += exposure;
+        });
+
+        console.log("totalExposure...66", totalExposure)
+
         const dataToSend = {
           amount: user.balance,
           userId: user.userId,
-          exposure: totalExposureValue,
+          exposure: totalExposure,
         };
         const baseURL = process.env.WHITE_LABEL_URL;
         const response = await axios.post(
@@ -1134,13 +1144,23 @@ export const getRevokeMarket = async (req, res) => {
       const newExposure = { [marketId]: Number(userProfitLoss.price) };
       user.marketListExposure = [...(user.marketListExposure || []), newExposure];
 
+      const marketExposure = user.marketListExposure;
+
+      let totalExposure = 0;
+      marketExposure.forEach(market => {
+        const exposure = Object.values(market)[0];
+        totalExposure += exposure;
+      });
+
+      console.log("totalExposure...777", totalExposure)
+
       const dataToSend = {
         amount: user.balance,
         userId: user.userId,
-        exposure:userProfitLoss.price,
+        exposure: totalExposure,
       };
 
-      console.log("testing.....",dataToSend)
+      console.log("testing.....", dataToSend)
       const baseURL = process.env.WHITE_LABEL_URL;
       const response = await axios.post(
         `${baseURL}/api/admin/extrnal/balance-update`,
@@ -1267,10 +1287,20 @@ export const getDeleteLiveMarket = async (req, res) => {
       await user.update({ balance: user.balance, marketListExposure: user.marketListExposure }, { transaction: t });
     }
 
+    const marketExposureList = user.marketListExposure;
+
+    let totalExposure = 0;
+    marketExposureList.forEach(market => {
+      const exposure = Object.values(market)[0];
+      totalExposure += exposure;
+    });
+
+    console.log("totalExposure...888", totalExposure)
+    
     const dataToSend = {
       amount: user.balance,
       userId: user.userId,
-      exposure: exposureValue - totalExposureValue,
+      exposure: totalExposure,
     };
     const baseURL = process.env.WHITE_LABEL_URL;
     const response = await axios.post(

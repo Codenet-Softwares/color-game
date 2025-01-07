@@ -62,12 +62,19 @@ export const purchaseLottery = async (req, res) => {
 
     const user = await userSchema.findOne({ where: { userId }, transaction: t });
     user.balance -= lotteryPrice;
-    let updatedMarketListExposure = marketListExposure.map(exposure => {
-      if (exposure.hasOwnProperty(marketId)) {
-        exposure[marketId] += lotteryPrice;
-      }
-      return exposure;
-    });
+    let updatedMarketListExposure;
+
+    if (!marketListExposure || marketListExposure.length === 0) {
+      updatedMarketListExposure = [{ [marketId]: lotteryPrice }];
+    } else {
+      updatedMarketListExposure = marketListExposure.map(exposure => {
+        if (exposure.hasOwnProperty(marketId)) {
+          exposure[marketId] += lotteryPrice;
+        }
+        return exposure;
+      });
+    }
+    
 
     if (!updatedMarketListExposure.some(exposure => exposure.hasOwnProperty(marketId))) {
       const newExposure = { [marketId]: lotteryPrice };
@@ -76,6 +83,16 @@ export const purchaseLottery = async (req, res) => {
 
     user.marketListExposure = updatedMarketListExposure;
     await user.save({ fields: ["balance", "marketListExposure"], transaction: t });
+
+    const marketExposure = user.marketListExposure;
+
+    let totalExposure = 0;
+    marketExposure.forEach(market => {
+      const exposure = Object.values(market)[0];
+      totalExposure += exposure;
+    });
+
+    console.log("totalExposure...999", totalExposure)
 
     const [rs1, rs2] = await Promise.all([
       axios.post(
@@ -88,7 +105,7 @@ export const purchaseLottery = async (req, res) => {
       axios.post(`${whiteLabelUrl}/api/admin/extrnal/balance-update`, {
         userId,
         amount: balance - lotteryPrice,
-        exposure: lotteryPrice
+        exposure: totalExposure
       }),
     ]);
 
@@ -105,7 +122,7 @@ export const purchaseLottery = async (req, res) => {
   } catch (error) {
     await t.rollback();
 
-    console.error("Error:", error.response);
+    console.error("Error:", error);
     if (error.response) {
       return res.status(error.response.status).send(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
     } else {
@@ -297,10 +314,20 @@ export const updateBalance = async (req, res) => {
 
     user.balance += totalBalanceUpdate;
 
+    const marketExposure = user.marketListExposure;
+
+    let totalExposure = 0;
+    marketExposure.forEach(market => {
+      const exposure = Object.values(market)[0];
+      totalExposure += exposure;
+    });
+
+    console.log("totalExposure...1010", totalExposure)
+
     const dataToSend = {
       amount: user.balance,
       userId,
-      exposure: exposureValue
+      exposure: totalExposure
     };
     const baseURL = process.env.WHITE_LABEL_URL;
     const { data: response } = await axios.post(

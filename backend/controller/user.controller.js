@@ -745,8 +745,6 @@ export const filterMarketData = async (req, res) => {
       ],
     });
 
-    console.log("Market Data Rows:", marketDataRows);
-
     const markets = await Market.findOne({
       where: { marketId },
     });
@@ -1040,10 +1038,21 @@ export const createBid = async (req, res) => {
       await user.save();
     }
 
+    const marketExposure = user.marketListExposure;
+
+    let totalExposure = 0;
+    marketExposure.forEach(market => {
+      const exposure = Object.values(market)[0];
+      totalExposure += exposure;
+    });
+
+    console.log("totalExposure...11011", totalExposure)
+
+
     const dataToSend = {
       amount: user.balance,
       userId: userId,
-      exposure: exposure,
+      exposure: totalExposure,
     };
     const baseURL = process.env.WHITE_LABEL_URL;
     const response = await axios.post(
