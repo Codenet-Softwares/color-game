@@ -48,10 +48,19 @@ export const deleteLiveBetMarkets = async (req, res) => {
             return true;
         });
 
+        const marketExposure = user.marketListExposure;
+
+        let totalExposure = 0;
+        marketExposure.forEach(market => {
+          const exposure = Object.values(market)[0];
+          totalExposure += exposure;
+        });
+        console.log("totalExposure...44", totalExposure)
+    
         const dataToSend = {
-            amount: user.balance,
-            userId: userId,
-            exposure: updatedExposure
+          amount: user.balance,
+          userId: userId,
+          exposure: totalExposure
         };
 
         const baseURL = process.env.WHITE_LABEL_URL;
@@ -75,6 +84,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
             },
             transaction
         });
+        console.log("remainingMarket",remainingMarket)
 
         if (remainingMarket.length > 0) {
             let totalRunnerBalance = 0;
@@ -96,12 +106,17 @@ export const deleteLiveBetMarkets = async (req, res) => {
                     }
                 }
 
+              console.log("totalRunnerBalance",totalRunnerBalance)
+
                 totalRunnerBalance += runnerBalance;
                 user.balance += runnerBalance;
+
+              console.log("totalRunnerBalance ... 1",totalRunnerBalance += runnerBalance)
+
             });
 
             const updatedExposure = { [marketId]: Math.abs(totalRunnerBalance) };
-
+            console.log("updatedExposure",updatedExposure)
             user.marketListExposure = [updatedExposure];
 
             await user.update({
@@ -109,10 +124,20 @@ export const deleteLiveBetMarkets = async (req, res) => {
                 balance: user.balance,
             }, { transaction });
 
+            const marketExposure = user.marketListExposure;
+
+            let totalExposure = 0;
+            marketExposure.forEach(market => {
+              const exposure = Object.values(market)[0];
+              totalExposure += exposure;
+            });
+      
+            console.log("totalExposure...55", totalExposure)
+      
             const dataToSend = {
-                amount: user.balance,
-                userId: userId,
-                exposure: Math.abs(totalRunnerBalance)
+              amount: user.balance,
+              userId: userId,
+              exposure: totalExposure
             };
             const baseURL = process.env.WHITE_LABEL_URL;
             await axios.post(
@@ -132,86 +157,6 @@ export const deleteLiveBetMarkets = async (req, res) => {
     }
 };
 
-export const deleteBetMarkets = async (req, res) => {
-    const transaction = await sequelize.transaction();
-    try {
-        const { marketId, runnerId, userId, betId } = req.body;
-
-        const getMarket = await BetHistory.findOne({ where: { marketId, runnerId, userId, betId } });
-        if (!getMarket) {
-            return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market not found"))
-        }
-
-        await MarketTrash.create({
-            trashMarkets: [getMarket.dataValues],
-            trashMarketId: uuidv4(),
-        }, { transaction });
-
-        await getMarket.destroy({ transaction });
-
-        const remainingMarket = await BetHistory.findAll({
-            where: {
-                marketId,
-                [Op.or]: [
-                    { runnerId: runnerId },
-                    { betId: { [Op.ne]: betId } }
-                ]
-            },
-            transaction
-        });
-
-        if (remainingMarket.length > 0) {
-            let totalRunnerBalance = 0;
-            remainingMarket.map((market) => {
-                const runnerKey = market.runnerId;
-                let runnerBalance = 0;
-
-                if (market.type === "back") {
-                    if (String(runnerKey) === String(getMarket.runnerId)) {
-                        runnerBalance += Number(market.bidAmount);
-                    } else {
-                        runnerBalance -= Number(market.value);
-                    }
-                } else if (market.type === "lay") {
-                    if (String(runnerKey) === String(getMarket.runnerId)) {
-                        runnerBalance -= Number(market.bidAmount);
-                    } else {
-                        runnerBalance += Number(market.value);
-                    }
-                }
-
-                // totalRunnerBalance += runnerBalance;
-              
-            });
-
-            
-
-            // await user.update({
-            //     marketListExposure: user.marketListExposure,
-            //     balance: user.balance,
-            // }, { transaction });
-        }
-
-
-        // const getProfitLoss = await ProfitLoss.findOne({ where: { marketId, runnerId, userId } });
-        // await getProfitLoss.destroy({ transaction })
-
-        await transaction.commit();
-        return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
-
-    } catch (error) {
-        res
-            .status(statusCode.internalServerError)
-            .send(
-                apiResponseErr(
-                    null,
-                    false,
-                    statusCode.internalServerError,
-                    error.message,
-                )
-            );
-    }
-};
 
 // export const deleteAfterWinBetMarkets = async (req, res) => {
 //     const transaction = await sequelize.transaction();
