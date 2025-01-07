@@ -42,24 +42,27 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
   //   }
   // };
 
-
   const handleBuy = async () => {
     if (!responseData) return;
 
     const body = {
       generateId: responseData.generateId || "defaultId",
       lotteryPrice: responseData.price || "5.00",
-      marketId: marketId || "defaultMarketId", // Pass marketId to the body
+      marketId: marketId || "defaultMarketId",
     };
 
     try {
       setLoading(true);
-      const response = await PurhaseLotteryTicketUser(body); // Use updated body
+      const response = await PurhaseLotteryTicketUser(body);
+
       console.log("API response:", response);
       setPurchaseResponse(response);
-      setShowSearch(true);
-      
-      
+      // setShowSearch(true);
+
+      // Delay window reload by 2 seconds (2000 milliseconds)
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     } catch (error) {
       console.error("Error purchasing ticket:", error);
     } finally {
@@ -69,39 +72,42 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
 
   const handleBack = () => {
     setShowSearch(true);
-    // navigate(`/lottery/${marketId}`); 
+    // navigate(`/lottery/${marketId}`);
   };
 
   return (
-    <div className="text-center"  >
-       {/* Back Button */}
-       <div className="text-start ">
-          <button
-            className="btn btn-secondary"
-            onClick={handleBack} 
-            style={{
-              backgroundColor: "#6c757d",
-              padding: "10px 20px",
-              fontWeight: "bold",
-            }}
-          >
-            Back
-          </button>
-        </div>
+    <div className="text-center">
+      {/* Back Button */}
+      <div className="text-start ">
+        <button
+          className="btn btn-secondary"
+          onClick={handleBack}
+          style={{
+            backgroundColor: "#6c757d",
+            padding: "10px 20px",
+            fontWeight: "bold",
+          }}
+        >
+          Back
+        </button>
+      </div>
       <h4 style={{ color: "#4682B4", fontWeight: "bold" }}>Search Results:</h4>
       <div className="mt-3">
-        {responseData && responseData.tickets && responseData.tickets.length > 0 ? (
+        {responseData &&
+        responseData.tickets &&
+        responseData.tickets.length > 0 ? (
           <>
             <h5>Tickets:</h5>
             <div
               style={{
                 maxHeight: responseData.tickets.length > 8 ? "400px" : "auto",
                 overflowY: responseData.tickets.length > 8 ? "scroll" : "unset",
-                border: responseData.tickets.length > 8 ? "1px solid #ccc" : "none",
+                border:
+                  responseData.tickets.length > 8 ? "1px solid #ccc" : "none",
                 padding: "10px",
                 borderRadius: "4px",
-                 backgroundColor: "#B0B0B0",
-                //  border:"2px solid red" 
+                backgroundColor: "#B0B0B0",
+                //  border:"2px solid red"
               }}
             >
               <div
@@ -109,7 +115,7 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
                   display: "grid",
                   gridTemplateColumns: "repeat(2, 4fr)",
                   gap: "20px",
-                  // border:"2px solid red" 
+                  // border:"2px solid red"
                 }}
               >
                 {responseData.tickets.map((ticket, index) => {
@@ -117,33 +123,16 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
                   const lastFour = ticket.slice(-5);
                   return (
                     <div
-                    key={index}
-                    style={{
-                      background: "linear-gradient(135deg, #e6f7ff, #d4edff)",
-                      padding: "15px", // Increased padding to create proper space
-                      borderRadius: "12px",
-                      position: "relative",
-                      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                      color: "#3b6e91",
-                      border: "2px solid #3b6e91",
-                      // display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      clipPath:
-                        "polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)",
-                    }}
-                  >
-                    <div
+                      key={index}
                       style={{
                         background: "linear-gradient(135deg, #e6f7ff, #d4edff)",
-                        padding: "20px", // Increased padding here to ensure inner space
+                        padding: "15px", // Increased padding to create proper space
                         borderRadius: "12px",
                         position: "relative",
                         boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                         color: "#3b6e91",
                         border: "2px solid #3b6e91",
-                        display: "flex",
+                        // display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
                         alignItems: "center",
@@ -151,70 +140,89 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
                           "polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)",
                       }}
                     >
-                      {/* Left Vertical Numbers */}
                       <div
                         style={{
-                          writingMode: "vertical-rl",
-                          transform: "rotate(180deg)",
-                          fontWeight: "bold",
-                          fontSize: "1.5rem",
-                          color: "#4682B4",
-                          marginRight: "10px",
-                          // border:"2px solid red" 
+                          background:
+                            "linear-gradient(135deg, #e6f7ff, #d4edff)",
+                          padding: "20px", // Increased padding here to ensure inner space
+                          borderRadius: "12px",
+                          position: "relative",
+                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                          color: "#3b6e91",
+                          border: "2px solid #3b6e91",
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          clipPath:
+                            "polygon(10px 0, calc(100% - 10px) 0, 100% 10px, 100% calc(100% - 10px), calc(100% - 10px) 100%, 10px 100%, 0 calc(100% - 10px), 0 10px)",
                         }}
                       >
-                        {firstThree}
-                      </div>
-                      {/* Ticket Center Section */}
-                      <div
-                        style={{
-                          flexGrow: 1,
-                          textAlign: "center",
-                          borderLeft: "1px solid #ccc",
-                          borderRight: "1px solid #ccc",
-                          padding: "0 10px",
-                        }}
-                      >
+                        {/* Left Vertical Numbers */}
                         <div
                           style={{
+                            writingMode: "vertical-rl",
+                            transform: "rotate(180deg)",
+                            fontWeight: "bold",
                             fontSize: "1.5rem",
-                            fontWeight: "bold",
-                            marginBottom: "10px",
+                            color: "#4682B4",
+                            marginRight: "10px",
+                            // border:"2px solid red"
                           }}
                         >
-                          Ticket
+                          {firstThree}
                         </div>
+                        {/* Ticket Center Section */}
                         <div
                           style={{
-                            marginTop: "10px",
-                            fontSize: "1rem",
-                            fontWeight: "bold",
-                            color: "#3b6e91",
+                            flexGrow: 1,
+                            textAlign: "center",
+                            borderLeft: "1px solid #ccc",
+                            borderRight: "1px solid #ccc",
+                            padding: "0 10px",
                           }}
                         >
-                          {ticket}
+                          <div
+                            style={{
+                              fontSize: "1.5rem",
+                              fontWeight: "bold",
+                              marginBottom: "10px",
+                            }}
+                          >
+                            Ticket
+                          </div>
+                          <div
+                            style={{
+                              marginTop: "10px",
+                              fontSize: "1rem",
+                              fontWeight: "bold",
+                              color: "#3b6e91",
+                            }}
+                          >
+                            {ticket}
+                          </div>
+                        </div>
+                        {/* Right Vertical Numbers */}
+                        <div
+                          style={{
+                            writingMode: "vertical-rl",
+                            fontWeight: "bold",
+                            fontSize: "1.5rem",
+                            color: "#4682B4",
+                            marginLeft: "10px",
+                          }}
+                        >
+                          {lastFour}
                         </div>
                       </div>
-                      {/* Right Vertical Numbers */}
-                      <div
-                        style={{
-                          writingMode: "vertical-rl",
-                          fontWeight: "bold",
-                          fontSize: "1.5rem",
-                          color: "#4682B4",
-                          marginLeft: "10px",
-                        }}
-                      >
-                        {lastFour}
-                      </div>
-                    </div>
                     </div>
                   );
                 })}
               </div>
             </div>
             <h5>
-              Price: <span style={{ color: "#3b6e91" }}>₹{responseData.price}</span>
+              Price:{" "}
+              <span style={{ color: "#3b6e91" }}>₹{responseData.price}</span>
             </h5>
             <h5>
               SEM: <span style={{ color: "#3b6e91" }}>{responseData.sem}</span>
@@ -251,10 +259,7 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
         )}
       </div>
     </div>
-    
-      );
-    };
-  
-    
+  );
+};
 
 export default SearchLotteryResult;

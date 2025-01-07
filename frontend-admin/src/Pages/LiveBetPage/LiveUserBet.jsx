@@ -186,7 +186,7 @@ const LiveUserBet = () => {
                 <tr>
                   <th>Serial Number</th>
                   <th>User Name</th>
-                  <th>Market Name</th>
+                  <th>Runner Name</th>
                   <th>Odds</th>
                   <th>Type</th>
                   <th>Stake</th>
@@ -199,12 +199,12 @@ const LiveUserBet = () => {
                     <tr key={bet.id}>
                       <td>{startIndex + index}</td>
                       <td>{bet.userName}</td>
-                      <td>{bet.marketName}</td>
+                      <td>{bet.runnerName}</td>
                       <td>{bet.rate}</td>
                       <td className={`text-uppercase fw-bold ${bet.type === "back" ? "text-success" : "text-danger"}`}>
                         {bet.type}
                       </td>
-                      <td>{bet.bidAmount}</td>
+                      <td>{Math.round(bet.value)}({Math.round(bet.bidAmount)})</td>
                       <td>
                         <button
                           className="btn btn-danger"
