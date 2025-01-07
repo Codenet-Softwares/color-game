@@ -7,13 +7,13 @@ const WelcomePage = () => {
 console.log("auth",auth)
   return (
     <div>
-      <div className="WelcomePage">
-        <img src="../../../../../../img/welcome_img3.jpg" alt="" className="welcome-img"/>
-
+      {/* <div className="WelcomePage">
+        <header className="App-header">
           <h1 className="animated-header">Welcome to Color Game Application</h1>
           <p className="text-dark">
             Manage your transactions efficiently and effectively.
           </p>
+        </header>
         <section className="welcome-message">
           <h2>Welcome, {auth?.user?.userName}!</h2>
           <p>We're glad to have you back. Here’s what you can do today:</p>
@@ -42,7 +42,7 @@ console.log("auth",auth)
         <section className="cta">
           <button>Get Started</button>
         </section>
-      </div>
+      </div> */}
     </div>
   );
 };
