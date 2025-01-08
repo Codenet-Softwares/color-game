@@ -48,8 +48,8 @@ const NavTop = () => {
   };
 
   return (
-    <section className="main_content dashboard_part large_header_bg">
-      <div className="container-fluid g-0">
+    <section className="">
+      {/* <div className="container-fluid g-0">
         <div className="row">
           <div className="col-lg-12 p-0 ">
             <div className="header_iner d-flex justify-content-between align-items-center">
@@ -57,7 +57,6 @@ const NavTop = () => {
                 <i className="ti-menu"></i>
               </div>
               <div className="line_icon open_miniSide d-none d-lg-block">
-                <img src="../../../../../../img/line_img.png" alt="" />
               </div>
 
               <div className="header_right d-flex justify-content-between align-items-center">
@@ -66,7 +65,6 @@ const NavTop = () => {
                   <img src="../../../../../../img/client_img.png" alt="#" />
                   <div className="profile_info_iner">
                     <div className="profile_author_name">
-                      {/* <p>{auth.user.roles[0].role} </p> */}
                       <h5>{auth.user.userName}</h5>
                     </div>
                     <div className="profile_info_details">
@@ -80,8 +78,8 @@ const NavTop = () => {
             </div>
           </div>
         </div>
-      </div>
-      <Layout />
+      </div> */}
+      {/* <Layout /> */}
     </section>
   );
 };
