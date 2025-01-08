@@ -4,7 +4,7 @@ import AccountServices from "../../../Services/AccountServices";
 import { useAuth } from "../../../Utils/Auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { customErrorHandler } from '../../../Utils/helper.js'
+import { customErrorHandler } from "../../../Utils/helper.js";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
@@ -40,25 +40,25 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-background">
       <div className="login-box">
-        <h2 className="login-title">Log in</h2>
+        <h2 className="login-title text-uppercase">Log in</h2>
         <form>
           <input
             type="text"
             placeholder="Enter your Username"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            className="login-input"
+            className="login-input text-center"
           />
           <input
             type="password"
             placeholder="Enter Your Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="login-input"
+            className="login-input text-center"
           />
-          <button onClick={handleSubmit} className="login-button">
+          <button onClick={handleSubmit} className="login-button text-uppercase mt-4">
             Log in
           </button>
         </form>
@@ -68,3 +68,4 @@ const Login = () => {
 };
 
 export default Login;
+

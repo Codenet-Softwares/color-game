@@ -4,10 +4,18 @@
 /* small mobile :320px. */
 @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400&display=swap");
 /* line 1, G:/admin_project/8 admin/management_html/scss/_extends.scss */
-.CRM_dropdown.dropdown .dropdown-toggle:hover, .CRM_dropdown.dropdown .dropdown-toggle:focus {
-  background: -webkit-gradient(linear, left top, right top, from(#7C32FF), color-stop(70%, #A235EC), to(#C738D8));
-  background: -o-linear-gradient(left, #7C32FF 0%, #A235EC 70%, #C738D8 100%);
-  background: linear-gradient(90deg, #7C32FF 0%, #A235EC 70%, #C738D8 100%);
+.CRM_dropdown.dropdown .dropdown-toggle:hover,
+.CRM_dropdown.dropdown .dropdown-toggle:focus {
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    from(#7c32ff),
+    color-stop(70%, #a235ec),
+    to(#c738d8)
+  );
+  background: -o-linear-gradient(left, #7c32ff 0%, #a235ec 70%, #c738d8 100%);
+  background: linear-gradient(90deg, #7c32ff 0%, #a235ec 70%, #c738d8 100%);
 }
 
 /* line 6, G:/admin_project/8 admin/management_html/scss/_extends.scss */
@@ -23,7 +31,7 @@ body {
   margin: 0;
   font-size: 14px;
   position: relative;
-  background: #F6F7FB;
+  background: #f6f7fb;
 }
 
 @media (min-width: 1200px) {
@@ -45,7 +53,7 @@ body {
 
 /* line 23, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .border_bottom_1px {
-  border-bottom: 1px solid #E0E2E8;
+  border-bottom: 1px solid #e0e2e8;
 }
 
 /* line 26, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -54,7 +62,8 @@ body {
 }
 
 /* line 29, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-input:hover, input:focus {
+input:hover,
+input:focus {
   outline: none !important;
   box-shadow: 0px 0px 0px 0px transparent !important;
 }
@@ -72,13 +81,13 @@ input:hover, input:focus {
 
 /* line 40, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .form-control {
-  border-color: #BBC1C9;
+  border-color: #bbc1c9;
 }
 
 /* line 43, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .form-control:focus {
   box-shadow: 0 0 0 0rem transparent !important;
-  border-color: #BBC1C9;
+  border-color: #bbc1c9;
 }
 
 /* line 47, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -171,8 +180,13 @@ a:hover {
 }
 
 /* line 94, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-h1, h2, h3, h4, h5, h6 {
-  color: #474D58;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #474d58;
   font-family: "Mulish", sans-serif;
   font-weight: 600;
   line-height: 1.2;
@@ -206,7 +220,8 @@ li {
 }
 
 /* line 117, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-ul, ol {
+ul,
+ol {
   margin: 0;
   padding: 0;
 }
@@ -216,13 +231,16 @@ p {
   line-height: 24px;
   font-size: 14px;
   margin-bottom: 0px;
-  color: #828BB2;
+  color: #050505;
+  font-weight: bolder;
   font-family: "Mulish", sans-serif;
-  font-weight: 300;
 }
 
 /* line 130, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-a:focus, .button:focus, button:focus, .btn:focus {
+a:focus,
+.button:focus,
+button:focus,
+.btn:focus {
   text-decoration: none;
   outline: none;
   box-shadow: none;
@@ -351,12 +369,14 @@ a:focus, .button:focus, button:focus, .btn:focus {
 }
 
 /* line 205, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-th:focus, td:focus {
+th:focus,
+td:focus {
   outline: -webkit-focus-ring-color auto 0;
 }
 
 /* line 209, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-table.dataTable tbody th, table.dataTable tbody td {
+table.dataTable tbody th,
+table.dataTable tbody td {
   vertical-align: middle;
 }
 
@@ -481,7 +501,8 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 /* line 300, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.custom_checkbox tr th:first-child, .custom_checkbox tr td:first-child {
+.custom_checkbox tr th:first-child,
+.custom_checkbox tr td:first-child {
   padding: 16px 0 16px 0 !important;
 }
 
@@ -501,7 +522,7 @@ table.dataTable tbody th, table.dataTable tbody td {
   padding-right: 30px;
   color: #415094;
   border-radius: 5px;
-  border: 1px solid #A1A4B9;
+  border: 1px solid #a1a4b9;
 }
 
 /* line 319, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -518,7 +539,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 /* line 326, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .nice_Select:after {
   content: "\e62a";
-  font-family: 'themify';
+  font-family: "themify";
   border: 0;
   transform: rotate(0deg);
   margin-top: -16px;
@@ -595,8 +616,8 @@ table.dataTable tbody th, table.dataTable tbody td {
   border-radius: 0px;
   padding-left: 0;
   padding-right: 5px;
-  color: #2A2A2A;
-  background: #F6F7FB;
+  color: #2a2a2a;
+  background: #f6f7fb;
   border: 0;
   padding-left: 18px;
   padding-right: 38px;
@@ -620,7 +641,7 @@ table.dataTable tbody th, table.dataTable tbody td {
   line-height: 47px;
   background: transparent;
   padding: 0 23px;
-  border: 1px solid #E5ECFF !important;
+  border: 1px solid #e5ecff !important;
 }
 
 /* line 413, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -638,7 +659,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 /* line 422, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .nice_Select2:after {
   content: "\e64b";
-  font-family: 'themify';
+  font-family: "themify";
   border: 0;
   transform: rotate(0deg);
   margin-top: -16px;
@@ -654,11 +675,13 @@ table.dataTable tbody th, table.dataTable tbody td {
   right: 15px;
   margin-top: -18px;
   right: 25px;
-  color: #F45B0F;
+  color: #f45b0f;
 }
 
 /* line 442, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.nice_Select2:active, .nice_Select2.open, .nice_Select2:focus {
+.nice_Select2:active,
+.nice_Select2.open,
+.nice_Select2:focus {
   border-color: none;
   border: 0;
 }
@@ -727,7 +750,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 /* line 499, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .white_box {
-  background-color: #fff;
+  background-color: #FFC107;
   padding: 20px;
 }
 
@@ -829,14 +852,14 @@ table.dataTable tbody th, table.dataTable tbody td {
   vertical-align: 0;
   content: "\e64b";
   border-top: none;
-  font-family: 'themify';
+  font-family: "themify";
   font-size: 10px;
 }
 
 /* line 565, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cu_dropdown .dropdown-menu {
   min-width: auto;
-  background-color: #474D58;
+  background-color: #474d58;
   min-width: 102px;
   left: 0 !important;
   border-radius: 0 0 5px 5px;
@@ -882,10 +905,10 @@ table.dataTable tbody th, table.dataTable tbody td {
 .switch::after {
   top: 6px;
   left: 6px;
-  content: '';
+  content: "";
   width: 15px;
   height: 15px;
-  background-color: #2E4765;
+  background-color: #2e4765;
   position: absolute;
   border-radius: 100%;
   transition: 1s;
@@ -893,7 +916,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 /* line 626, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .switch:checked {
-  background-color: #2E4765 !important;
+  background-color: #2e4765 !important;
 }
 
 /* line 628, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -938,7 +961,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 /* line 654, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .text_underline {
-  color: #474D58;
+  color: #474d58;
   text-decoration: underline;
   -webkit-transition: 0.5s;
   transition: 0.5s;
@@ -946,7 +969,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 /* line 658, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .text_underline:hover {
-  color: #474D58;
+  color: #474d58;
   text-decoration: underline;
 }
 
@@ -1005,10 +1028,10 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 /* line 701, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .list_header p {
-  color: #474D58;
+  color: #474d58;
   font-weight: 400;
   font-size: 14px;
-  color: #7F8B9F;
+  color: #7f8b9f;
   font-weight: 400;
 }
 
@@ -1131,7 +1154,9 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 /* line 791, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.cs_modal .modal-body .nice_Select, .cs_modal .modal-body input, .cs_modal .modal-body textarea {
+.cs_modal .modal-body .nice_Select,
+.cs_modal .modal-body input,
+.cs_modal .modal-body textarea {
   height: 50px;
   line-height: 50px;
   background-color: #fff;
@@ -1148,7 +1173,9 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 /* line 805, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.cs_modal .modal-body .nice_Select::placeholder, .cs_modal .modal-body input::placeholder, .cs_modal .modal-body textarea::placeholder {
+.cs_modal .modal-body .nice_Select::placeholder,
+.cs_modal .modal-body input::placeholder,
+.cs_modal .modal-body textarea::placeholder {
   color: #7e7172;
   font-weight: 300;
   opacity: 1;
@@ -1166,7 +1193,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 /* line 817, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cs_modal .modal-body ::placeholder {
-  color: #474D58;
+  color: #474d58;
 }
 
 /* line 821, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1205,7 +1232,9 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 /* line 848, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.form_box .from_group .nice_Select, .form_box .from_group input, .form_box .from_group textarea {
+.form_box .from_group .nice_Select,
+.form_box .from_group input,
+.form_box .from_group textarea {
   width: 100%;
   display: block;
   background-color: #fef1f2;
@@ -1247,7 +1276,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 /* line 878, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .form_box .from_group .badge-info {
   color: #fff;
-  background-color: #2EC9B8;
+  background-color: #2ec9b8;
 }
 
 /* line 882, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1320,7 +1349,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 /* line 942, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .lms_pagination_wrap ul li {
   display: inline-block;
-  margin: 0 .8px;
+  margin: 0 0.8px;
 }
 
 /* line 945, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1399,13 +1428,15 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 /* line 1006, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.file_upload .btn_file_upload:hover, .file_upload .btn_file_upload:focus {
+.file_upload .btn_file_upload:hover,
+.file_upload .btn_file_upload:focus {
   color: #888888;
   border-color: #888888;
 }
 
 /* line 1015, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.file_upload .input-file, .file_upload .input-file2 {
+.file_upload .input-file,
+.file_upload .input-file2 {
   width: 0.1px;
   height: 0.1px;
   opacity: 0;
@@ -1415,7 +1446,10 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 /* line 1022, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.file_upload .input-file + .js-labelFile, .file_upload .input-file + .js-labelFile2, .file_upload .input-file2 + .js-labelFile, .file_upload .input-file2 + .js-labelFile2 {
+.file_upload .input-file + .js-labelFile,
+.file_upload .input-file + .js-labelFile2,
+.file_upload .input-file2 + .js-labelFile,
+.file_upload .input-file2 + .js-labelFile2 {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1438,7 +1472,7 @@ table.dataTable tbody th, table.dataTable tbody td {
 
 /* line 1040, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .file_upload .btn:hover {
-  background-color: #2E4765;
+  background-color: #2e4765;
   color: #fff;
   border: 0;
 }
@@ -1452,7 +1486,8 @@ table.dataTable tbody th, table.dataTable tbody td {
 }
 
 /* line 1053, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-td:focus, th:focus {
+td:focus,
+th:focus {
   outline: none !important;
 }
 
@@ -1491,14 +1526,14 @@ td:focus, th:focus {
 
 /* line 1081, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .lms_checkbox_1 .slider-check {
-  background-color: #F6F7FB;
+  background-color: #f6f7fb;
   bottom: 0;
   cursor: pointer;
   left: 0;
   position: absolute;
   right: 0;
   top: 0;
-  transition: .4s;
+  transition: 0.4s;
 }
 
 /* line 1090, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1508,13 +1543,13 @@ td:focus, th:focus {
 
 /* line 1093, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .lms_checkbox_1 .slider-check::before {
-  background-color: #F45B0F;
+  background-color: #f45b0f;
   bottom: 5px;
   content: "";
   height: 20px;
   left: 4px;
   position: absolute;
-  transition: .4s;
+  transition: 0.4s;
   width: 20px;
 }
 
@@ -1525,7 +1560,7 @@ td:focus, th:focus {
 
 /* line 1107, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .lms_checkbox_1 input:checked + .slider-check {
-  background-color: #F6F7FB;
+  background-color: #f6f7fb;
   color: #fff;
   content: "oui";
 }
@@ -1533,7 +1568,7 @@ td:focus, th:focus {
 /* line 1112, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .lms_checkbox_1 input:checked + .slider-check:before {
   transform: translateX(20px);
-  background: #884FFB;
+  background: #884ffb;
 }
 
 /* line 1122, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1726,7 +1761,7 @@ td:focus, th:focus {
 
 /* line 1261, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cs_modal .modal-header {
-  background-color: #F7FAFF;
+  background-color: #f7faff;
   padding: 23px 30px;
   border-bottom: 0px solid transparent;
 }
@@ -1750,11 +1785,12 @@ td:focus, th:focus {
 }
 
 /* line 1277, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.cs_modal .modal-body input, .cs_modal .modal-body .nice_Select {
+.cs_modal .modal-body input,
+.cs_modal .modal-body .nice_Select {
   height: 50px;
   line-height: 50px;
   padding: 10px 20px;
-  border: 1px solid #F1F3F5;
+  border: 1px solid #f1f3f5;
   color: #707070;
   font-size: 14px;
   font-weight: 500;
@@ -1786,7 +1822,7 @@ td:focus, th:focus {
 .cs_modal .modal-body textarea {
   height: 168px;
   padding: 15px 20px;
-  border: 1px solid #F1F3F5;
+  border: 1px solid #f1f3f5;
   color: #707070;
   font-size: 14px;
   font-weight: 500;
@@ -1803,7 +1839,7 @@ td:focus, th:focus {
 
 /* line 1314, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cs_modal .modal-body p a {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 1319, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1816,8 +1852,8 @@ td:focus, th:focus {
 /* line 1325, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cs_modal .modal-body .social_login_btn .btn_1 {
   color: #fff;
-  background-color: #3B5998;
-  border: 1px solid #3B5998;
+  background-color: #3b5998;
+  border: 1px solid #3b5998;
   margin-top: 0;
 }
 
@@ -1833,8 +1869,8 @@ td:focus, th:focus {
 
 /* line 1339, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cs_modal .modal-body .social_login_btn .form-group:last-child .btn_1 {
-  background-color: #4285F4;
-  border: 1px solid #4285F4;
+  background-color: #4285f4;
+  border: 1px solid #4285f4;
 }
 
 /* line 1346, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1849,7 +1885,7 @@ td:focus, th:focus {
 
 /* line 1353, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cs_modal .modal-body .pass_forget_btn:hover {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 1361, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1876,7 +1912,7 @@ td:focus, th:focus {
   content: "";
   height: 1px;
   width: 100%;
-  background-color: #BBC1C9;
+  background-color: #bbc1c9;
   top: 24px;
   left: 0;
   z-index: -1;
@@ -1889,7 +1925,7 @@ p a {
 
 /* line 1388, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 p a:hover {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 1394, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -1899,7 +1935,8 @@ p a:hover {
 }
 
 /* line 1397, G:/admin_project/8 admin/management_html/scss/_reset.scss */
-.cs_check_box input, .cs_check_box label {
+.cs_check_box input,
+.cs_check_box label {
   line-height: 20px !important;
   height: auto !important;
   width: auto !important;
@@ -1939,8 +1976,8 @@ p a:hover {
 
 /* line 1426, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .cs_check_box .common_checkbox:checked + label:after {
-  content: '\f00c';
-  font-family: 'Font Awesome\ 5 Free';
+  content: "\f00c";
+  font-family: "Font Awesome\ 5 Free";
   font-weight: 900;
   padding: 2px;
   font-size: 12px;
@@ -1956,13 +1993,13 @@ p a:hover {
 /* line 1440, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .hide_pils.dropdown-toggle::after {
   display: inline-block;
-  margin-left: .255em;
-  vertical-align: .255em;
+  margin-left: 0.255em;
+  vertical-align: 0.255em;
   content: "";
-  border-top: .3em solid;
-  border-right: .3em solid transparent;
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
   border-bottom: 0;
-  border-left: .3em solid transparent;
+  border-left: 0.3em solid transparent;
   border: 0 !important;
 }
 
@@ -1983,7 +2020,7 @@ p a:hover {
   font-size: 14px;
   font-weight: 600;
   font-family: "Mulish", sans-serif;
-  color: #2E4765;
+  color: #2e4765;
   margin-bottom: 0;
 }
 
@@ -2004,41 +2041,41 @@ p a:hover {
 
 /* line 1478, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .page-item.active .page-link {
-  background-color: #884FFB;
-  border-color: #884FFB;
+  background-color: #884ffb;
+  border-color: #884ffb;
 }
 
 /* line 1481, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .page-item.active .page-link:hover {
   color: #fff;
-  background-color: #884FFBe6;
-  border-color: #884FFBe6;
+  background-color: #884ffbe6;
+  border-color: #884ffbe6;
 }
 
 /* line 1487, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .page-link {
-  color: #884FFB;
+  color: #884ffb;
 }
 
 /* line 1489, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .page-link:hover {
   color: #fff;
-  background-color: #884FFBe6;
-  border-color: #884FFBe6;
+  background-color: #884ffbe6;
+  border-color: #884ffbe6;
 }
 
 /* line 1495, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .btn-primary {
   color: #fff;
-  background-color: #884FFB;
-  border-color: #884FFB;
+  background-color: #884ffb;
+  border-color: #884ffb;
 }
 
 /* line 1500, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .btn-primary:hover {
   color: #fff;
-  background-color: #884FFBe6;
-  border-color: #884FFBe6;
+  background-color: #884ffbe6;
+  border-color: #884ffbe6;
 }
 
 @media (max-width: 991px) {
@@ -2052,20 +2089,20 @@ p a:hover {
 .dashboard_header .dashboard_header_title h3 {
   font-size: 33px;
   font-weight: 600;
-  color: #2E4765;
+  color: #2e4765;
   margin-bottom: 7px;
 }
 
 /* line 1518, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .dashboard_header .dashboard_header_title h3 span {
-  color: #884FFB;
+  color: #884ffb;
 }
 
 /* line 1522, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .dashboard_header .dashboard_header_title p {
   font-size: 20px;
   font-weight: 400;
-  color: #7F8B9F;
+  color: #7f8b9f;
 }
 
 @media (max-width: 991px) {
@@ -2087,7 +2124,7 @@ p a:hover {
 .dashboard_breadcam ul li {
   font-size: 17px;
   font-weight: 400;
-  color: #884FFB;
+  color: #884ffb;
   padding-left: 14px;
   position: relative;
 }
@@ -2104,7 +2141,7 @@ p a:hover {
 
 /* line 1551, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .dashboard_breadcam ul li::before {
-  color: #884FFB;
+  color: #884ffb;
   content: "/";
   position: absolute;
   left: 4px;
@@ -2116,7 +2153,7 @@ p a:hover {
 .dashboard_breadcam ul li a {
   width: 30px;
   height: 30px;
-  background: #FFE7DF;
+  background: #ffe7df;
   border-radius: 50%;
   display: inline-block;
   line-height: 26px;
@@ -2141,23 +2178,23 @@ p a:hover {
 .header_prise h5 {
   font-size: 16px;
   font-weight: 500;
-  color: #884FFB;
+  color: #884ffb;
   margin-bottom: 0;
 }
 
 /* line 1590, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .pink_bg {
-  background: #FE80B2 !important;
+  background: #fe80b2 !important;
 }
 
 /* line 1593, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .parpel_bg {
-  background: #833CDF !important;
+  background: #833cdf !important;
 }
 
 /* line 1596, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .parpel_bg2 {
-  background: #F65365 !important;
+  background: #f65365 !important;
 }
 
 /* line 1601, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -2398,7 +2435,7 @@ span > .bg-secondary {
 
 /* line 1748, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .color_theme {
-  color: #474D58;
+  color: #474d58;
 }
 
 /* line 1751, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -2408,12 +2445,12 @@ span > .bg-secondary {
 
 /* line 1754, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .color_gray {
-  color: #8890B5;
+  color: #8890b5;
 }
 
 /* line 1757, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .color_gray2 {
-  color: #B1B6C9;
+  color: #b1b6c9;
 }
 
 /* line 1760, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -2538,7 +2575,7 @@ span > .bg-secondary {
 /* line 1864, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .header_more_tool .dropdown span {
   padding-left: 0px;
-  background: #F5F5FF;
+  background: #f5f5ff;
   padding: 5px 12px;
   border-radius: 5px;
 }
@@ -2548,7 +2585,7 @@ span > .bg-secondary {
   font-size: 12px;
   font-weight: 400;
   display: inline-block;
-  color: #464E5F;
+  color: #464e5f;
   position: relative;
   top: 0px;
   margin-right: 0px;
@@ -2599,18 +2636,18 @@ span > .bg-secondary {
   background-color: transparent;
   border: 0;
   padding: 10px 25px;
-  color: #81879F;
+  color: #81879f;
   font-weight: 400;
   font-size: 14px;
   width: 100%;
   display: block;
   border-radius: 10px;
-  border: 1px solid #E5ECFF;
+  border: 1px solid #e5ecff;
 }
 
 /* line 1924, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .common_input input::placeholder {
-  color: #81879F;
+  color: #81879f;
   font-weight: 400;
   font-size: 14px;
   opacity: 1;
@@ -2631,7 +2668,7 @@ span > .bg-secondary {
   right: -7px;
   border-radius: 50%;
   top: -10px;
-  background-color: #F65365;
+  background-color: #f65365;
   -webkit-animation: notify-pulse 1s infinite;
 }
 
@@ -2672,7 +2709,7 @@ span > .bg-secondary {
   display: block;
   color: #fff;
   line-height: 40px;
-  background: #884FFB;
+  background: #884ffb;
   font-size: 15px;
   border-radius: 30px;
   -webkit-transition: 0.3s;
@@ -2687,14 +2724,14 @@ span > .bg-secondary {
 
 /* line 2000, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .img-thumbnail {
-  background-color: #F5F6FF !important;
-  border: 1px solid #F5F6FF !important;
+  background-color: #f5f6ff !important;
+  border: 1px solid #f5f6ff !important;
   border-radius: 20px !important;
 }
 
 /* line 2006, G:/admin_project/8 admin/management_html/scss/_reset.scss */
 .default_border_1px {
-  border: 1px solid #E0E2E8;
+  border: 1px solid #e0e2e8;
   box-shadow: none !important;
 }
 
@@ -2724,14 +2761,14 @@ span > .bg-secondary {
   align-items: center;
   border-radius: 10px;
   background: rgba(95, 99, 242, 0.06);
-  color: #884FFB;
+  color: #884ffb;
 }
 
 /******** base color css ********/
 /* line 2, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_1 {
-  background-color: #884FFB;
-  border: 1px solid #884FFB;
+  background-color: #884ffb;
+  border: 1px solid #884ffb;
   color: #fff;
   display: inline-block;
   padding: 9px 25px;
@@ -2753,7 +2790,7 @@ span > .bg-secondary {
 /* line 18, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_1:hover {
   color: #fff;
-  background-color: #884FFB;
+  background-color: #884ffb;
   box-shadow: 0 3px 11px rgba(136, 79, 251, 0.4);
 }
 
@@ -2761,19 +2798,19 @@ span > .bg-secondary {
 .btn_1.light {
   background-color: rgba(46, 71, 101, 0.1);
   border: 1px solid transparent;
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 28, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_1.green {
   background-color: rgba(46, 201, 184, 0.1);
   border: 1px solid transparent;
-  color: #2EC9B8;
+  color: #2ec9b8;
 }
 
 /* line 33, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_1.orange_btn {
-  background: #2D1967;
+  background: #2d1967;
   font-size: 16px;
   border: 0;
   font-weight: 400;
@@ -2782,7 +2819,7 @@ span > .bg-secondary {
 
 /* line 39, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_1.orange_btn:hover {
-  background: #2D1967;
+  background: #2d1967;
   color: #fff;
 }
 
@@ -2820,20 +2857,20 @@ span > .bg-secondary {
   font-size: 14px;
   color: #fff;
   font-weight: 400;
-  background: #5B6CE1;
+  background: #5b6ce1;
   padding: 16px 10px;
 }
 
 /* line 67, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_1.radius_btn:hover {
   color: #fff;
-  background-color: #5B6CE1;
-  box-shadow: 0 3px 6px #CBD1FF;
+  background-color: #5b6ce1;
+  box-shadow: 0 3px 6px #cbd1ff;
 }
 
 /* line 74, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .Euro_btn {
-  background-color: #F5F6FF;
+  background-color: #f5f6ff;
   color: #fff;
   display: inline-block;
   padding: 11px 43px;
@@ -2845,19 +2882,19 @@ span > .bg-secondary {
   white-space: nowrap;
   -webkit-transition: 0.5s;
   transition: 0.5s;
-  color: #9267FF;
+  color: #9267ff;
 }
 
 /* line 88, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .Euro_btn:hover {
-  background-color: #9267FF;
+  background-color: #9267ff;
   color: #000;
 }
 
 /* line 93, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_2 {
-  color: #F65365;
-  border: 1px solid #F65365;
+  color: #f65365;
+  border: 1px solid #f65365;
   display: inline-block;
   padding: 11px 23px;
   text-transform: capitalize;
@@ -2873,14 +2910,14 @@ span > .bg-secondary {
 
 /* line 106, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_2:hover {
-  background-color: #F65365;
-  border: 1px solid #F65365;
+  background-color: #f65365;
+  border: 1px solid #f65365;
   color: #fff;
 }
 
 /* line 112, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_3 {
-  color: #474D58;
+  color: #474d58;
   border: 1px solid #e4e8ec;
   display: inline-block;
   padding: 11px 27px;
@@ -2902,8 +2939,8 @@ span > .bg-secondary {
 
 /* line 129, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_3:hover {
-  background-color: #2E4765;
-  border: 1px solid #2E4765;
+  background-color: #2e4765;
+  border: 1px solid #2e4765;
   color: #fff;
 }
 
@@ -2924,8 +2961,8 @@ span > .bg-secondary {
 
 /* line 146, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_4:hover {
-  background-color: #2E4765;
-  border: 1px solid #2E4765;
+  background-color: #2e4765;
+  border: 1px solid #2e4765;
   color: #fff;
 }
 
@@ -2951,8 +2988,8 @@ span > .bg-secondary {
 
 /* line 169, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_5:hover {
-  background-color: #2E4765 !important;
-  border: 1px solid #2E4765 !important;
+  background-color: #2e4765 !important;
+  border: 1px solid #2e4765 !important;
   color: #fff;
   opacity: 1 !important;
 }
@@ -2978,7 +3015,7 @@ span > .bg-secondary {
 
 /* line 185, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_6 {
-  color: #474D58;
+  color: #474d58;
   border: 1px solid #eee1e2;
   display: inline-block;
   padding: 11px 25px;
@@ -2995,8 +3032,8 @@ span > .bg-secondary {
 
 /* line 198, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .btn_6:hover {
-  background-color: #2E4765;
-  border: 1px solid #2E4765;
+  background-color: #2e4765;
+  border: 1px solid #2e4765;
   color: #fff;
 }
 
@@ -3033,8 +3070,8 @@ span > .bg-secondary {
 
 /* line 227, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .view_archive_btn:hover {
-  color: #2E4765;
-  border: 1px solid #2E4765;
+  color: #2e4765;
+  border: 1px solid #2e4765;
 }
 
 /* line 233, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3044,14 +3081,14 @@ span > .bg-secondary {
   font-size: 12px;
   font-weight: 400;
   background: #fff;
-  transition: .3s;
+  transition: 0.3s;
   padding: 6px 20px;
   border-radius: 3px;
 }
 
 /* line 242, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .white_btn:hover {
-  background: #2D1967;
+  background: #2d1967;
   color: #fff;
 }
 
@@ -3061,8 +3098,8 @@ span > .bg-secondary {
   color: #fff;
   font-size: 16px;
   font-weight: 600;
-  background: #2D1967;
-  transition: .3s;
+  background: #2d1967;
+  transition: 0.3s;
   padding: 15px 25px;
   border-radius: 3px;
 }
@@ -3095,8 +3132,8 @@ span > .bg-secondary {
 
 /* line 278, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .close.white_btn2:hover {
-  background-color: #2E4765 !important;
-  border: 1px solid #2E4765 !important;
+  background-color: #2e4765 !important;
+  border: 1px solid #2e4765 !important;
   color: #fff;
   opacity: 1 !important;
 }
@@ -3124,8 +3161,8 @@ span > .bg-secondary {
 
 /* line 302, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .white_btn3:hover {
-  background-color: #884FFB !important;
-  border: 1px solid #884FFB !important;
+  background-color: #884ffb !important;
+  border: 1px solid #884ffb !important;
   color: #fff;
   opacity: 1 !important;
 }
@@ -3172,7 +3209,7 @@ span > .bg-secondary {
   border: 0;
   border: 1px solid #eee1e2;
   position: relative;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 345, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3204,7 +3241,7 @@ span > .bg-secondary {
 
 /* line 367, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .dropdown.show .dropdown-toggle.lms_drop_1 {
-  background: #2D1967;
+  background: #2d1967;
   padding: 4px 15px;
   border-radius: 3px;
   font-size: 12px;
@@ -3216,7 +3253,7 @@ span > .bg-secondary {
   width: 102px;
   border: 0;
   color: #fff;
-  border: 1px solid #2D1967;
+  border: 1px solid #2d1967;
 }
 
 /* line 381, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3243,7 +3280,7 @@ span > .bg-secondary {
 /* line 396, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .dropdown .dropdown-menu .dropdown-item:hover {
   color: #fff !important;
-  background: #5B6CE1;
+  background: #5b6ce1;
 }
 
 /* line 401, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3265,7 +3302,7 @@ span > .bg-secondary {
   border-radius: 3px;
   border: 1px solid #eee1e2;
   color: #7e7172;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 420, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3277,15 +3314,15 @@ span > .bg-secondary {
 
 /* line 425, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .white_btn_line:hover {
-  background: #2D1967;
+  background: #2d1967;
   color: #fff;
-  border: 1px solid #2D1967;
+  border: 1px solid #2d1967;
 }
 
 /* line 429, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .white_btn_line:hover i {
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 435, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3300,7 +3337,7 @@ span > .bg-secondary {
   border: 0;
   border: 1px solid #eee1e2;
   color: #7e7172;
-  transition: .3s;
+  transition: 0.3s;
   border-radius: 30px;
   line-height: 28px;
   padding: 0 18px;
@@ -3308,37 +3345,43 @@ span > .bg-secondary {
 
 /* line 450, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .white_btn_line2:hover {
-  background: #2D1967;
+  background: #2d1967;
   color: #fff !important;
-  border: 1px solid #2D1967;
+  border: 1px solid #2d1967;
 }
 
 /* line 454, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .white_btn_line2:hover i {
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 460, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .theme_text_btn {
   font-size: 14px;
-  color: #46D293;
+  color: #46d293;
   font-weight: 700;
 }
 
 /* line 464, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .theme_text_btn:hover {
-  color: #46D293;
+  color: #46d293;
 }
 
 /* line 469, G:/admin_project/8 admin/management_html/scss/_button.scss */
-table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > td:first-child::before,
-table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::before {
+table.dataTable.dtr-inline.collapsed
+  > tbody
+  > tr[role="row"]
+  > td:first-child::before,
+table.dataTable.dtr-inline.collapsed
+  > tbody
+  > tr[role="row"]
+  > th:first-child::before {
   z-index: 9;
   top: 50%;
   transform: translateY(-50%);
   content: "\e61a";
-  font-family: 'themify';
+  font-family: "themify";
   font-size: 8px;
   line-height: 14px;
   font-weight: 600;
@@ -3347,8 +3390,14 @@ table.dataTable.dtr-inline.collapsed > tbody > tr[role="row"] > th:first-child::
 }
 
 /* line 485, G:/admin_project/8 admin/management_html/scss/_button.scss */
-table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child::before,
-table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::before {
+table.dataTable.dtr-inline.collapsed
+  > tbody
+  > tr.parent
+  > td:first-child::before,
+table.dataTable.dtr-inline.collapsed
+  > tbody
+  > tr.parent
+  > th:first-child::before {
   content: "\e622";
   box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.08), inset -6px -6px 12px white;
 }
@@ -3364,7 +3413,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   padding: 5px 20px;
   text-transform: uppercase;
   overflow: hidden;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 510, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3381,11 +3430,12 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   top: 3px;
   left: 0;
   font-weight: 600;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 525, G:/admin_project/8 admin/management_html/scss/_button.scss */
-.CRM_dropdown.dropdown .dropdown-toggle:hover, .CRM_dropdown.dropdown .dropdown-toggle:focus {
+.CRM_dropdown.dropdown .dropdown-toggle:hover,
+.CRM_dropdown.dropdown .dropdown-toggle:focus {
   color: #fff;
   border: 1px solid transparent;
   box-shadow: none;
@@ -3411,7 +3461,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 
 /* line 552, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .CRM_dropdown.dropdown .dropdown-menu .dropdown-item:hover {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 559, G:/admin_project/8 admin/management_html/scss/_button.scss */
@@ -3427,23 +3477,23 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   background: transparent;
   line-height: 30px;
   text-align: center;
-  color: #67349D;
+  color: #67349d;
   font-size: 12px;
-  transition: .3s;
+  transition: 0.3s;
   display: inline-block;
   flex: 32px 0 0;
 }
 
 /* line 574, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .action_btn:hover {
-  background: #67349D;
+  background: #67349d;
   color: #fff;
   box-shadow: 0 5px 10px rgba(136, 79, 251, 0.26);
 }
 
 /* line 581, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .color_button {
-  background-color: #8950FC;
+  background-color: #8950fc;
   border: 0;
   color: #fff;
   display: inline-block;
@@ -3459,37 +3509,37 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 
 /* line 593, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .color_button.color_button2 {
-  background: #9AFDD2;
+  background: #9afdd2;
   color: #313131;
 }
 
 /* line 596, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .color_button.color_button2:hover {
-  background: #9AFDD2;
+  background: #9afdd2;
   color: #313131;
 }
 
 /* line 601, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .color_button.color_button3 {
-  background: #FFCA60;
+  background: #ffca60;
   color: #313131;
 }
 
 /* line 604, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .color_button.color_button3:hover {
-  background: #FFCA60;
+  background: #ffca60;
   color: #313131;
 }
 
 /* line 609, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .color_button:hover {
-  background-color: #8950FC;
+  background-color: #8950fc;
   color: #fff;
 }
 
 /* line 614, G:/admin_project/8 admin/management_html/scss/_button.scss */
 .export_btn {
-  background: #FF7A88;
+  background: #ff7a88;
   font-size: 16px;
   font-weight: 400;
   color: #fff;
@@ -3514,16 +3564,16 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   position: relative;
   border-radius: 0px;
   margin: 0;
-  background: #F6F7FB;
+  background: #f6f7fb;
   border-radius: 0;
   margin: 0;
   border-radius: 0px;
-  border-bottom: 2px solid #E8E8E8;
+  border-bottom: 2px solid #e8e8e8;
 }
 
 /* line 29, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .header_iner.default_header {
-  background: #F65365;
+  background: #f65365;
   border-radius: 0;
 }
 
@@ -3646,7 +3696,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   top: 0;
   height: 9px;
   width: 9px;
-  background-color: #2E4765;
+  background-color: #2e4765;
   border-radius: 50%;
 }
 
@@ -3720,7 +3770,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 .header_iner .header_right .header_notification_warp li .serach_button {
   width: 32px;
   height: 32px;
-  background: #884FFB;
+  background: #884ffb;
   border-radius: 50%;
   text-align: center;
   line-height: 32px;
@@ -3737,7 +3787,12 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 }
 
 /* line 185, G:/admin_project/8 admin/management_html/scss/_header.scss */
-.header_iner .header_right .header_notification_warp li .serach_button .serach_field-area {
+.header_iner
+  .header_right
+  .header_notification_warp
+  li
+  .serach_button
+  .serach_field-area {
   position: absolute;
   right: 0;
   top: 0px;
@@ -3745,25 +3800,42 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   background: #fff;
   border-radius: 10px;
   opacity: 0;
-  transition: .3s;
+  transition: 0.3s;
   visibility: hidden;
   right: 50px;
   top: -4px;
 }
 
 /* line 197, G:/admin_project/8 admin/management_html/scss/_header.scss */
-.header_iner .header_right .header_notification_warp li .serach_button .serach_field-area.active {
+.header_iner
+  .header_right
+  .header_notification_warp
+  li
+  .serach_button
+  .serach_field-area.active {
   opacity: 1;
   visibility: visible;
 }
 
 /* line 201, G:/admin_project/8 admin/management_html/scss/_header.scss */
-.header_iner .header_right .header_notification_warp li .serach_button .serach_field-area i {
+.header_iner
+  .header_right
+  .header_notification_warp
+  li
+  .serach_button
+  .serach_field-area
+  i {
   color: rgba(137, 80, 252, 0.7);
 }
 
 /* line 204, G:/admin_project/8 admin/management_html/scss/_header.scss */
-.header_iner .header_right .header_notification_warp li .serach_button .serach_field-area input {
+.header_iner
+  .header_right
+  .header_notification_warp
+  li
+  .serach_button
+  .serach_field-area
+  input {
   border-radius: 10px;
 }
 
@@ -3796,7 +3868,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   border-radius: 50%;
   right: -12px;
   top: -12px;
-  background: #F45B0F;
+  background: #f45b0f;
   line-height: 22px;
 }
 
@@ -3816,7 +3888,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 
 /* line 251, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .header_iner .nice_Select {
-  color: #929BB5;
+  color: #929bb5;
 }
 
 /* line 255, G:/admin_project/8 admin/management_html/scss/_header.scss */
@@ -3829,7 +3901,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   max-width: 42px;
   max-height: 42px;
   border-radius: 50%;
-  border: 2px solid #94C0D4;
+  border: 2px solid #94c0d4;
   cursor: pointer;
 }
 
@@ -3861,21 +3933,21 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 /* line 282, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .profile_info .profile_info_iner::before {
   position: absolute;
-  content: '';
+  content: "";
   width: 0;
   height: 0;
   border-style: solid;
   top: -10px;
   right: 15px;
   border-width: 0 11px 12px 11px;
-  border-color: transparent transparent #567AED transparent;
+  border-color: transparent transparent #567aed transparent;
   z-index: 2;
 }
 
 /* line 294, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .profile_info .profile_info_iner .profile_author_name {
   padding: 20px 25px;
-  background: #567AED;
+  background: #567aed;
   border-radius: 10px 15px 0px 0px;
 }
 
@@ -3912,7 +3984,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 
 /* line 324, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .profile_info .profile_info_details a {
-  color: #2E4765;
+  color: #2e4765;
   font-size: 14px;
   display: block;
   padding: 10px 0;
@@ -3921,17 +3993,17 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 
 /* line 330, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .profile_info .profile_info_details a:hover {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 332, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .profile_info .profile_info_details a:hover i {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 337, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .profile_info .profile_info_details i {
-  color: #2E4765;
+  color: #2e4765;
   font-size: 12px;
   margin-left: 20px;
   -webkit-transition: 0.5s;
@@ -3977,13 +4049,13 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 .serach_field-area {
   width: 268px;
   position: relative;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 6px;
 }
 
 /* line 376, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .serach_field-area.theme_bg {
-  background: #F6F7FB;
+  background: #f6f7fb;
 }
 
 /* line 378, G:/admin_project/8 admin/management_html/scss/_header.scss */
@@ -4005,14 +4077,14 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 
 /* line 387, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .serach_field-area .search_inner input {
-  color: #86898E;
+  color: #86898e;
   font-size: 11px;
   height: 36px;
   width: 100%;
   padding-left: 12px;
   border: 0;
   padding-right: 6px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 6px;
   border: 0;
   font-weight: 400;
@@ -4023,7 +4095,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 .serach_field-area .search_inner input::placeholder {
   font-size: 11px;
   font-weight: 400;
-  color: #86898E;
+  color: #86898e;
   font-family: "Mulish", sans-serif;
 }
 
@@ -4042,7 +4114,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   border: 0;
   width: 32px;
   height: 32px;
-  background: #F45B0F;
+  background: #f45b0f;
   line-height: 32px;
   border-radius: 4px;
 }
@@ -4056,7 +4128,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 /* line 426, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .serach_field-area .search_inner button i {
   font-size: 14px;
-  color: #818E94;
+  color: #818e94;
 }
 
 /* line 435, G:/admin_project/8 admin/management_html/scss/_header.scss */
@@ -4081,8 +4153,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   padding-left: 82px;
   border: 0;
   padding-right: 15px;
-  border-bottom: 1px solid #F4F7FC;
-  background: #F5F7FD;
+  border-bottom: 1px solid #f4f7fc;
+  background: #f5f7fd;
   border-radius: 30px;
 }
 
@@ -4090,7 +4162,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 .serach_field-area2 .search_inner input::placeholder {
   font-size: 16px;
   font-weight: 400;
-  color: #818E94;
+  color: #818e94;
   font-family: "Mulish", sans-serif;
 }
 
@@ -4115,7 +4187,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 /* line 475, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .serach_field-area2 .search_inner button i {
   font-size: 14px;
-  color: #818E94;
+  color: #818e94;
 }
 
 /* line 485, G:/admin_project/8 admin/management_html/scss/_header.scss */
@@ -4161,7 +4233,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   width: 100%;
   border-radius: 5px;
   padding-left: 55px;
-  border: 1px solid #2D1967;
+  border: 1px solid #2d1967;
   padding-right: 15px;
 }
 
@@ -4193,7 +4265,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
 /* line 531, G:/admin_project/8 admin/management_html/scss/_header.scss */
 .serach_field_2 .search_inner button i {
   font-size: 12px;
-  color: #2D1967;
+  color: #2d1967;
 }
 
 /* line 535, G:/admin_project/8 admin/management_html/scss/_header.scss */
@@ -4201,8 +4273,8 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   position: absolute;
   width: 1px;
   height: 24px;
-  content: '';
-  background: #2D1967;
+  content: "";
+  background: #2d1967;
   top: 50%;
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
@@ -4221,8 +4293,9 @@ table.dataTable {
 }
 
 /* line 566, G:/admin_project/8 admin/management_html/scss/_header.scss */
-.table td, .table th {
-  padding: .75rem;
+.table td,
+.table th {
+  padding: 0.75rem;
   vertical-align: top;
   border-top: 0 !important;
 }
@@ -4259,9 +4332,9 @@ table.dataTable {
   z-index: 999;
   overflow: hidden;
   overflow-y: auto;
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0 12px 30px rgba(80, 143, 244, 0.1);
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 18, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4305,7 +4378,7 @@ table.dataTable {
 /* line 40, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .logo {
   margin: 0px;
-  background: #F3F6F9;
+  background: #f3f6f9;
   padding: 24px;
   margin-bottom: 20px;
 }
@@ -4325,7 +4398,7 @@ table.dataTable {
 /* line 55, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .menu-text {
   font-size: 12px;
-  color: #B1BDCB;
+  color: #b1bdcb;
   font-weight: 600;
   margin: 0;
   padding: 12px 0 12px 24px;
@@ -4356,7 +4429,7 @@ table.dataTable {
   width: 100%;
   display: flex;
   align-items: center;
-  transition: .3s;
+  transition: 0.3s;
   position: relative;
   z-index: 0;
   border-top: 1px solid transparent;
@@ -4367,20 +4440,20 @@ table.dataTable {
 .sidebar .single_sidebar_tittle a::before {
   position: absolute;
   right: 0;
-  background: #2E4765;
+  background: #2e4765;
   width: 0px;
   top: 0;
   bottom: 0;
-  content: '';
+  content: "";
   opacity: 0;
-  transition: .3s;
+  transition: 0.3s;
   right: 0px;
   visibility: hidden;
 }
 
 /* line 102, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .single_sidebar_tittle a.current_active i {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 105, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4448,7 +4521,7 @@ table.dataTable {
 
 /* line 152, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .single_sidebar_tittle:hover i {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 157, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4581,12 +4654,14 @@ table.dataTable {
 }
 
 /* line 253, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar_widget .date_range .start_date, .sidebar_widget .date_range .end_date {
+.sidebar_widget .date_range .start_date,
+.sidebar_widget .date_range .end_date {
   width: 115px;
 }
 
 /* line 255, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar_widget .date_range .start_date input, .sidebar_widget .date_range .end_date input {
+.sidebar_widget .date_range .start_date input,
+.sidebar_widget .date_range .end_date input {
   width: 100%;
   border: 1px solid #e4e8ec;
   color: #7e7172;
@@ -4597,7 +4672,8 @@ table.dataTable {
 }
 
 /* line 264, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar_widget .date_range .start_date ::placeholder, .sidebar_widget .date_range .end_date ::placeholder {
+.sidebar_widget .date_range .start_date ::placeholder,
+.sidebar_widget .date_range .end_date ::placeholder {
   color: #7e7172;
 }
 
@@ -4614,7 +4690,7 @@ table.dataTable {
   color: #144339;
   padding: 0px 25px 0px 0px;
   background: #fff;
-  transition: .3s;
+  transition: 0.3s;
   position: relative;
   z-index: 0;
   display: grid;
@@ -4623,7 +4699,7 @@ table.dataTable {
   align-items: center;
   position: relative;
   background: transparent;
-  color: #8890B5;
+  color: #8890b5;
   font-family: "Mulish", sans-serif;
   padding: 10px 10px 10px 26px;
   background: #fff;
@@ -4633,14 +4709,14 @@ table.dataTable {
 
 /* line 299, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li a:hover {
-  color: #F65365 !important;
-  background: #F6F7FB;
+  color: #f65365 !important;
+  background: #f6f7fb;
 }
 
 /* line 303, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li a.active {
-  color: #F65365;
-  background: #F8FAFC;
+  color: #f65365;
+  background: #f8fafc;
   border-radius: 15px;
 }
 
@@ -4651,14 +4727,14 @@ table.dataTable {
   opacity: 1;
   font-size: 10px;
   right: 15px;
-  color: #A1A4B9;
+  color: #a1a4b9;
 }
 
 /* line 332, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li a i {
   font-size: 15px;
   margin-right: 12px;
-  color: #A5ADC6;
+  color: #a5adc6;
   -webkit-transition: 0.5s;
   transition: 0.5s;
 }
@@ -4686,7 +4762,7 @@ table.dataTable {
 
 /* line 364, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li.mm-active > a::after {
-  color: #8890B5;
+  color: #8890b5;
   transform: rotate(0deg) translate(0, -50%);
   opacity: 1;
   font-size: 10px;
@@ -4697,12 +4773,12 @@ table.dataTable {
 .sidebar #sidebar_menu > li.mm-active.metis_dropmenu > a {
   padding-top: 29px;
   padding-bottom: 30px;
-  color: #A5ADC6;
+  color: #a5adc6;
 }
 
 /* line 380, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li.mm-active > a i {
-  color: #A5ADC6;
+  color: #a5adc6;
 }
 
 /* line 383, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4729,7 +4805,7 @@ table.dataTable {
 /* line 407, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li ul li a {
   font-size: 14px;
-  color: #8890B5;
+  color: #8890b5;
   font-weight: 400;
   padding: 0;
   white-space: nowrap;
@@ -4747,7 +4823,7 @@ table.dataTable {
 
 /* line 421, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li ul li a.active {
-  color: #F65365 !important;
+  color: #f65365 !important;
 }
 
 /* line 426, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4861,18 +4937,21 @@ table.dataTable {
 }
 
 /* line 520, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar::-webkit-scrollbar-track, body::-webkit-scrollbar-track {
+.sidebar::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
   background-color: #ddd;
 }
 
 /* line 525, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar::-webkit-scrollbar, body::-webkit-scrollbar {
+.sidebar::-webkit-scrollbar,
+body::-webkit-scrollbar {
   width: 6px;
   background-color: #ddd;
 }
 
 /* line 530, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
-.sidebar::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
+.sidebar::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
   background-color: #f8dbdd;
 }
 
@@ -4931,7 +5010,7 @@ body::-webkit-scrollbar {
 /* line 582, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar.dark_sidebar #sidebar_menu > li ul li a.active {
   background: transparent;
-  color: #F65365 !important;
+  color: #f65365 !important;
 }
 
 /* line 586, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4961,7 +5040,7 @@ body::-webkit-scrollbar {
   font-family: "Mulish", sans-serif;
   font-weight: 700;
   font-size: 18px;
-  color: #474D58;
+  color: #474d58;
 }
 
 /* line 15, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
@@ -5025,7 +5104,7 @@ body::-webkit-scrollbar {
 
 /* line 64, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .legend_style li.inactive {
-  opacity: .29;
+  opacity: 0.29;
 }
 
 /* line 69, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
@@ -5045,22 +5124,22 @@ body::-webkit-scrollbar {
   background: #fff;
   font-size: 11px;
   text-transform: capitalize;
-  color: #706F9A;
+  color: #706f9a;
   border-radius: 5px;
   line-height: 25px;
   padding: 0 10px;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 85, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .title_btn ul li a:hover {
-  background: #A66DD4;
+  background: #a66dd4;
   color: #fff;
 }
 
 /* line 89, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .title_btn ul li a.active {
-  background: #A66DD4;
+  background: #a66dd4;
   color: #fff;
 }
 
@@ -5073,7 +5152,7 @@ body::-webkit-scrollbar {
 /* line 102, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .radial_footer .radial_footer_inner .left_footer h5 {
   font-size: 13px;
-  color: #43425D;
+  color: #43425d;
   font-weight: 500;
   margin-bottom: 0px;
   position: relative;
@@ -5084,7 +5163,7 @@ body::-webkit-scrollbar {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #A4A1FB;
+  background: #a4a1fb;
   display: inline-block;
   position: absolute;
   left: -15px;
@@ -5094,15 +5173,15 @@ body::-webkit-scrollbar {
 /* line 119, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .radial_footer .radial_footer_inner .left_footer p {
   font-size: 12px;
-  color: #4D4F5C;
-  opacity: .5;
+  color: #4d4f5c;
+  opacity: 0.5;
   font-weight: 400;
   margin-bottom: 0;
 }
 
 /* line 128, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .radial_footer .radial_bottom {
-  border-top: 1px solid #EFEFEF;
+  border-top: 1px solid #efefef;
   text-align: center;
   padding-top: 15px;
   margin-top: 4px;
@@ -5111,20 +5190,20 @@ body::-webkit-scrollbar {
 /* line 134, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .radial_footer .radial_bottom p a {
   font-size: 12px;
-  color: #3B86FF;
+  color: #3b86ff;
   font-weight: 600;
 }
 
 /* line 143, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .blud_card {
-  background: #4567EE !important;
+  background: #4567ee !important;
   background-repeat: no-repeat;
   background-position: bottom;
 }
 
 /* line 147, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .blud_card p {
-  color: #BCD3FF;
+  color: #bcd3ff;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 20px;
@@ -5138,33 +5217,33 @@ body::-webkit-scrollbar {
 
 /* line 161, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .single_user_pil {
-  background: #F5F5FF;
+  background: #f5f5ff;
   padding: 10px 20px;
   border-radius: 15px;
-  transition: .3s;
+  transition: 0.3s;
   margin-bottom: 15px;
 }
 
 /* line 167, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .single_user_pil.admin_bg {
-  background: #F5FDFF;
+  background: #f5fdff;
 }
 
 /* line 170, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .single_user_pil:hover {
-  background: #F5FDFF;
+  background: #f5fdff;
 }
 
 /* line 174, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .single_user_pil .user_pils_thumb img {
-  border: 1px solid #94C0D4;
+  border: 1px solid #94c0d4;
 }
 
 /* line 178, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
 .single_user_pil .user_info {
   font-size: 14px;
   font-weight: 400;
-  color: #B5BACD;
+  color: #b5bacd;
 }
 
 /* line 185, G:/admin_project/8 admin/management_html/scss/_body_content.scss */
@@ -5180,11 +5259,44 @@ body::-webkit-scrollbar {
   padding-left: 270px;
   width: 100%;
   padding-top: 0px !important;
-  transition: .5s;
+  transition: 0.5s;
   position: relative;
   min-height: 100vh;
-  padding-bottom: 70px;
+  /* padding-bottom: 70px; */
   overflow: hidden;
+  background-image: linear-gradient(90deg, #020024 0%, #090979 35%, #00d4ff 100%);
+}
+.text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text h1 {
+  font-size: 5rem;
+  text-align: center;
+  color: #e5fcf5;
+  font-family: "Yellowtail", cursive;
+  font-weight: 700;
+  text-shadow: 2px 2px 0px #c78283, 4px 4px 0px #f3d9dc, 6px 6px 0px #46b59b,
+    8px 8px 0px #017e7f, 10px 10px 0px #744253, 12px 12px 0px #560213,
+    14px 14px 0px #77031b,18px 18px 0px #ffc43d;
+}
+
+.text1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text1 h1 {
+  /* font-size: 15rem; */
+  text-align: center;
+  color: #e5fcf5;
+  font-family: "Yellowtail", cursive;
+  font-weight: 700;
+  text-shadow: 5px 5px 0px #c78283, 10px 10px 0px #f3d9dc, 15px 15px 0px #46b59b,
+    
 }
 
 /* line 13, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
@@ -5241,10 +5353,10 @@ body::-webkit-scrollbar {
 
 /* line 44, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .main_content .main_content_iner {
-  min-height: 68vh;
-  transition: .5s;
+  /* min-height: 68vh; */
+  transition: 0.5s;
   position: relative;
-  background: #F6F7FB;
+  /* background: #358b32; */
   margin: 0;
   z-index: 22;
   border-radius: 0px;
@@ -5253,7 +5365,7 @@ body::-webkit-scrollbar {
 
 /* line 54, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .main_content .main_content_iner.default_main_contaner_iner {
-  background: #FFFFFF;
+  background: #ffffff;
 }
 
 /* line 56, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
@@ -5399,22 +5511,22 @@ body::-webkit-scrollbar {
 
 /* line 169, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .single_element .single_quick_activity .count_content .blue_color {
-  color: #20B1B9 !important;
+  color: #20b1b9 !important;
 }
 
 /* line 172, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .single_element .single_quick_activity .count_content .red_color {
-  color: #FF4409 !important;
+  color: #ff4409 !important;
 }
 
 /* line 175, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .single_element .single_quick_activity .count_content .deep_blue {
-  color: #016DD8 !important;
+  color: #016dd8 !important;
 }
 
 /* line 178, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .single_element .single_quick_activity .count_content .green_color {
-  color: #01D874 !important;
+  color: #01d874 !important;
 }
 
 /* line 182, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
@@ -5424,7 +5536,7 @@ body::-webkit-scrollbar {
   font-weight: 700;
   -webkit-transition: 0.5s;
   transition: 0.5s;
-  color: #474D58;
+  color: #474d58;
   margin-bottom: 0px;
   font-family: "Mulish", sans-serif;
   line-height: 1;
@@ -5436,7 +5548,7 @@ body::-webkit-scrollbar {
   transition: 0.5s;
   font-size: 14px;
   font-weight: 700;
-  color: #8890B5;
+  color: #8890b5;
   font-family: "Mulish", sans-serif;
   line-height: 1;
   margin-bottom: 15px;
@@ -5456,17 +5568,17 @@ body::-webkit-scrollbar {
 
 /* line 226, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .orange_bg {
-  background: #FF4409 !important;
+  background: #ff4409 !important;
 }
 
 /* line 229, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .blue_bg {
-  background: #016DD8 !important;
+  background: #016dd8 !important;
 }
 
 /* line 232, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .green_bg {
-  background: #20B1B9 !important;
+  background: #20b1b9 !important;
 }
 
 /******** main content css end *********/
@@ -5497,38 +5609,40 @@ body::-webkit-scrollbar {
 
 /* line 256, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .breadcrumb.page_bradcam.default_bradcam li {
-  color: #9B9ABA;
+  color: #9b9aba;
 }
 
 /* line 258, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .breadcrumb.page_bradcam.default_bradcam li a {
-  color: #9B9ABA;
+  color: #9b9aba;
 }
 
 /* line 262, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
-.breadcrumb.page_bradcam.default_bradcam .breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb.page_bradcam.default_bradcam
+  .breadcrumb-item
+  + .breadcrumb-item::before {
   content: ">";
-  color: #9B9ABA;
+  color: #9b9aba;
 }
 
 /* line 267, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .breadcrumb.page_bradcam li {
   font-size: 14px;
   font-weight: 400;
-  color: #9B9ABA;
+  color: #9b9aba;
 }
 
 /* line 271, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .breadcrumb.page_bradcam li a {
   font-size: 13px;
   font-weight: 400;
-  color: #9B9ABA;
+  color: #9b9aba;
 }
 
 /* line 280, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .breadcrumb.page_bradcam .breadcrumb-item + .breadcrumb-item::before {
   content: "/";
-  color: #9B9ABA;
+  color: #9b9aba;
 }
 
 /* line 286, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
@@ -5540,7 +5654,7 @@ body::-webkit-scrollbar {
 
 /* line 293, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .common_bootstrap_button span {
-  background: #F64E60;
+  background: #f64e60;
   padding: 7px 12px;
   text-transform: capitalize;
   display: inline-block;
@@ -5555,12 +5669,12 @@ body::-webkit-scrollbar {
 /* line 306, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
 .page_date_button {
   text-transform: capitalize;
-  color: #9995B6;
+  color: #9995b6;
   border-radius: 5px;
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: .3s;
+  transition: 0.3s;
   min-height: 36px;
 }
 
@@ -5583,7 +5697,7 @@ body::-webkit-scrollbar {
 /* line 2, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .dashboard_part .notification_tab {
   padding: 27px 25px;
-  background-color: #F5ECEC;
+  background-color: #f5ecec;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -5595,12 +5709,12 @@ body::-webkit-scrollbar {
 /* line 10, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .dashboard_part .notification_tab p {
   font-size: 16px;
-  color: #474D58;
+  color: #474d58;
 }
 
 /* line 13, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .dashboard_part .notification_tab p a {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 18, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
@@ -5610,14 +5724,14 @@ body::-webkit-scrollbar {
 
 /* line 20, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .dashboard_part .hide_icon i {
-  color: #2E4765;
+  color: #2e4765;
   font-size: 10px;
 }
 
 /* line 26, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .white_box {
   padding: 30px;
-  background-color: #FFFFFF;
+  /* background-color: #ffffff; */
   -webkit-border-radius: 20px;
   -moz-border-radius: 20px;
   border-radius: 20px;
@@ -5646,7 +5760,7 @@ body::-webkit-scrollbar {
 
 /* line 44, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .white_card {
-  background-color: #FFFFFF;
+  /* background-color: #FFFFFF; */
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -5665,7 +5779,7 @@ body::-webkit-scrollbar {
 /* line 57, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .white_box_50px {
   padding: 43px 45px 38px 50px;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
@@ -5819,14 +5933,15 @@ body::-webkit-scrollbar {
 
 /* line 172, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .QA_section .QA_table .table {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 10px;
   margin-bottom: 35px;
   padding-top: 20px;
 }
 
 /* line 180, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
-.QA_section .QA_table th, .QA_section .QA_table td {
+.QA_section .QA_table th,
+.QA_section .QA_table td {
   font-weight: 400;
   padding: 10px 15px;
   vertical-align: middle;
@@ -5840,7 +5955,7 @@ body::-webkit-scrollbar {
 
 /* line 188, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .QA_section .QA_table .question_content:hover {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 192, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
@@ -5869,7 +5984,7 @@ body::-webkit-scrollbar {
 
 /* line 211, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .QA_section .QA_table tbody .btn_1 {
-  background: #65F9B3;
+  background: #65f9b3;
   color: #fff;
   border: 0;
   font-size: 8px;
@@ -5896,24 +6011,27 @@ body::-webkit-scrollbar {
 }
 
 /* line 233, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
-.QA_section .QA_table tbody th, .QA_section .QA_table tbody td {
+.QA_section .QA_table tbody th,
+.QA_section .QA_table tbody td {
   font-size: 12px;
   font-weight: 400;
   border-bottom: 0;
 }
 
 /* line 245, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
-.QA_section .QA_table tbody th.pending, .QA_section .QA_table tbody td.pending {
-  color: #E09079;
+.QA_section .QA_table tbody th.pending,
+.QA_section .QA_table tbody td.pending {
+  color: #e09079;
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 500;
 }
 
 /* line 252, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
-.QA_section .QA_table tbody th.priority_hight, .QA_section .QA_table tbody td.priority_hight {
+.QA_section .QA_table tbody th.priority_hight,
+.QA_section .QA_table tbody td.priority_hight {
   font-size: 14px;
-  color: #D7598F;
+  color: #d7598f;
   font-weight: 400;
 }
 
@@ -5932,7 +6050,7 @@ body::-webkit-scrollbar {
 
 /* line 274, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .QA_section .QA_table .view_btn {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 276, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
@@ -5952,7 +6070,7 @@ body::-webkit-scrollbar {
   border: 0px solid transparent;
   font-size: 12px;
   font-weight: 600;
-  color: #474D58;
+  color: #474d58;
   white-space: nowrap;
   text-transform: capitalize;
   font-family: "Mulish", sans-serif;
@@ -5960,21 +6078,21 @@ body::-webkit-scrollbar {
   background: #fff;
   border: 0 !important;
   background: transparent;
-  border-top: 1px solid #E5ECFF !important;
-  border-bottom: 1px solid #E5ECFF !important;
+  border-top: 1px solid #e5ecff !important;
+  border-bottom: 1px solid #e5ecff !important;
   position: relative;
 }
 
 /* line 299, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .QA_section .QA_table .table thead th:first-child {
   border-radius: 5px 0px 0px 5px;
-  border-left: 1px solid #E5ECFF !important;
+  border-left: 1px solid #e5ecff !important;
 }
 
 /* line 303, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .QA_section .QA_table .table thead th:last-child {
   border-radius: 0px 5px 5px 0px;
-  border-right: 1px solid #E5ECFF !important;
+  border-right: 1px solid #e5ecff !important;
 }
 
 @media only screen and (min-width: 576px) and (max-width: 767px) {
@@ -6049,7 +6167,7 @@ body::-webkit-scrollbar {
 
 /* line 360, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .chart_box_1 .box_header .box_header_right .legend_circle ul li {
-  color: #828BB2;
+  color: #828bb2;
   font-size: 12px;
   font-weight: 400;
   margin-right: 30px;
@@ -6079,7 +6197,7 @@ body::-webkit-scrollbar {
 
 /* line 387, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .dashboard_breadcam p {
-  color: #6F658D;
+  color: #6f658d;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 0;
@@ -6092,14 +6210,15 @@ body::-webkit-scrollbar {
 
 /* line 395, G:/admin_project/8 admin/management_html/scss/_dashboard_part.scss */
 .dashboard_breadcam p a {
-  color: #6F658D;
+  color: #6f658d;
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 0;
 }
 
 /* line 4, G:/admin_project/8 admin/management_html/scss/_form_style.scss */
-.form_style .form-group label, .form_style .form-group p {
+.form_style .form-group label,
+.form_style .form-group p {
   font-size: 14px;
   font-weight: 300;
   text-transform: capitalize;
@@ -6155,7 +6274,7 @@ body::-webkit-scrollbar {
 
 /* line 29, G:/admin_project/8 admin/management_html/scss/_revenue_part.scss */
 .revenue_part .courses_duration h6 i {
-  color: #2E4765;
+  color: #2e4765;
   position: absolute;
   left: 0;
   top: 2px;
@@ -6204,7 +6323,7 @@ body::-webkit-scrollbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #BBC1C9;
+  border: 1px solid #bbc1c9;
   border-left: 0px solid transparent;
   -webkit-transition: 0.5s;
   transition: 0.5s;
@@ -6212,7 +6331,7 @@ body::-webkit-scrollbar {
 
 /* line 35, G:/admin_project/8 admin/management_html/scss/_payment_setting.scss */
 .payment_methord .payment_methord_logo .single_logo_iner:first-child {
-  border-left: 1px solid #BBC1C9;
+  border-left: 1px solid #bbc1c9;
   border-radius: 5px 0 0 5px;
 }
 
@@ -6228,7 +6347,7 @@ body::-webkit-scrollbar {
 
 /* line 45, G:/admin_project/8 admin/management_html/scss/_payment_setting.scss */
 .payment_methord .payment_methord_logo .single_logo_iner.active {
-  border: 1px solid #2E4765 !important;
+  border: 1px solid #2e4765 !important;
 }
 
 /* line 54, G:/admin_project/8 admin/management_html/scss/_payment_setting.scss */
@@ -6241,7 +6360,7 @@ body::-webkit-scrollbar {
   width: 100%;
   background-color: #fef1f2;
   border-radius: 5px;
-  border: 1px solid #F1F3F5;
+  border: 1px solid #f1f3f5;
   padding: 12px 20px;
 }
 
@@ -6257,7 +6376,7 @@ body::-webkit-scrollbar {
   display: inline-block;
   padding: 12px 20px;
   max-width: 85px;
-  color: #9C9C9C;
+  color: #9c9c9c;
 }
 
 /* line 76, G:/admin_project/8 admin/management_html/scss/_payment_setting.scss */
@@ -6269,14 +6388,14 @@ body::-webkit-scrollbar {
 .form_group .nice_Select {
   background-color: #fef1f2;
   margin-right: 10px;
-  color: #9C9C9C;
+  color: #9c9c9c;
 }
 
 /* line 86, G:/admin_project/8 admin/management_html/scss/_payment_setting.scss */
 .checkbox label {
   margin-bottom: 0;
   margin-top: 25px;
-  color: #9C9C9C;
+  color: #9c9c9c;
   margin-left: 8px;
 }
 
@@ -6306,7 +6425,7 @@ body::-webkit-scrollbar {
 
 /* line 22, G:/admin_project/8 admin/management_html/scss/_footer.scss */
 .footer_part.fixed_footer .footer_iner {
-  border-top: 2px solid #884FFB;
+  border-top: 2px solid #884ffb;
   background: #fff !important;
 }
 
@@ -6317,7 +6436,7 @@ body::-webkit-scrollbar {
 
 /* line 30, G:/admin_project/8 admin/management_html/scss/_footer.scss */
 .footer_part.default_footer {
-  background: #F5F6FF;
+  background: #f5f6ff;
 }
 
 /* line 32, G:/admin_project/8 admin/management_html/scss/_footer.scss */
@@ -6341,7 +6460,7 @@ body::-webkit-scrollbar {
 
 /* line 44, G:/admin_project/8 admin/management_html/scss/_footer.scss */
 .footer_part .footer_iner.text-center {
-  background: #FFFFFF;
+  background: #ffffff;
   padding: 27px 0;
   margin: 0 15px;
   border-radius: 15px;
@@ -6352,7 +6471,7 @@ body::-webkit-scrollbar {
 .footer_part p {
   font-size: 12px;
   font-weight: 500;
-  color: #818E94;
+  color: #818e94;
 }
 
 /* line 55, G:/admin_project/8 admin/management_html/scss/_footer.scss */
@@ -6362,7 +6481,7 @@ body::-webkit-scrollbar {
 
 /* line 58, G:/admin_project/8 admin/management_html/scss/_footer.scss */
 .footer_part p a {
-  color: #884FFB;
+  color: #884ffb;
 }
 
 /* line 60, G:/admin_project/8 admin/management_html/scss/_footer.scss */
@@ -6402,7 +6521,7 @@ body::-webkit-scrollbar {
 
 /* line 17, G:/admin_project/8 admin/management_html/scss/_breadcrumb.scss */
 .breadcrumb_content .active {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 20, G:/admin_project/8 admin/management_html/scss/_breadcrumb.scss */
@@ -6467,22 +6586,22 @@ body::-webkit-scrollbar {
 
 /* line 57, G:/admin_project/8 admin/management_html/scss/_breadcrumb.scss */
 .breadcrumb_content .sa_breadcrumb_iner a:hover {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 58, G:/admin_project/8 admin/management_html/scss/_breadcrumb.scss */
 .breadcrumb_content .sa_breadcrumb_iner a:hover:after {
-  background-color: #2E4765;
+  background-color: #2e4765;
 }
 
 /* line 63, G:/admin_project/8 admin/management_html/scss/_breadcrumb.scss */
 .breadcrumb_content .sa_breadcrumb_iner a:last-child {
-  color: #2E4765;
+  color: #2e4765;
 }
 
 /* line 65, G:/admin_project/8 admin/management_html/scss/_breadcrumb.scss */
 .breadcrumb_content .sa_breadcrumb_iner a:last-child:after {
-  background-color: #2E4765;
+  background-color: #2e4765;
 }
 
 /********* breadcrumd css end **********/
@@ -6602,7 +6721,7 @@ canvas#highlights {
   background: #fff;
   align-items: center;
   border-bottom: 1px solid #eee1e2;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 @media (max-width: 575.98px) {
@@ -6634,14 +6753,14 @@ canvas#highlights {
 .income_servay .count_content h3 {
   font-size: 30px;
   font-weight: 600;
-  color: #2E4765;
+  color: #2e4765;
   line-height: 1;
   margin-bottom: 5px;
 }
 
 /* line 64, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .income_servay .count_content h3 span {
-  color: #2E4765;
+  color: #2e4765;
   font-weight: 600;
   line-height: 1;
 }
@@ -6650,7 +6769,7 @@ canvas#highlights {
 .income_servay .count_content p {
   font-size: 14px;
   font-weight: 400;
-  color: #B2B5C0;
+  color: #b2b5c0;
   line-height: 1;
 }
 
@@ -6683,14 +6802,14 @@ canvas#highlights {
 .staf_list_wrapper .single_staf h4 {
   font-size: 22px;
   font-weight: 600;
-  color: #2E4765;
+  color: #2e4765;
   margin-bottom: 3px;
 }
 
 /* line 102, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .staf_list_wrapper .single_staf p {
   font-size: 14px;
-  color: #818E94;
+  color: #818e94;
   font-weight: 500;
 }
 
@@ -6699,12 +6818,12 @@ canvas#highlights {
   width: 39px;
   height: 39px;
   border-radius: 7px;
-  background: #EFF1F7;
+  background: #eff1f7;
   position: absolute;
   top: -89px;
   right: 0;
   font-size: 18px !important;
-  background: #EFF1F7 !important;
+  background: #eff1f7 !important;
   color: #141124;
 }
 
@@ -6715,7 +6834,7 @@ canvas#highlights {
 
 /* line 126, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .owl-carousel .owl-nav button:hover {
-  background: #16BBE5 !important;
+  background: #16bbe5 !important;
   color: #fff;
 }
 
@@ -6737,7 +6856,7 @@ canvas#highlights {
 
 /* line 144, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .Activity_timeline ul li .activity_bell {
-  background: #884FFB;
+  background: #884ffb;
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -6747,7 +6866,7 @@ canvas#highlights {
 
 /* line 151, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .Activity_timeline ul li .activity_bell.bell_lite {
-  opacity: .19;
+  opacity: 0.19;
 }
 
 /* line 155, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
@@ -6760,7 +6879,7 @@ canvas#highlights {
 .Activity_timeline ul li .activity_wrap h6 {
   font-size: 16px;
   font-weight: 600;
-  color: #2D1967;
+  color: #2d1967;
   margin-bottom: 0;
   line-height: 28px;
 }
@@ -6769,7 +6888,7 @@ canvas#highlights {
 .Activity_timeline ul li .activity_wrap p {
   font-size: 14px;
   line-height: 28px;
-  color: #ADB8C7;
+  color: #adb8c7;
   font-weight: 400;
 }
 
@@ -6784,7 +6903,7 @@ canvas#highlights {
 .barfiller {
   width: 100%;
   height: 8px;
-  background: #F8F9FF;
+  background: #f8f9ff;
   position: relative;
   margin-bottom: 30px;
   border-radius: 30px;
@@ -6818,22 +6937,22 @@ canvas#highlights {
 
 /* line 214, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .barfiller#bar1 .tip {
-  color: #508FF4;
+  color: #508ff4;
 }
 
 /* line 219, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .barfiller#bar2 .tip {
-  color: #FFBF43;
+  color: #ffbf43;
 }
 
 /* line 224, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .barfiller#bar3 .tip {
-  color: #4BE69D;
+  color: #4be69d;
 }
 
 /* line 229, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .barfiller#bar4 .tip {
-  color: #9267FF;
+  color: #9267ff;
 }
 
 /* line 236, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
@@ -6845,7 +6964,7 @@ canvas#highlights {
 .single_social_media .icon_media {
   width: 72px;
   height: 68px;
-  background: #508FF4;
+  background: #508ff4;
   font-size: 38px;
   text-align: center;
   line-height: 72px;
@@ -6857,23 +6976,23 @@ canvas#highlights {
 
 /* line 249, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .single_social_media .icon_media.twitter_bg {
-  background: #43CCFF;
+  background: #43ccff;
 }
 
 /* line 252, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .single_social_media .icon_media.youtube_bg {
-  background: #FF0000;
+  background: #ff0000;
 }
 
 /* line 255, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .single_social_media .icon_media.insta_bg {
-  background: #FF72B9;
+  background: #ff72b9;
 }
 
 /* line 260, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .single_social_media .media_contet span {
   font-size: 16px;
-  color: #8890B5;
+  color: #8890b5;
   font-weight: 700;
   display: block;
   margin-bottom: 10px;
@@ -6883,7 +7002,7 @@ canvas#highlights {
 .single_social_media .media_contet h4 {
   font-size: 35px;
   font-weight: 700;
-  color: #474D58;
+  color: #474d58;
   margin-bottom: 0;
 }
 
@@ -6908,7 +7027,7 @@ canvas#highlights {
 
 /* line 288, G:/admin_project/8 admin/management_html/scss/_lms_category.scss */
 .weatcher_update_wrapper .weather_img_2 {
-  background-color: #E5FFFE;
+  background-color: #e5fffe;
   border-radius: 15px;
   background-image: url(../img/weather_1.png);
   background-repeat: no-repeat;
@@ -6923,15 +7042,17 @@ canvas#highlights {
 }
 
 /* line 3, G:/admin_project/8 admin/management_html/scss/_summer_note.scss */
-.note-editor.note-frame .note-popover .note-popover-content, .note-editor.note-frame .note-toolbar {
+.note-editor.note-frame .note-popover .note-popover-content,
+.note-editor.note-frame .note-toolbar {
   padding: 4px 15px 8px 15px;
   margin: 0;
   border-radius: 5px 5px 0 0;
-  background-color: #F65365;
+  background-color: #f65365;
 }
 
 /* line 12, G:/admin_project/8 admin/management_html/scss/_summer_note.scss */
-.note-editor.note-frame .note-btn i, .note-editor.note-frame .note-current-fontname {
+.note-editor.note-frame .note-btn i,
+.note-editor.note-frame .note-current-fontname {
   color: #7e7172;
   font-size: 12px;
 }
@@ -6951,13 +7072,13 @@ canvas#highlights {
 /* line 26, G:/admin_project/8 admin/management_html/scss/_summer_note.scss */
 .note-editor.note-frame .note-btn:hover {
   color: #fff;
-  background: #884FFB;
+  background: #884ffb;
 }
 
 /* line 30, G:/admin_project/8 admin/management_html/scss/_summer_note.scss */
 .note-editor.note-frame .note-btn:hover i {
   color: #fff;
-  background: #884FFB;
+  background: #884ffb;
 }
 
 /* line 34, G:/admin_project/8 admin/management_html/scss/_summer_note.scss */
@@ -7048,19 +7169,20 @@ canvas#highlights {
 /* line 31, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .gj-picker-md table tr td.today div {
   color: #fff;
-  background: #FF4409;
+  background: #ff4409;
   border-radius: 50%;
 }
 
 /* line 36, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .gj-picker-md table tr td.gj-cursor-pointer div:hover {
   border-radius: 50%;
-  background: #FF4409;
+  background: #ff4409;
   color: #fff;
 }
 
 /* line 42, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
-.gj-picker-md div[role="navigator"] div:first-child, .gj-picker-md div[role="navigator"] div:last-child {
+.gj-picker-md div[role="navigator"] div:first-child,
+.gj-picker-md div[role="navigator"] div:last-child {
   max-width: 42px;
   background: #fef1f2;
   color: #000;
@@ -7072,7 +7194,8 @@ canvas#highlights {
 }
 
 /* line 51, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
-.gj-picker-md div[role="navigator"] div:first-child i, .gj-picker-md div[role="navigator"] div:last-child i {
+.gj-picker-md div[role="navigator"] div:first-child i,
+.gj-picker-md div[role="navigator"] div:last-child i {
   font-weight: 900;
   font-size: 14px;
 }
@@ -7179,10 +7302,29 @@ canvas#highlights {
   width: 3px;
   height: 3px;
   background: #7e7172;
-  content: '';
+  content: "";
   border-radius: 50%;
 }
+.btn-grad {background-image: linear-gradient(to right, #16A085 0%, #F4D03F  51%, #16A085  100%)}
+.btn-grad {
+   margin: 10px;
+   padding: 15px 45px;
+   text-align: center;
+   text-transform: uppercase;
+   transition: 0.5s;
+   background-size: 200% auto;
+   color: Black;            
+   box-shadow: 0 0 20px #eee;
+   border-radius: 10px;
+   display: block;
+   font-weight: bolder;
+ }
 
+ .btn-grad:hover {
+   background-position: right center; /* change the direction of the change here */
+   color: #fff;
+   text-decoration: none;
+ }
 /* line 150, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .result_modal_table_form .modal-body {
   margin: 30px 0;
@@ -7220,7 +7362,8 @@ canvas#highlights {
 }
 
 /* line 179, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
-.result_modal_table_form .table tbody th, .result_modal_table_form .table tbody td {
+.result_modal_table_form .table tbody th,
+.result_modal_table_form .table tbody td {
   color: #7e7172;
   font-size: 13px !important;
   color: #7e7172;
@@ -7306,7 +7449,7 @@ canvas#highlights {
 /* line 243, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .common_date_picker input {
   width: 100%;
-  border: 1px solid #F1F3F5;
+  border: 1px solid #f1f3f5;
   border-radius: 3px;
   height: 40px;
   line-height: 40px;
@@ -7392,10 +7535,10 @@ canvas#highlights {
   line-height: 30px;
   padding: 0 30px 0 20px;
   font-size: 12px;
-  color: #FF4409;
+  color: #ff4409;
   font-weight: 400;
   background: #ffff;
-  border: 1px solid #FF4409;
+  border: 1px solid #ff4409;
   border-radius: 30px;
   position: relative;
 }
@@ -7403,7 +7546,7 @@ canvas#highlights {
 /* line 329, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .tagInput_field .bootstrap-tagsinput .badge [data-role="remove"]::after {
   font-size: 10px;
-  font-family: 'themify';
+  font-family: "themify";
   content: "\e646";
   background: none;
   padding: 0;
@@ -7418,9 +7561,9 @@ canvas#highlights {
 
 /* line 343, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .tagInput_field .bootstrap-tagsinput .badge [data-role="remove"]:hover::after {
-  background: #FF4409;
+  background: #ff4409;
   color: #fff;
-  border-color: #FF4409;
+  border-color: #ff4409;
 }
 
 /* line 348, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
@@ -7496,7 +7639,8 @@ canvas#highlights {
   border-radius: 50%;
   vertical-align: -6px;
   margin-right: 15px;
-  transition: background-color 150ms 200ms, transform 350ms cubic-bezier(0.78, -1.22, 0.17, 1.89);
+  transition: background-color 150ms 200ms,
+    transform 350ms cubic-bezier(0.78, -1.22, 0.17, 1.89);
 }
 
 /* line 419, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
@@ -7505,7 +7649,7 @@ canvas#highlights {
   width: 0px;
   height: 1px;
   border-radius: 2px;
-  background: #FF4409;
+  background: #ff4409;
   position: absolute;
   transform: rotate(38deg);
   top: 13px;
@@ -7523,7 +7667,7 @@ canvas#highlights {
   width: 0;
   height: 1px;
   border-radius: 2px;
-  background: #FF4409;
+  background: #ff4409;
   position: absolute;
   transform: rotate(305deg);
   top: 12.8px;
@@ -7552,9 +7696,9 @@ canvas#highlights {
 
 /* line 469, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .custom_lms_radio_2 input[type="radio"]:checked + label span {
-  background-color: #FF4409;
+  background-color: #ff4409;
   transform: scale(1);
-  border-color: #FF4409;
+  border-color: #ff4409;
 }
 
 /* line 474, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
@@ -7573,9 +7717,9 @@ canvas#highlights {
 
 /* line 487, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .custom_lms_radio_2 input[type="radio"]:checked + label:hover span {
-  background-color: #FF4409;
+  background-color: #ff4409;
   transform: scale(1.25);
-  border-color: #FF4409;
+  border-color: #ff4409;
 }
 
 /* line 492, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
@@ -7655,7 +7799,9 @@ canvas#highlights {
 }
 
 /* line 563, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
-.indvisual_form .nice_Select, .indvisual_form input, .indvisual_form textarea {
+.indvisual_form .nice_Select,
+.indvisual_form input,
+.indvisual_form textarea {
   height: 50px;
   line-height: 50px;
   background-color: #fff;
@@ -7672,7 +7818,9 @@ canvas#highlights {
 }
 
 /* line 577, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
-.indvisual_form .nice_Select::placeholder, .indvisual_form input::placeholder, .indvisual_form textarea::placeholder {
+.indvisual_form .nice_Select::placeholder,
+.indvisual_form input::placeholder,
+.indvisual_form textarea::placeholder {
   color: #7e7172;
   font-weight: 300;
   opacity: 1;
@@ -7714,7 +7862,7 @@ canvas#highlights {
 
 /* line 615, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .list_counter_wrapper .single_list_counter {
-  border-bottom: 1px solid #F1F3F5;
+  border-bottom: 1px solid #f1f3f5;
   padding: 35px 0 26px 87px;
 }
 
@@ -7739,34 +7887,34 @@ canvas#highlights {
 /* line 630, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .list_counter_wrapper .single_list_counter p {
   font-size: 17px;
-  color: #6F658D;
+  color: #6f658d;
   margin-bottom: 0;
   padding-top: 15px;
 }
 
 /* line 639, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .green_color {
-  color: #01D874 !important;
+  color: #01d874 !important;
 }
 
 /* line 642, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .blue_color {
-  color: #20B1B9 !important;
+  color: #20b1b9 !important;
 }
 
 /* line 645, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .deep_blue {
-  color: #016DD8 !important;
+  color: #016dd8 !important;
 }
 
 /* line 648, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .deep_blue_2 {
-  color: #4567EE !important;
+  color: #4567ee !important;
 }
 
 /* line 651, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .red_color {
-  color: #FF4409 !important;
+  color: #ff4409 !important;
 }
 
 /* line 657, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
@@ -7781,7 +7929,7 @@ canvas#highlights {
 .activity_progressbar .single_progressbar h6 {
   font-size: 16px;
   font-weight: 400;
-  color: #2D1967;
+  color: #2d1967;
 }
 
 /* line 667, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
@@ -7791,7 +7939,7 @@ canvas#highlights {
 
 /* line 669, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .activity_progressbar .single_progressbar .barfiller .tip {
-  color: #2D1967 !important;
+  color: #2d1967 !important;
   font-size: 12px;
 }
 
@@ -7827,7 +7975,7 @@ canvas#highlights {
 
 /* line 699, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .bulder_tab_wrapper ul {
-  border-bottom: 1px solid #E4E6EF;
+  border-bottom: 1px solid #e4e6ef;
 }
 
 /* line 702, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
@@ -7835,15 +7983,15 @@ canvas#highlights {
   padding-top: 2rem;
   padding-bottom: 2rem;
   font-weight: 500;
-  color: #7E8299;
+  color: #7e8299;
   text-transform: capitalize;
   border-bottom: 1px solid transparent;
 }
 
 /* line 709, G:/admin_project/8 admin/management_html/scss/_common_component.scss */
 .bulder_tab_wrapper ul li .nav-link.active {
-  color: #3699FF;
-  border-bottom: 1px solid #3699FF;
+  color: #3699ff;
+  border-bottom: 1px solid #3699ff;
 }
 
 /* line 2, G:/admin_project/8 admin/management_html/scss/_projects.scss */
@@ -7885,7 +8033,7 @@ canvas#highlights {
 .dataTables_paginate a {
   width: 32px;
   height: 32px;
-  background: #FFFFFF !important;
+  background: #ffffff !important;
   border-radius: 3px !important;
   text-align: center !important;
   line-height: 32px;
@@ -7896,7 +8044,7 @@ canvas#highlights {
 
 /* line 40, G:/admin_project/8 admin/management_html/scss/_projects.scss */
 .dataTables_paginate a.current {
-  background: #884FFB !important;
+  background: #884ffb !important;
   box-shadow: 0px 5px 10px rgba(59, 118, 239, 0.3) !important;
   border: 0 !important;
   color: #fff !important;
@@ -7904,7 +8052,7 @@ canvas#highlights {
 
 /* line 46, G:/admin_project/8 admin/management_html/scss/_projects.scss */
 .dataTables_paginate a:hover {
-  background: #884FFB !important;
+  background: #884ffb !important;
   box-shadow: 0px 5px 10px rgba(59, 118, 239, 0.3);
   border: 0 !important;
   color: #fff !important;
@@ -7923,7 +8071,9 @@ canvas#highlights {
 }
 
 /* line 62, G:/admin_project/8 admin/management_html/scss/_projects.scss */
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
   cursor: default;
   color: #fff !important;
   border: 0;
@@ -7939,10 +8089,11 @@ canvas#highlights {
 }
 
 /* line 74, G:/admin_project/8 admin/management_html/scss/_projects.scss */
-.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
   color: #fff !important;
-  border: 1px solid #884FFB;
-  background-color: #884FFB !important;
+  border: 1px solid #884ffb;
+  background-color: #884ffb !important;
   box-shadow: 0px 5px 10px rgba(136, 79, 251, 0.04) !important;
 }
 
@@ -7989,7 +8140,7 @@ canvas#highlights {
 
 /* line 5, G:/admin_project/8 admin/management_html/scss/_chart_box.scss */
 .widget-chart .rounded {
-  border-radius: .25rem !important;
+  border-radius: 0.25rem !important;
 }
 
 /* line 8, G:/admin_project/8 admin/management_html/scss/_chart_box.scss */
@@ -8007,7 +8158,7 @@ canvas#highlights {
   height: 100%;
   width: 100%;
   z-index: 3;
-  opacity: .2;
+  opacity: 0.2;
 }
 
 /* line 21, G:/admin_project/8 admin/management_html/scss/_chart_box.scss */
@@ -8036,7 +8187,7 @@ canvas#highlights {
 
 /* line 41, G:/admin_project/8 admin/management_html/scss/_chart_box.scss */
 .widget-chart .widget-subheading {
-  margin-top: -.5rem;
+  margin-top: -0.5rem;
 }
 
 /* line 44, G:/admin_project/8 admin/management_html/scss/_chart_box.scss */
@@ -8051,7 +8202,7 @@ canvas#highlights {
 
 /* line 52, G:/admin_project/8 admin/management_html/scss/_chart_box.scss */
 .icon-wrapper .icon-wrapper-bg.bg-light {
-  opacity: .08;
+  opacity: 0.08;
 }
 
 /* line 55, G:/admin_project/8 admin/management_html/scss/_chart_box.scss */
@@ -8100,7 +8251,7 @@ canvas#highlights {
   position: relative;
   position: relative;
   padding: 13px 20px;
-  background: #884FFB;
+  background: #884ffb;
   box-shadow: 0px 5px 10px rgba(76, 110, 248, 0.3);
   color: #fff;
   -webkit-transition: 0.3s;
@@ -8120,7 +8271,7 @@ canvas#highlights {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-family: 'themify';
+  font-family: "themify";
   font-size: 14px;
   right: 30px;
   color: #fff;
@@ -8128,7 +8279,7 @@ canvas#highlights {
 
 /* line 47, G:/admin_project/8 admin/management_html/scss/_faq.scss */
 .accordion_custom .card .card-header h2 a.collapsed {
-  background: #F5F6FF;
+  background: #f5f6ff;
   color: #415094;
   box-shadow: none;
   -webkit-border-radius: 10px;
@@ -8209,7 +8360,7 @@ canvas#highlights {
   position: relative;
   position: relative;
   padding: 13px 20px;
-  background: #884FFB;
+  background: #884ffb;
   box-shadow: 0px 5px 10px rgba(76, 110, 248, 0.3);
   color: #fff;
   -webkit-transition: 0.3s;
@@ -8229,7 +8380,7 @@ canvas#highlights {
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-family: 'themify';
+  font-family: "themify";
   font-size: 14px;
   right: 30px;
   color: #fff;
@@ -8237,7 +8388,7 @@ canvas#highlights {
 
 /* line 127, G:/admin_project/8 admin/management_html/scss/_faq.scss */
 .accordion_custom2 .card .card-header h2 a.collapsed {
-  background: #F5F6FF;
+  background: #f5f6ff;
   color: #415094;
   box-shadow: none;
   -webkit-border-radius: 0px;
@@ -8259,7 +8410,7 @@ canvas#highlights {
 /* line 143, G:/admin_project/8 admin/management_html/scss/_faq.scss */
 .accordion_custom2 .card .card-body {
   padding: 24px 20px 30px 20px;
-  background: #F5F6FF;
+  background: #f5f6ff;
 }
 
 /* line 149, G:/admin_project/8 admin/management_html/scss/_faq.scss */
@@ -8351,19 +8502,39 @@ canvas#highlights {
 }
 
 /* line 204, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_list ul li a .message_pre_left .message_preview_thumb {
+.messages_box_area
+  .messages_list
+  ul
+  li
+  a
+  .message_pre_left
+  .message_preview_thumb {
   position: relative;
 }
 
 /* line 206, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_list ul li a .message_pre_left .message_preview_thumb img {
+.messages_box_area
+  .messages_list
+  ul
+  li
+  a
+  .message_pre_left
+  .message_preview_thumb
+  img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
 }
 
 /* line 211, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_list ul li a .message_pre_left .message_preview_thumb .round-10 {
+.messages_box_area
+  .messages_list
+  ul
+  li
+  a
+  .message_pre_left
+  .message_preview_thumb
+  .round-10 {
   border: 2px solid #f8f8fc;
   border-radius: 50%;
   position: absolute;
@@ -8391,7 +8562,7 @@ canvas#highlights {
 .messages_box_area .messages_list ul li a .message_pre_left p {
   font-size: 13px;
   font-weight: 300;
-  color: #676B84;
+  color: #676b84;
   margin-bottom: 0;
 }
 
@@ -8453,24 +8624,40 @@ canvas#highlights {
 
 /* line 278, G:/admin_project/8 admin/management_html/scss/_faq.scss */
 .messages_box_area .messages_chat .single_message_chat .message_content_view {
-  background: #F5F6FF;
+  background: #f5f6ff;
   border-radius: 10px;
   padding: 30px;
 }
 
 /* line 282, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_chat .single_message_chat .message_content_view.red_border {
-  border: 1px solid #884FFB;
-  background: #884FFB;
+.messages_box_area
+  .messages_chat
+  .single_message_chat
+  .message_content_view.red_border {
+  border: 1px solid #884ffb;
+  background: #884ffb;
 }
 
 /* line 285, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_chat .single_message_chat .message_content_view.red_border span, .messages_box_area .messages_chat .single_message_chat .message_content_view.red_border p {
+.messages_box_area
+  .messages_chat
+  .single_message_chat
+  .message_content_view.red_border
+  span,
+.messages_box_area
+  .messages_chat
+  .single_message_chat
+  .message_content_view.red_border
+  p {
   color: #fff;
 }
 
 /* line 289, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_chat .single_message_chat .message_content_view span {
+.messages_box_area
+  .messages_chat
+  .single_message_chat
+  .message_content_view
+  span {
   display: block;
   margin: 17px 0 17px 0;
 }
@@ -8479,7 +8666,7 @@ canvas#highlights {
 .messages_box_area .messages_chat .single_message_chat .message_content_view p {
   font-size: 13px;
   font-weight: 300;
-  color: #676B84;
+  color: #676b84;
   line-height: 26px;
 }
 
@@ -8491,14 +8678,23 @@ canvas#highlights {
 }
 
 /* line 306, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_chat .single_message_chat .message_pre_left .message_preview_thumb img {
+.messages_box_area
+  .messages_chat
+  .single_message_chat
+  .message_pre_left
+  .message_preview_thumb
+  img {
   width: 50px;
   height: 50px;
   border-radius: 50%;
 }
 
 /* line 312, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_chat .single_message_chat .message_pre_left .messges_info {
+.messages_box_area
+  .messages_chat
+  .single_message_chat
+  .message_pre_left
+  .messges_info {
   padding-left: 20px;
 }
 
@@ -8514,7 +8710,7 @@ canvas#highlights {
 .messages_box_area .messages_chat .single_message_chat .message_pre_left p {
   font-size: 12px;
   font-weight: 300;
-  color: #676B84;
+  color: #676b84;
   margin-bottom: 0;
 }
 
@@ -8561,7 +8757,10 @@ canvas#highlights {
 }
 
 /* line 351, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_chat .single_message_chat.sender_message .message_pre_left {
+.messages_box_area
+  .messages_chat
+  .single_message_chat.sender_message
+  .message_pre_left {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -8569,7 +8768,10 @@ canvas#highlights {
 }
 
 /* line 357, G:/admin_project/8 admin/management_html/scss/_faq.scss */
-.messages_box_area .messages_chat .single_message_chat.sender_message .messges_info {
+.messages_box_area
+  .messages_chat
+  .single_message_chat.sender_message
+  .messges_info {
   padding-left: 0px;
   padding-right: 20px;
   text-align: right;
@@ -8593,7 +8795,7 @@ canvas#highlights {
 
 /* line 373, G:/admin_project/8 admin/management_html/scss/_faq.scss */
 .messages_box_area .messages_chat .message_send_field input {
-  color: #676B84;
+  color: #676b84;
   font-size: 13px;
   height: 40px;
   width: 100%;
@@ -8605,7 +8807,7 @@ canvas#highlights {
 
 /* line 382, G:/admin_project/8 admin/management_html/scss/_faq.scss */
 .messages_box_area .messages_chat .message_send_field input::placeholder {
-  color: #676B84;
+  color: #676b84;
   font-weight: 300;
   opacity: 1;
 }
@@ -8623,7 +8825,7 @@ canvas#highlights {
 /* line 11, G:/admin_project/8 admin/management_html/scss/_mailbox.scss */
 .email-sidebar h4 {
   font-weight: 600;
-  font-size: .875rem;
+  font-size: 0.875rem;
   color: #333;
   padding: 2.5rem 0 3.125rem 1.5625rem;
 }
@@ -8641,14 +8843,14 @@ canvas#highlights {
 /* line 30, G:/admin_project/8 admin/management_html/scss/_mailbox.scss */
 .email-sidebar ul li.active a {
   background: rgba(136, 79, 251, 0.1);
-  color: #884FFB !important;
+  color: #884ffb !important;
 }
 
 /* line 35, G:/admin_project/8 admin/management_html/scss/_mailbox.scss */
 .email-sidebar ul li a {
   display: flex;
   padding: 10px 15px;
-  transition: all .5s ease-in-out;
+  transition: all 0.5s ease-in-out;
   font-weight: 600;
   font-size: 15px;
   color: #333;
@@ -8666,17 +8868,17 @@ canvas#highlights {
 /* line 49, G:/admin_project/8 admin/management_html/scss/_mailbox.scss */
 .email-sidebar ul li a:hover {
   background: rgba(136, 79, 251, 0.1);
-  color: #884FFB !important;
+  color: #884ffb !important;
 }
 
 /* line 52, G:/admin_project/8 admin/management_html/scss/_mailbox.scss */
 .email-sidebar ul li a:hover i {
-  color: #884FFB;
+  color: #884ffb;
 }
 
 /* line 56, G:/admin_project/8 admin/management_html/scss/_mailbox.scss */
 .email-sidebar ul li a i {
-  margin-right: .7rem;
+  margin-right: 0.7rem;
 }
 
 /* line 1, ../../../../../../xampp/htdocs/CRM_frontend/admin/public/frontend/scss/_predefine.scss */
@@ -8724,16 +8926,16 @@ canvas#highlights {
   width: 100%;
   height: 100%;
   border: 0;
-  transition: .3s;
+  transition: 0.3s;
   transform: scale(0);
 }
 
 /* line 44, ../../../../../../xampp/htdocs/CRM_frontend/admin/public/frontend/scss/_predefine.scss */
 /* line 111, G:/admin_project/8 admin/management_html/scss/_mailbox.scss */
 .primary_checkbox input:checked ~ .checkmark {
-  background: #884FFB !important;
+  background: #884ffb !important;
   box-shadow: 0px 5px 10px rgba(59, 118, 239, 0.3) !important;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 52, ../../../../../../xampp/htdocs/CRM_frontend/admin/public/frontend/scss/_predefine.scss */
@@ -8746,7 +8948,7 @@ canvas#highlights {
   top: 0px;
   left: 3px;
   text-indent: 1px;
-  color: #828BB2;
+  color: #828bb2;
   background-color: transparent;
   border: 0px;
   -webkit-transform: rotate(8deg);
@@ -8759,7 +8961,7 @@ canvas#highlights {
   line-height: 20px;
   z-index: 99;
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 76, ../../../../../../xampp/htdocs/CRM_frontend/admin/public/frontend/scss/_predefine.scss */
@@ -8775,7 +8977,7 @@ canvas#highlights {
   background: transparent;
   border-radius: 5px;
   border: 0;
-  transition: .3s;
+  transition: 0.3s;
   transform: scale(1);
   background: rgba(201, 247, 201, 0.34);
 }
@@ -8854,8 +9056,8 @@ canvas#highlights {
 .blue_button {
   font-size: 12px;
   font-weight: 600;
-  color: #2F90F7;
-  background: #E7F3FE;
+  color: #2f90f7;
+  background: #e7f3fe;
   display: inline-block;
   padding: 4px 16px;
   border-radius: 30px;
@@ -8866,7 +9068,7 @@ canvas#highlights {
   font-size: 10px;
   font-weight: 400;
   color: #fff;
-  background: #508FF4;
+  background: #508ff4;
   display: inline-block;
   border-radius: 3px;
   padding: 4px 14px;
@@ -8879,19 +9081,19 @@ canvas#highlights {
 
 /* line 82, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .notification_btn.yellow_btn {
-  background: #FFBF43;
+  background: #ffbf43;
   color: #fff;
 }
 
 /* line 86, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .notification_btn.green_btn {
-  background: #4BE69D;
+  background: #4be69d;
   color: #fff;
 }
 
 /* line 90, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .notification_btn.violate_btn {
-  background: #9267FF;
+  background: #9267ff;
   color: #fff;
 }
 
@@ -8952,72 +9154,72 @@ canvas#highlights {
 
 /* line 132, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .color_blue {
-  color: #2F90F7;
+  color: #2f90f7;
 }
 
 /* line 135, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .color_blue2 {
-  color: #8AC6FB;
+  color: #8ac6fb;
 }
 
 /* line 138, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .color_parpel {
-  color: #833CDF;
+  color: #833cdf;
 }
 
 /* line 142, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .color_parpel2 {
-  color: #F65365;
+  color: #f65365;
 }
 
 /* line 146, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .color_pink {
-  color: #FE80B2;
+  color: #fe80b2;
 }
 
 /* line 149, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .color_yellow {
-  color: #FFCB24;
+  color: #ffcb24;
 }
 
 /* line 153, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_bg_1 {
-  background: #A37BFD !important;
+  background: #a37bfd !important;
 }
 
 /* line 156, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_color_1 {
-  color: #2D1967 !important;
+  color: #2d1967 !important;
 }
 
 /* line 159, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_color_2 {
-  color: #833CDF !important;
+  color: #833cdf !important;
 }
 
 /* line 162, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_color_3 {
-  color: #FE80B2 !important;
+  color: #fe80b2 !important;
 }
 
 /* line 165, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_color_4 {
-  color: #FE80B2 !important;
+  color: #fe80b2 !important;
 }
 
 /* line 168, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_color_5 {
-  color: #2FF0F7 !important;
+  color: #2ff0f7 !important;
 }
 
 /* line 171, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_color_6 {
-  color: #8950FC !important;
+  color: #8950fc !important;
 }
 
 /* line 174, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .theme_bg_6 {
-  background: #8950FC !important;
+  background: #8950fc !important;
 }
 
 /* line 177, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
@@ -9377,13 +9579,13 @@ canvas#highlights {
 /* -------------------------------------------------------------------------- */
 /* line 430, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .single_update_news {
-  border-bottom: 1px solid #F3F4F3;
+  border-bottom: 1px solid #f3f4f3;
   padding: 15px 0 17px 0;
 }
 
 /* line 433, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .single_update_news:first-child {
-  border-top: 1px solid #F3F4F3;
+  border-top: 1px solid #f3f4f3;
 }
 
 /* line 436, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
@@ -9413,7 +9615,7 @@ canvas#highlights {
   border-radius: 50%;
   margin-right: 10px;
   padding: 12px;
-  background: #F5F5FF;
+  background: #f5f5ff;
   line-height: 1;
 }
 
@@ -9426,21 +9628,21 @@ canvas#highlights {
 .monthly_plan_wraper .single_plan .plan_left h5 {
   font-size: 16px;
   font-weight: 700;
-  color: #474D58;
+  color: #474d58;
   margin-bottom: 0;
 }
 
 /* line 469, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .monthly_plan_wraper .single_plan .plan_left span {
   font-size: 12px;
-  color: #B5B5C3 !important;
+  color: #b5b5c3 !important;
   font-weight: 700;
   line-height: 12px;
 }
 
 /* line 476, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .monthly_plan_wraper .single_plan .brouser_btn {
-  background: #F3F6F9;
+  background: #f3f6f9;
   font-size: 12px;
   font-weight: 700;
   color: #757575;
@@ -9451,29 +9653,29 @@ canvas#highlights {
 
 /* line 487, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .monthly_plan_wraper .total_blance {
-  background: #F8FAFF;
+  background: #f8faff;
   border-radius: 5px;
   padding: 18px 30px;
 }
 
 /* line 495, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .Sales_Details_plan .row .col-lg-6:nth-child(1) .thumb {
-  background: #EEE5FF;
+  background: #eee5ff;
 }
 
 /* line 498, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .Sales_Details_plan .row .col-lg-6:nth-child(2) .thumb {
-  background: #FFE2E5;
+  background: #ffe2e5;
 }
 
 /* line 501, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .Sales_Details_plan .row .col-lg-6:nth-child(3) .thumb {
-  background: #C9F7F5;
+  background: #c9f7f5;
 }
 
 /* line 504, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .Sales_Details_plan .row .col-lg-6:nth-child(4) .thumb {
-  background: #D7F9EF;
+  background: #d7f9ef;
 }
 
 /* line 508, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
@@ -9488,7 +9690,7 @@ canvas#highlights {
   border-radius: 0.42rem;
   margin-right: 10px;
   padding: 12px;
-  background: #F5F5FF;
+  background: #f5f5ff;
   line-height: 1;
 }
 
@@ -9501,21 +9703,21 @@ canvas#highlights {
 .Sales_Details_plan .single_plan .plan_left h5 {
   font-size: 16px;
   font-weight: 700;
-  color: #474D58;
+  color: #474d58;
   margin-bottom: 0;
 }
 
 /* line 529, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .Sales_Details_plan .single_plan .plan_left span {
   font-size: 12px;
-  color: #B5B5C3 !important;
+  color: #b5b5c3 !important;
   font-weight: 700;
   line-height: 12px;
 }
 
 /* line 536, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .Sales_Details_plan .single_plan .brouser_btn {
-  background: #F3F6F9;
+  background: #f3f6f9;
   font-size: 12px;
   font-weight: 700;
   color: #757575;
@@ -9526,7 +9728,7 @@ canvas#highlights {
 
 /* line 547, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .Sales_Details_plan .total_blance {
-  background: #F8FAFF;
+  background: #f8faff;
   border-radius: 5px;
   padding: 18px 30px;
 }
@@ -9544,7 +9746,7 @@ canvas#highlights {
 
 /* line 563, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .common_tab_btn a {
-  color: #7E8299;
+  color: #7e8299;
   font-size: 12px;
   font-weight: 600;
   border-radius: 8px;
@@ -9554,12 +9756,12 @@ canvas#highlights {
 /* line 569, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .common_tab_btn a.active {
   color: #fff;
-  background-color: #884FFB;
+  background-color: #884ffb;
 }
 
 /* line 576, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .common_tab_btn2 a {
-  color: #7E8299;
+  color: #7e8299;
   font-size: 12px;
   font-weight: 600;
   border-radius: 8px;
@@ -9569,7 +9771,7 @@ canvas#highlights {
 /* line 582, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .common_tab_btn2 a.active {
   color: #fff;
-  background-color: #F64E60;
+  background-color: #f64e60;
 }
 
 /* line 588, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
@@ -9583,7 +9785,8 @@ canvas#highlights {
 }
 
 /* line 594, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.dashboard_w_map .jvectormap-zoomin, .dashboard_w_map .jvectormap-zoomout {
+.dashboard_w_map .jvectormap-zoomin,
+.dashboard_w_map .jvectormap-zoomout {
   width: 20px;
   height: 20px;
 }
@@ -9594,7 +9797,9 @@ canvas#highlights {
 }
 
 /* line 601, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.dashboard_w_map .jvectormap-zoomin, .dashboard_w_map .jvectormap-zoomout, .dashboard_w_map .jvectormap-goback {
+.dashboard_w_map .jvectormap-zoomin,
+.dashboard_w_map .jvectormap-zoomout,
+.dashboard_w_map .jvectormap-goback {
   position: absolute;
   left: auto;
   right: 0;
@@ -9614,12 +9819,12 @@ canvas#highlights {
 .single_progressbar h6 {
   font-size: 14px;
   font-weight: 400;
-  color: #474D58;
+  color: #474d58;
 }
 
 /* line 624, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .single_progressbar .barfiller span {
-  color: #8890B5 !important;
+  color: #8890b5 !important;
   font-size: 11px;
 }
 
@@ -9647,7 +9852,7 @@ canvas#highlights {
 
 /* line 657, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .social_media_card {
-  background-color: #EEE5FF;
+  background-color: #eee5ff;
   background-image: url(../img/shape_2.svg);
   background-size: cover;
   background-position: top right;
@@ -9664,10 +9869,10 @@ canvas#highlights {
 /* line 667, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .social_media_card .media_card_body::before {
   position: absolute;
-  content: '';
+  content: "";
   left: 0;
   top: 0;
-  background: #FFFFFF;
+  background: #ffffff;
   width: 100%;
   bottom: 0;
   top: 70px;
@@ -9684,7 +9889,7 @@ canvas#highlights {
 
 /* line 683, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .social_media_card .media_card_body .media_card_list .single_media_card {
-  background: #FFF4DE;
+  background: #fff4de;
   border-radius: 15px;
   height: 136px;
   display: flex;
@@ -9696,7 +9901,7 @@ canvas#highlights {
 
 /* line 692, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .social_media_card .media_card_body .media_card_list .single_media_card span {
-  color: #FFC881;
+  color: #ffc881;
   font-size: 12px;
   font-weight: 700;
 }
@@ -9706,57 +9911,90 @@ canvas#highlights {
   font-size: 28px;
   font-weight: 900;
   margin-bottom: 0;
-  color: #FFAD44;
+  color: #ffad44;
 }
 
 /* line 703, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(2) {
-  background: #E2FFF6;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(2) {
+  background: #e2fff6;
 }
 
 /* line 705, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(2) span {
-  color: #69E2BD;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(2)
+  span {
+  color: #69e2bd;
 }
 
 /* line 708, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(2) h3 {
-  color: #25C997;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(2)
+  h3 {
+  color: #25c997;
 }
 
 /* line 712, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(3) {
-  background: #FFE2E5;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(3) {
+  background: #ffe2e5;
 }
 
 /* line 714, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(3) span {
-  color: #FF8895;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(3)
+  span {
+  color: #ff8895;
 }
 
 /* line 717, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(3) h3 {
-  color: #F64E60;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(3)
+  h3 {
+  color: #f64e60;
 }
 
 /* line 721, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(4) {
-  background: #E1F0FF;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(4) {
+  background: #e1f0ff;
 }
 
 /* line 723, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(4) span {
-  color: #76B5F5;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(4)
+  span {
+  color: #76b5f5;
 }
 
 /* line 726, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
-.social_media_card .media_card_body .media_card_list .single_media_card:nth-child(4) h3 {
-  color: #3699FF;
+.social_media_card
+  .media_card_body
+  .media_card_list
+  .single_media_card:nth-child(4)
+  h3 {
+  color: #3699ff;
 }
 
 /* line 736, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .sales_card_wrapper {
-  background-color: #F65365;
+  background-color: #f65365;
   position: relative;
   background-image: url(../img/plane_thumb.svg);
   background-repeat: no-repeat;
@@ -9790,7 +10028,7 @@ canvas#highlights {
 /* line 762, G:/admin_project/8 admin/management_html/scss/_byer_table.scss */
 .sales_card_wrapper .sales_card_body .single_sales h3 {
   font-size: 25px;
-  color: #474D58;
+  color: #474d58;
   font-weight: 900;
   margin-bottom: 0;
 }
@@ -9805,7 +10043,7 @@ canvas#highlights {
 
 /* line 8, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .notification_wrapper .single_notification .notification_info h4 {
-  color: #2E4765;
+  color: #2e4765;
   margin-bottom: 0;
 }
 
@@ -9813,7 +10051,7 @@ canvas#highlights {
 .notification_wrapper .single_notification .notification_info p {
   font-size: 13px;
   font-weight: 400;
-  color: #7F8B9F;
+  color: #7f8b9f;
 }
 
 /* line 21, G:/admin_project/8 admin/management_html/scss/_notification.scss */
@@ -9821,28 +10059,28 @@ canvas#highlights {
   width: 27px;
   height: 28px;
   border-radius: 5px;
-  background: #C9F7F5;
+  background: #c9f7f5;
   flex: 27px 0 0;
 }
 
 /* line 27, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .color_bg.color_lite_pink {
-  background: #FFE2E5;
+  background: #ffe2e5;
 }
 
 /* line 30, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .color_bg.color_lite_violate {
-  background: #E2E4FF;
+  background: #e2e4ff;
 }
 
 /* line 33, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .color_bg.color_lite_green {
-  background: #E2FFF0;
+  background: #e2fff0;
 }
 
 /* line 36, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .color_bg.color_lite_yellow {
-  background: #FDFFE2;
+  background: #fdffe2;
 }
 
 /* line 40, G:/admin_project/8 admin/management_html/scss/_notification.scss */
@@ -9898,7 +10136,7 @@ canvas#highlights {
 /* line 75, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .property_wrapper .single_property .property_content a h4 {
   font-size: 29px;
-  color: #2E4765;
+  color: #2e4765;
   font-weight: 700;
   margin-bottom: 0;
 }
@@ -9912,14 +10150,14 @@ canvas#highlights {
 
 /* line 83, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .property_wrapper .single_property .property_content a h4.Up_name {
-  color: #D1D1D1;
+  color: #d1d1d1;
 }
 
 /* line 87, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .property_wrapper .single_property .property_content a.property_location {
   font-size: 14px;
-  color: #2F90F7;
-  background: #E7F3FE;
+  color: #2f90f7;
+  background: #e7f3fe;
   display: inline-block;
   padding: 10px 14px;
   display: inline-flex;
@@ -9937,7 +10175,7 @@ canvas#highlights {
 /* line 103, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .property_wrapper .single_property .property_content p {
   font-size: 14px;
-  color: #7F8B9F;
+  color: #7f8b9f;
   font-weight: 400;
 }
 
@@ -9953,7 +10191,7 @@ canvas#highlights {
 
 /* line 117, G:/admin_project/8 admin/management_html/scss/_notification.scss */
 .weather_box {
-  background: #0090FF;
+  background: #0090ff;
 }
 
 /* line 119, G:/admin_project/8 admin/management_html/scss/_notification.scss */
@@ -10001,7 +10239,7 @@ canvas#highlights {
 .weather_box .weather_header .weather_info p {
   font-size: 22px;
   display: inline-block;
-  color: #FFFFFF;
+  color: #ffffff;
   vertical-align: top;
   font-weight: 400;
 }
@@ -10025,7 +10263,7 @@ canvas#highlights {
 .weather_box .weather_content ul li span.selcias {
   font-size: 71px;
   font-weight: 700;
-  color: #FFDC7B;
+  color: #ffdc7b;
   text-transform: uppercase;
 }
 
@@ -10087,12 +10325,21 @@ canvas#highlights {
 }
 
 /* line 5, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--nav .datepicker--nav-action {
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--nav
+  .datepicker--nav-action {
   display: none;
 }
 
 /* line 8, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--days-names {
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--days-names {
   margin: 30px 0 0px;
   padding: 15px 0;
 }
@@ -10107,7 +10354,13 @@ canvas#highlights {
 }
 
 /* line 18, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--days-names .datepicker--day-name {
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--days-names
+  .datepicker--day-name {
   font-size: 14px;
   font-family: "Mulish", sans-serif;
   color: #2b2b2b;
@@ -10115,32 +10368,56 @@ canvas#highlights {
 }
 
 /* line 24, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--cells .datepicker--cell-day.-other-month- {
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--cells
+  .datepicker--cell-day.-other-month- {
   color: #2b2b2b;
 }
 
 /* line 27, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--cells .datepicker--cell {
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--cells
+  .datepicker--cell {
   font-weight: 700;
   font-size: 18px;
 }
 
 /* line 31, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--cells .datepicker--cell-day {
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--cells
+  .datepicker--cell-day {
   height: 51px;
   color: #2b2b2b;
 }
 
 /* line 36, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--cells .datepicker--cell-day:hover {
-  background: #884FFB;
-  border: 2px solid #884FFB;
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--cells
+  .datepicker--cell-day:hover {
+  background: #884ffb;
+  border: 2px solid #884ffb;
   color: #fff;
 }
 
 /* line 42, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
 .default-datepicker .datepicker-inline .datepicker .datepicker--nav-title {
-  color: #FF3000;
+  color: #ff3000;
   font-size: 18px;
   font-weight: 900;
   font-family: "Mulish", sans-serif;
@@ -10167,7 +10444,7 @@ canvas#highlights {
   font-size: 30px;
   color: #2b2b2b;
   font-family: "Mulish", sans-serif;
-  color: #884FFB;
+  color: #884ffb;
 }
 
 /* line 67, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
@@ -10222,7 +10499,8 @@ canvas#highlights {
 }
 
 /* line 110, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker--nav-title, .default-datepicker .datepicker--nav-action {
+.default-datepicker .datepicker--nav-title,
+.default-datepicker .datepicker--nav-action {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -10240,19 +10518,20 @@ canvas#highlights {
   color: #fff !important;
   border-radius: 15px;
   font-weight: bold;
-  border: 2px solid #884FFB;
-  background: #884FFB;
+  border: 2px solid #884ffb;
+  background: #884ffb;
 }
 
 /* line 130, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
 .default-datepicker .datepicker--cell.-focus- {
-  background: #884FFB;
-  border: 2px solid #884FFB;
+  background: #884ffb;
+  border: 2px solid #884ffb;
   color: #fff;
 }
 
 /* line 137, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.datepicker--cell-day.-other-month-, .datepicker--cell-year.-other-decade- {
+.datepicker--cell-day.-other-month-,
+.datepicker--cell-year.-other-decade- {
   color: #dedede;
 }
 
@@ -10270,20 +10549,26 @@ canvas#highlights {
 /* line 152, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
 .datepicker--cell.-selected- {
   border: none;
-  background: #884FFB;
+  background: #884ffb;
   color: #fff;
 }
 
 /* line 157, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
 .datepicker--cell.-selected-.-current- {
   border: none;
-  background: #884FFB;
+  background: #884ffb;
   color: #fff;
 }
 
 /* line 163, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--cells .datepicker--cell.-selected- {
-  background: #884FFB;
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--cells
+  .datepicker--cell.-selected- {
+  background: #884ffb;
   color: #fff;
   border-radius: 15px;
   position: relative;
@@ -10291,7 +10576,7 @@ canvas#highlights {
 
 /* line 171, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
 .datepicker--cell.-focus- {
-  background: #884FFB;
+  background: #884ffb;
   color: #fff;
 }
 
@@ -10300,12 +10585,18 @@ canvas#highlights {
   color: #000;
   border-radius: 5px;
   font-weight: bold;
-  border: 2px solid #884FFB;
+  border: 2px solid #884ffb;
 }
 
 /* line 181, G:/admin_project/8 admin/management_html/scss/_datepicker.scss */
-.default-datepicker .datepicker-inline .datepicker .datepicker--content .datepicker--days .datepicker--cells .datepicker--cell-day.-other-month- {
-  color: #8890B5;
+.default-datepicker
+  .datepicker-inline
+  .datepicker
+  .datepicker--content
+  .datepicker--days
+  .datepicker--cells
+  .datepicker--cell-day.-other-month- {
+  color: #8890b5;
 }
 
 /* line 2, G:/admin_project/8 admin/management_html/scss/_error_page.scss */
@@ -10430,7 +10721,7 @@ canvas#highlights {
   -webkit-transition: 0.4s;
   transition: 0.4s;
   content: "\e648";
-  font-family: 'themify';
+  font-family: "themify";
   font-size: 14px;
 }
 
@@ -10441,7 +10732,7 @@ canvas#highlights {
   -webkit-transition: 0.4s;
   transition: 0.4s;
   content: "\e64b";
-  font-family: 'themify';
+  font-family: "themify";
   font-size: 14px;
 }
 
@@ -10466,9 +10757,9 @@ canvas#highlights {
   padding: 0;
   margin: 0;
   float: right;
-  opacity: .75;
-  -webkit-transition: opacity .2s;
-  transition: opacity .2s;
+  opacity: 0.75;
+  -webkit-transition: opacity 0.2s;
+  transition: opacity 0.2s;
   -webkit-box-shadow: none;
   box-shadow: none;
 }
@@ -10482,7 +10773,7 @@ canvas#highlights {
 /* line 28, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 .pswp__button:active {
   outline: 0;
-  opacity: .9;
+  opacity: 0.9;
 }
 
 /* line 33, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -10506,7 +10797,10 @@ canvas#highlights {
   height: 44px;
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.1), (-webkit-min-device-pixel-ratio: 1.09375), (min-resolution: 105dpi), (min-resolution: 1.1dppx) {
+@media (-webkit-min-device-pixel-ratio: 1.1),
+  (-webkit-min-device-pixel-ratio: 1.09375),
+  (min-resolution: 105dpi),
+  (min-resolution: 1.1dppx) {
   /* line 55, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
   .pswp--svg .pswp__button,
   .pswp--svg .pswp__button--arrow--left:before,
@@ -10591,7 +10885,7 @@ canvas#highlights {
 /* line 122, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 .pswp__button--arrow--left:before,
 .pswp__button--arrow--right:before {
-  content: '';
+  content: "";
   top: 35px;
   background-color: rgba(0, 0, 0, 0.3);
   height: 30px;
@@ -10632,8 +10926,8 @@ canvas#highlights {
   position: absolute;
   z-index: 1600;
   opacity: 0;
-  -webkit-transition: opacity .25s ease-out;
-  transition: opacity .25s ease-out;
+  -webkit-transition: opacity 0.25s ease-out;
+  transition: opacity 0.25s ease-out;
   -webkit-backface-visibility: hidden;
   will-change: opacity;
 }
@@ -10647,7 +10941,7 @@ canvas#highlights {
 .pswp__share-tooltip {
   z-index: 1620;
   position: absolute;
-  background: #FFF;
+  background: #fff;
   top: 56px;
   border-radius: 2px;
   display: block;
@@ -10657,10 +10951,10 @@ canvas#highlights {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
   -webkit-transform: translateY(6px);
   transform: translateY(6px);
-  -webkit-transition: -webkit-transform .25s;
-  transition: -webkit-transform .25s;
-  transition: transform .25s;
-  transition: transform .25s, -webkit-transform .25s;
+  -webkit-transition: -webkit-transform 0.25s;
+  transition: -webkit-transform 0.25s;
+  transition: transform 0.25s;
+  transition: transform 0.25s, -webkit-transform 0.25s;
   -webkit-backface-visibility: hidden;
   will-change: transform;
 }
@@ -10709,7 +11003,7 @@ canvas#highlights {
 
 /* line 227, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 a.pswp__share--facebook:before {
-  content: '';
+  content: "";
   display: block;
   width: 0;
   height: 0;
@@ -10717,7 +11011,7 @@ a.pswp__share--facebook:before {
   top: -12px;
   right: 15px;
   border: 6px solid transparent;
-  border-bottom-color: #FFF;
+  border-bottom-color: #fff;
   -webkit-pointer-events: none;
   -moz-pointer-events: none;
   pointer-events: none;
@@ -10726,7 +11020,7 @@ a.pswp__share--facebook:before {
 /* line 242, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 a.pswp__share--facebook:hover {
   background: #3e5c9a;
-  color: #FFF;
+  color: #fff;
 }
 
 /* line 247, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -10737,18 +11031,18 @@ a.pswp__share--facebook:hover:before {
 /* line 251, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 a.pswp__share--twitter:hover {
   background: #55acee;
-  color: #FFF;
+  color: #fff;
 }
 
 /* line 256, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 a.pswp__share--pinterest:hover {
-  background: #CCC;
+  background: #ccc;
   color: #ce272d;
 }
 
 /* line 261, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 a.pswp__share--download:hover {
-  background: #DDD;
+  background: #ddd;
 }
 
 /* line 265, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -10759,8 +11053,8 @@ a.pswp__share--download:hover {
   height: 44px;
   font-size: 13px;
   line-height: 44px;
-  color: #FFF;
-  opacity: .75;
+  color: #fff;
+  opacity: 0.75;
   padding: 0 10px;
 }
 
@@ -10776,7 +11070,7 @@ a.pswp__share--download:hover {
 /* line 285, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 .pswp__caption small {
   font-size: 11px;
-  color: #BBB;
+  color: #bbb;
 }
 
 /* line 290, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -10787,7 +11081,7 @@ a.pswp__share--download:hover {
   font-size: 13px;
   padding: 10px;
   line-height: 20px;
-  color: #CCC;
+  color: #ccc;
 }
 
 /* line 300, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -10809,8 +11103,8 @@ a.pswp__share--download:hover {
   left: 50%;
   margin-left: -22px;
   opacity: 0;
-  -webkit-transition: opacity .25s ease-out;
-  transition: opacity .25s ease-out;
+  -webkit-transition: opacity 0.25s ease-out;
+  transition: opacity 0.25s ease-out;
   will-change: opacity;
   direction: ltr;
 }
@@ -10852,7 +11146,7 @@ a.pswp__share--download:hover {
 /* line 350, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 .pswp--css_animation .pswp__preloader__icn {
   background: 0;
-  opacity: .75;
+  opacity: 0.75;
   width: 14px;
   height: 14px;
   position: absolute;
@@ -10875,7 +11169,7 @@ a.pswp__share--download:hover {
   box-sizing: border-box;
   width: 14px;
   height: 14px;
-  border: 2px solid #FFF;
+  border: 2px solid #fff;
   border-radius: 50%;
   border-left-color: transparent;
   border-bottom-color: transparent;
@@ -11011,7 +11305,7 @@ a.pswp__share--download:hover {
 .pswp__ui--hidden .pswp__caption,
 .pswp__ui--hidden .pswp__button--arrow--left,
 .pswp__ui--hidden .pswp__button--arrow--right {
-  opacity: .001;
+  opacity: 0.001;
 }
 
 /* line 502, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -11062,7 +11356,7 @@ a.pswp__share--download:hover {
 
 /* line 543, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 .pswp--animate_opacity {
-  opacity: .001;
+  opacity: 0.001;
   will-change: opacity;
   -webkit-transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
   transition: opacity 333ms cubic-bezier(0.4, 0, 0.22, 1);
@@ -11146,7 +11440,8 @@ a.pswp__share--download:hover {
   -webkit-transition: -webkit-transform 333ms cubic-bezier(0.4, 0, 0.22, 1);
   transition: -webkit-transform 333ms cubic-bezier(0.4, 0, 0.22, 1);
   transition: transform 333ms cubic-bezier(0.4, 0, 0.22, 1);
-  transition: transform 333ms cubic-bezier(0.4, 0, 0.22, 1), -webkit-transform 333ms cubic-bezier(0.4, 0, 0.22, 1);
+  transition: transform 333ms cubic-bezier(0.4, 0, 0.22, 1),
+    -webkit-transform 333ms cubic-bezier(0.4, 0, 0.22, 1);
 }
 
 /* line 622, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -11216,12 +11511,12 @@ a.pswp__share--download:hover {
   font-size: 14px;
   line-height: 16px;
   margin-top: -8px;
-  color: #CCC;
+  color: #ccc;
 }
 
 /* line 683, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 .pswp__error-msg a {
-  color: #CCC;
+  color: #ccc;
   text-decoration: underline;
 }
 
@@ -11278,7 +11573,7 @@ a.pswp__share--download:hover {
 
 /* line 730, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
 .my-gallery.gallery figure.img-hover.hover-12 a > div:hover img {
-  opacity: .7;
+  opacity: 0.7;
 }
 
 /* line 734, G:/admin_project/8 admin/management_html/scss/_photoswip.scss */
@@ -11297,7 +11592,7 @@ a.pswp__share--download:hover {
 /*# sourceMappingURL=photoswipe.css.map */
 /* line 2, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .Menu_NOtification_Wrap {
-  background: #FFFFFF;
+  background: #ffffff;
   box-shadow: 0px 10px 15px rgba(6, 0, 8, 0.22);
   border-radius: 10px;
   position: absolute;
@@ -11306,7 +11601,7 @@ a.pswp__share--download:hover {
   transform: translateY(30px) translateX(20px);
   opacity: 0;
   visibility: hidden;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 @media (max-width: 575.98px) {
@@ -11335,7 +11630,7 @@ a.pswp__share--download:hover {
 .Menu_NOtification_Wrap .notification_Header {
   padding: 15px 20px;
   border-radius: 10px 10px 0px 0px;
-  background: #8950FC;
+  background: #8950fc;
 }
 
 /* line 29, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
@@ -11392,7 +11687,7 @@ a.pswp__share--download:hover {
 /* line 70, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .Menu_NOtification_Wrap .nofity_footer {
   padding: 13px 20px;
-  background: #F5F7F9;
+  background: #f5f7f9;
   border-radius: 0 0 10px 10px;
 }
 
@@ -11404,7 +11699,7 @@ a.pswp__share--download:hover {
 /* line 84, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX {
   width: 360px;
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 5px;
   position: fixed;
   bottom: 40px;
@@ -11413,7 +11708,7 @@ a.pswp__share--download:hover {
   opacity: 0;
   visibility: hidden;
   transform: translateX(50%);
-  transition: .5s;
+  transition: 0.5s;
   box-shadow: 0px 10px 15px rgba(6, 0, 8, 0.22);
 }
 
@@ -11435,7 +11730,7 @@ a.pswp__share--download:hover {
 
 /* line 108, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_HEADER {
-  background: #8950FC;
+  background: #8950fc;
   border-radius: 5px 5px 0px 0px;
   padding: 27px 20px;
   position: relative;
@@ -11472,12 +11767,18 @@ a.pswp__share--download:hover {
 .CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_HEADER ul li a .member_thumb img {
   width: 27px;
   height: 27px;
-  transition: .3s;
+  transition: 0.3s;
   border-radius: 50%;
 }
 
 /* line 138, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
-.CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_HEADER ul li a .member_thumb .more_member_count {
+.CHAT_MESSAGE_POPUPBOX
+  .CHAT_POPUP_HEADER
+  ul
+  li
+  a
+  .member_thumb
+  .more_member_count {
   background: rgba(255, 255, 255, 0.2);
   width: 27px;
   height: 27px;
@@ -11487,7 +11788,14 @@ a.pswp__share--download:hover {
 }
 
 /* line 145, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
-.CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_HEADER ul li a .member_thumb .more_member_count span {
+.CHAT_MESSAGE_POPUPBOX
+  .CHAT_POPUP_HEADER
+  ul
+  li
+  a
+  .member_thumb
+  .more_member_count
+  span {
   font-size: 12px;
   font-weight: 400;
   color: #fff;
@@ -11500,14 +11808,14 @@ a.pswp__share--download:hover {
 
 /* line 161, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX .chat_input_box {
-  background: #F5F7FB;
+  background: #f5f7fb;
   border-radius: 0px 0px 5px 5px;
   padding-right: 10px;
 }
 
 /* line 165, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX .chat_input_box input {
-  background: #F5F7FB;
+  background: #f5f7fb;
   height: 50px;
   border: 0;
   padding-left: 20px;
@@ -11516,7 +11824,7 @@ a.pswp__share--download:hover {
 
 /* line 171, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX .chat_input_box input::placeholder {
-  color: #707DB7;
+  color: #707db7;
   font-size: 13px;
   font-weight: 400;
 }
@@ -11528,9 +11836,9 @@ a.pswp__share--download:hover {
 
 /* line 178, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX .chat_input_box .input-group-append .btn {
-  background: #F5F7FB;
+  background: #f5f7fb;
   font-size: 20px;
-  color: #A0A7C9;
+  color: #a0a7c9;
   padding: 0;
   line-height: 40px;
   position: relative;
@@ -11551,8 +11859,12 @@ a.pswp__share--download:hover {
 }
 
 /* line 196, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
-.CHAT_MESSAGE_POPUPBOX .chat_input_box .input-group-append .btn input::placeholder {
-  color: #707DB7;
+.CHAT_MESSAGE_POPUPBOX
+  .chat_input_box
+  .input-group-append
+  .btn
+  input::placeholder {
+  color: #707db7;
   font-size: 13px;
   font-weight: 400;
 }
@@ -11602,14 +11914,20 @@ a.pswp__share--download:hover {
 }
 
 /* line 235, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
-.CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_BODY .CHATING_SENDER.CHATING_RECEIVEr .SMS_thumb {
+.CHAT_MESSAGE_POPUPBOX
+  .CHAT_POPUP_BODY
+  .CHATING_SENDER.CHATING_RECEIVEr
+  .SMS_thumb {
   margin-right: 0;
   margin-left: 9.55px;
 }
 
 /* line 239, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
-.CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_BODY .CHATING_SENDER.CHATING_RECEIVEr .SEND_SMS_VIEW {
-  background: #8950FC;
+.CHAT_MESSAGE_POPUPBOX
+  .CHAT_POPUP_BODY
+  .CHATING_SENDER.CHATING_RECEIVEr
+  .SEND_SMS_VIEW {
+  background: #8950fc;
 }
 
 /* line 243, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
@@ -11626,7 +11944,7 @@ a.pswp__share--download:hover {
 
 /* line 251, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_BODY .CHATING_SENDER .SEND_SMS_VIEW {
-  background: #4567EE;
+  background: #4567ee;
   border-radius: 5px;
   padding: 10px 15px;
 }
@@ -11634,7 +11952,7 @@ a.pswp__share--download:hover {
 /* line 255, G:/admin_project/8 admin/management_html/scss/_notification_menu.scss */
 .CHAT_MESSAGE_POPUPBOX .CHAT_POPUP_BODY .CHATING_SENDER .SEND_SMS_VIEW p {
   font-size: 13px;
-  color: #FFFFFF;
+  color: #ffffff;
   font-weight: 400;
   line-height: 23px;
 }
@@ -11642,92 +11960,92 @@ a.pswp__share--download:hover {
 /* Spinner */
 /* line 3, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .theme_loder_1 div::after {
-  background: #2D1967 !important;
+  background: #2d1967 !important;
 }
 
 /* line 6, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .blue_loder div::after {
-  background: #2F90F7 !important;
+  background: #2f90f7 !important;
 }
 
 /* line 9, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .perpel_loder div::after {
-  background: #833CDF !important;
+  background: #833cdf !important;
 }
 
 /* line 12, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .pink_loder div::after {
-  background: #FE80B2 !important;
+  background: #fe80b2 !important;
 }
 
 /* line 15, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .yellow_loder div::after {
-  background: #FFCB24 !important;
+  background: #ffcb24 !important;
 }
 
 /* line 19, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .green_loder div::after {
-  background: #2FF0F7 !important;
+  background: #2ff0f7 !important;
 }
 
 /* line 23, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .Ring_1 div {
-  border-color: #2D1967  transparent transparent transparent !important;
+  border-color: #2d1967 transparent transparent transparent !important;
 }
 
 /* line 26, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .Ring_2 div {
-  border-color: #2F90F7 transparent transparent transparent !important;
+  border-color: #2f90f7 transparent transparent transparent !important;
 }
 
 /* line 29, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .Ring_3 div {
-  border-color: #833CDF transparent transparent transparent !important;
+  border-color: #833cdf transparent transparent transparent !important;
 }
 
 /* line 32, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .Ring_4 div {
-  border-color: #FE80B2 transparent transparent transparent !important;
+  border-color: #fe80b2 transparent transparent transparent !important;
 }
 
 /* line 35, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .Ring_5 div {
-  border-color: #FFCB24 transparent transparent transparent !important;
+  border-color: #ffcb24 transparent transparent transparent !important;
 }
 
 /* line 39, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .Ring_6 div {
-  border-color: #2FF0F7 transparent transparent transparent !important;
+  border-color: #2ff0f7 transparent transparent transparent !important;
 }
 
 /* line 44, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .colord_bg_1 div {
-  background-color: #2D1967  !important;
+  background-color: #2d1967 !important;
 }
 
 /* line 47, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .colord_bg_2 div {
-  background-color: #2F90F7 !important;
+  background-color: #2f90f7 !important;
 }
 
 /* line 50, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .colord_bg_3 div {
-  background-color: #833CDF !important;
+  background-color: #833cdf !important;
 }
 
 /* line 53, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .colord_bg_4 div {
-  background-color: #FE80B2 !important;
+  background-color: #fe80b2 !important;
 }
 
 /* line 56, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .colord_bg_5 div {
-  background-color: #FFCB24 !important;
+  background-color: #ffcb24 !important;
 }
 
 /* line 59, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
 .colord_bg_6 div {
-  background-color: #2FF0F7 !important;
+  background-color: #2ff0f7 !important;
 }
 
 /* line 68, G:/admin_project/8 admin/management_html/scss/_loadsers.scss */
@@ -12516,7 +12834,7 @@ a.pswp__share--download:hover {
   width: 54px;
   height: 54px;
   border-radius: 8px;
-  background: #7799FF;
+  background: #7799ff;
   font-size: 30px;
   text-align: center;
   color: #fff;
@@ -12525,17 +12843,17 @@ a.pswp__share--download:hover {
 
 /* line 24, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .social_media.insta_bg {
-  background: #FF72C2;
+  background: #ff72c2;
 }
 
 /* line 27, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .social_media.twitter_bg {
-  background: #56D5FF;
+  background: #56d5ff;
 }
 
 /* line 30, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .social_media.youtube_bg {
-  background: #FF7171;
+  background: #ff7171;
 }
 
 /* line 34, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
@@ -12545,27 +12863,27 @@ a.pswp__share--download:hover {
 
 /* line 38, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .color_text_1 {
-  color: #BDA5F8 !important;
+  color: #bda5f8 !important;
 }
 
 /* line 41, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .color_text_2 {
-  color: #FFB98A !important;
+  color: #ffb98a !important;
 }
 
 /* line 44, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .color_text_3 {
-  color: #A48CBC !important;
+  color: #a48cbc !important;
 }
 
 /* line 47, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .color_text_4 {
-  color: #97C0FF !important;
+  color: #97c0ff !important;
 }
 
 /* line 50, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .color_text_5 {
-  color: #474D58 !important;
+  color: #474d58 !important;
 }
 
 /* line 54, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
@@ -12575,101 +12893,101 @@ a.pswp__share--download:hover {
 
 /* line 58, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .color_text_7 {
-  color: #4489FF !important;
+  color: #4489ff !important;
 }
 
 /* line 63, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_1 {
   font-size: 11px;
   font-weight: 700;
-  background: #FFF0EB;
+  background: #fff0eb;
   display: inline-block;
   border-radius: 2px;
   padding: 5px 17px;
-  color: #FF7F57;
+  color: #ff7f57;
 }
 
 /* line 71, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_1:hover {
-  color: #FF7F57;
+  color: #ff7f57;
 }
 
 /* line 75, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_2 {
   font-size: 11px;
   font-weight: 700;
-  background: #FDEBFF;
+  background: #fdebff;
   display: inline-block;
   border-radius: 2px;
   padding: 5px 17px;
-  color: #C85ED4;
+  color: #c85ed4;
 }
 
 /* line 83, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_2:hover {
-  color: #C85ED4;
+  color: #c85ed4;
 }
 
 /* line 87, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_3 {
   font-size: 11px;
   font-weight: 700;
-  background: #E6F8FF;
+  background: #e6f8ff;
   display: inline-block;
   border-radius: 2px;
   padding: 5px 17px;
-  color: #0893C8;
+  color: #0893c8;
 }
 
 /* line 95, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_3:hover {
-  color: #0893C8;
+  color: #0893c8;
 }
 
 /* line 99, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_4 {
   font-size: 11px;
   font-weight: 700;
-  background: #E8FFEB;
+  background: #e8ffeb;
   display: inline-block;
   border-radius: 2px;
   padding: 5px 17px;
-  color: #50D863;
+  color: #50d863;
 }
 
 /* line 107, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_4:hover {
-  color: #50D863;
+  color: #50d863;
 }
 
 /* line 111, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_5 {
   font-size: 14px;
   font-weight: 700;
-  background: #E8FFEB;
+  background: #e8ffeb;
   display: inline-block;
   border-radius: 4px;
   padding: 2px 10px;
-  background: #D1EEE7;
-  color: #7BCA9E;
+  background: #d1eee7;
+  color: #7bca9e;
 }
 
 /* line 120, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_5:hover {
-  color: #7BCA9E;
+  color: #7bca9e;
 }
 
 /* line 124, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_btn_6 {
   font-size: 10px;
   font-weight: 700;
-  background: #E8FFEB;
+  background: #e8ffeb;
   display: inline-block;
   border-radius: 2px;
   padding: 6px 17px;
-  background: #F16060;
+  background: #f16060;
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 134, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
@@ -12682,13 +13000,13 @@ a.pswp__share--download:hover {
 .badge_btn_7 {
   font-size: 10px;
   font-weight: 700;
-  background: #E8FFEB;
+  background: #e8ffeb;
   display: inline-block;
   border-radius: 2px;
   padding: 6px 17px;
-  background: #567AED;
+  background: #567aed;
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 149, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
@@ -12701,13 +13019,13 @@ a.pswp__share--download:hover {
 .badge_btn_8 {
   font-size: 10px;
   font-weight: 700;
-  background: #E8FFEB;
+  background: #e8ffeb;
   display: inline-block;
   border-radius: 2px;
   padding: 6px 17px;
-  background: #884FFB;
+  background: #884ffb;
   color: #fff;
-  transition: .3s;
+  transition: 0.3s;
 }
 
 /* line 164, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
@@ -12720,7 +13038,7 @@ a.pswp__share--download:hover {
 .badge_btn_semi {
   font-size: 11px;
   font-weight: 700;
-  background: #567AED;
+  background: #567aed;
   display: inline-block;
   border-radius: 2px;
   padding: 11px 70px;
@@ -12739,168 +13057,168 @@ a.pswp__share--download:hover {
 .badge_complete {
   font-size: 12px;
   font-weight: 700;
-  background: #E2FFE2;
+  background: #e2ffe2;
   display: inline-block;
   border-radius: 8px;
   padding: 5px 17px;
-  color: #64E355;
+  color: #64e355;
 }
 
 /* line 193, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_complete:hover {
-  background: #E2FFE2;
-  color: #64E355;
+  background: #e2ffe2;
+  color: #64e355;
 }
 
 /* line 198, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active {
   font-size: 12px;
   font-weight: 700;
-  background: #E2FFE2;
+  background: #e2ffe2;
   display: inline-block;
   border-radius: 8px;
   padding: 5px 17px;
-  color: #64E355;
+  color: #64e355;
 }
 
 /* line 206, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active:hover {
-  background: #E2FFE2;
-  color: #64E355;
+  background: #e2ffe2;
+  color: #64e355;
 }
 
 /* line 211, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active2 {
   font-size: 12px;
   font-weight: 700;
-  background: #E2F2FF;
+  background: #e2f2ff;
   display: inline-block;
   border-radius: 8px;
   padding: 5px 17px;
-  color: #59A0DF;
+  color: #59a0df;
 }
 
 /* line 219, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active2:hover {
-  background: #E2F2FF;
-  color: #59A0DF;
+  background: #e2f2ff;
+  color: #59a0df;
 }
 
 /* line 224, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active3 {
   font-size: 12px;
   font-weight: 700;
-  background: #FFEAE6;
+  background: #ffeae6;
   display: inline-block;
   border-radius: 8px;
   padding: 5px 17px;
-  color: #FF816D;
+  color: #ff816d;
 }
 
 /* line 232, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active3:hover {
-  background: #FFEAE6;
-  color: #FF816D;
+  background: #ffeae6;
+  color: #ff816d;
 }
 
 /* line 237, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active4 {
   font-size: 12px;
   font-weight: 700;
-  background: #FFF8D5;
+  background: #fff8d5;
   display: inline-block;
   border-radius: 8px;
   padding: 5px 17px;
-  color: #D2BF62;
+  color: #d2bf62;
 }
 
 /* line 245, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .badge_active4:hover {
-  background: #FFF8D5;
-  color: #D2BF62;
+  background: #fff8d5;
+  color: #d2bf62;
 }
 
 /* line 250, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .mark_complete {
   font-size: 12px;
   font-weight: 700;
-  background: #FFEFF1;
+  background: #ffeff1;
   display: inline-block;
   border-radius: 8px;
   padding: 5px 17px;
-  color: #FE8794;
+  color: #fe8794;
 }
 
 /* line 258, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .mark_complete:hover {
-  background: #FFEFF1;
-  color: #FE8794;
+  background: #ffeff1;
+  color: #fe8794;
 }
 
 /* line 263, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_1 {
   font-size: 11px;
   font-weight: 400;
-  color: #FF6D6D !important;
+  color: #ff6d6d !important;
 }
 
 /* line 268, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_2 {
   font-size: 11px;
   font-weight: 400;
-  color: #62D45E !important;
+  color: #62d45e !important;
 }
 
 /* line 273, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_3 {
   font-size: 11px;
   font-weight: 400;
-  color: #6FA5EC !important;
+  color: #6fa5ec !important;
 }
 
 /* line 278, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_4 {
-  color: #E64B55 !important;
+  color: #e64b55 !important;
 }
 
 /* line 281, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_5 {
-  color: #4BE69D !important;
+  color: #4be69d !important;
 }
 
 /* line 284, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_6 {
-  color: #706F9A !important;
+  color: #706f9a !important;
 }
 
 /* line 287, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_7 {
-  color: #59748A !important;
+  color: #59748a !important;
 }
 
 /* line 290, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_8 {
-  color: #A48CBC !important;
+  color: #a48cbc !important;
 }
 
 /* line 293, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_9 {
-  color: #A4CBFF !important;
+  color: #a4cbff !important;
 }
 
 /* line 296, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_10 {
-  color: #AF81DC !important;
+  color: #af81dc !important;
 }
 
 /* line 299, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_11 {
-  color: #96D89C !important;
+  color: #96d89c !important;
 }
 
 /* line 302, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
 .text_color_11 {
-  color: #67349D !important;
+  color: #67349d !important;
 }
 
 /* line 307, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
@@ -12925,10 +13243,10 @@ a.pswp__share--download:hover {
   left: 0px;
   left: 2px;
   position: absolute;
-  transition: .3s;
+  transition: 0.3s;
   width: 13px;
   top: 1.4px;
-  border: 3px solid #8950FC;
+  border: 3px solid #8950fc;
 }
 
 /* line 334, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
@@ -12964,8 +13282,8 @@ a.pswp__share--download:hover {
   position: absolute;
   right: 0;
   top: 0;
-  transition: .3s;
-  border: 3px solid #8950FC;
+  transition: 0.3s;
+  border: 3px solid #8950fc;
   background: transparent;
 }
 
@@ -12985,13 +13303,15 @@ a.pswp__share--download:hover {
 }
 
 /* line 382, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
-.nav-pills .nav-item.show .nav-link, .nav-pills .nav-link.active {
+.nav-pills .nav-item.show .nav-link,
+.nav-pills .nav-link.active {
   background: #1761fd;
   color: #fff;
 }
 
 /* line 386, G:/admin_project/8 admin/management_html/scss/_predefine.scss */
-.nav-pills .nav-item.show .nav-link, .nav-pills .nav-link.active {
+.nav-pills .nav-item.show .nav-link,
+.nav-pills .nav-link.active {
   background: #1761fd;
   color: #fff;
 }
@@ -13089,7 +13409,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   margin-bottom: 12px;
   border-radius: 4px;
   padding: 20px;
-  background: #f1f5fa;
+  /* background: #f1f5fa; */
 }
 
 /* line 45, G:/admin_project/8 admin/management_html/scss/_board.scss */
@@ -13102,7 +13422,12 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 51, G:/admin_project/8 admin/management_html/scss/_board.scss */
-.board_wrapper .single_board .main_board_card .board_card_list .card .card-body {
+.board_wrapper
+  .single_board
+  .main_board_card
+  .board_card_list
+  .card
+  .card-body {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
@@ -13143,7 +13468,10 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 27, G:/admin_project/8 admin/management_html/scss/_product.scss */
-.total-payment .table tbody td, .total-payment table tbody td, .shopping-cart .table tbody td, .shopping-cart table tbody td {
+.total-payment .table tbody td,
+.total-payment table tbody td,
+.shopping-cart .table tbody td,
+.shopping-cart table tbody td {
   padding: 20px 10px;
   border-top: 0 !important;
   border-bottom: 1px solid #f1f5fa;
@@ -13178,13 +13506,14 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 52, G:/admin_project/8 admin/management_html/scss/_product.scss */
-.ribbon1 span.rib1-primary::before, .ribbon1 span.rib1-primary {
-  background: #884FFB;
+.ribbon1 span.rib1-primary::before,
+.ribbon1 span.rib1-primary {
+  background: #884ffb;
 }
 
 /* line 55, G:/admin_project/8 admin/management_html/scss/_product.scss */
 .ribbon1.rib1-primary::after {
-  border-top-color: #884FFB;
+  border-top-color: #884ffb;
 }
 
 /* line 58, G:/admin_project/8 admin/management_html/scss/_product.scss */
@@ -13200,8 +13529,9 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 68, G:/admin_project/8 admin/management_html/scss/_product.scss */
-.ribbon1 span.rib1-primary::before, .ribbon1 span.rib1-primary {
-  background: #884FFB;
+.ribbon1 span.rib1-primary::before,
+.ribbon1 span.rib1-primary {
+  background: #884ffb;
 }
 
 /* line 71, G:/admin_project/8 admin/management_html/scss/_product.scss */
@@ -13213,14 +13543,15 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 77, G:/admin_project/8 admin/management_html/scss/_product.scss */
-.ribbon1 span::before, .ribbon1 span::after {
+.ribbon1 span::before,
+.ribbon1 span::after {
   position: absolute;
   content: "";
 }
 
 /* line 81, G:/admin_project/8 admin/management_html/scss/_product.scss */
 .ribbon1 span.rib1-primary::after {
-  background: #884FFB;
+  background: #884ffb;
 }
 
 /* line 84, G:/admin_project/8 admin/management_html/scss/_product.scss */
@@ -13233,7 +13564,8 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 91, G:/admin_project/8 admin/management_html/scss/_product.scss */
-.ribbon1 span::before, .ribbon1 span::after {
+.ribbon1 span::before,
+.ribbon1 span::after {
   position: absolute;
   content: "";
 }
@@ -13292,7 +13624,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 /* line 131, G:/admin_project/8 admin/management_html/scss/_product.scss */
 .single-pro-detail .pro-features li:before {
   content: "\f00c" !important;
-  font-family: 'Font Awesome 5 Free' !important;
+  font-family: "Font Awesome 5 Free" !important;
   font-weight: 600;
   font-size: 12px;
   color: #03d87f !important;
@@ -13307,7 +13639,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 
 /* line 6, G:/admin_project/8 admin/management_html/scss/_todo.scss */
 .todo_wrapper .single_todo .lodo_left .todo_head h5 {
-  color: #474D58;
+  color: #474d58;
   line-height: 24px;
 }
 
@@ -13320,13 +13652,13 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 .bar_line {
   height: 49px;
   width: 4px;
-  background: #64E355;
+  background: #64e355;
   border-radius: 5px;
 }
 
 /* line 25, G:/admin_project/8 admin/management_html/scss/_todo.scss */
 .bar_line.red_line {
-  background: #FE8794;
+  background: #fe8794;
 }
 
 /* line 30, G:/admin_project/8 admin/management_html/scss/_todo.scss */
@@ -13340,7 +13672,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 
 /* line 38, G:/admin_project/8 admin/management_html/scss/_todo.scss */
 .project_complete {
-  background: #E2FFF6;
+  background: #e2fff6;
   background-image: url(../img/pro_complete.png);
   height: 100%;
   background-size: cover;
@@ -13375,25 +13707,25 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 .project_complete .single_pro .box_content h4 {
   font-size: 25px;
   font-weight: 900;
-  color: #F4876B;
+  color: #f4876b;
   margin-bottom: 0;
 }
 
 /* line 67, G:/admin_project/8 admin/management_html/scss/_todo.scss */
 .project_complete .single_pro .box_content h4.bluish_text {
-  color: #2F62A5;
+  color: #2f62a5;
 }
 
 /* line 71, G:/admin_project/8 admin/management_html/scss/_todo.scss */
 .project_complete .single_pro .box_content span {
   font-size: 12px;
-  color: #C5BAB7;
+  color: #c5bab7;
   font-weight: 600;
 }
 
 /* line 75, G:/admin_project/8 admin/management_html/scss/_todo.scss */
 .project_complete .single_pro .box_content span.grayis_text {
-  color: #A6B1BF;
+  color: #a6b1bf;
 }
 
 /* line 2, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
@@ -13414,7 +13746,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 /* line 14, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
 .sidebar.mini_sidebar .menu-text {
   font-size: 12px;
-  color: #B1BDCB;
+  color: #b1bdcb;
   font-weight: 600;
   margin: 0;
   padding: 12px 0 12px 24px;
@@ -13526,47 +13858,64 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 98, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li > a:hover, .sidebar.mini_sidebar #sidebar_menu > li > a:active {
+.sidebar.mini_sidebar #sidebar_menu > li > a:hover,
+.sidebar.mini_sidebar #sidebar_menu > li > a:active {
   width: 330px;
 }
 
 /* line 102, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li > a:hover .nav_icon_small, .sidebar.mini_sidebar #sidebar_menu > li > a:active .nav_icon_small {
+.sidebar.mini_sidebar #sidebar_menu > li > a:hover .nav_icon_small,
+.sidebar.mini_sidebar #sidebar_menu > li > a:active .nav_icon_small {
   display: inline-block;
 }
 
 /* line 105, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li > a:hover .nav_title, .sidebar.mini_sidebar #sidebar_menu > li > a:active .nav_title {
+.sidebar.mini_sidebar #sidebar_menu > li > a:hover .nav_title,
+.sidebar.mini_sidebar #sidebar_menu > li > a:active .nav_title {
   display: inline-block;
 }
 
 /* line 108, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li > a:hover.has-arrow::after, .sidebar.mini_sidebar #sidebar_menu > li > a:active.has-arrow::after {
+.sidebar.mini_sidebar #sidebar_menu > li > a:hover.has-arrow::after,
+.sidebar.mini_sidebar #sidebar_menu > li > a:active.has-arrow::after {
   display: inline-block;
 }
 
 /* line 113, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li:hover > a, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a {
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a {
   width: 330px !important;
 }
 
 /* line 117, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover, .sidebar.mini_sidebar #sidebar_menu > li:hover > a.active, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active {
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover,
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a.active,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active {
   width: 330px;
 }
 
 /* line 121, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover .nav_icon_small, .sidebar.mini_sidebar #sidebar_menu > li:hover > a.active .nav_icon_small, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover .nav_icon_small, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active .nav_icon_small {
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover .nav_icon_small,
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a.active .nav_icon_small,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover .nav_icon_small,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active .nav_icon_small {
   display: inline-block;
 }
 
 /* line 124, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover .nav_title, .sidebar.mini_sidebar #sidebar_menu > li:hover > a.active .nav_title, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover .nav_title, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active .nav_title {
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover .nav_title,
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a.active .nav_title,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover .nav_title,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active .nav_title {
   display: inline-block;
 }
 
 /* line 127, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover.has-arrow::after, .sidebar.mini_sidebar #sidebar_menu > li:hover > a.active.has-arrow::after, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover.has-arrow::after, .sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active.has-arrow::after {
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a:hover.has-arrow::after,
+.sidebar.mini_sidebar #sidebar_menu > li:hover > a.active.has-arrow::after,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a:hover.has-arrow::after,
+.sidebar.mini_sidebar #sidebar_menu > li.mm-active > a.active.has-arrow::after {
   display: inline-block;
 }
 
@@ -13638,7 +13987,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 /* line 189, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
 .sidebar.mini_sidebar ul li ul {
   background: #144339;
-  opacity: .9;
+  opacity: 0.9;
   position: absolute;
   left: 100%;
 }
@@ -13686,14 +14035,15 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 }
 
 /* line 236, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
-.sidebar.dark_sidebar.mini_sidebar #sidebar_menu > li > a:hover, .sidebar.dark_sidebar.mini_sidebar #sidebar_menu > li > a:active {
+.sidebar.dark_sidebar.mini_sidebar #sidebar_menu > li > a:hover,
+.sidebar.dark_sidebar.mini_sidebar #sidebar_menu > li > a:active {
   background: #1e1e2d;
 }
 
 /* line 239, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
 .sidebar.dark_sidebar.mini_sidebar #sidebar_menu > li.mm-active > a {
   background: #1e1e2d;
-  color: #F65365 !important;
+  color: #f65365 !important;
 }
 
 /* line 243, G:/admin_project/8 admin/management_html/scss/_mini_menu.scss */
@@ -13881,7 +14231,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 
 /* line 11, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm .crm_head {
-  background: #FF7EA5;
+  background: #ff7ea5;
   padding: 8px 20px;
   border-radius: 13px;
 }
@@ -13906,7 +14256,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 /* line 26, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .single_crm .crm_body p {
   font-size: 14px;
-  color: #9B9ABA;
+  color: #9b9aba;
   font-weight: 400;
 }
 
@@ -13930,7 +14280,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 
 /* line 49, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .crm_reports_bnner p {
-  color: #C8B4DE;
+  color: #c8b4de;
   font-size: 12px;
   font-weight: 400;
   line-height: 20px;
@@ -13939,29 +14289,29 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 
 /* line 56, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .user_crm_wrapper .crm_reports_bnner a {
-  color: #EFC343;
+  color: #efc343;
   font-size: 10px;
   font-weight: 300;
 }
 
 /* line 64, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_1 {
-  background: #20DEFF !important;
+  background: #20deff !important;
 }
 
 /* line 67, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_2 {
-  background: #C388F6 !important;
+  background: #c388f6 !important;
 }
 
 /* line 70, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_3 {
-  background: #F5F5FF !important;
+  background: #f5f5ff !important;
 }
 
 /* line 72, G:/admin_project/8 admin/management_html/scss/_crm.scss */
 .crm_bg_3 i {
-  color: #58377E !important;
+  color: #58377e !important;
 }
 
 /* line 76, G:/admin_project/8 admin/management_html/scss/_crm.scss */

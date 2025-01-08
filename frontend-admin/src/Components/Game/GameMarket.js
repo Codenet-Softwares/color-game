@@ -195,11 +195,13 @@ const GameMarket = ({ marketId }) => {
       <div className="container-fluid p-0 ">
         <div className="row">
           <div className="col-12">
-            <div className="page_title_box d-flex align-items-center justify-content-between">
+            <div className="page_title_box">
               <div className="page_title_left">
-                <h3 className="f_s_30 f_w_700 dark_text">Game Market</h3>
+                <div class="text">
+                  <h1>Game Market</h1>
+                </div>
               </div>
-              <button className="btn btn-primary" onClick={handleShow}>
+              <button className="btn-grad" onClick={handleShow}>
                 <span className="me-2">
                   <i className="fa fa-plus " aria-hidden="true"></i>
                 </span>
@@ -210,7 +212,7 @@ const GameMarket = ({ marketId }) => {
         </div>
         <div className="row ">
           <div className="col-12">
-            <div className="white_box_tittle list_header">
+            <div className="white_box_tittle list_header text-dark" style={{}}>
               <div className="col-2 text-center">
                 <select
                   className="form-select form-select-sm"
@@ -253,25 +255,21 @@ const GameMarket = ({ marketId }) => {
               <div className="card-body">
                 <div className="board_wrapper">
                   <div className="single_board">
-                    <div className="main_board_card">
-                      <div className="white_card_header ps-0 pe-0 pt-0">
-                        <div className="box_header m-0">
-                          <div className="main-title">
-                            <h3 className="m-0">Available Games</h3>
-                          </div>
-                        </div>
-                      </div>
+                    <div className="main_board_card ">
+                          <div class="text1">
+                        <h1 className="text-decoration-underline">Available Games</h1>
+                      </div>                
                       {games.length > 0 ? (
-                        <div className="board_card_list">
+                        <div className="board_card_list mt-5">
                           {games.map((game, index) => {
                             return (
                               <div className="card border-0" key={index}>
-                                <div className="card-body m-0 p-2">
+                                <div className="card-body m-0 p-3 bg-warning rounded">
                                   <div className="card_head d-flex justify-content-between align-items-center">
-                                    <div className="d-flex justify-content-between align-items-center">
+                                    <div className="d-flex justify-content-center align-items-center">
                                       <i className="far fa-circle f_s_14 text_color_4 me-2"></i>
-                                      <h5 className="f_s_16 f_w_500 mb-0 text-decoration-none">
-                                        <Link to={`${game.gameId}`}>
+                                      <h5 className="f_s_16 f_w_500 mb-0 ">
+                                        <Link to={`${game.gameId}`} className="game_name text-decoration-none h3 fw-bold">
                                           {game.gameName}
                                         </Link>
                                       </h5>
@@ -301,12 +299,12 @@ const GameMarket = ({ marketId }) => {
                                             left: "0px",
                                           }}
                                         >
-                                          <a className="dropdown-item" href="#">
+                                          <a className="dropdown-item fw-bold" href="#">
                                             {" "}
-                                            <i className="ti-eye"></i> Action
+                                            <i className="ti-eye h3"></i> Action
                                           </a>
                                           <a
-                                            className="dropdown-item"
+                                            className="dropdown-item fw-bold"
                                             onClick={(e) =>
                                               handleDelete(e, game.gameId)
                                             }
@@ -315,7 +313,7 @@ const GameMarket = ({ marketId }) => {
                                             <i className="ti-trash"></i> Delete
                                           </a>
                                           <a
-                                            className="dropdown-item"
+                                            className="dropdown-item fw-bold"
                                             href="#"
                                             onClick={() => {
                                               handleShowUpdateModal(
@@ -330,7 +328,7 @@ const GameMarket = ({ marketId }) => {
 
                                           {!game.announceId ? (
                                             <a
-                                              className="dropdown-item"
+                                              className="dropdown-item fw-bold"
                                               onClick={(e) =>
                                                 handleCreateAnnounceClick(
                                                   e,
@@ -346,7 +344,7 @@ const GameMarket = ({ marketId }) => {
                                             </a>
                                           ) : (
                                             <a
-                                              className="dropdown-item"
+                                              className="dropdown-item fw-bold"
                                               onClick={(e) =>
                                                 handleUpdateAnnouncementClick(
                                                   e,
@@ -365,7 +363,7 @@ const GameMarket = ({ marketId }) => {
                                           )}
 
                                           <a
-                                            className="dropdown-item"
+                                            className="dropdown-item fw-bold"
                                             onClick={(e) =>
                                               handleShowLatestAnnouncementModal(
                                                 e,
