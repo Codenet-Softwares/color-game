@@ -3,8 +3,8 @@
 class UrlConstant {
   constructor() {}
 
-  // url_dev = "https://cg.server.dummydoma.in/api";
-  url_dev = "http://localhost:7000/api";
+  url_dev = "https://cg.server.dummydoma.in/api";
+  // url_dev = "http://localhost:7000/api";
 
   // user api
   user = "user";
