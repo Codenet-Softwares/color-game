@@ -856,10 +856,6 @@ export const filterMarketData = async (req, res) => {
         },
       });
 
-      console.log(
-        `Deleted ${deleteResult} MarketBalance entries for userId ${userId} and marketId ${marketId}`
-      );
-
       // Save or update the balances in MarketBalance
       for (const balance of userMarketBalance.runnerBalance) {
         await MarketBalance.create({
@@ -1045,9 +1041,6 @@ export const createBid = async (req, res) => {
       const exposure = Object.values(market)[0];
       totalExposure += exposure;
     });
-
-    console.log("totalExposure...11011", totalExposure)
-
 
     const dataToSend = {
       amount: user.balance,
