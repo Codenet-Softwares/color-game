@@ -715,3 +715,14 @@ export const validateTrashMarket = [
     .isUUID()
     .withMessage("Invalid trashMarketId. It should be a valid UUID."),
 ];
+
+export const validateRevokeLiveMarket= [
+  body('marketId')
+    .notEmpty().withMessage('Market ID is required')
+    .isUUID().withMessage('Market ID must be a valid UUID'),
+  body('userId')
+    .notEmpty().withMessage('userId is required')
+    .isUUID().withMessage('userId must be a valid UUID'),
+  body('lotteryPrice')
+    .notEmpty().withMessage('lotteryPrice is required')
+]

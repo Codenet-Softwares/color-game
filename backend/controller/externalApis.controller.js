@@ -1348,6 +1348,90 @@ export const getDeleteLiveMarket = async (req, res) => {
   }
 };
 
+export const revokeLiveBet = async (req, res) => {
+  try {
+    const { marketId, userId, lotteryPrice } = req.body;
+
+    const user = await userSchema.findOne({
+      where: { userId },
+    });
+
+    if (!user || user.length === 0) {
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.notFound,
+            "No matching users found in the database"
+          )
+        );
+    }
+    const newBalance = user.balance - lotteryPrice;
+     user.balance = newBalance;
+
+    const newExposure = { [marketId]: Math.abs(lotteryPrice) };
+    user.marketListExposure = [...(user.marketListExposure || []), newExposure];
+
+    const marketExposure = user.marketListExposure;
+    let totalExposure = 0;
+      marketExposure.forEach(market => {
+        const exposure = Object.values(market)[0];
+        totalExposure += exposure;
+      });
+
+    await user.save();
+
+    const dataToSend = {
+      amount: user.balance,
+      userId: user.userId,
+      exposure: totalExposure,
+    };
+    const baseURL = process.env.WHITE_LABEL_URL;
+    const response = await axios.post(
+      `${baseURL}/api/admin/extrnal/balance-update`,
+      dataToSend
+    );
+
+    if (!response.data.success) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "Failed to update balance"
+          )
+        );
+    }
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Market exposure updated successfully"
+        )
+      );
+  } catch (error) {
+    console.error("Error in getRevokeMarket:", error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          "An error occurred while revoking the market"
+        )
+      );
+  }
+};
+
 
 
 
