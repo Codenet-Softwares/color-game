@@ -1147,6 +1147,7 @@ export const getBetsAfterWin = async (req, res) => {
       where_clause[Op.or] = [
         { userName: { [Op.like]: `%${search}%` } },
         { marketName: { [Op.like]: `%${search}%` } },
+        { runnerName: { [Op.like]: `%${search}%` } }
       ];
     }
 
