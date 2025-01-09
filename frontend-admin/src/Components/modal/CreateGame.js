@@ -42,7 +42,8 @@ const CreateGame = ({ show, setShow }) => {
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-            <Modal.Header closeButton>
+            <Modal.Header closeButton className=" bg-primary" style={{  backgroundImage: "linear-gradient(90deg, #020024 0%, #090979 35%, #00d4ff 100%)"
+}}>
                 <Modal.Title>Create Game</Modal.Title>
             </Modal.Header>
             <Modal.Body>

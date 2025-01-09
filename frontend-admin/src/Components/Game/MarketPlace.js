@@ -262,7 +262,7 @@ const MarketPlace = () => {
                         <div className="box_header m-0">
                           <div className="main-title">
                             <h3 className="m-0 text-white">
-                              Available<span>{pathdata[0]?.name}</span> Market
+                              Available {pathdata[0]?.name} Market
                             </h3>
                           </div>
                         </div>

@@ -201,7 +201,7 @@ const GameMarket = ({ marketId }) => {
                   <h1>Game Market</h1>
                 </div>
               </div>
-              <button className="btn-grad" onClick={handleShow}>
+              <button className="btn-grad btn-primary p-2 border-0 rounded" onClick={handleShow}>
                 <span className="me-2">
                   <i className="fa fa-plus " aria-hidden="true"></i>
                 </span>
@@ -252,24 +252,24 @@ const GameMarket = ({ marketId }) => {
               </div>
             </div>
             <div className="white_card">
-              <div className="card-body">
-                <div className="board_wrapper">
+              <div className="card-body" >
+                <div className="board_wrapper" >
                   <div className="single_board">
-                    <div className="main_board_card ">
+                    <div className="main_board_card " >
                           <div class="text1">
                         <h1 className="text-decoration-underline">Available Games</h1>
                       </div>                
                       {games.length > 0 ? (
-                        <div className="board_card_list mt-5">
+                        <div className="board_card_list mt-2" style={{background:"#FFFDD0",borderRadius:"20px"}}>
                           {games.map((game, index) => {
                             return (
-                              <div className="card border-0" key={index}>
-                                <div className="card-body m-0 p-3 bg-warning rounded">
+                              <div className="card shadow-lg" key={index} style={{background:"#FFFDD0",borderRadius:"20px"}}>
+                                <div className="card-body m-0" >
                                   <div className="card_head d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-center align-items-center">
-                                      <i className="far fa-circle f_s_14 text_color_4 me-2"></i>
-                                      <h5 className="f_s_16 f_w_500 mb-0 ">
-                                        <Link to={`${game.gameId}`} className="game_name text-decoration-none h3 fw-bold">
+                                    <i className="fas fa-puzzle-piece fa-spin" style={{ color: '#28a745', fontSize: '20px' }}></i>
+                                    <h5 className="f_s_16 f_w_500 mb-0 px-3">
+                                        <Link to={`${game.gameId}`} className="game_name h3 fw-bold">
                                           {game.gameName}
                                         </Link>
                                       </h5>
