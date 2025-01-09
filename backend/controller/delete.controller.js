@@ -616,13 +616,13 @@ export const deleteMarketTrash = async (req, res) => {
 
 
 export const restoreMarketData = async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
-    const transaction = await sequelize.transaction();
     const { trashMarketId } = req.params
 
     const trash_data = await MarketTrash.findOne({ where: { trashMarketId } });
-        
-    if (!trash_data) {return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Market trash data not found'))}
+
+    if (!trash_data) { return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Market trash data not found')) }
 
     const trash_markets = trash_data.dataValues.trashMarkets;
 
@@ -652,7 +652,12 @@ export const restoreMarketData = async (req, res) => {
 
     console.log("map_trash_data", map_trash_data);
 
-    const new_orders = await CurrentOrder.bulkCreate(map_trash_data);
+    await CurrentOrder.bulkCreate(map_trash_data, { transaction });
+
+    const marketId = map_trash_data[0].marketId
+    const userId = map_trash_data[0].userId
+    const runnerId = map_trash_data[0].runnerId
+    const betId = map_trash_data[0].betId
 
     const user = await userSchema.findOne({ where: { userId }, transaction });
     if (!user) {
@@ -807,11 +812,12 @@ export const restoreMarketData = async (req, res) => {
 
     await transaction.commit();
 
-    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
+    await MarketTrash.destroy({ where: { trashMarketId } })
 
-    const delete_trash_data = await MarketTrash.destroy({ where: { trashMarketId } })
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Restore data successfully"));
 
   } catch (error) {
+    console.log("error",error)
     await transaction.rollback();
     return res
       .status(statusCode.internalServerError)
