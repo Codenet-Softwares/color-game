@@ -389,7 +389,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
 
 export const getMarket = async (req, res) => {
   try {
-    let { page = 1, pageSize = 10 } = req.query;
+    let { page = 1, pageSize = 10, search } = req.query;
 
     page = parseInt(page);
     pageSize = parseInt(pageSize);
@@ -417,14 +417,32 @@ export const getMarket = async (req, res) => {
       );
     }
 
-    const uniqueMarkets = [
-      ...new Map(
-        allMarkets.map((m) => [
-          m.marketId,
-          { marketId: m.marketId, marketName: m.marketName },
-        ])
-      ).values(),
-    ];
+    const filteredMarkets = search
+      ? allMarkets.filter(
+          (market) =>
+            market.userName?.toLowerCase().includes(search.toLowerCase()) ||
+            market.marketName?.toLowerCase().includes(search.toLowerCase())
+        )
+      : allMarkets;
+
+      if (filteredMarkets.length === 0) {
+        return apiResponseErr(
+          null,
+          false,
+          statusCode.notFound,
+          "No markets match the search criteria",
+          res
+        );
+      }
+
+      const uniqueMarkets = [
+        ...new Map(
+          filteredMarkets.map((m) => [
+            m.marketId,
+            { marketId: m.marketId, marketName: m.marketName, userName: m.userName },
+          ])
+        ).values(),
+      ];
 
     const offset = (page - 1) * pageSize;
 
