@@ -12,6 +12,9 @@ import axios from "axios";
 import ProfitLoss from "../models/profitLoss.js";
 import Market from "../models/market.model.js";
 import Runner from "../models/runner.model.js";
+import { log } from "console";
+import { currentOrderSchema } from "../schema/commonSchema.js";
+import { type } from "os";
 // import ProfitLoss from "../models/profitLoss.js";
 // import Market from "../models/market.model.js";
 // import Runner from "../models/runner.model.js";
@@ -598,6 +601,224 @@ export const deleteMarketTrash = async (req, res) => {
       );
 
   } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+}
+
+
+export const restoreMarketData = async (req, res) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const { trashMarketId } = req.params
+
+    const trash_data = await MarketTrash.findOne({ where: { trashMarketId } });
+
+    if (!trash_data) { return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Market trash data not found')) }
+
+    const trash_markets = trash_data.dataValues.trashMarkets;
+
+    console.log("trash_markets", trash_markets);
+
+    const map_trash_data = trash_markets.map((data) => ({
+      userId: data.userId,
+      userName: data.userName,
+      gameId: data.gameId,
+      gameName: data.gameName,
+      marketId: data.marketId,
+      marketName: data.marketName,
+      runnerId: data.runnerId,
+      runnerName: data.runnerName,
+      rate: parseFloat(data.rate),
+      value: parseFloat(data.value),
+      type: data.type,
+      date: (data.date),
+      bidAmount: parseFloat(data.bidAmount),
+      isWin: data.isWin,
+      profitLoss: data.profitLoss,
+      exposure: parseFloat(data.exposure),
+      betId: data.betId,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt
+    }));
+
+    console.log("map_trash_data", map_trash_data);
+
+    await CurrentOrder.bulkCreate(map_trash_data, { transaction });
+
+    const marketId = map_trash_data[0].marketId
+    const userId = map_trash_data[0].userId
+    const runnerId = map_trash_data[0].runnerId
+    const betId = map_trash_data[0].betId
+
+    const user = await userSchema.findOne({ where: { userId }, transaction });
+    if (!user) {
+      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
+    }
+
+    const marketListExposure = user.marketListExposure || [];
+    const updatedExposure = marketListExposure.filter(market => {
+      const [key, value] = Object.entries(market)[0];
+      if (key === marketId) {
+        user.balance += value;
+        return false;
+      }
+      return true;
+    });
+
+
+    const marketExposure = user.marketListExposure;
+
+    let totalExposure = 0;
+    marketExposure.forEach(market => {
+      const exposure = Object.values(market)[0];
+      totalExposure += exposure;
+    });
+
+    const dataToSend = {
+      amount: user.balance,
+      userId: userId,
+      exposure: totalExposure
+    };
+
+    const baseURL = process.env.WHITE_LABEL_URL;
+    await axios.post(
+      `${baseURL}/api/admin/extrnal/balance-update`,
+      dataToSend
+    );
+
+    await user.update({
+      marketListExposure: updatedExposure,
+      balance: user.balance,
+    }, { transaction });
+
+    const marketDataRows = await Market.findAll({
+      where: { marketId },
+      include: [
+        {
+          model: Runner,
+          required: false,
+        },
+      ],
+    });
+
+    let marketDataObj = {
+      marketId: marketDataRows[0].marketId,
+      marketName: marketDataRows[0].marketName,
+      participants: marketDataRows[0].participants,
+      startTime: marketDataRows[0].startTime,
+      endTime: marketDataRows[0].endTime,
+      announcementResult: marketDataRows[0].announcementResult,
+      isActive: marketDataRows[0].isActive,
+      runners: [],
+    };
+
+    // Initialize runner data
+    marketDataRows[0].Runners.forEach((runner) => {
+      marketDataObj.runners.push({
+        id: runner.id,
+        runnerName: {
+          runnerId: runner.runnerId,
+          name: runner.runnerName,
+          isWin: runner.isWin,
+          bal: Math.round(parseFloat(runner.bal)),
+        },
+        rate: [
+          {
+            back: runner.back,
+            lay: runner.lay,
+          },
+        ],
+      });
+    });
+
+    const remainingMarket = await CurrentOrder.findAll({
+      where: {
+        marketId,
+        [Op.or]: [
+          { runnerId: runnerId },
+          { betId: { [Op.ne]: betId } }
+        ]
+      },
+      transaction
+    });
+
+    // Calculate user market balance
+    const userMarketBalance = {
+      userId,
+      marketId,
+      runnerBalance: [],
+    };
+
+    marketDataObj.runners.forEach((runner) => {
+      let runnerBalance = 0;
+      remainingMarket.forEach((order) => {
+
+        if (order.type === "back") {
+          if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
+            runnerBalance += Number(order.bidAmount);
+          } else {
+            runnerBalance -= Number(order.value);
+          }
+        } else if (order.type === "lay") {
+          if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
+            runnerBalance -= Number(order.bidAmount);
+          } else {
+            runnerBalance += Number(order.value);
+          }
+        }
+      });
+
+      userMarketBalance.runnerBalance.push({
+        runnerId: runner.runnerName.runnerId,
+        bal: runnerBalance,
+      });
+
+      runner.runnerName.bal = runnerBalance;
+      const maxNegativeRunnerBalance = userMarketBalance.runnerBalance.reduce((max, current) => {
+        return current.bal < max.bal ? current : max;
+      }, { bal: 0 });
+
+      const updatedExposure = { [marketId]: Math.abs(maxNegativeRunnerBalance.bal) };
+      user.marketListExposure = [updatedExposure];
+    });
+
+    await user.update({
+      marketListExposure: user.marketListExposure,
+    }, { transaction });
+
+    const marketListExposureData = user.marketListExposure || [];
+
+    marketListExposureData.filter(market => {
+      const [key, value] = Object.entries(market)[0];
+      if (key === marketId) {
+        user.balance -= value;
+        return false;
+      }
+      return true;
+    });
+
+    await user.update({
+      balance: user.balance,
+    }, { transaction });
+
+    await transaction.commit();
+
+    await MarketTrash.destroy({ where: { trashMarketId } })
+
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Restore data successfully"));
+
+  } catch (error) {
+    console.log("error",error)
+    await transaction.rollback();
     return res
       .status(statusCode.internalServerError)
       .send(
