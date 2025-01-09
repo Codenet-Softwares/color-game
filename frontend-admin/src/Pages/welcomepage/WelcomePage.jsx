@@ -12,7 +12,7 @@ const WelcomePage = () => {
         {/* <img src="https://www.istockphoto.com/vector/abstract-illuminated-blue-circle-shape-of-particles-array-on-dark-background-gm1159366405-316983061?utm_source=pixabay&utm_medium=affiliate&utm_campaign=ADP_illustration_sponsored_ratiochange&utm_content=https%3A%2F%2Fpixabay.com%2Fillustrations%2Fbullet-abstract-template-lines-1023985%2F&utm_term=kugel+abstrakt" alt="" /> */}
          <header className="App-header">
          <div class="text__animation bg-image--1 fullscreen">
-		<h2 class="title">Welcome To Colorgame Admin Panel</h2>
+		<h3 class="title">Welcome To Colorgame Admin Panel</h3>
 	</div>
         </header> 
         <section className="welcome-message">

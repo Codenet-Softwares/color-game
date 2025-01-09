@@ -185,7 +185,7 @@ const MarketPlace = () => {
           <div className="col-12">
             <div className="page_title_box d-flex align-items-center justify-content-between">
               <div className="page_title_left">
-                <h3 className="f_s_30 f_w_700 dark_text">
+                <h3 className="f_s_30 f_w_700 dark_text text-white">
                   <span href="#" onClick={ClearPath}>
                     GameMarket
                   </span>
@@ -268,11 +268,24 @@ const MarketPlace = () => {
                         </div>
                       </div>
                       {gameMarketData.length > 0 ? (
-                        <div className="board_card_list">
+                        <div
+                          className="board_card_list"
+                          style={{
+                            background: "#FFFDD0",
+                            borderRadius: "20px",
+                          }}
+                        >
                           {gameMarketData.map((market, index) => {
                             console.log(market);
                             return (
-                              <div className="card border-0" key={index}>
+                              <div
+                                className="card shadow-lg"
+                                key={index}
+                                style={{
+                                  background: "#FFFDD0",
+                                  borderRadius: "20px",
+                                }}
+                              >
                                 <div className="card-body">
                                   <div className="row align-items-center">
                                     <div
@@ -282,18 +295,26 @@ const MarketPlace = () => {
                                         alignItems: "center",
                                       }}
                                     >
-                                      <i className="far fa-circle f_s_14 text_color_4"></i>
-                                      <h5 className="f_s_16 f_w_500 mb-0 text-start">
+                                      <i
+                                        className="fas fa-chart-line fa-bounce"
+                                        style={{
+                                          color: "#6f42c1",
+                                          fontSize: "20px",
+                                        }}
+                                      ></i>
+
+                                      <h5 className="f_s_16 f_w_500 mb-0 text-start px-2 fw-bold">
                                         {market.marketName}
                                       </h5>
                                     </div>
 
                                     <div className="col-md-4">
                                       <span
-                                        className={`status-text fw-bold fs-5 position-relative ${market.isActive
-                                          ? "text-success"
-                                          : "text-danger"
-                                          }`}
+                                        className={`status-text fw-bold fs-5 position-relative ${
+                                          market.isActive
+                                            ? "text-success"
+                                            : "text-danger"
+                                        }`}
                                         style={{ top: "1px", right: "10px" }}
                                       >
                                         {market.isActive
@@ -358,19 +379,29 @@ const MarketPlace = () => {
                                                   <a
                                                     className="dropdown-item"
                                                     onClick={(e) =>
-                                                      handleSuspensedMarket(e, false, market.marketId)
+                                                      handleSuspensedMarket(
+                                                        e,
+                                                        false,
+                                                        market.marketId
+                                                      )
                                                     }
                                                   >
-                                                    <i className="fa-solid fa-lock"></i> Suspensed
+                                                    <i className="fa-solid fa-lock"></i>{" "}
+                                                    Suspensed
                                                   </a>
                                                 ) : (
                                                   <>
                                                     <a
                                                       className="dropdown-item"
                                                       href="#"
-                                                      onClick={() => handleShowUpdateModal(gameMarketData[index])}
+                                                      onClick={() =>
+                                                        handleShowUpdateModal(
+                                                          gameMarketData[index]
+                                                        )
+                                                      }
                                                     >
-                                                      <i className="fas fa-edit"></i> Edit
+                                                      <i className="fas fa-edit"></i>{" "}
+                                                      Edit
                                                     </a>
                                                     <a
                                                       className="dropdown-item"

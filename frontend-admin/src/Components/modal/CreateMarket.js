@@ -98,8 +98,8 @@ console.log("now",now)
 
   return (
     <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Create Market</Modal.Title>
+      <Modal.Header closeButton style={{  backgroundImage: "linear-gradient(90deg, #020024 0%, #090979 35%, #00d4ff 100%)"}}>
+        <Modal.Title className="text-white">Create Market</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <div className="input-group mb-3">

@@ -32,6 +32,7 @@ const BetHistoryPage = () => {
       betHistory.name
     )
       .then((res) => {
+        console.log("response bet============")
         setBetHistory((prev) => ({
           ...prev,
           betHistory: res.data?.data || [],

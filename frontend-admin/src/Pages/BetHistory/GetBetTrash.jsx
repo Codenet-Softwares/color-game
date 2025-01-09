@@ -2,8 +2,7 @@ import React, { useState } from "react";
 // import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Pagination from "../../Components/Pagination";
-import GameService from "../../Services/GameService";
-import { toast } from "react-toastify";
+
 import { useAuth } from "../../Utils/Auth";
 const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) => {
   const auth = useAuth();
@@ -40,20 +39,7 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
   const paginatedData = selectedMarketDetails.slice(startIndex, endIndex);
 
   return (
-    <div className="card shadow-lg p-3 mb-5 rounded ">
-      <div
-        className="d-flex align-items-center justify-content-center rounded border border-dark"
-        style={{ background: "#95D9E8" }}
-      >
-        <h5 className="fw-bold p-3 mt-1 mb-0">Deleted Market Details:</h5>
-        <h4
-          className="fw-bolder text-decoration-underline mb-0 ms-2"
-          style={{ color: "#000", textShadow: "0 0 10px green, 0 0 15px yellow, 0 0 20px #9601FB" }}
-        >
-          {marketName || "N/A"}
-        </h4>
-      </div>
-
+    <div className="card shadow-lg p-3 m-2 rounded" style={{background:"#E2E0B8"}}>
       <div className="mt-3 text-end">
         <label className="me-2 fw-bold">Show</label>
         <select
@@ -68,7 +54,7 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
         </select>
         <label className="ms-2 fw-bold">Entries</label>
       </div>
-      <div className="table-responsive">
+      <div className="table-responsive p-3">
         <table className="table table-striped table-hover text-center">
           <thead>
             <tr>

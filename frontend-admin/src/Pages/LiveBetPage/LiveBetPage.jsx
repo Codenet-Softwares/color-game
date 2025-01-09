@@ -168,6 +168,7 @@ const LiveBetPage = () => {
                     <th>Serial Number</th>
                     <th>Game Name</th>
                     <th>Market Name</th>
+                    <th>User Name</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -177,6 +178,7 @@ const LiveBetPage = () => {
                       <td>{index + 1}</td>
                       <td>{bet.gameName}</td>
                       <td>{bet.marketName}</td>
+                      <td>{bet.userName}</td>
                       <td>
                         <button
                           className="btn btn-primary"

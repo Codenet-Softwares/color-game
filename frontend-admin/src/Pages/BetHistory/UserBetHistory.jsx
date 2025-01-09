@@ -188,7 +188,7 @@ const UserBetHistory = () => {
                     <th>Odds</th>
                     <th>Type</th>
                     <th>Stake</th>
-                    <th>Action</th>
+                    {/* <th>Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -212,11 +212,11 @@ const UserBetHistory = () => {
                             {winBet.type}
                           </td>
                           <td>{winBet.value}</td>
-                          <td>
+                          {/* <td>
                             <button className="btn btn-danger">
                               <FaTrashAlt />
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       );
                     })

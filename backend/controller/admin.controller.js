@@ -1058,12 +1058,22 @@ export const liveUsersBet = async (req, res) => {
 
 export const getUsersLiveBetGames = async (req, res) => {
   try {
-    const { page = 1, pageSize = 10 } = req.query;
+    const { page = 1, pageSize = 10, search } = req.query;
     const limit = parseInt(pageSize, 10);
     const offset = (parseInt(page, 10) - 1) * limit;
 
+    const where_clause = search
+      ? {
+          [Op.or]: [
+            { userName: { [Op.like]: `%${search}%` } },
+            { marketName: { [Op.like]: `%${search}%` } },
+          ],
+        }
+      : {};
+
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName"],
+      attributes: ["gameId", "gameName", "marketId", "marketName", "userName"],
+      where : where_clause,
       raw: true,
     });
 
@@ -1092,6 +1102,7 @@ export const getUsersLiveBetGames = async (req, res) => {
       gameName: order.gameName,
       marketId: order.marketId,
       marketName: order.marketName,
+      userName : order.userName
     }));
 
     const totalPages = Math.ceil(uniqueOrders.length / limit);
@@ -1125,11 +1136,23 @@ export const getUsersLiveBetGames = async (req, res) => {
 export const getBetsAfterWin = async (req, res) => {
   try {
     const { marketId } = req.params;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const { page = 1, pageSize = 10, search } = req.query;
+    const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
+
+    const where_clause = {
+      marketId: marketId,
+    };
+
+    if (search) {
+      where_clause[Op.or] = [
+        { userName: { [Op.like]: `%${search}%` } },
+        { marketName: { [Op.like]: `%${search}%` } },
+        { runnerName: { [Op.like]: `%${search}%` } }
+      ];
+    }
 
     const { count, rows } = await BetHistory.findAndCountAll({
-      where: { marketId: marketId },
+      where: where_clause,
       attributes: [
         "userId",
         "userName",
@@ -1143,12 +1166,11 @@ export const getBetsAfterWin = async (req, res) => {
         "matchDate",
         "placeDate",
       ],
-      limit,
-      offset: (page - 1) * limit,
+      limit: parseInt(pageSize, 10),
+      offset,
     });
 
-    const totalPages = Math.ceil(count / limit);
-    const pageSize = limit;
+    const totalPages = Math.ceil(count / parseInt(pageSize, 10));
     const totalItems = count;
 
     res
@@ -1177,12 +1199,12 @@ export const getBetsAfterWin = async (req, res) => {
 
 export const getBetMarketsAfterWin = async (req, res) => {
   try {
-    const { page = 1, pageSize = 10 } = req.query;
+    const { page = 1, pageSize = 10, search } = req.query;
     const limit = parseInt(pageSize, 10);
     const offset = (parseInt(page, 10) - 1) * limit;
 
     const { rows: betHistoryOrders } = await BetHistory.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName"],
+      attributes: ["gameId", "gameName", "marketId", "marketName", "userName"],
       raw: true,
     });
 
@@ -1194,10 +1216,26 @@ export const getBetMarketsAfterWin = async (req, res) => {
         );
     }
 
+    const filteredOrders = search
+      ? betHistoryOrders.filter(
+          (order) =>
+            order.gameName?.toLowerCase().includes(search.toLowerCase()) ||
+            order.marketName?.toLowerCase().includes(search.toLowerCase())
+        )
+      : betHistoryOrders;
+
+    if (filteredOrders.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "No data match search criteria.")
+        );
+    }
+
     // Remove duplicates by creating a Map with unique keys based on gameId and marketId
     const uniqueOrders = Array.from(
       new Map(
-        betHistoryOrders.map((order) => [
+        filteredOrders.map((order) => [
           `${order.gameId}-${order.marketId}`,
           order,
         ])
@@ -1211,6 +1249,7 @@ export const getBetMarketsAfterWin = async (req, res) => {
       gameName: order.gameName,
       marketId: order.marketId,
       marketName: order.marketName,
+      userName: order.userName
     }));
 
     const totalPages = Math.ceil(uniqueOrders.length / limit);

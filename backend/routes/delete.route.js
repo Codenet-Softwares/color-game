@@ -1,5 +1,5 @@
 import { string } from "../constructor/string.js";
-import { deleteLiveBetMarkets, getMarket, getTrashMarketDetails, deleteMarketTrash } from "../controller/delete.controller.js";
+import { deleteLiveBetMarkets, getMarket, getTrashMarketDetails, deleteMarketTrash, restoreMarketData } from "../controller/delete.controller.js";
 import { authorize } from "../middleware/auth.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
 import { validateDeleteLiveBet, validateTrashMarketId, validateTrashMarket } from "../schema/commonSchema.js";
@@ -17,4 +17,5 @@ export const DeleteRoutes = (app) => {
 
     app.delete('/api/delete-market-trash/:trashMarketId', validateTrashMarket, customErrorHandler,authorize([string.Admin]), deleteMarketTrash)
 
+    app.post('/api/re-store/market/:trashMarketId', validateTrashMarket, customErrorHandler,authorize([string.Admin]), restoreMarketData)
 }
