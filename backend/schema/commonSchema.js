@@ -726,3 +726,9 @@ export const validateRevokeLiveMarket= [
   body('lotteryPrice')
     .notEmpty().withMessage('lotteryPrice is required')
 ]
+
+export const validateApprovalMarket = [
+  param("approvalMarketId")
+    .isUUID()
+    .withMessage("Invalid Approval ID."),
+];

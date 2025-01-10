@@ -331,8 +331,8 @@ export const getAllMarkets = async (req, res) => {
           [Op.like]: `%${searchQuery}%`,
         },
         hideMarket: false,
-        isVoid: false
-
+        isVoid: false,
+        deleteApproval: false
       },
       offset: (page - 1) * pageSize,
       limit: pageSize,
@@ -973,38 +973,10 @@ export const deleteMarket = async (req, res) => {
       approvalMarketId: uuidv4(),
     }, { transaction });
 
-    const runners = await Runner.findAll({
-      where: { marketId },
+    await getMarket.update({
+      deleteApproval: true,
       transaction,
     });
-
-    const runnerIds = runners.map((runner) => runner.runnerId);
-
-    if (runnerIds.length) {
-      await rateSchema.destroy({
-        where: { runnerId: { [Op.in]: runnerIds } },
-        transaction,
-      });
-
-      await Runner.destroy({
-        where: { marketId },
-        transaction,
-      });
-    }
-
-    await CurrentOrder.destroy({
-      where: { marketId },
-      transaction,
-    });
-
-    const deletedMarketCount = await Market.destroy({
-      where: { marketId },
-      transaction,
-    });
-
-    if (deletedMarketCount === 0) {
-      res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market deletion failed"));
-    }
 
     await transaction.commit();
 
@@ -1120,8 +1092,8 @@ export const gameActiveInactive = async (req, res) => {
 };
 
 
-export const updateGameStatus=async (req, res) => {
-  const { status } = req.body; 
+export const updateGameStatus = async (req, res) => {
+  const { status } = req.body;
   const { gameId } = req.params;
 
   try {
@@ -1139,32 +1111,32 @@ export const updateGameStatus=async (req, res) => {
     const markets = await Market.findAll({ where: { gameId } });
     if (markets.length > 0) {
       for (const market of markets) {
-        market.isActive = status; 
+        market.isActive = status;
         await market.save();
       }
     }
-   const marketsUpdated= markets.map(market => ({
+    const marketsUpdated = markets.map(market => ({
       marketId: market.marketId,
       status: market.isActive,
     }))
 
     const statusMessage = `Game ${status ? 'activated' : 'suspended'} successfully.`
-   
+
     res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(marketsUpdated, true, statusCode.success, statusMessage)
       );
-   
+
   } catch (error) {
     res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
-         null,
+          null,
           false,
-           statusCode.internalServerError,
-           error.message
+          statusCode.internalServerError,
+          error.message
         )
       );
   }

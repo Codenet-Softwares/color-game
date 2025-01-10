@@ -65,6 +65,10 @@ Market.init(
     isVoid : {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    deleteApproval : {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     }
   },
   {
