@@ -42,7 +42,7 @@ const GameMarket = ({ marketId }) => {
 
   const [showLatestAnnouncementModal, setShowLatestAnnouncementModal] =
     useState(false);
-  const [latestAnnouncements, setLatestAnnouncements] = useState([]); // Assuming this state holds the latest announcements data
+  const [latestAnnouncements, setLatestAnnouncements] = useState([]);
   console.log("===========>>>> line ", latestAnnouncements);
   console.log("==========> data for games", games);
   console.log("========> data line 23", data);

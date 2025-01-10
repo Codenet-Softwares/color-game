@@ -1,3 +1,4 @@
+
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RequireAuth } from "../Utils/RequireAuth";
@@ -19,6 +20,7 @@ import LiveUserBet from "../Pages/LiveBetPage/LiveUserBet";
 import BetHistoryPage from "../Pages/BetHistory/BetHistoryPage";
 import UserBetHistory from "../Pages/BetHistory/UserBetHistory";
 import DeleteBetHistory from "../Pages/BetHistory/DeleteBetHistory";
+import DeleteMarket from "../Components/Game/DeleteMarket";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -91,6 +93,14 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <GameMarket />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="deleteMarket"
+            element={
+              <RequireAuth>
+                <DeleteMarket />
               </RequireAuth>
             }
           />

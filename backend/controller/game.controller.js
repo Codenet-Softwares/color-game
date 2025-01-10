@@ -16,6 +16,8 @@ import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import { format } from 'date-fns';
 import moment from 'moment';
+import MarketDeleteApproval from "../models/marketApproval.model.js";
+import sequelize from "../db.js";
 
 
 // done
@@ -329,8 +331,8 @@ export const getAllMarkets = async (req, res) => {
           [Op.like]: `%${searchQuery}%`,
         },
         hideMarket: false,
-        isVoid: false
-
+        isVoid: false,
+        deleteApproval: false
       },
       offset: (page - 1) * pageSize,
       limit: pageSize,
@@ -955,51 +957,28 @@ export const deleteGame = async (req, res) => {
 };
 // done
 export const deleteMarket = async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
     const { marketId } = req.params;
 
-    const runners = await Runner.findAll({
-      where: {
-        marketId: marketId,
-      },
-    });
-
-    const runnerIds = runners.map((runner) => runner.runnerId);
-
-    if (runnerIds.length) {
-      await rateSchema.destroy({
-        where: {
-          runnerId: {
-            [Op.in]: runnerIds,
-          },
-        },
-      });
-
-      await Runner.destroy({
-        where: {
-          marketId: marketId,
-        },
-      });
+    const getMarket = await Market.findOne({ where: { marketId }, transaction });
+    if (!getMarket) {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
     }
 
-    const deletedMarketCount = await Market.destroy({
-      where: {
-        marketId: marketId,
-      },
+    await MarketDeleteApproval.create({
+      approvalMarkets: [getMarket.dataValues],
+      approvalMarketId: uuidv4(),
+    }, { transaction });
+
+    await getMarket.update({
+      deleteApproval: true,
+      transaction,
     });
 
-    if (deletedMarketCount === 0) {
-      res
-        .status(statusCode.internalServerError)
-        .send(
-          apiResponseErr(
-            error.data ?? null,
-            false,
-            error.responseCode ?? statusCode.internalServerError,
-            error.errMessage ?? error.message
-          )
-        );
-    }
+    await transaction.commit();
 
     res
       .status(statusCode.success)
@@ -1012,17 +991,10 @@ export const deleteMarket = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error("Error deleting market:", error);
+    transaction.rollback();
     res
       .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+      .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
 // done
@@ -1120,8 +1092,8 @@ export const gameActiveInactive = async (req, res) => {
 };
 
 
-export const updateGameStatus=async (req, res) => {
-  const { status } = req.body; 
+export const updateGameStatus = async (req, res) => {
+  const { status } = req.body;
   const { gameId } = req.params;
 
   try {
@@ -1139,32 +1111,32 @@ export const updateGameStatus=async (req, res) => {
     const markets = await Market.findAll({ where: { gameId } });
     if (markets.length > 0) {
       for (const market of markets) {
-        market.isActive = status; 
+        market.isActive = status;
         await market.save();
       }
     }
-   const marketsUpdated= markets.map(market => ({
+    const marketsUpdated = markets.map(market => ({
       marketId: market.marketId,
       status: market.isActive,
     }))
 
     const statusMessage = `Game ${status ? 'activated' : 'suspended'} successfully.`
-   
+
     res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(marketsUpdated, true, statusCode.success, statusMessage)
       );
-   
+
   } catch (error) {
     res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
-         null,
+          null,
           false,
-           statusCode.internalServerError,
-           error.message
+          statusCode.internalServerError,
+          error.message
         )
       );
   }

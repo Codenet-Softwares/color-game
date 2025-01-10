@@ -257,6 +257,26 @@ restoreTrashMarket(user, trashMarketId){
     },
   });
 }
+
+deleteGameMarket(user, approvalMarketId, page, pageSize,search){
+return axios({
+  method:"GET",
+  url:`${API_HOST}/api/market-delete-approval${approvalMarketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
+  headers:{
+    Authorization: `Bearer ${user.token}`,
+  }
+})
+}
+
+gameMarketDelete(user, approvalMarketId){
+return axios({
+  method:"POST",
+  url: API_HOST + `/api/deleted-market-approval/${approvalMarketId}`,
+  headers:{
+    Authorization: `Bearer ${user.token}`,
+  }
+})
+}
 }
 
 export default new GameService();
