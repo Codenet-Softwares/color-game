@@ -1,9 +1,9 @@
-import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket } from "../controller/externalApis.controller.js";
+import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet } from "../controller/externalApis.controller.js";
 import { currentOrderHistory } from "../controller/user.controller.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
 import { authenticateAdmin } from "../middleware/lottery.auth.js";
 import { authenticateSuperAdmin } from "../middleware/whiteLabelAuth.js";
-import { betHistorySchema, calculateProfitLossSchema, marketProfitLossSchema, runnerProfitLossSchema, validateDeleteLiveMarket, validateGetLiveUserBet, validateMarketId, validateRevokeMarket, validateVoidMarket } from "../schema/commonSchema.js";
+import { betHistorySchema, calculateProfitLossSchema, marketProfitLossSchema, runnerProfitLossSchema, validateDeleteLiveMarket, validateGetLiveUserBet, validateMarketId, validateRevokeLiveMarket, validateRevokeMarket, validateVoidMarket } from "../schema/commonSchema.js";
 
 export const externalApisRoute = (app) => {
     app.get('/api/external-user-betHistory/:userName/:gameId', betHistorySchema, customErrorHandler, authenticateSuperAdmin, getExternalUserBetHistory);
@@ -29,5 +29,8 @@ export const externalApisRoute = (app) => {
     app.post('/api/external/revoke-market-lottery',validateRevokeMarket , customErrorHandler, authenticateAdmin, getRevokeMarket)
 
     app.post('/api/external/delete-liveMarket-lottery',validateDeleteLiveMarket,customErrorHandler, authenticateAdmin, getDeleteLiveMarket)
+
+    app.post('/api/external/revoke-liveBet-lottery',validateRevokeLiveMarket,customErrorHandler, authenticateAdmin, revokeLiveBet)
+
 
 }
