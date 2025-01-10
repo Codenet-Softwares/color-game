@@ -73,7 +73,7 @@ export const voidMarket = async (req, res) => {
             });
           }
 
-          const marketExposure = user.marketListExposure;
+          const marketExposure = userDetails.marketListExposure;
 
           let totalExposure = 0;
           marketExposure.forEach(market => {

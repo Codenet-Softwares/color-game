@@ -422,30 +422,30 @@ export const getMarket = async (req, res) => {
 
     const filteredMarkets = search
       ? allMarkets.filter(
-          (market) =>
-            market.userName?.toLowerCase().includes(search.toLowerCase()) ||
-            market.marketName?.toLowerCase().includes(search.toLowerCase())
-        )
+        (market) =>
+          market.userName?.toLowerCase().includes(search.toLowerCase()) ||
+          market.marketName?.toLowerCase().includes(search.toLowerCase())
+      )
       : allMarkets;
 
-      if (filteredMarkets.length === 0) {
-        return apiResponseErr(
-          null,
-          false,
-          statusCode.notFound,
-          "No markets match the search criteria",
-          res
-        );
-      }
+    if (filteredMarkets.length === 0) {
+      return apiResponseErr(
+        null,
+        false,
+        statusCode.notFound,
+        "No markets match the search criteria",
+        res
+      );
+    }
 
-      const uniqueMarkets = [
-        ...new Map(
-          filteredMarkets.map((m) => [
-            m.marketId,
-            { marketId: m.marketId, marketName: m.marketName, userName: m.userName },
-          ])
-        ).values(),
-      ];
+    const uniqueMarkets = [
+      ...new Map(
+        filteredMarkets.map((m) => [
+          m.marketId,
+          { marketId: m.marketId, marketName: m.marketName, userName: m.userName },
+        ])
+      ).values(),
+    ];
 
     const offset = (page - 1) * pageSize;
 
@@ -652,12 +652,23 @@ export const restoreMarketData = async (req, res) => {
 
     console.log("map_trash_data", map_trash_data);
 
-    await CurrentOrder.bulkCreate(map_trash_data, { transaction });
+    const { marketId, userId, runnerId, betId } = map_trash_data[0];
 
-    const marketId = map_trash_data[0].marketId
-    const userId = map_trash_data[0].userId
-    const runnerId = map_trash_data[0].runnerId
-    const betId = map_trash_data[0].betId
+    const checkMarket = await Market.findOne({ where: { marketId }, transaction });
+
+    if (!checkMarket) {
+      return res.status(statusCode.badRequest).send(
+        apiResponseErr(null, false, statusCode.badRequest, 'Market is no longer available, cannot restore bet')
+      );
+    }
+
+    if (!checkMarket.isActive) {
+      return res.status(statusCode.badRequest).send(
+        apiResponseErr(null, false, statusCode.badRequest, 'Market is suspended, cannot restore bet.')
+      );
+    }
+
+    await CurrentOrder.bulkCreate(map_trash_data, { transaction });
 
     const user = await userSchema.findOne({ where: { userId }, transaction });
     if (!user) {
