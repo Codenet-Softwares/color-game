@@ -16,6 +16,8 @@ import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import { format } from 'date-fns';
 import moment from 'moment';
+import MarketDeleteApproval from "../models/marketApproval.model.js";
+import sequelize from "../db.js";
 
 
 // done
@@ -955,51 +957,56 @@ export const deleteGame = async (req, res) => {
 };
 // done
 export const deleteMarket = async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
     const { marketId } = req.params;
 
+    const getMarket = await Market.findOne({ where: { marketId }, transaction });
+    if (!getMarket) {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
+    }
+
+    await MarketDeleteApproval.create({
+      approvalMarkets: [getMarket.dataValues],
+      approvalMarketId: uuidv4(),
+    }, { transaction });
+
     const runners = await Runner.findAll({
-      where: {
-        marketId: marketId,
-      },
+      where: { marketId },
+      transaction,
     });
 
     const runnerIds = runners.map((runner) => runner.runnerId);
 
     if (runnerIds.length) {
       await rateSchema.destroy({
-        where: {
-          runnerId: {
-            [Op.in]: runnerIds,
-          },
-        },
+        where: { runnerId: { [Op.in]: runnerIds } },
+        transaction,
       });
 
       await Runner.destroy({
-        where: {
-          marketId: marketId,
-        },
+        where: { marketId },
+        transaction,
       });
     }
 
+    await CurrentOrder.destroy({
+      where: { marketId },
+      transaction,
+    });
+
     const deletedMarketCount = await Market.destroy({
-      where: {
-        marketId: marketId,
-      },
+      where: { marketId },
+      transaction,
     });
 
     if (deletedMarketCount === 0) {
-      res
-        .status(statusCode.internalServerError)
-        .send(
-          apiResponseErr(
-            error.data ?? null,
-            false,
-            error.responseCode ?? statusCode.internalServerError,
-            error.errMessage ?? error.message
-          )
-        );
+      res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market deletion failed"));
     }
+
+    await transaction.commit();
 
     res
       .status(statusCode.success)
@@ -1012,17 +1019,10 @@ export const deleteMarket = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error("Error deleting market:", error);
+    transaction.rollback();
     res
       .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+      .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
 // done
