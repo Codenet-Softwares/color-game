@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-// import { useParams } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Pagination from "../../Components/Pagination";
-import GameService from "../../Services/GameService";
-import { toast } from "react-toastify";
 import { useAuth } from "../../Utils/Auth";
-const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) => {
+
+const GetBetTrash = ({
+  selectedMarketDetails,
+  marketName,
+  deleteMarketTrash,
+  restoreMarketTrash,
+}) => {
   const auth = useAuth();
-  // const { trashMarketId } = useParams();
-  // console.log("trashMarketId   Market Trash Id ", trashMarketId)
+
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalEntries: 10,
@@ -28,8 +30,19 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
       totalEntries: parseInt(e.target.value, 10),
     });
   };
-  const handleDelete = async (trashMarketId) => {
+
+  const handleDelete = (trashMarketId) => {
     deleteMarketTrash(trashMarketId);
+  };
+
+  const handleRestore = (trashMarketId) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to restore this market?"
+    );
+
+    if (!isConfirmed) return;
+
+    restoreMarketTrash(trashMarketId);
   };
 
   const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
@@ -40,20 +53,7 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
   const paginatedData = selectedMarketDetails.slice(startIndex, endIndex);
 
   return (
-    <div className="card shadow-lg p-3 mb-5 rounded ">
-      <div
-        className="d-flex align-items-center justify-content-center rounded border border-dark"
-        style={{ background: "#95D9E8" }}
-      >
-        <h5 className="fw-bold p-3 mt-1 mb-0">Deleted Market Details:</h5>
-        <h4
-          className="fw-bolder text-decoration-underline mb-0 ms-2"
-          style={{ color: "#000", textShadow: "0 0 10px green, 0 0 15px yellow, 0 0 20px #9601FB" }}
-        >
-          {marketName || "N/A"}
-        </h4>
-      </div>
-
+    <div className="card shadow-lg p-3 m-2 rounded" style={{ background: "#E2E0B8" }}>
       <div className="mt-3 text-end">
         <label className="me-2 fw-bold">Show</label>
         <select
@@ -68,49 +68,56 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
         </select>
         <label className="ms-2 fw-bold">Entries</label>
       </div>
-      <div className="table-responsive">
+      <div className="table-responsive p-3">
         <table className="table table-striped table-hover text-center">
           <thead>
             <tr>
-              {/* <th>Market Name</th> */}
               <th>Runner Name</th>
               <th>User Name</th>
               <th>Rate</th>
               <th>Type</th>
               <th>Stake</th>
-              <th>Action</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {paginatedData.length > 0 ? (
               paginatedData.map((detail, index) => (
                 <tr key={index}>
-                  {/* <td>{detail.marketName}</td> */}
                   <td>{detail.runnerName}</td>
                   <td>{detail.userName}</td>
                   <td>{detail.rate}</td>
                   <td
-                    className={`text-uppercase fw-bold ${detail.type === "back" ? "text-success" : "text-danger"
-                      }`}
+                    className={`text-uppercase fw-bold ${
+                      detail.type === "back" ? "text-success" : "text-danger"
+                    }`}
                   >
                     {detail.type}
                   </td>
-                  <td>{Math.round(detail.value)}({Math.round(detail.bidAmount)})</td>
-
                   <td>
+                    {Math.round(detail.value)}(
+                    {Math.round(detail.bidAmount)})
+                  </td>
+                  <td>
+                   
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger me-2"
                       onClick={() => handleDelete(detail.trashMarketId)}
                     >
                       Delete
                     </button>
+                    <button
+                      className="btn btn-info"
+                      onClick={() => handleRestore(detail.trashMarketId)}
+                    >
+                      Restore
+                    </button>
                   </td>
-
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="7">No data found for the selected market</td>
+                <td colSpan="6">No data found for the selected market</td>
               </tr>
             )}
           </tbody>
@@ -129,3 +136,5 @@ const GetBetTrash = ({ selectedMarketDetails, marketName, deleteMarketTrash}) =>
 };
 
 export default GetBetTrash;
+
+
