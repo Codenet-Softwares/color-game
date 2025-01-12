@@ -30,7 +30,7 @@ const LiveUserBet = () => {
   const fetchLiveUserBet = async () => {
     try {
       const response = await GameService.userLiveBetGame(
-        auth.user,
+        auth.user,  
         marketId,
         userBets.currentPage,
         userBets.totalEntries,

@@ -41,6 +41,16 @@ const DeleteMarket = () => {
     }
   };
 
+  const handleRestore = async (approvalMarketId) => {
+    try {
+      await GameService.restoreDeletedMarket(auth.user, approvalMarketId);
+      fetchMarkets(pagination.page, pagination.pageSize, searchTerm);
+      alert("Market restored successfully!");
+    } catch (error) {
+      console.error("Error restoring market:", error);
+      alert("Failed to restore market.");
+    }
+  };
   const handleSearch = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -60,6 +70,23 @@ const DeleteMarket = () => {
     const newPageSize = Number(event.target.value);
     setPagination((prev) => ({ ...prev, pageSize: newPageSize, page: 1 }));
     fetchMarkets(1, newPageSize);
+  };
+
+  const handleDelete = async (approvalMarketId) => {
+    try {
+      await GameService.gameMarketDelete(auth.user, approvalMarketId);
+
+      setMarkets((prevMarkets) =>
+        prevMarkets.filter((market) => market.approvalMarketId !== approvalMarketId)
+      );
+
+      fetchMarkets(pagination.page, pagination.pageSize, searchTerm);
+
+      alert("Market deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting market:", error);
+      alert("Failed to delete market.");
+    }
   };
 
   useEffect(() => {
@@ -163,13 +190,13 @@ const DeleteMarket = () => {
                       <td>
                         <button
                           className="btn btn-danger me-2"
-                          //  onClick={() => handleDelete(detail.trashMarketId)}
+                          onClick={() => handleDelete(market.approvalMarketId)}
                         >
                           Delete
                         </button>
                         <button
                           className="btn btn-info"
-                          //  onClick={() => handleRestore(detail.trashMarketId)}
+                          onClick={() => handleRestore(market.approvalMarketId)}
                         >
                           Restore
                         </button>
