@@ -16,29 +16,30 @@ const s3 = new AWS.S3({
 
 const awsS3Obj = {
   addDocumentToS3: async function (base64Data, fileName, bucketName, fileType) {
-    const fileBuffer = Buffer.from(base64Data, 'base64');
-    const fileExtension = fileType.substring(fileType.lastIndexOf('/') + 1);
-    const nameFile = `${fileName}_${Date.now()}.${fileExtension}`;
-    // Set the parameters for the S3 upload
-    const params = {
-      Bucket: bucketName,
-      Key: nameFile,
-      Body: fileBuffer,
-      ContentEncoding: 'base64',
-      ContentType: fileType,
-      ACL: 'public-read',
-    };
-    // Upload the file to S3
-    return new Promise((resolve, reject) => {
-      s3.upload(params, function (err, data) {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+    try {
+      if (!base64Data || !fileName || !bucketName || !fileType) {
+        throw new Error('Missing required parameters.');
+      }
+      const fileBuffer = Buffer.from(base64Data, 'base64');
+      const fileExtension = fileType.substring(fileType.lastIndexOf('/') + 1);
+      const uniqueFileName = `${fileName}_${Date.now()}.${fileExtension}`;
+      const params = {
+        Bucket: bucketName,
+        Key: uniqueFileName,
+        Body: fileBuffer,
+        ContentType: fileType,
+        ContentEncoding: 'base64',
+        ACL: 'public-read',
+      };
+      const uploadResult = await s3.upload(params).promise();
+      return uploadResult.Location;
+    } catch (error) {
+      console.error('Error uploading file to S3:', error);
+      throw new Error(`Error uploading file to S3: ${error.message}`);
+    }
   },
+
+
   deleteDocumentsFromS3: async function (fileName, bucketName) {
     try {
       const ans = await s3

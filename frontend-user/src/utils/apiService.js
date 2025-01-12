@@ -1,7 +1,10 @@
+import { useAppContext } from "../contextApi/context";
 import urls from "../utils/constant/UrlConstant";
 import strings from "../utils/constant/stringConstant";
 
 import { getCallParams, getNoAuthCallParams, makeCall } from "./service";
+
+// const { store } = useAppContext();
 
 export async function login(body, isToast = false) {
   try {
@@ -472,16 +475,50 @@ export async function lotteryPurchaseHIstoryUserNew(body = {}, isToast = false) 
 }
 
 
+// export async function getLotteryMarketsApi(body = {}, isToast = false) {
+//   try {
+//     const callParams = await getCallParams(strings.GET, body, isToast);
+      
+//     const userLoggedIn = body.user.isLogin;
+//     if (!userLoggedIn) {
+//       console.warn("User is not logged in. Skipping API call for lottery markets.");
+//       return { success: false, data: [] };
+//     }
+    
+//     const response = await makeCall(urls.getLotteryMarketsApi, callParams, isToast);
+//     return response;
+//   } catch (error) {
+//     console.error("Error fetching lottery markets:", error.message || error);
+//     return { success: false, data: [], error: error.message || error };
+//   }
+// }
 
-export async function getLotteryMarketsApi(body = {}, isToast = false) {
+// For the time being donot chnage this api and this api is resolved for the headers error 
+
+export const getLotteryMarketsApi = async (body = {}, isToast = false) => {
   try {
-    const callParams = await getCallParams(strings.GET, body, isToast);
-    const response = await makeCall(urls.getLotteryMarketsApi, callParams, isToast);
-    return response;
-  } catch (error) {
-    throw error;
+    const { user } = body;
+    if (!user?.isLogin || !user?.accessToken) {
+      console.warn("User is not logged in or access token is missing. Skipping API call for lottery markets.");
+      return { success: false, data: [] };
+    }
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.accessToken}`,
+      },
+    };
+    const response = await fetch(urls.getLotteryMarketsApi, callParams, isToast);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getLotteryMarketsApi:", err);
+    return { success: false, error: err.message };
   }
-}
+};
+
+
 
 export async function getWinningResult(body = {}, isToast = false) {
   try {
@@ -579,3 +616,75 @@ export async function getUpdateMarketStatus(body, marketId, isToast = false) {
     throw error;
   }
 }
+
+export const getSliderImgText = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getSliderTextImg, callParams);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
+
+export const getGameImg = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getGameImg, callParams);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
+
+export const getGifImg = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getGifImg, callParams);
+    console.log("gifresponse", response);
+    
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
+
+export const getInnerImg = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getInnerImg, callParams);
+    console.log("gifresponse", response);
+    
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
