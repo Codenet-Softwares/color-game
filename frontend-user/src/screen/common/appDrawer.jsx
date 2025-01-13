@@ -155,7 +155,7 @@ function AppDrawer({
                         to={`/gameView/${gameObj?.gameName?.replace(
                           /\s/g,
                           ""
-                        )}-${marketObj?.marketName?.replace(
+                        )}/${marketObj?.marketName?.replace(
                           /\s/g,
                           ""
                         )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
