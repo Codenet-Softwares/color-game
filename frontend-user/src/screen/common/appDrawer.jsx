@@ -9,6 +9,7 @@ import { getAllGameDataInitialState } from "../../utils/getInitiateState";
 import HamburgerNavBar from "./hamburgerNavBar";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../utils/constant/stringConstant";
+import InnerCarousel from "./InnerCarousel";
 
 function AppDrawer({
   children,
@@ -27,7 +28,7 @@ function AppDrawer({
   );
   const [lotteryDrawTimes, setLotteryDrawTimes] = useState([]);
   const [lotteryToggle, setLotteryToggle] = useState(false); // New state for toggling draw times
-  const { dispatch } = useAppContext();
+  const { dispatch, store } = useAppContext();
 
   useEffect(() => {
     user_getAllGames();
@@ -36,9 +37,12 @@ function AppDrawer({
 
   // Function to fetch draw times from API
   async function fetchLotteryMarkets() {
-    const response = await getLotteryMarketsApi();
+    const response = await getLotteryMarketsApi(store);
     if (response?.success) {
-      setLotteryDrawTimes(response.data); // Update state with draw times data
+      setLotteryDrawTimes(response.data);
+    } else {
+      console.warn("Failed to fetch lottery markets. Response:", response);
+      setLotteryDrawTimes([]);
     }
   }
 
@@ -69,13 +73,6 @@ function AppDrawer({
   const handleLotteryToggle = () => {
     setLotteryToggle(!lotteryToggle);
   };
-  const carouselImages = [
-    "https://editorial.uefa.com/resources/0288-19b92e19420c-1a9cbc155530-1000/ucl_easportsuclglory_ingamerender_16x9.png",
-    "https://www.hindustantimes.com/ht-img/img/2024/01/14/550x309/TOPSHOT-TENNIS-AUS-OPEN-33_1705249861778_1705249942860.jpg",
-    "https://assets-webp.khelnow.com/d7293de2fa93b29528da214253f1d8d0/640x360/news/uploads/2024/02/football-lead-pic.jpg.webp",
-    "https://deadline.com/wp-content/uploads/2023/08/US-Open-2023-2.jpg",
-    "https://pbs.twimg.com/media/GFlDX7JWkAAseHX.jpg:large",
-  ];
 
   function getLeftNavBar() {
     return (
@@ -175,58 +172,6 @@ function AppDrawer({
     );
   }
 
-  function getMidCarousel() {
-    return (
-      <>
-        <div
-          id="carouselExampleAutoPlaying"
-          className="carousel slide"
-          data-bs-ride="carousel"
-        >
-          <div className="carousel-inner ">
-            {carouselImages.map((image, index) => (
-              <div
-                key={index}
-                className={`carousel-item ${index === 0 ? "active" : ""} mt-3`}
-              >
-                <img
-                  src={image}
-                  className="d-block w-100"
-                  alt={`carousel-image-${index}`}
-                  style={{ height: "400px", objectFit: "fill" }}
-                />
-              </div>
-            ))}
-          </div>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleAutoPlaying"
-            data-bs-slide="prev"
-          >
-            <span
-              className="carousel-control-prev-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleAutoPlaying"
-            data-bs-slide="next"
-          >
-            <span
-              className="carousel-control-next-icon"
-              aria-hidden="true"
-            ></span>
-            <span className="visually-hidden">Next</span>
-          </button>
-        </div>
-      </>
-    );
-  }
-
   function getBody() {
     return isMobile ? (
       getLeftNavBar()
@@ -255,7 +200,7 @@ function AppDrawer({
               className="col-md-12"
               style={{ background: "green", overflowX: "auto" }}
             >
-              {showCarousel && getMidCarousel()}
+              {showCarousel && <InnerCarousel />}
             </div>
             {children}
           </div>

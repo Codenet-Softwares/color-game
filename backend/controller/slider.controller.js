@@ -4,35 +4,45 @@ import { apiResponseSuccess, apiResponseErr } from '../middleware/serverError.js
 import sliderSchema from '../models/slider.model.js';
 import { statusCode } from '../helper/statusCodes.js';
 import gifSchema from '../models/gif.model.js';
+import gameImgSchema from '../models/gameImg.model.js';
+import innerImgSchema from '../models/innerSliderImg.model.js';
 
-// Done
+/*
+     Slider Image Function Starts's.....
+  */
+
 export const createSlider = async (req, res) => {
-  const { data } = req.body;
   try {
+    const { data } = req.body;
     if (!Array.isArray(data)) {
       return res.status(400).send(apiResponseErr(null, false, 400, 'Data must be an array'));
+    }
+
+    const activeImagesCount = await sliderSchema.count({ where: { isActive: true } });
+
+    if (activeImagesCount + data.length > 3) {
+      return res
+        .status(400)
+        .send(apiResponseErr(null, false, 400, 'Cannot add more than 3 active images. Please deactivate or delete existing images.'));
     }
 
     let sliderArray = [];
 
     for (const element of data) {
-      const result = await awsS3Obj.addDocumentToS3(element.docBase, element.name, 'game-slider', element.doctype);
+      const result = await awsS3Obj.addDocumentToS3(element.docBase, 'Img_Slider', 'game-slider', 'image/jpeg');
       const slider = {
         imageId: uuidv4(),
-        image: result.Location,
+        image: result,
         text: element.text,
         headingText: element.headingText,
-        isActive: element.isActive ?? true,
-        // sliderCount: parseInt(sliderCount),
+        isActive: element.isActive,
       };
       sliderArray.push(slider);
     }
 
     const createdSliders = await sliderSchema.bulkCreate(sliderArray);
 
-    return res
-      .status(statusCode.create)
-      .send(apiResponseSuccess(createdSliders, true, statusCode.create, 'Slider created successfully.'));
+    return res.status(statusCode.create).send(apiResponseSuccess(createdSliders, true, statusCode.create, 'Slider created successfully.'));
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -52,8 +62,33 @@ export const getSliderTextImg = async (req, res) => {
   try {
     const sliders = await sliderSchema.findAll({
       attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+      where: {
+        isActive: true,
+      },
     });
+    if (!sliders.length) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'No active sliders found.'));
+    }
+    return res.status(statusCode.success).send(apiResponseSuccess(sliders, true, statusCode.success, 'Success'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
 
+export const getAllSliderTextImg = async (req, res) => {
+  try {
+    const sliders = await sliderSchema.findAll({
+      attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+    });
     return res.status(statusCode.success).send(apiResponseSuccess(sliders, true, statusCode.success, 'Success'));
   } catch (error) {
     return res
@@ -85,9 +120,7 @@ export const activeSlider = async (req, res) => {
 
     sliderData.update({ isActive });
 
-    return res
-      .status(statusCode.success)
-      .send(apiResponseSuccess(sliderData, true, statusCode.success, 'Slider status updated successfully'));
+    return res.status(statusCode.success).send(apiResponseSuccess(sliderData, true, statusCode.success, 'Slider status updated successfully'));
   } catch (error) {
     return res
       .status(statusCode.internalServerError)
@@ -102,27 +135,29 @@ export const activeSlider = async (req, res) => {
   }
 };
 
-// Done
-export const updateSliderImage = async (req, res) => {
+export const deleteImgData = async (req, res) => {
+  const { imageId } = req.params;
+
   try {
-    const { imageId } = req.params;
-    const data = req.body;
-    const slider = await sliderSchema.findOne({
-      where: { imageId },
+    const imgData = await sliderSchema.findOne({
+      where: {
+        imageId: imageId,
+      },
     });
-    if (!slider) {
+
+    if (!imgData) {
       return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Image not found'));
     }
 
-    slider.image = data.image || slider.image;
-    slider.text = data.text || slider.text;
-    slider.headingText = data.headingText || slider.headingText;
-    const updatedSlider = await slider.save();
+    await sliderSchema.destroy({
+      where: {
+        imageId: imageId,
+      },
+    });
 
-    return res
-      .status(statusCode.success)
-      .send(apiResponseSuccess(updatedSlider, true, statusCode.success, 'Slider updated successfully'));
+    return res.status(statusCode.success).send(apiResponseSuccess(imgData, true, statusCode.success, 'Image Deleted Successfully'));
   } catch (error) {
+    console.error('Error in deleteGifData:', error);
     return res
       .status(statusCode.internalServerError)
       .send(
@@ -136,21 +171,37 @@ export const updateSliderImage = async (req, res) => {
   }
 };
 
+/*
+     Slider Image Function End's.....
+  */
+
+/*
+     Gif Function Starts's.....
+  */
 // Done
 export const createGif = async (req, res) => {
   try {
     const { data } = req.body;
+
     if (!Array.isArray(data)) {
       return res.status(400).send(apiResponseErr(null, false, 400, 'Data must be an array'));
+    }
+
+    const activeGifsCount = await gifSchema.count({ where: { isActive: true } });
+
+    if (activeGifsCount + data.length > 3) {
+      return res
+        .status(400)
+        .send(apiResponseErr(null, false, 400, 'Cannot add more than 3 active GIFs. Please deactivate or delete existing GIFs.'));
     }
 
     let sliderArray = [];
 
     for (const element of data) {
-      const result = await awsS3Obj.addDocumentToS3(element.docBase, element.name, 'gif-slider', element.doctype);
+      const result = await awsS3Obj.addDocumentToS3(element.docBase, 'Gif', 'gif-slider', element.doctype);
       const slider = {
         imageId: uuidv4(),
-        image: result.Location,
+        image: result,
         text: element.text,
         headingText: element.headingText,
         isActive: element.isActive ?? true,
@@ -165,6 +216,53 @@ export const createGif = async (req, res) => {
       .send(apiResponseSuccess(createdSliders, true, statusCode.create, 'Gif created successfully.'));
   } catch (error) {
     res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+
+export const getGif = async (req, res) => {
+  try {
+    const gif = await gifSchema.findAll({
+      attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+      where: {
+        isActive: true,
+      },
+    });
+    if (!gif.length) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'No active gif found.'));
+    }
+    return res.status(statusCode.success).send(apiResponseSuccess(gif, true, statusCode.success, 'Success'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const getAllGif = async (req, res) => {
+  try {
+    const gif = await gifSchema.findAll({
+      attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+    });
+    return res.status(statusCode.success).send(apiResponseSuccess(gif, true, statusCode.success, 'Success'));
+  } catch (error) {
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -200,7 +298,7 @@ export const deleteGifData = async (req, res) => {
 
     return res
       .status(statusCode.success)
-      .send(apiResponseSuccess(gifData, true, statusCode.success, 'Delete Gif Successfully'));
+      .send(apiResponseSuccess(gifData, true, statusCode.success, 'Deleted Gif Successfully'));
   } catch (error) {
     console.error('Error in deleteGifData:', error);
     return res
@@ -215,3 +313,363 @@ export const deleteGifData = async (req, res) => {
       );
   }
 };
+
+export const activeGif = async (req, res) => {
+  try {
+    const { isActive } = req.body;
+    const { imageId } = req.params;
+
+    const sliderData = await gifSchema.findOne({
+      where: { imageId },
+    });
+
+    if (!sliderData) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Gif not found'));
+    }
+
+    sliderData.update({ isActive });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(sliderData, true, statusCode.success, 'Gif status updated successfully'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+/*
+     Gif Function Ends's.....
+  */
+
+/*
+     Game Img Function Start's.....
+  */
+
+export const createGameImg = async (req, res) => {
+  try {
+    const { data } = req.body;
+    if (!Array.isArray(data)) {
+      return res.status(400).send(apiResponseErr(null, false, 400, 'Data must be an array'));
+    }
+
+    const activeImagesCount = await gameImgSchema.count({ where: { isActive: true } });
+
+    if (activeImagesCount + data.length > 3) {
+      return res
+        .status(400)
+        .send(apiResponseErr(null, false, 400, 'Cannot add more than 3 active images. Please deactivate or delete existing images.'));
+    }
+
+    let sliderArray = [];
+
+    for (const element of data) {
+      const result = await awsS3Obj.addDocumentToS3(element.docBase, 'Game_Img', 'game-slider', 'image/jpeg');
+      const slider = {
+        imageId: uuidv4(),
+        image: result,
+        text: element.text,
+        headingText: element.headingText,
+        isActive: element.isActive ?? true,
+      };
+      sliderArray.push(slider);
+    }
+    const createdSliders = await gameImgSchema.bulkCreate(sliderArray);
+
+    return res
+      .status(statusCode.create)
+      .send(apiResponseSuccess(createdSliders, true, statusCode.create, 'Game image created successfully.'));
+  } catch (error) {
+    res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const getGameImg = async (req, res) => {
+  try {
+    const sliders = await gameImgSchema.findAll({
+      attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+      where: {
+        isActive: true,
+      },
+    });
+    if (!sliders.length) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'No active game image found.'));
+    }
+    return res.status(statusCode.success).send(apiResponseSuccess(sliders, true, statusCode.success, 'Success'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const getAllGameImg = async (req, res) => {
+  try {
+    const sliders = await gameImgSchema.findAll({
+      attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+    });
+    return res.status(statusCode.success).send(apiResponseSuccess(sliders, true, statusCode.success, 'Success'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const activeGame = async (req, res) => {
+  try {
+    const { isActive } = req.body;
+    const { imageId } = req.params;
+
+    const sliderData = await gameImgSchema.findOne({
+      where: { imageId },
+    });
+
+    if (!sliderData) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Game image not found'));
+    }
+
+    sliderData.update({ isActive });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(sliderData, true, statusCode.success, 'Game image updated successfully'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const deleteGameData = async (req, res) => {
+  const { imageId } = req.params;
+
+  try {
+    const imgData = await gameImgSchema.findOne({
+      where: {
+        imageId: imageId,
+      },
+    });
+
+    if (!imgData) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Game Image not found'));
+    }
+
+    await gameImgSchema.destroy({
+      where: {
+        imageId: imageId,
+      },
+    });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(imgData, true, statusCode.success, 'Game Img Deleted Successfully'));
+  } catch (error) {
+    console.error('Error in deleteGifData:', error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+/*
+     Game Img Function Ends's.....
+  */
+
+/*
+     Inner Img Function Start's.....
+  */
+
+export const createInnerImg = async (req, res) => {
+  try {
+    const { data } = req.body;
+    if (!Array.isArray(data)) {
+      return res.status(400).send(apiResponseErr(null, false, 400, 'Data must be an array'));
+    }
+
+    let sliderArray = [];
+
+    for (const element of data) {
+      const result = await awsS3Obj.addDocumentToS3(element.docBase, 'Inner_Img', 'game-slider', 'image/jpeg');
+      const slider = {
+        imageId: uuidv4(),
+        image: result,
+        text: element.text,
+        headingText: element.headingText,
+        isActive: element.isActive ?? true,
+      };
+      sliderArray.push(slider);
+    }
+    const createdSliders = await innerImgSchema.bulkCreate(sliderArray);
+
+    return res
+      .status(statusCode.create)
+      .send(apiResponseSuccess(createdSliders, true, statusCode.create, 'Image created successfully.'));
+  } catch (error) {
+    res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const getInnerImg = async (req, res) => {
+  try {
+    const sliders = await innerImgSchema.findAll({
+      attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+      where: {
+        isActive: true,
+      },
+    });
+    if (!sliders.length) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'No active image found.'));
+    }
+    return res.status(statusCode.success).send(apiResponseSuccess(sliders, true, statusCode.success, 'Success'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const getAllInnerImg = async (req, res) => {
+  try {
+    const sliders = await innerImgSchema.findAll({
+      attributes: ['imageId', 'image', 'text', 'headingText', 'isActive'],
+    });
+    return res.status(statusCode.success).send(apiResponseSuccess(sliders, true, statusCode.success, 'Success'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const activeInnerImg = async (req, res) => {
+  try {
+    const { isActive } = req.body;
+    const { imageId } = req.params;
+
+    const sliderData = await innerImgSchema.findOne({
+      where: { imageId },
+    });
+
+    if (!sliderData) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Image not found'));
+    }
+
+    sliderData.update({ isActive });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(sliderData, true, statusCode.success, 'Image updated successfully'));
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+export const deleteInnerImgData = async (req, res) => {
+  const { imageId } = req.params;
+
+  try {
+    const imgData = await innerImgSchema.findOne({
+      where: {
+        imageId: imageId,
+      },
+    });
+
+    if (!imgData) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Image not found'));
+    }
+
+    await innerImgSchema.destroy({
+      where: {
+        imageId: imageId,
+      },
+    });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(imgData, true, statusCode.success, 'Image Deleted Successfully'));
+  } catch (error) {
+    console.error('Error in deleteGifData:', error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+/*
+    Inner Img Function Ends's.....
+*/

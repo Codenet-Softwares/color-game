@@ -1,9 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db.js';
 
-class sliderSchema extends Model {}
+class innerImgSchema extends Model {}
 
-sliderSchema.init(
+innerImgSchema.init(
   {
     id: {
       type: DataTypes.INTEGER,
@@ -34,10 +34,10 @@ sliderSchema.init(
   },
   {
     sequelize,
-    modelName: 'slider',
-    tableName: 'slider',
+    modelName: 'innerImgSchema',
+    tableName: 'innerImgSchema',
     timestamps: false,
   },
 );
 
-export default sliderSchema;
+export default innerImgSchema;
