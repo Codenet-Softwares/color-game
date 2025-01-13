@@ -274,10 +274,10 @@ export const createMarket = async (req, res) => {
       marketId: marketId,
       marketName: marketName,
       participants: participants,
-      startTime: moment(startTime).utc().format(),
-      endTime: moment(endTime).utc().format(),
-      // startTime: new Date(startTime), 
-      // endTime: new Date(endTime),   
+      // startTime: moment(startTime).utc().format(),
+      // endTime: moment(endTime).utc().format(),
+      startTime: new Date(startTime), 
+      endTime: new Date(endTime),   
       announcementResult: false,
       isActive: false,
       isDisplay: true,
@@ -411,11 +411,15 @@ export const updateMarket = async (req, res) => {
       Runner.destroy({ where: { marketId } })
     }
     if (startTime !== undefined) {
-      market.startTime = moment(startTime).utc().format();
+      // market.startTime = moment(startTime).utc().format();
+      market.startTime = new Date(startTime);
+
     }
 
     if (endTime !== undefined) {
-      market.endTime = moment(endTime).utc().format();
+      // market.endTime = moment(endTime).utc().format();
+      market.endTime = new Date(endTime);
+
     }
 
     await market.save();
