@@ -21,6 +21,10 @@ import BetHistoryPage from "../Pages/BetHistory/BetHistoryPage";
 import UserBetHistory from "../Pages/BetHistory/UserBetHistory";
 import DeleteBetHistory from "../Pages/BetHistory/DeleteBetHistory";
 import DeleteMarket from "../Components/Game/DeleteMarket";
+import CreateImage from "../Pages/AddImages/SliderImages/CreateImage";
+import SliderImageDelete from "../Pages/AddImages/SliderImages/SliderImageDelete";
+import CreateGameImage from "../Pages/AddImages/AddGameImageSlider/CreateGameImage";
+import UpdateGameSlider from "../Pages/AddImages/AddGameImageSlider/UpdateGameSlider";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -170,6 +174,39 @@ const AppRoutes = () => {
             </RequireAuth>
           }
           />        
+          <Route
+          path="create-image"
+          element={
+            <RequireAuth>
+              <CreateImage/>
+            </RequireAuth>
+          }
+          /> 
+          <Route
+          path="slider-image-delete"
+          element={
+            <RequireAuth>
+              <SliderImageDelete/>
+            </RequireAuth>
+          }
+          /> 
+          <Route
+          path="GameImage-slider"
+          element={
+            <RequireAuth>
+              <CreateGameImage/>
+            </RequireAuth>
+          }
+          /> 
+          <Route
+          path="UpdateGameImage-slider"
+          element={
+            <RequireAuth>
+              <UpdateGameSlider/>
+            </RequireAuth>
+          }
+          /> 
+
         </Route>
       </Routes>
     </BrowserRouter>

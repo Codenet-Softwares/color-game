@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Utils/Auth";
+import { use } from "react";
 
 const Navside = () => {
   const auth = useAuth();
   const [isUser, setIsUser] = useState(true);
   const [isGame, setIsGame] = useState(true);
-  const [isAnnouncement, setIsAnnouncement] = useState(true); // announcement
+  const [isImage, setisImage] = useState(false);
+  const [isSliderImage, setisSliderImage] = useState(true);
+  const [isGameSliderImage, setisGameSliderImage] = useState(true)
+  const [isAnnouncement, setIsAnnouncement] = useState(true);
   const [inactive, setInactive] = useState(true);
 
   const navigate = useNavigate();
-
-
 
   const handleUserToggle = () => {
     setIsUser(!isUser);
@@ -25,8 +27,16 @@ const Navside = () => {
   const handleGameToggle = () => {
     setIsGame(!isGame);
   };
+  const handleImageToggle = () => {
+    setisImage(!isImage);
+  };
+  const handleSliderImageToggle = () => {
+    setisSliderImage(!isSliderImage);
+  };
+  const handleGameImageSlider =()=>{
+    isGameSliderImage(!setisGameSliderImage);
 
-
+  }
   const handleAnnouncementToggle = () => {
     setIsAnnouncement(!isAnnouncement);
   };
@@ -158,7 +168,7 @@ const Navside = () => {
             <span className="ms-3">Inactive Games</span>
           </Link>
         </li>
-        <li className="" >
+        <li className="">
           <Link to="/voidMarket" className="d-flex align-items-center">
             <div className="nav_icon_small">
               <img
@@ -169,7 +179,7 @@ const Navside = () => {
             <span className="ms-3">Void Games</span>
           </Link>
         </li>
-        <li className="" >
+        <li className="">
           <Link to="/liveBet" className="d-flex align-items-center">
             <div className="nav_icon_small">
               <img
@@ -180,8 +190,11 @@ const Navside = () => {
             <span className="ms-3">Live Bet</span>
           </Link>
         </li>
-        <li className="" >
-          <Link to="/get-bet-markets-afterWin" className="d-flex align-items-center">
+        <li className="">
+          <Link
+            to="/get-bet-markets-afterWin"
+            className="d-flex align-items-center"
+          >
             <div className="nav_icon_small">
               <img
                 src="../../.../../../../img/menu-icon/dashboard.svg"
@@ -191,7 +204,7 @@ const Navside = () => {
             <span className="ms-3">Bet History</span>
           </Link>
         </li>
-        <li className="" >
+        <li className="">
           <Link to="/trash" className="d-flex align-items-center">
             <div className="nav_icon_small">
               <img
@@ -202,7 +215,90 @@ const Navside = () => {
             <span className="ms-3">Trash Bets</span>
           </Link>
         </li>
+    
+      {/* Image Management */}
+<li>
+  <a
+    className={`has-arrow ${isImage ? "active" : ""}`}
+    href="#"
+    onClick={handleImageToggle}
+  >
+    <div className="nav_icon_small">
+      <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+    </div>
+    <div className="nav_title">
+      <span>Add Image</span>
+    </div>
+  </a>
+  {isImage && (
+    <ul>
+      {/* Slider Image */}
+      <li>
+        <a
+          className={`has-arrow ${isSliderImage ? "active" : ""}`}
+          href="#"
+          onClick={handleSliderImageToggle}
+        >
+          <div className="nav_icon_small">
+            <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+          </div>
+          <div className="nav_title">
+            <span>Slider Image</span>
+          </div>
+        </a>
+        {isSliderImage && (
+          <ul>
+            <li>
+              <Link to="create-image">
+                <i className="fa-solid fa-circle"></i> Create Slider
+              </Link>
+            </li>
+            <li>
+              <Link to="slider-image-delete">
+                <i className="fa-solid fa-circle"></i> Update Slider
+              </Link>
+            </li>
+          </ul>
+        )}
+      </li>
+      <li>
+      <a
+          className={`has-arrow ${isGameSliderImage ? "active" : ""}`}
+          href="#"
+          onClick={handleGameImageSlider}
+        >
+          <div className="nav_icon_small">
+            <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+          </div>
+          <div className="nav_title">
+            <span>Game Image</span>
+          </div>
+        </a>
+        {isGameSliderImage && (
+          <ul>
+            <li>
+              <Link to="GameImage-slider">
+                <i className="fa-solid fa-circle"></i> Create Slider
+              </Link>
+            </li>
+            <li>
+              <Link to="UpdateGameImage-slider">
+                <i className="fa-solid fa-circle"></i> Update Slider
+              </Link>
+            </li>
+          </ul>
+        )}
+      </li>
+      <li>
+        <Link to="/gif-image">
+          <i className="fa-solid fa-circle"></i> GIF Image
+        </Link>
+      </li>
+    </ul>
+  )}
+</li>
 
+      </ul>
         {/* Announcement Management */}
         {/* <li className={isAnnouncement ? 'active' : ''}>
           <a className="has-arrow" onClick={handleAnnouncementToggle}>
@@ -240,7 +336,7 @@ const Navside = () => {
           )}
         </li> */}
         {/* Announcement Management Ends */}
-      </ul>
+      
       {/* List Of the Sidebar Ends */}
     </nav>
   );

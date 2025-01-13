@@ -264,8 +264,8 @@ class GameService {
       url: `${API_HOST}/api/market-delete-approval${approvalMarketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
-      }
-    })
+      },
+    });
   }
 
   gameMarketDelete(user, approvalMarketId) {
@@ -274,18 +274,73 @@ class GameService {
       url: API_HOST + `/api/deleted-market-approval/${approvalMarketId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
-      }
-    })
+      },
+    });
   }
 
   restoreDeletedMarket(user, approvalMarketId) {
     return axios({
       method: "POST",
-      url: API_HOST + `/api/restore-deleted-market-approval/${approvalMarketId}`,
+      url:
+        API_HOST + `/api/restore-deleted-market-approval/${approvalMarketId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
-      }
+      },
     });
+  }
+
+  createSliderImage(user, data) {
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-slider-text-img`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  getSliderImage(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/all-slider-text-img`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  deleteCreatedImage(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  activeInactiveImage(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/admin/active-slider/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
+  
+  gameSliderImage(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-game-img`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
   }
 }
 
