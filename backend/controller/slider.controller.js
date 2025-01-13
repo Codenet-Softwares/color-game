@@ -189,10 +189,10 @@ export const createGif = async (req, res) => {
 
     const activeGifsCount = await gifSchema.count({ where: { isActive: true } });
 
-    if (activeGifsCount + data.length > 3) {
+    if (activeGifsCount + data.length > 2) {
       return res
         .status(400)
-        .send(apiResponseErr(null, false, 400, 'Cannot add more than 3 active GIFs. Please deactivate or delete existing GIFs.'));
+        .send(apiResponseErr(null, false, 400, 'Cannot add more than 2 active GIFs. Please deactivate or delete existing GIFs.'));
     }
 
     let sliderArray = [];
