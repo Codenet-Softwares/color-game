@@ -136,6 +136,13 @@ const Navside = () => {
                   </span>
                 </Link>
               </li>
+              <li>
+                <Link to="/deleteMarket">
+                  <span>
+                    <i class="fa-solid fa-circle"></i>delete Market
+                  </span>
+                </Link>
+              </li>
             </ul>
           </li>
         )}

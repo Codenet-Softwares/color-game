@@ -161,18 +161,18 @@ class GameService {
       },
     });
   }
-   
-  liveBetGame(user,page,pageSize, search){
+
+  liveBetGame(user, page, pageSize, search) {
     return axios({
       method: "GET",
-      url:`${API_HOST}/api/live-users-bet-games?page=${page}&pageSize=${pageSize}&search=${search}`,
-      headers:{
+      url: `${API_HOST}/api/live-users-bet-games?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
   }
 
-userLiveBetGame(user, marketId, page, pageSize, search) {
+  userLiveBetGame(user, marketId, page, pageSize, search) {
     return axios({
       method: "GET",
       url: `${API_HOST}/api/live-users-bet/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
@@ -182,87 +182,111 @@ userLiveBetGame(user, marketId, page, pageSize, search) {
     });
   }
 
-DeleteMarket(user, userId,  marketId, runnerId, betId) {
-  return axios({
-    method: "DELETE",
-    url: `${API_HOST}/api/delete-markets`,
-    data: {
-      marketId: marketId,
-      runnerId: runnerId,
-      userId: userId,
-      betId: betId,
-    },
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  });
-}
+  DeleteMarket(user, userId, marketId, runnerId, betId) {
+    return axios({
+      method: "DELETE",
+      url: `${API_HOST}/api/delete-markets`,
+      data: {
+        marketId: marketId,
+        runnerId: runnerId,
+        userId: userId,
+        betId: betId,
+      },
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
-betHistory(user,page,pageSize,search){
-return axios({
-  method:"GET",
-  url:`${API_HOST}/api/get-bet-markets-afterWin?page=${page}&pageSize=${pageSize}&search=${search}`,
-  headers:{
-    Authorization:`Bearer ${user.token}`,
-  },
-});
-}
+  betHistory(user, page, pageSize, search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/get-bet-markets-afterWin?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
-winBetHistory(user, marketId, page, pageSize, search){
-return axios({
-  method:"GET",
-  url: `${API_HOST}/api/get-bets-afterWin/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
-  headers:{
-    Authorization:`Bearer ${user.token}`,
-  },
-});
-}
+  winBetHistory(user, marketId, page, pageSize, search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/get-bets-afterWin/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
-trashLiveBetHistory(user,page, pageSize,search){
-return axios({
-  method:"GET",
-  url:`${API_HOST}/api/get-market?page=${page}&pageSize=${pageSize}&search=${search}`,
-  headers:{
-    Authorization:`Bearer ${user.token}`,
-  },
-});
-}
+  trashLiveBetHistory(user, page, pageSize, search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/get-market?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
-getBetTrash(user, marketId, page, pageSize) {
-  return axios({
-    method: "GET",
-    url: `${API_HOST}/api/get-bet-trash/${marketId}?page=${page}&pageSize=${pageSize}`,
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  });
-}
-// DeleteMarket(user, userId,  marketId, runnerId, betId) {
-//   return axios({
-//     method: "DELETE",
-//     url: `${API_HOST}/api/delete-markets`,
-//     data: {
-//       marketId: marketId,
-//       runnerId: runnerId,
-//       userId: userId,
-//       betId: betId,
-//     },
-//     headers: {
-//       Authorization: `Bearer ${user.token}`,
-//     },
-//   });
-// }
-deleteTrashMarket(user, trashMarketId) {
-  return axios({
-    method: "DELETE",
-    url: `${API_HOST}/api/delete-market-trash/${trashMarketId}`,
-    headers: {
-      Authorization: `Bearer ${user.token}`,
-    },
-  });
-}
+  getBetTrash(user, marketId, page, pageSize) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/get-bet-trash/${marketId}?page=${page}&pageSize=${pageSize}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
+  deleteTrashMarket(user, trashMarketId, page, pageSize) {
+    return axios({
+      method: "DELETE",
+      url: `${API_HOST}/api/delete-market-trash/${trashMarketId}?page=${page}&pageSize=${pageSize}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
+  restoreTrashMarket(user, trashMarketId) {
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/re-store/market/${trashMarketId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  deleteGameMarket(user, approvalMarketId, page, pageSize, search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/market-delete-approval${approvalMarketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      }
+    })
+  }
+
+  gameMarketDelete(user, approvalMarketId) {
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/deleted-market-approval/${approvalMarketId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      }
+    })
+  }
+
+  restoreDeletedMarket(user, approvalMarketId) {
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/restore-deleted-market-approval/${approvalMarketId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      }
+    });
+  }
 }
 
 export default new GameService();
