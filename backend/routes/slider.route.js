@@ -88,11 +88,11 @@ export const SliderRoute = (app) => {
 
   app.get('/api/admin/get-inner-game-img', customErrorHandler, getInnerImg);
 
-  app.get('/api/admin/get-all-game-img', customErrorHandler, authorize([string.Admin]), getAllInnerImg);
+  app.get('/api/admin/get-all-inner-img', customErrorHandler, authorize([string.Admin]), getAllInnerImg);
 
-  app.delete('/api/delete/game-img/:imageId', customErrorHandler, authorize([string.Admin]), deleteInnerImgData);
+  app.delete('/api/delete/inner-img/:imageId', customErrorHandler, authorize([string.Admin]), deleteInnerImgData);
 
-  app.post('/api/admin/active-game-img/:imageId', authorize([string.Admin]), customErrorHandler, activeInnerImg);
+  app.post('/api/admin/inner-game-img/:imageId', authorize([string.Admin]), customErrorHandler, activeInnerImg);
 
   /*
      Inner Img Apis End's.....

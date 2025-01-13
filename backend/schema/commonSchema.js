@@ -195,18 +195,6 @@ export const announcementsSchema = [
     .withMessage("Announcement content is required"),
 ];
 
-export const updateAnnouncementSchema = [
-  param("announceId").notEmpty().withMessage("Announcement ID is required"),
-  body("typeOfAnnouncement")
-    .optional()
-    .notEmpty()
-    .withMessage("Type of announcement is required"),
-  body("announcement")
-    .optional()
-    .notEmpty()
-    .withMessage("Announcement content is required"),
-];
-
 export const depositSchema = [
   body("adminId").notEmpty().withMessage("Admin ID is required"),
   body("depositAmount")

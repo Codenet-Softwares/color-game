@@ -2,8 +2,8 @@ import { DataTypes } from 'sequelize';
 import sequelize from '../db.js';
 import gameSchema from './game.model.js';
 
-const announcementSchema = sequelize.define(
-  'announcement',
+const innerAnnouncementSchema = sequelize.define(
+  'innerAnnouncement',
   {
     id: {
       type: DataTypes.INTEGER,
@@ -21,10 +21,10 @@ const announcementSchema = sequelize.define(
   },
   {
     sequelize,
-    modelName: 'announcements',
-    tableName: 'announcements',
+    modelName: 'innerAnnouncement',
+    tableName: 'innerAnnouncement',
     timestamps: true,
   },
 );
 
-export default announcementSchema;
+export default innerAnnouncementSchema;
