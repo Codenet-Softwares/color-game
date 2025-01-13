@@ -198,7 +198,7 @@ export const createGif = async (req, res) => {
     let sliderArray = [];
 
     for (const element of data) {
-      const result = await awsS3Obj.addDocumentToS3(element.docBase, 'Gif', 'gif-slider', element.doctype);
+      const result = await awsS3Obj.addDocumentToS3(element.docBase, 'Gif', 'gif-slider', 'image/gif');
       const slider = {
         imageId: uuidv4(),
         image: result,
