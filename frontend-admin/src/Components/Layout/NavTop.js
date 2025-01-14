@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Layout from "./Layout";
@@ -6,11 +6,12 @@ import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../Utils/Auth";
 
-
 const NavTop = () => {
   const auth = useAuth();
-  console.log('user id ', auth)
   const navigate = useNavigate();
+  
+  // State for managing modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     let logoutPerformed = false;
@@ -47,6 +48,16 @@ const NavTop = () => {
     }
   };
 
+  // Function to open the reset password modal
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  // Function to close the reset password modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <section className="main_content dashboard_part large_header_bg">
       <div className="container-fluid g-0">
@@ -73,6 +84,9 @@ const NavTop = () => {
                       <a style={{ cursor: "pointer" }} onClick={handleLogout}>
                         <b className="text-danger">Logout</b>
                       </a>
+                      <a style={{ cursor: "pointer" }} onClick={openModal}>
+                        <b className="text-primary">Reset Password</b>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -82,6 +96,30 @@ const NavTop = () => {
         </div>
       </div>
       <Layout />
+      
+      {/* Modal for Reset Password */}
+      {isModalOpen && (
+        <div className="modal" style={{ display: 'block' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Reset Password</h5>
+                <button type="button" className="close" onClick={closeModal}>
+                  &times;
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>Here, you can add the reset password form.</p>
+                {/* Add your reset password form or functionality here */}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                <button type="button" className="btn btn-primary">Reset Password</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

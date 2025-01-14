@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import { customErrorHandler } from "../../Utils/helper";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import DateTime from 'react-datetime';
+import DateTime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 
 const Update = ({ show, setShow, data, Update }) => {
@@ -64,20 +64,22 @@ const Update = ({ show, setShow, data, Update }) => {
     setNewValue((prevState) => ({
       ...prevState,
       startTime: date,
-    }))
+    }));
     setEditedData((prev) => ({
-      ...prev, startTime: date
-    }))
+      ...prev,
+      startTime: date,
+    }));
   };
 
   const handleEndDateTimeChange = (date) => {
     setNewValue((prevState) => ({
       ...prevState,
       endTime: date,
-    }))
+    }));
     setEditedData((prev) => ({
-      ...prev, endTime: date
-    }))
+      ...prev,
+      endTime: date,
+    }));
   };
 
   const handleNewValue = (event) => {
@@ -100,8 +102,9 @@ const Update = ({ show, setShow, data, Update }) => {
             name === "participants" ? value : prevState.participants,
         }));
         setEditedData((prev) => ({
-          ...prev, [name]: value
-        }))
+          ...prev,
+          [name]: value,
+        }));
         break;
       case "runner":
         setNewValue((prevState) => ({
@@ -116,8 +119,9 @@ const Update = ({ show, setShow, data, Update }) => {
           lay: name === "lay" ? value : prevState.lay,
         }));
         setEditedData((prev) => ({
-          ...prev, [name]: value
-        }))
+          ...prev,
+          [name]: value,
+        }));
         break;
       default:
     }
@@ -148,7 +152,7 @@ const Update = ({ show, setShow, data, Update }) => {
       case "market":
         const marketApiData = {
           marketId: data.marketId,
-          ...editedData
+          ...editedData,
         };
         GameService.marketUpdate(marketApiData, auth.user)
           .then((res) => {
@@ -180,7 +184,7 @@ const Update = ({ show, setShow, data, Update }) => {
       case "rate":
         const rateApiData = {
           runnerId: data.runnerId,
-          ...editedData
+          ...editedData,
         };
 
         GameService.rateUpdate(rateApiData, auth.user)
@@ -229,7 +233,7 @@ const Update = ({ show, setShow, data, Update }) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        {Update != "Rate" && (
+        {Update !== "Rate" && (
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <span className="input-group-text w-100" id="basic-addon1">
@@ -244,12 +248,20 @@ const Update = ({ show, setShow, data, Update }) => {
                 Update === "Game"
                   ? "gameName"
                   : Update === "Market"
-                    ? "marketName"
-                    : Update === "Runner"
-                      ? "runnerName"
-                      : ""
+                  ? "marketName"
+                  : Update === "Runner"
+                  ? "runnerName"
+                  : ""
               }
-              value={Update === "Market" && newValue.marketName}
+              value={
+                Update === "Game"
+                  ? newValue.gameName
+                  : Update === "Market"
+                  ? newValue.marketName
+                  : Update === "Runner"
+                  ? newValue.runnerName
+                  : ""
+              }
               onChange={handleNewValue}
             />
           </div>
@@ -257,7 +269,9 @@ const Update = ({ show, setShow, data, Update }) => {
 
         {Update === "Game" && (
           <div className="form-group">
-            <label htmlFor="exampleFormControlTextarea1">New Description:</label>
+            <label htmlFor="exampleFormControlTextarea1">
+              New Description:
+            </label>
             <textarea
               className="form-control"
               id="exampleFormControlTextarea1"
@@ -290,14 +304,16 @@ const Update = ({ show, setShow, data, Update }) => {
 
             <div className="input-group mb-3">
               <div className="input-group-prepend">
-                <span className="input-group-text w-100">Start Date & Time</span>
+                <span className="input-group-text w-100">
+                  Start Date & Time
+                </span>
               </div>
               <DateTime
                 value={newValue.startTime}
                 onChange={handleStartDateTimeChange}
                 dateFormat="YYYY-MM-DD"
                 timeFormat="HH:mm:ss"
-                utc={true}  // To handle UTC
+                utc={true} // To handle UTC
               />
             </div>
 
@@ -310,7 +326,7 @@ const Update = ({ show, setShow, data, Update }) => {
                 onChange={handleEndDateTimeChange}
                 dateFormat="YYYY-MM-DD"
                 timeFormat="HH:mm:ss"
-                utc={true}  // To handle UTC
+                utc={true} // To handle UTC
               />
             </div>
           </>

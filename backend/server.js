@@ -41,6 +41,7 @@ import { lotteryRoute } from './routes/lotteryGame.route.js';
 import { voidGameRoute } from './routes/voidGame.route.js';
 import { DeleteRoutes } from './routes/delete.route.js';
 import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
+import { getISTTime } from './helper/commonMethods.js';
 
 
 dotenv.config();
@@ -115,8 +116,8 @@ Market.hasMany(InactiveGame, { foreignKey: 'marketId' });
 InactiveGame.belongsTo(Runner, { foreignKey: 'runnerId' });
 Runner.hasMany(InactiveGame, { foreignKey: 'runnerId' });
 
-checkAndManageIndexes('game'); 
-checkAndManageIndexes('runner'); 
+checkAndManageIndexes('game');
+checkAndManageIndexes('runner');
 checkAndManageIndexes('market');
 
 const clients = new Set();
@@ -127,7 +128,7 @@ app.get('/events', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', 'https://cg.user.dummydoma.in');
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.flushHeaders();
@@ -157,35 +158,55 @@ sequelize
       console.log(`App is running on - http://localhost:${process.env.PORT || 7000}`);
     });
 
-    // cron.schedule('*/2 * * * * *', async () => {
-    //   try {
-    //     const markets = await Market.findAll({
-    //       where: {
-    //         isActive: true,
-    //         endTime: { [Op.lte]: moment().utc().toISOString() },
-    //       },
-    //     });
+    cron.schedule('*/2 * * * * *', async () => {
+      try {
+        const currentTime = getISTTime();
 
-    //     const updateMarket = [];
-    //     for (const market of markets) {
-    //       market.isActive = false;
-    //       const response = await market.save();
-    //       updateMarket.push(JSON.parse(JSON.stringify(response)));
-    //     }
+        const suspendMarkets = await Market.findAll({
+          where: {
+            isActive : true,
+            [Op.or]: [
+              { startTime: { [Op.gt]: currentTime } },
+              { endTime: { [Op.lt]: currentTime } }
+            ]
+          },
+        });
 
-    //     clients.forEach((client) => {
-    //       try {
-    //         client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
-    //       } catch (err) {
-    //         console.error('[SSE] Error sending data to client:', err);
-    //       }
-    //     });
+        const updateMarket = [];
 
-    //     console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
-    //   } catch (error) {
-    //     console.error('Error checking market statuses:', error);
-    //   }
-    // });
+        for (const market of suspendMarkets) {
+          market.isActive = false;
+          const response = await market.save();
+          updateMarket.push(JSON.parse(JSON.stringify(response)));
+        }
+
+        const activeMarkets = await Market.findAll({
+          where: {
+            isActive : false,
+            startTime: { [Op.lte]: currentTime },
+            endTime: { [Op.gte]: currentTime },
+          },
+        });
+
+        for (const market of activeMarkets) {
+          market.isActive = true;
+          const response = await market.save();
+          updateMarket.push(JSON.parse(JSON.stringify(response)));
+        }
+
+        clients.forEach((client) => {
+          try {
+            client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
+          } catch (err) {
+            console.error('[SSE] Error sending data to client:', err);
+          }
+        });
+
+        console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
+      } catch (error) {
+        console.error('Error checking market statuses:', error);
+      }
+    });
   })
   .catch((err) => {
     console.error('Unable to create tables:', err);
