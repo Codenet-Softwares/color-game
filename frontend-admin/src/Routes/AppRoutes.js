@@ -21,6 +21,18 @@ import BetHistoryPage from "../Pages/BetHistory/BetHistoryPage";
 import UserBetHistory from "../Pages/BetHistory/UserBetHistory";
 import DeleteBetHistory from "../Pages/BetHistory/DeleteBetHistory";
 import DeleteMarket from "../Components/Game/DeleteMarket";
+import CreateImage from "../Pages/AddImages/SliderImages/CreateImage";
+import SliderImageDelete from "../Pages/AddImages/SliderImages/SliderImageDelete";
+import CreateGameImage from "../Pages/AddImages/AddGameImageSlider/CreateGameImage";
+import UpdateGameSlider from "../Pages/AddImages/AddGameImageSlider/UpdateGameSlider";
+import AddGameGif from "../Pages/AddImages/AddGameGIFimage/AddGameGif";
+import UpdateGifSlider from "../Pages/AddImages/AddGameGIFimage/UpdateGifSlider";
+import CreateInnerImage from "../Pages/AddImages/AddInnerImage/CreateInnerImage";
+import UpdateInnerImage from "../Pages/AddImages/AddInnerImage/UpdateInnerImage";
+import InnerAnnouncement from "../Pages/Announcements/InnerAnnouncement";
+import OuterAnnouncement from "../Pages/Announcements/OuterAnnouncement";
+import UpdateOuterAnnouncement from "../Pages/Announcements/UpdateOuterAnnouncement";
+import UpdateInnerAnnouncement from "../Pages/Announcements/UpdateInnerAnnouncement";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -161,15 +173,111 @@ const AppRoutes = () => {
                 <UserBetHistory />
               </RequireAuth>
             }
-          />  
+          />
           <Route
-          path="trash"
-          element={
-            <RequireAuth>
-              <DeleteBetHistory/>
-            </RequireAuth>
-          }
-          />        
+            path="trash"
+            element={
+              <RequireAuth>
+                <DeleteBetHistory />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="create-image"
+            element={
+              <RequireAuth>
+                <CreateImage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="slider-image-delete"
+            element={
+              <RequireAuth>
+                <SliderImageDelete />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="GameImage-slider"
+            element={
+              <RequireAuth>
+                <CreateGameImage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="UpdateGameImage-slider"
+            element={
+              <RequireAuth>
+                <UpdateGameSlider />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="create-game-GIF"
+            element={
+              <RequireAuth>
+                <AddGameGif />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="update-game-GIF"
+            element={
+              <RequireAuth>
+                <UpdateGifSlider />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="create-inner-image"
+            element={
+              <RequireAuth>
+                <CreateInnerImage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="update-inner-image"
+            element={
+              <RequireAuth>
+                <UpdateInnerImage />
+              </RequireAuth>
+            }
+          />
+           <Route
+            path="outer-announcement"
+            element={
+              <RequireAuth>
+                <OuterAnnouncement />
+              </RequireAuth>
+            }
+          />
+           <Route
+            path="update-outer-announcement"
+            element={
+              <RequireAuth>
+                <UpdateOuterAnnouncement />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="inner-announcement"
+            element={
+              <RequireAuth>
+                <InnerAnnouncement />
+              </RequireAuth>
+            }
+          />
+         <Route
+            path="update-inner-announcement"
+            element={
+              <RequireAuth>
+                <UpdateInnerAnnouncement />
+              </RequireAuth>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>

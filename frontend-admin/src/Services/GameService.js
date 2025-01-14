@@ -264,8 +264,8 @@ class GameService {
       url: `${API_HOST}/api/market-delete-approval${approvalMarketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
-      }
-    })
+      },
+    });
   }
 
   gameMarketDelete(user, approvalMarketId) {
@@ -274,17 +274,254 @@ class GameService {
       url: API_HOST + `/api/deleted-market-approval/${approvalMarketId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
-      }
-    })
+      },
+    });
   }
 
   restoreDeletedMarket(user, approvalMarketId) {
     return axios({
       method: "POST",
-      url: API_HOST + `/api/restore-deleted-market-approval/${approvalMarketId}`,
+      url:
+        API_HOST + `/api/restore-deleted-market-approval/${approvalMarketId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
-      }
+      },
+    });
+  }
+
+  // OUTER IMAGE SLIDER
+  createSliderImage(user, data) {
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-slider-text-img`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  getSliderImage(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/all-slider-text-img`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  deleteCreatedImage(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  activeInactiveImage(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/admin/active-slider/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
+  
+  // GAME SLIDER IMAGE
+  gameSliderImage(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-game-img`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+
+  getGameSliderImage(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-all-game-img`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteGameCreatedImage(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/game-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  activeInactiveGameImage(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/admin/active-game-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
+
+  // GIF SLIDER START
+  gifSliderImage(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-gif`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+  getGifSlider(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-all-gif`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteCreateGif(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/gif/${imageId}`, 
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  
+  activeInactiveGameGif(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: API_HOST +`/api/admin/active-gif/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
+  
+
+// INNER SLIDER IMAGE  START
+  innerSliderImage(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-inner-img`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+  getInnerSliderImage(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-all-inner-img`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteCreateInnerImage(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/inner-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  activeInactiveGameImage(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/admin/inner-game-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
+
+  // OUTER announcement 
+  CreateOuterAnnouncement(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/announcements-create`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+
+  getOuterAnnouncement(user){
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-admin-announcements`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteOuterAnnouncement(user, announceId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/admin/delete-announcements/${announceId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+   // INNER announcement 
+   CreateInnerAnnouncement(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/inner-announcements-create`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+
+  getInnerAnnouncement(user){
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-inner-announcements`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteInnerAnnouncement(user, announceId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/admin/delete-inner-announcements/${announceId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
     });
   }
 }
