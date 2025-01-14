@@ -163,6 +163,14 @@ sequelize
     cron.schedule('*/2 * * * * *', async () => {
       try {
         const currentTime = getISTTime();
+            
+        const activeMarkets = await Market.findAll({
+          where: {
+            isActive: false,
+            startTime: { [Op.lte]: currentTime },
+            endTime: { [Op.gte]: currentTime },
+          },
+        });
     
         const suspendMarkets = await Market.findAll({
           where: {
@@ -173,27 +181,9 @@ sequelize
             ]
           },
         });
-    
-        const activeMarkets = await Market.findAll({
-          where: {
-            isActive: false,
-            startTime: { [Op.lte]: currentTime },
-            endTime: { [Op.gte]: currentTime },
-          },
-        });
-    
+
         const updateMarket = [];
-        
-        // Update suspend markets
-        for (const market of suspendMarkets) {
-          if (!updatedMarketsCache.has(market.marketId) || updatedMarketsCache.get(market.marketId).isActive !== false) {
-            market.isActive = false;
-            const response = await market.save();
-            updateMarket.push(response.toJSON());
-            updatedMarketsCache.set(market.marketId, response.toJSON());
-          }
-        }
-    
+
         // Update active markets
         for (const market of activeMarkets) {
           if (!updatedMarketsCache.has(market.marketId) || updatedMarketsCache.get(market.marketId).isActive !== true) {
@@ -204,7 +194,17 @@ sequelize
             updatedMarketsCache.set(market.marketId, response.toJSON());
           }
         }
-    
+        
+        // Update suspend markets
+        for (const market of suspendMarkets) {
+          if (!updatedMarketsCache.has(market.marketId) || updatedMarketsCache.get(market.marketId).isActive !== false) {
+            market.isActive = false;
+            const response = await market.save();
+            updateMarket.push(response.toJSON());
+            updatedMarketsCache.set(market.marketId, response.toJSON());
+          }
+        }
+   
         if (updateMarket.length > 0) {
           clients.forEach((client) => {
             try {
