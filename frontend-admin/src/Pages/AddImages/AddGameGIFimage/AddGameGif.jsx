@@ -45,14 +45,21 @@ const AddGameGif = () => {
 
       try {
         const response = await GameService.gifSliderImage(auth.user, data);
+      
         toast.success("GIF uploaded successfully!");
         console.log(response.data);
-        setFile(null); 
-        setGifPreview(null); 
+        setFile(null);
+        setGifPreview(null);
       } catch (error) {
-        toast.error("Failed to upload the GIF. Please try again.");
+        // Check if the error response exists and contains the `errMessage` property
+        if (error.response && error.response.data && error.response.data.errMessage) {
+          toast.error(error.response.data.errMessage); // Display the backend error message
+        } else {
+          toast.error("Failed to upload the GIF. Please try again."); // Fallback error message
+        }
         console.error(error);
       }
+      
     };
 
     reader.readAsDataURL(file);

@@ -15,10 +15,10 @@ const InnerAnnouncement = () => {
   };
 
   const handleCreateAnnouncement = async () => {
-    const { announcement } = announcementData;  
-    
+    const { announcement } = announcementData;
+  
     if (!announcement) {
-      toast.error("Please provide an Announcement.");
+      toast.error("Please provide an announcement.");
       return;
     }
   
@@ -30,10 +30,16 @@ const InnerAnnouncement = () => {
       toast.success("Inner Announcement created successfully!");
       setAnnouncementData({ announcement: "" });
     } catch (error) {
-      toast.error("Failed to create announcement. Please try again.");
+      // Check if the error response exists and contains the `errMessage` property
+      if (error.response && error.response.data && error.response.data.errMessage) {
+        toast.error(error.response.data.errMessage); // Display the backend error message
+      } else {
+        toast.error("Failed to create announcement. Please try again."); // Fallback error message
+      }
       console.error("Error creating inner announcement:", error);
     }
   };
+  
 
   return (
     <div className="container my-5">

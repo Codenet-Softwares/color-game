@@ -15,25 +15,31 @@ const OuterAnnouncement = () => {
   };
 
   const handleCreateAnnouncement = async () => {
-    const { announcement } = announcementData;  
+    const { announcement } = announcementData;
   
     if (!announcement) {
-      toast.error("Please provide a Announcement.");
+      toast.error("Please provide an announcement.");
       return;
     }
   
-    const data = { announcement };  
+    const data = { announcement };
   
     try {
       const response = await GameService.CreateOuterAnnouncement(user, data);
-      console.log("Create API Response:", response.data); 
+      console.log("Create API Response:", response.data);
       toast.success("Announcement created successfully!");
       setAnnouncementData({ announcement: "" });
     } catch (error) {
-      toast.error("Failed to create announcement. Please try again.");
+      // Check if the error response exists and contains the `errMessage` property
+      if (error.response && error.response.data && error.response.data.errMessage) {
+        toast.error(error.response.data.errMessage); // Display the backend error message
+      } else {
+        toast.error("Failed to create announcement. Please try again."); // Fallback error message
+      }
       console.error("Error creating announcement:", error);
     }
   };
+  
   
   
   return (

@@ -328,7 +328,7 @@ const GameMarket = ({ marketId }) => {
                                             <i className="fas fa-edit"></i> Edit
                                           </a>
 
-                                          {!game.announceId ? (
+                                          {/* {!game.announceId ? (
                                             <a
                                               className="dropdown-item"
                                               onClick={(e) =>
@@ -362,9 +362,9 @@ const GameMarket = ({ marketId }) => {
                                               Update Announcement for{" "}
                                               {game.gameName}
                                             </a>
-                                          )}
+                                          )} */}
 
-                                          <a
+                                          {/* <a
                                             className="dropdown-item"
                                             onClick={(e) =>
                                               handleShowLatestAnnouncementModal(
@@ -377,7 +377,7 @@ const GameMarket = ({ marketId }) => {
                                             <i className="ti-announcement"></i>
                                             Latest Announcement for{" "}
                                             {game.gameName}
-                                          </a>
+                                          </a> */}
                                         </div>
                                       </div>
                                     </div>

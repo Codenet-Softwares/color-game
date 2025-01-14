@@ -45,15 +45,20 @@ const CreateImage = () => {
 
       try {
         const response = await GameService.createSliderImage(auth.user, data);
-
+      
         toast.success("Image uploaded successfully!");
         console.log(response.data);
         setFile(null);
         setImagePreview(null);
       } catch (error) {
-        toast.error("Failed to upload the image. Please try again.");
+        if (error.response && error.response.data && error.response.data.errMessage) {
+          toast.error(error.response.data.errMessage); 
+        } else {
+          toast.error("Failed to upload the image. Please try again."); 
+        }
         console.error(error);
       }
+      
     };
 
     reader.readAsDataURL(file);

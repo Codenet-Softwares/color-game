@@ -45,7 +45,6 @@ const CreateInnerImage = () => {
       };
 
       try {
-        // Use the existing function to call the API
         const response = await GameService.innerSliderImage(auth.user, data);
         toast.success("Image uploaded successfully!");
         console.log(response.data);
