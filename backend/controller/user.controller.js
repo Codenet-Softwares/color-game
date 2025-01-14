@@ -536,6 +536,7 @@ export const filteredGameData = async (req, res) => {
           ],
           where: {
             isVoid: false,
+            hideMarketUser: false
           },
           include: [
             {
@@ -548,6 +549,9 @@ export const filteredGameData = async (req, res) => {
                 "back",
                 "lay",
               ],
+              where: {
+                isWin: false,
+              },
             },
           ],
         },
@@ -757,8 +761,8 @@ export const filterMarketData = async (req, res) => {
       {
         where: {
           [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } }, 
-            { endTime: { [Op.lt]: currentTime } }   
+            { startTime: { [Op.gt]: currentTime } },
+            { endTime: { [Op.lt]: currentTime } }
           ]
         },
       }
