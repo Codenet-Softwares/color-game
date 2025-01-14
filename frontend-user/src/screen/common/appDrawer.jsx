@@ -19,8 +19,6 @@ function AppDrawer({
   setShowResetModal,
   showResetModal,
   onMarketSelect, // New prop for market selection callback
-  
-
 }) {
   const [toggleStates, setToggleStates] = useState({});
   const [user_allGames, setUser_allGames] = useState(
@@ -98,7 +96,6 @@ function AppDrawer({
         </span>
 
         <ul>
-
           <li
             className="MenuHead lottery-section"
             onClick={handleLotteryToggle}
@@ -133,17 +130,17 @@ function AppDrawer({
           >
             <a href="#">In-Play</a>
           </li>
-          {user_allGames.map((gameObj, index) => (
+          {user_allGames?.map((gameObj, index) => (
             <React.Fragment key={index}>
               <li
                 className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
                 onClick={() => handleToggle(index)}
               >
-                <Link>{gameObj.gameName}</Link>
+                <Link>{gameObj?.gameName}</Link>
               </li>
               {/* Mapping over markets inside each gameName */}
               {toggleStates[index] && gameObj.markets.length > 0
-                ? gameObj.markets.map((marketObj, marketIndex) => (
+                ? gameObj?.markets?.slice(0, 3)?.map((marketObj, marketIndex) => (
                     <li
                       className="subMenuItems"
                       key={marketIndex}
@@ -155,7 +152,7 @@ function AppDrawer({
                         to={`/gameView/${gameObj?.gameName?.replace(
                           /\s/g,
                           ""
-                        )}-${marketObj?.marketName?.replace(
+                        )}/${marketObj?.marketName?.replace(
                           /\s/g,
                           ""
                         )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
