@@ -190,6 +190,7 @@ sequelize
 
         for (const market of activeMarkets) {
           market.isActive = true;
+          market.hideMarketUser = false
           const response = await market.save();
           updateMarket.push(JSON.parse(JSON.stringify(response)));
         }

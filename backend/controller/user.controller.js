@@ -765,7 +765,7 @@ export const filterMarketData = async (req, res) => {
     );
 
     await Market.update(
-      { isActive: true },
+      { isActive: true, hideMarketUser: false },
       {
         where: {
           startTime: { [Op.lte]: currentTime },
@@ -1436,12 +1436,12 @@ export const calculateProfitLoss = async (req, res) => {
 
     return res.status(statusCode.success).send(
       apiResponseSuccess(
-        paginatedCombinedData, 
+        paginatedCombinedData,
         true,
         statusCode.success,
         "Success",
 
-        paginationData 
+        paginationData
       )
     );
   } catch (error) {
