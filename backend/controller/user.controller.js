@@ -532,7 +532,12 @@ export const filteredGameData = async (req, res) => {
             "endTime",
             "announcementResult",
             "isActive",
+            "isVoid"
           ],
+          where: {
+            isVoid: false,
+            hideMarketUser: false
+          },
           include: [
             {
               model: Runner,
@@ -544,6 +549,9 @@ export const filteredGameData = async (req, res) => {
                 "back",
                 "lay",
               ],
+              where: {
+                isWin: false,
+              },
             },
           ],
         },
@@ -753,15 +761,15 @@ export const filterMarketData = async (req, res) => {
       {
         where: {
           [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } }, 
-            { endTime: { [Op.lt]: currentTime } }   
+            { startTime: { [Op.gt]: currentTime } },
+            { endTime: { [Op.lt]: currentTime } }
           ]
         },
       }
     );
 
     await Market.update(
-      { isActive: true },
+      { isActive: true, hideMarketUser: false },
       {
         where: {
           startTime: { [Op.lte]: currentTime },
@@ -1432,12 +1440,12 @@ export const calculateProfitLoss = async (req, res) => {
 
     return res.status(statusCode.success).send(
       apiResponseSuccess(
-        paginatedCombinedData, 
+        paginatedCombinedData,
         true,
         statusCode.success,
         "Success",
 
-        paginationData 
+        paginationData
       )
     );
   } catch (error) {

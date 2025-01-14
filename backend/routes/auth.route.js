@@ -1,9 +1,9 @@
 import { string } from '../constructor/string.js';
-import { adminLogin, loginUser, resetPassword, trashUser, restoreTrashUser, logout, externalResetPassword } from '../controller/auth.controller.js';
+import { adminLogin, loginUser, resetPassword, trashUser, restoreTrashUser, logout, externalResetPassword, adminResetPassword } from '../controller/auth.controller.js';
 import { authorize } from '../middleware/auth.js';
 import customErrorHandler from '../middleware/customErrorHandler.js';
 import { authenticateSuperAdmin } from '../middleware/whiteLabelAuth.js';
-import { externalResetPasswordSchema, loginSchema, logOutValidate, resetPasswordSchema, trashUserSchema } from '../schema/commonSchema.js';
+import { externalResetPasswordSchema, loginSchema, logOutValidate, resetPasswordSchema, trashUserSchema, validateResetPassword } from '../schema/commonSchema.js';
 
 export const authRoute = (app) => {
   // done
@@ -21,4 +21,5 @@ export const authRoute = (app) => {
 
   app.post('/api/external-reset-password', externalResetPasswordSchema, customErrorHandler, authenticateSuperAdmin, externalResetPassword);
 
+  app.post('/api/supAdmin-reset-password',validateResetPassword, customErrorHandler, authorize([string.Admin]), adminResetPassword);
 };
