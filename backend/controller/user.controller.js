@@ -21,6 +21,7 @@ import axios from "axios";
 import CustomError from "../helper/extendError.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
+import { getISTTime } from "../helper/commonMethods.js";
 
 // done
 export const createUser = async (req, res) => {
@@ -745,6 +746,30 @@ export const filterMarketData = async (req, res) => {
       ],
     });
 
+    const currentTime = getISTTime();
+
+    await Market.update(
+      { isActive: false },
+      {
+        where: {
+          [Op.or]: [
+            { startTime: { [Op.gt]: currentTime } }, 
+            { endTime: { [Op.lt]: currentTime } }   
+          ]
+        },
+      }
+    );
+
+    await Market.update(
+      { isActive: true },
+      {
+        where: {
+          startTime: { [Op.lte]: currentTime },
+          endTime: { [Op.gte]: currentTime },
+        },
+      }
+    );
+
     const markets = await Market.findOne({
       where: { marketId },
     });
@@ -985,6 +1010,17 @@ export const createBid = async (req, res) => {
         "Market Not Found"
       );
     }
+
+    const currentTime = getISTTime();
+
+    if (currentTime < market.startTime) {
+      throw apiResponseErr(null, false, statusCode.badRequest, "Market time has not started yet.");
+    }
+
+    if (currentTime > market.endTime) {
+      throw apiResponseErr(null, false, statusCode.badRequest, "Market is suspended.");
+    }
+
     if (!market.isActive) {
       throw apiResponseErr(
         null,
