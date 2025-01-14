@@ -1433,6 +1433,23 @@ export const revokeLiveBet = async (req, res) => {
 };
 
 
+export const userLiveBte = async (req, res) => {
+  try {
+    const { marketId } = req.params
 
+    const currentOrders = await CurrentOrder.findAll({
+      where: { marketId },
+      attributes: ['userName', 'userId', 'marketName', 'marketId', 'runnerId', 'runnerName', 'rate', 'value', 'type'],
+    });
+
+    if (currentOrders.length === 0) {
+      return res.status(statusCode.success).send(apiResponseSuccess([], true, statusCode.success, 'No current orders found'));
+    }
+
+    return res.status(statusCode.success).send(apiResponseSuccess(currentOrders, true, statusCode.success, "Success"));
+  } catch (error) {
+    return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+  }
+};
 
 

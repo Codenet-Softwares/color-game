@@ -78,7 +78,8 @@ export const getAllGames = async (req, res) => {
     const pageSize = req.query.pageSize ? parseInt(req.query.pageSize) : 10;
     const searchQuery = req.query.search || "";
 
-    const { count, rows } = await Game.findAndCountAll({
+    // Fetch games with pagination and search query
+    const { count, rows: games } = await Game.findAndCountAll({
       attributes: ["gameId", "gameName", "description"],
       where: {
         gameName: {
@@ -90,63 +91,32 @@ export const getAllGames = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    if (!rows || rows.length === 0) {
-      const paginationData = apiResponsePagination(0, 0, count);
-
-      const response = {
-        games: [],
-        pagination: paginationData,
-      };
-
-      return res
-        .status(statusCode.success)
-        .json(apiResponseSuccess(response, true, statusCode.success, "Success"));
-    }
-
-    const gameData = await Promise.all(
-      rows.map(async (game) => {
-        const announcements = await announcementSchema.findAll({
-          attributes: ["announceId", "announcement"],
-          where: {
-            gameId: game.gameId,
-          },
-        });
-
-        const formattedAnnouncements = announcements.map((announcement) => ({
-          announceId: announcement.announceId,
-          announcement: announcement.announcement,
-        }));
-
-        if (formattedAnnouncements.length === 0) {
-          // Ensure the game is included even if there are no announcements
-          return [
-            {
-              gameId: game.gameId,
-              gameName: game.gameName,
-              description: game.description,
-              announceId: null,
-              announcement: null,
-            },
-          ];
-        }
-
-        return formattedAnnouncements.map((announcement) => ({
-          gameId: game.gameId,
-          gameName: game.gameName,
-          description: game.description,
-          announceId: announcement.announceId,
-          announcement: announcement.announcement,
-        }));
-      })
-    );
-
-    const flattenedGameData = gameData.flat();
-
+    // Prepare pagination data
     const totalPages = Math.ceil(count / pageSize);
     const paginationData = apiResponsePagination(page, totalPages, count);
 
+    // Check if no games found
+    if (!games || games.length === 0) {
+      return res.status(statusCode.success).json(
+        apiResponseSuccess(
+          { games: [], pagination: paginationData },
+          true,
+          statusCode.success,
+          "No games found"
+        )
+      );
+    }
+
+    // Map game data
+    const gameData = games.map((game) => ({
+      gameId: game.gameId,
+      gameName: game.gameName,
+      description: game.description,
+    }));
+
+    // Prepare response
     const response = {
-      games: flattenedGameData,
+      games: gameData,
       pagination: paginationData,
     };
 
@@ -274,10 +244,10 @@ export const createMarket = async (req, res) => {
       marketId: marketId,
       marketName: marketName,
       participants: participants,
-      startTime: moment(startTime).utc().format(),
-      endTime: moment(endTime).utc().format(),
-      // startTime: new Date(startTime), 
-      // endTime: new Date(endTime),   
+      // startTime: moment(startTime).utc().format(),
+      // endTime: moment(endTime).utc().format(),
+      startTime: new Date(startTime),
+      endTime: new Date(endTime),
       announcementResult: false,
       isActive: false,
       isDisplay: true,
@@ -411,11 +381,15 @@ export const updateMarket = async (req, res) => {
       Runner.destroy({ where: { marketId } })
     }
     if (startTime !== undefined) {
-      market.startTime = moment(startTime).utc().format();
+      // market.startTime = moment(startTime).utc().format();
+      market.startTime = new Date(startTime);
+
     }
 
     if (endTime !== undefined) {
-      market.endTime = moment(endTime).utc().format();
+      // market.endTime = moment(endTime).utc().format();
+      market.endTime = new Date(endTime);
+
     }
 
     await market.save();
