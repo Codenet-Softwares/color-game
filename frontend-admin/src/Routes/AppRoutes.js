@@ -29,6 +29,10 @@ import AddGameGif from "../Pages/AddImages/AddGameGIFimage/AddGameGif";
 import UpdateGifSlider from "../Pages/AddImages/AddGameGIFimage/UpdateGifSlider";
 import CreateInnerImage from "../Pages/AddImages/AddInnerImage/CreateInnerImage";
 import UpdateInnerImage from "../Pages/AddImages/AddInnerImage/UpdateInnerImage";
+import InnerAnnouncement from "../Pages/Announcements/InnerAnnouncement";
+import OuterAnnouncement from "../Pages/Announcements/OuterAnnouncement";
+import UpdateOuterAnnouncement from "../Pages/Announcements/UpdateOuterAnnouncement";
+import UpdateInnerAnnouncement from "../Pages/Announcements/UpdateInnerAnnouncement";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -239,6 +243,38 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <UpdateInnerImage />
+              </RequireAuth>
+            }
+          />
+           <Route
+            path="outer-announcement"
+            element={
+              <RequireAuth>
+                <OuterAnnouncement />
+              </RequireAuth>
+            }
+          />
+           <Route
+            path="update-outer-announcement"
+            element={
+              <RequireAuth>
+                <UpdateOuterAnnouncement />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="inner-announcement"
+            element={
+              <RequireAuth>
+                <InnerAnnouncement />
+              </RequireAuth>
+            }
+          />
+         <Route
+            path="update-inner-announcement"
+            element={
+              <RequireAuth>
+                <UpdateInnerAnnouncement />
               </RequireAuth>
             }
           />

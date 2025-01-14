@@ -4,36 +4,29 @@ import { v4 as uuidv4 } from 'uuid';
 import gameSchema from '../models/game.model.js';
 import announcementSchema from '../models/announcement.model.js';
 import { statusCode } from '../helper/statusCodes.js';
+import innerAnnouncementSchema from '../models/innerAnnouncement.model.js';
 
-// done
-export const announcements = async (req, res) => {
-  const { typeOfAnnouncement, announcement } = req.body;
+/*
+  Announcement Apis Starts's.....
+*/
+
+export const createAnnouncements = async (req, res) => {
+  const { announcement } = req.body;
   try {
-    const game = await gameSchema.findOne({ where: { gameName: typeOfAnnouncement } });
+    const id = req.user.adminId
+    const active_announcement_count = await announcementSchema.count();
 
-    if (!game) {
-      return res.status(400).json(apiResponseErr(null, false, 400, 'Game not found'));
+    if (active_announcement_count >= 1) {
+      return res
+        .status(400)
+        .send(apiResponseErr(null, false, 400, 'Cannot add more than 1 announcement. Please delete existing announcement.'));
     }
-
-    let announce = await announcementSchema.findOne({
-      where: { gameId: game.gameId, typeOfAnnouncement },
-    });
-
-    if (!announce) {
-      const announceId = uuidv4();
-      announce = await announcementSchema.create({
-        gameId: game.gameId,
-        announceId: announceId,
-        typeOfAnnouncement,
-        announcement,
-      });
-    } else {
-      await announce.update({ announcement });
-    }
-
-    return res
-      .status(statusCode.create)
-      .json(apiResponseSuccess(announce, true, statusCode.create, 'Announcement created successfully'));
+    const announceId = uuidv4();
+    const create_announcement = await announcementSchema.create({
+      announceId: announceId,
+      announcement
+    }) 
+    return res.status(statusCode.create).json(apiResponseSuccess(create_announcement, true, statusCode.create, 'Announcement created successfully'));
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -48,26 +41,18 @@ export const announcements = async (req, res) => {
   }
 };
 
-// done
+
 export const getAnnouncement = async (req, res) => {
   try {
-    const { announceId } = req.params;
-
-    const announcement = await announcementSchema.findOne({ where: { announceId } });
+    const announcement = await announcementSchema.findAll();
 
     if (!announcement) {
       return res.status(400).json(apiResponseErr(null, false, 400, 'Announcement not found'));
     }
 
-    const announcementText = announcement.announcement;
-
     return res.status(statusCode.create).json(
       apiResponseSuccess(
-        {
-          announceId: announcement.announceId,
-          typeOfAnnouncement: announcement.typeOfAnnouncement,
-          announcement: [announcementText],
-        },
+        announcement,
         true,
         statusCode.success,
         'Success',
@@ -86,31 +71,71 @@ export const getAnnouncement = async (req, res) => {
       );
   }
 };
-// done
-export const updateAnnouncement = async (req, res) => {
-  const announceId = req.params.announceId;
-  const { typeOfAnnouncement, announcement } = req.body;
+
+export const deleteAnnouncementData = async (req, res) => {
+  const { announceId } = req.params;
 
   try {
-    const announcementToUpdate = await announcementSchema.findOne({ where: { announceId } });
+    const announcement_Data = await announcementSchema.findOne({
+      where: {
+        announceId: announceId,
+      },
+    });
 
-    if (!announcementToUpdate) {
-      return res.status(400).json(apiResponseErr(null, false, 400, 'Announcement not found'));
+    if (!announcement_Data) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Announcement not found'));
     }
 
-    if (typeOfAnnouncement !== undefined) {
-      announcementToUpdate.typeOfAnnouncement = typeOfAnnouncement;
-    }
-
-    if (announcement !== undefined) {
-      announcementToUpdate.announcement = announcement;
-    }
-
-    await announcementToUpdate.save();
+    await announcementSchema.destroy({
+      where: {
+        announceId: announceId,
+      },
+    });
 
     return res
-      .status(statusCode.create)
-      .json(apiResponseSuccess(null, true, statusCode.create, 'Announcement updated successfully'));
+      .status(statusCode.success)
+      .send(apiResponseSuccess(announcement_Data, true, statusCode.success, 'Announcement Deleted Successfully'));
+  } catch (error) {
+    console.error('Error in deleteGifData:', error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message,
+        ),
+      );
+  }
+};
+
+/*
+  Announcement Apis Ends's.....
+*/
+
+
+/*
+  Inner Announcement Apis Starts's.....
+*/
+
+export const createInnerAnnouncements = async (req, res) => {
+  const { announcement } = req.body;
+  try {
+    const id = req.user.adminId
+    const active_announcement_count = await innerAnnouncementSchema.count();
+
+    if (active_announcement_count >= 1) {
+      return res
+        .status(400)
+        .send(apiResponseErr(null, false, 400, 'Cannot add more than 1 announcement. Please delete existing announcement.'));
+    }
+    const announceId = uuidv4();
+    const create_announcement = await innerAnnouncementSchema.create({
+      announceId: announceId,
+      announcement
+    }) 
+    return res.status(statusCode.create).json(apiResponseSuccess(create_announcement, true, statusCode.create, 'Announcement created successfully'));
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -124,34 +149,21 @@ export const updateAnnouncement = async (req, res) => {
       );
   }
 };
-// done
-export const getAnnouncementUser = async (req, res) => {
+
+export const getInnerAnnouncement = async (req, res) => {
   try {
-    const announceId = req.params.announceId;
+    const announcement = await innerAnnouncementSchema.findAll();
 
-    const announcementData = await announcementSchema.findAll({ where: { announceId } });
-
-    if (announcementData.length === 0) {
-      throw apiResponseErr(null, false, statusCode.badRequest, 'Announcement not found');
+    if (!announcement) {
+      return res.status(400).json(apiResponseErr(null, false, 400, 'Announcement not found'));
     }
 
-    const latestAnnouncement = announcementData.reduce((latest, current) => {
-      if (latest.announceId < current.announceId) {
-        return current;
-      }
-      return latest;
-    });
-
-    res.status(statusCode.success).send(
+    return res.status(statusCode.create).json(
       apiResponseSuccess(
-        {
-          announcementId: latestAnnouncement.announceId,
-          typeOfAnnouncement: latestAnnouncement.typeOfAnnouncement,
-          announcement: [latestAnnouncement.announcement],
-        },
+        announcement,
         true,
         statusCode.success,
-        'success',
+        'Success',
       ),
     );
   } catch (error) {
@@ -167,21 +179,33 @@ export const getAnnouncementUser = async (req, res) => {
       );
   }
 };
-// done
-export const getAnnouncementTypes = async (req, res) => {
+
+export const deleteInnerAnnouncementData = async (req, res) => {
+  const { announceId } = req.params;
+
   try {
-    const announcementTypesData = await announcementSchema.findAll({
-      attributes: ['announceId', 'typeOfAnnouncement'],
+    const announcement_Data = await innerAnnouncementSchema.findOne({
+      where: {
+        announceId: announceId,
+      },
     });
 
-    const announcementTypes = announcementTypesData.map((announcement) => ({
-      announceId: announcement.announceId,
-      typeOfAnnouncement: announcement.typeOfAnnouncement,
-    }));
+    if (!announcement_Data) {
+      return res.status(statusCode.notFound).send(apiResponseErr(null, false, statusCode.notFound, 'Announcement not found'));
+    }
 
-    res.status(statusCode.success).send(apiResponseSuccess(announcementTypes, true, statusCode.success, 'Success'));
+    await innerAnnouncementSchema.destroy({
+      where: {
+        announceId: announceId,
+      },
+    });
+
+    return res
+      .status(statusCode.success)
+      .send(apiResponseSuccess(announcement_Data, true, statusCode.success, 'Announcement Deleted Successfully'));
   } catch (error) {
-    res
+    console.error('Error in deleteGifData:', error);
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -193,3 +217,7 @@ export const getAnnouncementTypes = async (req, res) => {
       );
   }
 };
+
+ /*
+  Inner Announcement Apis Ends's.....
+*/

@@ -9,11 +9,13 @@ const Navside = () => {
   const [isUser, setIsUser] = useState(true);
   const [isGame, setIsGame] = useState(true);
   const [isImage, setisImage] = useState(false);
-  const [isSliderImage, setisSliderImage] = useState(true);
-  const [isGameSliderImage, setisGameSliderImage] = useState(true)
-  const [isGifSliderImage, setisGifSliderImage] = useState(true)
-  const [isInnerSliderImage,setIsInnerSliderImage] = useState(true)
-  const [isAnnouncement, setIsAnnouncement] = useState(true);
+  const [isSliderImage, setisSliderImage] = useState(false);
+  const [isGameSliderImage, setisGameSliderImage] = useState(false);
+  const [isGifSliderImage, setisGifSliderImage] = useState(false);
+  const [isInnerSliderImage, setIsInnerSliderImage] = useState(false);
+  const [isAnnouncement, setIsAnnouncement] = useState(false);
+  const [isInnerAnnouncement, setIsInnerAnnouncement] = useState(true);
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
 
   const navigate = useNavigate();
@@ -37,17 +39,23 @@ const Navside = () => {
   };
   const handleGameImageSlider = () => {
     setisGameSliderImage(!isGameSliderImage);
-  }
+  };
   const handleGifImageSlider = () => {
-    setisGifSliderImage(!isGifSliderImage); 
+    setisGifSliderImage(!isGifSliderImage);
   };
   const handleInnerImageSlider = () => {
-    setIsInnerSliderImage(!isInnerSliderImage); 
+    setIsInnerSliderImage(!isInnerSliderImage);
   };
   const handleAnnouncementToggle = () => {
     setIsAnnouncement(!isAnnouncement);
   };
+  const handleInnerAnnouncementToggle = () => {
+    setIsInnerAnnouncement(!isInnerAnnouncement);
+  };
 
+  const toggleSubmenu = () => {
+    setIsSubmenuOpen(!isSubmenuOpen);
+  };
   return (
     <nav className="sidebar">
       <div className="logo d-flex justify-content-between">
@@ -247,7 +255,10 @@ const Navside = () => {
                   onClick={handleSliderImageToggle}
                 >
                   <div className="nav_icon_small">
-                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                    <img
+                      src="../../../../../../img/menu-icon/dashboard.svg"
+                      alt=""
+                    />
                   </div>
                   <div className="nav_title">
                     <span>Slider Image</span>
@@ -275,7 +286,10 @@ const Navside = () => {
                   onClick={handleGameImageSlider}
                 >
                   <div className="nav_icon_small">
-                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                    <img
+                      src="../../../../../../img/menu-icon/dashboard.svg"
+                      alt=""
+                    />
                   </div>
                   <div className="nav_title">
                     <span>Game Image</span>
@@ -303,7 +317,10 @@ const Navside = () => {
                   onClick={handleGifImageSlider}
                 >
                   <div className="nav_icon_small">
-                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                    <img
+                      src="../../../../../../img/menu-icon/dashboard.svg"
+                      alt=""
+                    />
                   </div>
                   <div className="nav_title">
                     <span>Game GIF</span>
@@ -331,7 +348,10 @@ const Navside = () => {
                   onClick={handleInnerImageSlider}
                 >
                   <div className="nav_icon_small">
-                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                    <img
+                      src="../../../../../../img/menu-icon/dashboard.svg"
+                      alt=""
+                    />
                   </div>
                   <div className="nav_title">
                     <span>Inner Image</span>
@@ -341,59 +361,109 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="create-inner-image">
-                        <i className="fa-solid fa-circle"></i> Create GIF
+                        <i className="fa-solid fa-circle"></i> Create Inner
+                        Image
                       </Link>
                     </li>
                     <li>
                       <Link to="update-inner-image">
-                        <i className="fa-solid fa-circle"></i> Update GIF
+                        <i className="fa-solid fa-circle"></i> Update Inner
+                        Image
                       </Link>
                     </li>
                   </ul>
                 )}
+                
               </li>
             </ul>
           )}
         </li>
 
-      </ul>
-      {/* Announcement Management */}
-      {/* <li className={isAnnouncement ? 'active' : ''}>
-          <a className="has-arrow" onClick={handleAnnouncementToggle}>
+        {/* Announcement Management */}
+        <li className="" onClick={handleAnnouncementToggle}>
+          <a
+            className="has-arrow"
+            href="#"
+            aria-expanded={isAnnouncement ? "true" : "false"}
+          >
             <div className="nav_icon_small">
               <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
             </div>
             <div className="nav_title">
-              <span>Announcement Management</span>
+              <span>Game Announcement</span>
             </div>
           </a>
+          {/* Submenu */}
           {isAnnouncement && (
             <ul>
               <li>
-                <Link to="/createAnnouncement">
-                  <span>
-                    <i class="fa-solid fa-circle"></i>Create Announcement
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/updateAnnouncement">
-                  <span>
-                    <i class="fa-solid fa-circle"></i>Update Announcement
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/latestAnnouncements">
-                  <span>
-                    <i class="fa-solid fa-circle"></i>Latest Announcements
-                  </span>
-                </Link>
+                <a
+                  className={`has-arrow ${isSliderImage ? "active" : ""}`}
+                  href="#"
+                  onClick={handleSliderImageToggle}
+                >
+                  <div className="nav_icon_small">
+                    <img
+                      src="../../../../../../img/menu-icon/dashboard.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div className="nav_title">
+                    <span>Outer Announcement</span>
+                  </div>
+                </a>
+                {isInnerAnnouncement && (
+                  <ul>
+                    <li>
+                      <Link to="outer-announcement">
+                        <i className="fa-solid fa-circle"></i> Create
+                        Announcement
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="update-outer-announcement">
+                        <i className="fa-solid fa-circle"></i> Update Slider
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+                 <a
+                  className={`has-arrow ${isSliderImage ? "active" : ""}`}
+                  href="#"
+                  onClick={handleInnerAnnouncementToggle}
+                >
+                  <div className="nav_icon_small">
+                    <img
+                      src="../../../../../../img/menu-icon/dashboard.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div className="nav_title">
+                    <span>Inner Announcement</span>
+                  </div>
+                  {isInnerAnnouncement && (
+                  <ul>
+                    <li>
+                      <Link to="inner-announcement">
+                        <i className="fa-solid fa-circle"></i> Create
+                        Announcement
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="update-inner-announcement">
+                        <i className="fa-solid fa-circle"></i> Update Slider
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+                </a>
               </li>
             </ul>
           )}
-        </li> */}
-      {/* Announcement Management Ends */}
+        </li>
+
+        {/* Announcement Management Ends */}
+      </ul>
 
       {/* List Of the Sidebar Ends */}
     </nav>

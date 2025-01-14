@@ -1,36 +1,45 @@
 import { string } from '../constructor/string.js';
 import {
-  announcements,
+  createAnnouncements,
+  createInnerAnnouncements,
+  deleteAnnouncementData,
+  deleteInnerAnnouncementData,
   getAnnouncement,
-  updateAnnouncement,
-  getAnnouncementUser,
-  getAnnouncementTypes,
+  getInnerAnnouncement,
 } from '../controller/announcement.controller.js';
 import { authorize } from '../middleware/auth.js';
 import customErrorHandler from '../middleware/customErrorHandler.js';
-import { announcementsSchema, updateAnnouncementSchema } from '../schema/commonSchema.js';
 
 export const AnnouncementRoute = (app) => {
-  // done
-  app.post(
-    '/api/admin/announcements-create',
-    announcementsSchema,
-    customErrorHandler,
-    authorize([string.Admin]),
-    announcements,
-  );
-  // done
-  app.get('/api/admin/announcements-latest/:announceId', customErrorHandler, getAnnouncement);
-  // done
-  app.put(
-    '/api/admin/update-announcement/:announceId',
-    updateAnnouncementSchema,
-    customErrorHandler,
-    authorize([string.Admin]),
-    updateAnnouncement,
-  );
-  // done
-  app.get('/api/user/announcements/:announceId', getAnnouncementUser);
-  // done
-  app.get('/api/user/game-typeOfAnnouncement', getAnnouncementTypes);
+  /*
+    Announcement Apis Start's.....
+  */
+
+  app.post('/api/admin/announcements-create', customErrorHandler, authorize([string.Admin]), createAnnouncements);
+  
+  app.get('/api/admin/get-announcements', customErrorHandler, getAnnouncement);
+ 
+  app.get('/api/admin/get-admin-announcements', authorize([string.Admin]), customErrorHandler, getAnnouncement);
+  
+  app.delete('/api/admin/delete-announcements/:announceId', authorize([string.Admin]), customErrorHandler, deleteAnnouncementData);
+
+  /*
+    Announcement Apis Ends's.....
+  */
+
+  /*
+    Inner Announcement Apis Start's.....
+  */
+
+  app.post('/api/admin/inner-announcements-create', customErrorHandler, authorize([string.Admin]), createInnerAnnouncements);
+     
+  app.get('/api/admin/get-inner-announcements', customErrorHandler, getInnerAnnouncement);
+    
+  app.get('/api/admin/get-admin-inner-announcements', authorize([string.Admin]), customErrorHandler, getInnerAnnouncement);
+     
+  app.delete('/api/admin/delete-inner-announcements/:announceId', authorize([string.Admin]), customErrorHandler, deleteInnerAnnouncementData);
+
+  /*
+    Inner Announcement Apis Ends's.....
+  */
 };

@@ -289,6 +289,7 @@ class GameService {
     });
   }
 
+  // OUTER IMAGE SLIDER
   createSliderImage(user, data) {
     return axios({
       method: "POST",
@@ -332,6 +333,7 @@ class GameService {
     });
   }
   
+  // GAME SLIDER IMAGE
   gameSliderImage(user,data){
     return axios({
       method: "POST",
@@ -374,6 +376,8 @@ class GameService {
       },
     });
   }
+
+  // GIF SLIDER START
   gifSliderImage(user,data){
     return axios({
       method: "POST",
@@ -396,16 +400,17 @@ class GameService {
   deleteCreateGif(user, imageId) {
     return axios({
       method: "DELETE",
-      url: API_HOST + `/api/delete/gif/${imageId}`,
+      url: API_HOST + `/api/delete/gif/${imageId}`, 
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
   }
+  
   activeInactiveGameGif(user, imageId, isActive) {
     return axios({
       method: "POST",
-      url: `API_HOST/api/admin/active-gif/${imageId}`,
+      url: API_HOST +`/api/admin/active-gif/${imageId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -414,7 +419,9 @@ class GameService {
       },
     });
   }
+  
 
+// INNER SLIDER IMAGE  START
   innerSliderImage(user,data){
     return axios({
       method: "POST",
@@ -452,6 +459,68 @@ class GameService {
       },
       data: {
         isActive,
+      },
+    });
+  }
+
+  // OUTER announcement 
+  CreateOuterAnnouncement(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/announcements-create`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+
+  getOuterAnnouncement(user){
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-admin-announcements`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteOuterAnnouncement(user, announceId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/admin/delete-announcements/${announceId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+   // INNER announcement 
+   CreateInnerAnnouncement(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/inner-announcements-create`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+
+  getInnerAnnouncement(user){
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-inner-announcements`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteInnerAnnouncement(user, announceId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/admin/delete-inner-announcements/${announceId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
       },
     });
   }

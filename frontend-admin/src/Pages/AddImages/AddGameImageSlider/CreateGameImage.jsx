@@ -12,7 +12,6 @@ const CreateGameImage = () => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
-    // Create an image preview
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result);

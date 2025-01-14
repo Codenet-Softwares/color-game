@@ -14,17 +14,21 @@ const UpdateGifSlider = () => {
     fetchGifImages();
   }, []);
 
+  // Function to fetch GIF slider images
   const fetchGifImages = async () => {
     try {
       const response = await GameService.getGifSlider(auth.user);
-      setGifImages(response.data.data || []); // Adjust based on actual API response structure
+      console.log("GIF API Response:", response.data); // Debugging
+      setGifImages(response.data.data || []); // Ensure proper data mapping
     } catch (error) {
       toast.error("Failed to fetch GIF slider images.");
       console.error("Error fetching GIF images:", error);
     }
   };
 
+  // Function to delete a GIF image
   const handleDelete = async (imageId) => {
+    console.log("Deleting GIF ID:", imageId); // Debugging
     try {
       const response = await GameService.deleteCreateGif(auth.user, imageId);
       if (response.status === 200) {
@@ -41,13 +45,16 @@ const UpdateGifSlider = () => {
 
   const handleToggleActiveStatus = async (imageId, currentStatus) => {
     const newStatus = !currentStatus;
-
+    console.log("Toggling status for imageId:", imageId, "to:", newStatus);
+  
     try {
       const response = await GameService.activeInactiveGameGif(auth.user, imageId, newStatus);
+      console.log("API Response:", response.data); 
+  
       if (response.status === 200) {
         setGifImages((prev) =>
           prev.map((gif) =>
-            gif.id === imageId ? { ...gif, isActive: newStatus } : gif
+            gif.imageId === imageId ? { ...gif, isActive: newStatus } : gif
           )
         );
         toast.success(`GIF ${newStatus ? "activated" : "deactivated"} successfully.`);
@@ -59,6 +66,7 @@ const UpdateGifSlider = () => {
       console.error("Error updating GIF status:", error);
     }
   };
+  
 
   return (
     <div className="container my-5">
@@ -78,7 +86,7 @@ const UpdateGifSlider = () => {
           ) : (
             <div className="row">
               {gifImages.map((gif, index) => (
-                <div key={gif.id} className="col-md-4 col-sm-4 mb-4">
+                <div key={gif.imageId} className="col-md-4 col-sm-4 mb-4">
                   <div className="card">
                     <img
                       src={gif.url}
@@ -102,22 +110,21 @@ const UpdateGifSlider = () => {
                           <input
                             className="form-check-input"
                             type="checkbox"
-                            id={`flexSwitch-${gif.id}`}
+                            id={`flexSwitch-${gif.imageId}`}
                             checked={gif.isActive}
                             onChange={() =>
-                              handleToggleActiveStatus(gif.id, gif.isActive)
+                              handleToggleActiveStatus(gif.imageId, gif.isActive)
                             }
                           />
                           <label
                             className="form-check-label"
-                            htmlFor={`flexSwitch-${gif.id}`}
+                            htmlFor={`flexSwitch-${gif.imageId}`}
                           ></label>
                         </div>
                       </div>
-
                       <button
                         className="btn btn-danger mt-2"
-                        onClick={() => handleDelete(gif.id)}
+                        onClick={() => handleDelete(gif.imageId)}
                       >
                         <FaTrashAlt />
                       </button>
