@@ -688,3 +688,41 @@ export const getInnerImg = async () => {
     throw err;
   }
 };
+
+export const getAnnouncement = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getAannouncement, callParams);
+    console.log("gifresponse", response);
+    
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
+
+export const getInnerAnnouncement = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getInnerAannouncement, callParams);
+    console.log("gifresponse", response);
+    
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
