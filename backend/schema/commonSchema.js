@@ -720,3 +720,9 @@ export const validateApprovalMarket = [
     .isUUID()
     .withMessage("Invalid Approval ID."),
 ];
+
+export const validateUserLiveBet = [
+  param("marketId")
+    .isUUID()
+    .withMessage("Invalid Market ID."),
+];
