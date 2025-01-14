@@ -140,27 +140,30 @@ function AppDrawer({
               </li>
               {/* Mapping over markets inside each gameName */}
               {toggleStates[index] && gameObj.markets.length > 0
-                ? gameObj?.markets?.slice(0, 3)?.map((marketObj, marketIndex) => (
-                    <li
-                      className="subMenuItems"
-                      key={marketIndex}
-                      onClick={() =>
-                        handleAllId(gameObj?.gameId, marketObj?.marketId)
-                      }
-                    >
-                      <Link
-                        to={`/gameView/${gameObj?.gameName?.replace(
-                          /\s/g,
-                          ""
-                        )}/${marketObj?.marketName?.replace(
-                          /\s/g,
-                          ""
-                        )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                ? gameObj?.markets?.map((marketObj, marketIndex) => {
+                    console.log("====", marketObj);
+                    return (
+                      <li
+                        className="subMenuItems"
+                        key={marketIndex}
+                        onClick={() =>
+                          handleAllId(gameObj?.gameId, marketObj?.marketId)
+                        }
                       >
-                        {marketObj.marketName}
-                      </Link>
-                    </li>
-                  ))
+                        <Link
+                          to={`/gameView/${gameObj?.gameName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                        >
+                          {marketObj.marketName}
+                        </Link>
+                      </li>
+                    );
+                  })
                 : null}
             </React.Fragment>
           ))}

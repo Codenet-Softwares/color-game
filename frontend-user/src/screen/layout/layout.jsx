@@ -4,6 +4,7 @@ import NavBar from '../common/navBar';
 import { user_getAllGames_api } from '../../utils/apiService';
 import './layout.css';
 import strings from '../../utils/constant/stringConstant';
+import { Link } from 'react-router-dom';
 
 function Layout() {
   const [user_allGames, setUser_allGames] = useState([]);
@@ -41,9 +42,9 @@ function Layout() {
         }}
       >
         <li key={0} className="p-2 text-white" style={{ fontWeight: 600 }}>
-          <a className=" text-decoration-none" href={`/home`}>
+          <Link className=" text-decoration-none" to={`/home`}>
             {"Home"}
-          </a>
+          </Link>
         </li>
         {user_allGames.map((gameObj, index) => (
           <li
@@ -51,16 +52,16 @@ function Layout() {
             className="p-2 text-white"
             style={{ fontWeight: 600 }}
           >
-            <a
+            <Link
               className={`text-white text-decoration-none text-nowrap ${
                 gameObj.isBlink ? "blink_me" : ""
               }`}
-              href={`/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
+              to={`/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
                 gameObj.gameId
               }`}
             >
               {gameObj.gameName}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

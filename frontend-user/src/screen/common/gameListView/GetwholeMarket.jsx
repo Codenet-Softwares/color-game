@@ -47,7 +47,7 @@ const GetwholeMarket = () => {
                   {gameWithMarketData.gameName}
                 </div>
                 {gameWithMarketData &&
-                  gameWithMarketData.markets.slice(0, 2).map((marketData) => {
+                  gameWithMarketData.markets.slice(0, 3).map((marketData) => {
                     return (
                       <div
                         className="row p-0 m-0"

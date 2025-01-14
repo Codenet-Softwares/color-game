@@ -52,35 +52,33 @@ const GetSingleMarket = () => {
               {user_gameWithMarketData[0]?.gameName}
             </div>
             {user_gameWithMarketData &&
-              user_gameWithMarketData[0]?.markets
-                .reverse()
-                .map((marketData) => {
-                  console.log("first", marketData);
-                  return (
-                    <div className="row py-1 px-0 m-0 border">
-                      <Link
-                        className={`col-4 text-dark text-decoration-none text-nowrap`}
-                        to={`/gameView/${user_gameWithMarketData[0]?.gameName?.replace(
-                          /\s/g,
-                          ""
-                        )}/${marketData?.marketName?.replace(/\s/g, "")}/${
-                          marketData?.marketId
-                        }`}
-                        onClick={() => handleMarketId(marketData?.marketId)}
-                      >
-                        <span>{marketData.timeSpan}</span> |{" "}
-                        <span> {marketData.marketName}</span>
-                      </Link>
+              user_gameWithMarketData[0]?.markets.map((marketData) => {
+                console.log("first", marketData);
+                return (
+                  <div className="row py-1 px-0 m-0 border">
+                    <Link
+                      className={`col-4 text-dark text-decoration-none text-nowrap`}
+                      to={`/gameView/${user_gameWithMarketData[0]?.gameName?.replace(
+                        /\s/g,
+                        ""
+                      )}/${marketData?.marketName?.replace(/\s/g, "")}/${
+                        marketData?.marketId
+                      }`}
+                      onClick={() => handleMarketId(marketData?.marketId)}
+                    >
+                      <span>{marketData.timeSpan}</span> |{" "}
+                      <span> {marketData.marketName}</span>
+                    </Link>
 
-                      <div
-                        className="col-8"
-                        style={{ backgroundColor: "orange" }}
-                      >
-                        col-8
-                      </div>
+                    <div
+                      className="col-8"
+                      style={{ backgroundColor: "orange" }}
+                    >
+                      col-8
                     </div>
-                  );
-                })}
+                  </div>
+                );
+              })}
           </div>
         </AppDrawer>
       </div>
