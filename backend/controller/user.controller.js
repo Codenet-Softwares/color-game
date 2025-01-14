@@ -532,7 +532,11 @@ export const filteredGameData = async (req, res) => {
             "endTime",
             "announcementResult",
             "isActive",
+            "isVoid"
           ],
+          where: {
+            isVoid: false,
+          },
           include: [
             {
               model: Runner,
