@@ -24,14 +24,14 @@ const SliderImageDelete = () => {
       .then((res) => {
         setSliderImages((prev) => ({
           ...prev,
-          data: res.data.data || [], 
+          data: res.data.data || [],
         }));
       })
       .catch((err) => {
         toast.error("Failed to load slider images.");
       });
   };
-  
+
 
   const handleDelete = async (imageId) => {
     try {
@@ -113,51 +113,51 @@ const SliderImageDelete = () => {
                 </tr>
               </thead>
               <tbody>
-  {sliderImages.data.length === 0 ? (
-    <tr>
-      <td colSpan="4" className="text-center">
-        No images available.
-      </td>
-    </tr>
-  ) : (
-    sliderImages.data.map((slider, index) => (
-      <tr key={slider.imageId}>
-        <td>{index + 1}</td>
-        <td>
-          <img
-            src={slider.image}
-            alt="Slider"
-            style={{ width: "100px", height: "100px" }}
-          />
-        </td>
-        <td>
-          <div className="form-check form-switch">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id={`flexSwitch-${slider.imageId}`}
-              checked={slider.isActive}
-              onChange={() =>
-                handleToggleActiveStatus(slider.imageId, slider.isActive)
-              }
-            />
-            <label className="form-check-label">
-              {slider.isActive ? "Active" : "Inactive"}
-            </label>
-          </div>
-        </td>
-        <td>
-          <button
-            className="btn btn-danger"
-            onClick={() => handleDelete(slider.imageId)}
-          >
-            <FaTrashAlt /> Delete
-          </button>
-        </td>
-      </tr>
-    ))
-  )}
-</tbody>
+                {sliderImages.data.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      No images available.
+                    </td>
+                  </tr>
+                ) : (
+                  sliderImages.data.map((slider, index) => (
+                    <tr key={slider.imageId}>
+                      <td>{index + 1}</td>
+                      <td>
+                        <img
+                          src={slider.image}
+                          alt="Slider"
+                          style={{ width: "100px", height: "100px" }}
+                        />
+                      </td>
+                      <td>
+                        <div className="form-check form-switch">
+                          <input
+                            className="form-check-input"
+                            type="checkbox"
+                            id={`flexSwitch-${slider.imageId}`}
+                            checked={slider.isActive}
+                            onChange={() =>
+                              handleToggleActiveStatus(slider.imageId, slider.isActive)
+                            }
+                          />
+                          <label className="form-check-label">
+                            {slider.isActive ? "Active" : "Inactive"}
+                          </label>
+                        </div>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => handleDelete(slider.imageId)}
+                        >
+                          <FaTrashAlt /> Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
 
             </table>
           </div>

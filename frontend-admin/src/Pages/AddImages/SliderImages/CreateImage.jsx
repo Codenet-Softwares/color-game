@@ -5,14 +5,12 @@ import { toast } from "react-toastify";
 
 const CreateImage = () => {
   const [file, setFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null); // To hold the image preview
+  const [imagePreview, setImagePreview] = useState(null);
   const auth = useAuth();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
-
-    // Create a preview URL for the selected image
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       setImagePreview(fileReader.result);
@@ -50,8 +48,6 @@ const CreateImage = () => {
 
         toast.success("Image uploaded successfully!");
         console.log(response.data);
-
-        // Automatically remove the image after successful upload
         setFile(null);
         setImagePreview(null);
       } catch (error) {

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { useAuth } from "../../../Utils/Auth";
-import GameService from "../../../Services/GameService";
+import { useAuth } from "../../../Utils/Auth"; // Ensure this path is correct
+import GameService from "../../../Services/GameService"; // Update this to wherever `innerSliderImage` is defined
 
-const CreateGameImage = () => {
+const CreateInnerImage = () => {
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const auth = useAuth();
@@ -33,7 +33,7 @@ const CreateGameImage = () => {
 
     const reader = new FileReader();
     reader.onloadend = async () => {
-      const base64Image = reader.result.split(",")[1]; 
+      const base64Image = reader.result.split(",")[1]; // Get the base64 part of the image
 
       const data = {
         data: [
@@ -45,7 +45,8 @@ const CreateGameImage = () => {
       };
 
       try {
-        const response = await GameService.gameSliderImage(auth.user, data);
+        // Use the existing function to call the API
+        const response = await GameService.innerSliderImage(auth.user, data);
         toast.success("Image uploaded successfully!");
         console.log(response.data);
         setFile(null);
@@ -66,7 +67,7 @@ const CreateGameImage = () => {
           className="card-header"
           style={{ backgroundColor: "#7D7D7D", color: "#FFFFFF" }}
         >
-          <h3 className="mb-0 fw-bold text-center">Create Game Image</h3>
+          <h3 className="mb-0 fw-bold text-center">Add Inner Image</h3>
         </div>
         <div className="card-body">
           <div className="mb-4 text-center">
@@ -133,4 +134,4 @@ const CreateGameImage = () => {
   );
 };
 
-export default CreateGameImage;
+export default CreateInnerImage;

@@ -342,6 +342,119 @@ class GameService {
       },
     })
   }
+
+  getGameSliderImage(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-all-game-img`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteGameCreatedImage(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/game-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  activeInactiveGameImage(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/admin/active-game-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
+  gifSliderImage(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-gif`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+  getGifSlider(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-all-gif`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteCreateGif(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/gif/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  activeInactiveGameGif(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: `API_HOST/api/admin/active-gif/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
+
+  innerSliderImage(user,data){
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/admin/create-inner-img`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+  getInnerSliderImage(user) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/admin/get-all-inner-img`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  deleteCreateInnerImage(user, imageId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/delete/inner-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  activeInactiveGameImage(user, imageId, isActive) {
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/admin/inner-game-img/${imageId}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        isActive,
+      },
+    });
+  }
 }
 
 export default new GameService();

@@ -11,6 +11,8 @@ const Navside = () => {
   const [isImage, setisImage] = useState(false);
   const [isSliderImage, setisSliderImage] = useState(true);
   const [isGameSliderImage, setisGameSliderImage] = useState(true)
+  const [isGifSliderImage, setisGifSliderImage] = useState(true)
+  const [isInnerSliderImage,setIsInnerSliderImage] = useState(true)
   const [isAnnouncement, setIsAnnouncement] = useState(true);
   const [inactive, setInactive] = useState(true);
 
@@ -33,10 +35,15 @@ const Navside = () => {
   const handleSliderImageToggle = () => {
     setisSliderImage(!isSliderImage);
   };
-  const handleGameImageSlider =()=>{
-    isGameSliderImage(!setisGameSliderImage);
-
+  const handleGameImageSlider = () => {
+    setisGameSliderImage(!isGameSliderImage);
   }
+  const handleGifImageSlider = () => {
+    setisGifSliderImage(!isGifSliderImage); 
+  };
+  const handleInnerImageSlider = () => {
+    setIsInnerSliderImage(!isInnerSliderImage); 
+  };
   const handleAnnouncementToggle = () => {
     setIsAnnouncement(!isAnnouncement);
   };
@@ -215,92 +222,143 @@ const Navside = () => {
             <span className="ms-3">Trash Bets</span>
           </Link>
         </li>
-    
-      {/* Image Management */}
-<li>
-  <a
-    className={`has-arrow ${isImage ? "active" : ""}`}
-    href="#"
-    onClick={handleImageToggle}
-  >
-    <div className="nav_icon_small">
-      <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
-    </div>
-    <div className="nav_title">
-      <span>Add Image</span>
-    </div>
-  </a>
-  {isImage && (
-    <ul>
-      {/* Slider Image */}
-      <li>
-        <a
-          className={`has-arrow ${isSliderImage ? "active" : ""}`}
-          href="#"
-          onClick={handleSliderImageToggle}
-        >
-          <div className="nav_icon_small">
-            <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
-          </div>
-          <div className="nav_title">
-            <span>Slider Image</span>
-          </div>
-        </a>
-        {isSliderImage && (
-          <ul>
-            <li>
-              <Link to="create-image">
-                <i className="fa-solid fa-circle"></i> Create Slider
-              </Link>
-            </li>
-            <li>
-              <Link to="slider-image-delete">
-                <i className="fa-solid fa-circle"></i> Update Slider
-              </Link>
-            </li>
-          </ul>
-        )}
-      </li>
-      <li>
-      <a
-          className={`has-arrow ${isGameSliderImage ? "active" : ""}`}
-          href="#"
-          onClick={handleGameImageSlider}
-        >
-          <div className="nav_icon_small">
-            <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
-          </div>
-          <div className="nav_title">
-            <span>Game Image</span>
-          </div>
-        </a>
-        {isGameSliderImage && (
-          <ul>
-            <li>
-              <Link to="GameImage-slider">
-                <i className="fa-solid fa-circle"></i> Create Slider
-              </Link>
-            </li>
-            <li>
-              <Link to="UpdateGameImage-slider">
-                <i className="fa-solid fa-circle"></i> Update Slider
-              </Link>
-            </li>
-          </ul>
-        )}
-      </li>
-      <li>
-        <Link to="/gif-image">
-          <i className="fa-solid fa-circle"></i> GIF Image
-        </Link>
-      </li>
-    </ul>
-  )}
-</li>
+
+        {/* Image Management */}
+        <li>
+          <a
+            className={`has-arrow ${isImage ? "active" : ""}`}
+            href="#"
+            onClick={handleImageToggle}
+          >
+            <div className="nav_icon_small">
+              <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+            </div>
+            <div className="nav_title">
+              <span>Add Image</span>
+            </div>
+          </a>
+          {isImage && (
+            <ul>
+              {/* Slider Image */}
+              <li>
+                <a
+                  className={`has-arrow ${isSliderImage ? "active" : ""}`}
+                  href="#"
+                  onClick={handleSliderImageToggle}
+                >
+                  <div className="nav_icon_small">
+                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                  </div>
+                  <div className="nav_title">
+                    <span>Slider Image</span>
+                  </div>
+                </a>
+                {isSliderImage && (
+                  <ul>
+                    <li>
+                      <Link to="create-image">
+                        <i className="fa-solid fa-circle"></i> Create Slider
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="slider-image-delete">
+                        <i className="fa-solid fa-circle"></i> Update Slider
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </li>
+              <li>
+                <a
+                  className={`has-arrow ${isGameSliderImage ? "active" : ""}`}
+                  href="#"
+                  onClick={handleGameImageSlider}
+                >
+                  <div className="nav_icon_small">
+                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                  </div>
+                  <div className="nav_title">
+                    <span>Game Image</span>
+                  </div>
+                </a>
+                {isGameSliderImage && (
+                  <ul>
+                    <li>
+                      <Link to="GameImage-slider">
+                        <i className="fa-solid fa-circle"></i> Create Slider
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="UpdateGameImage-slider">
+                        <i className="fa-solid fa-circle"></i> Update Slider
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </li>
+              <li>
+                <a
+                  className={`has-arrow ${isGifSliderImage ? "active" : ""}`}
+                  href="#"
+                  onClick={handleGifImageSlider}
+                >
+                  <div className="nav_icon_small">
+                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                  </div>
+                  <div className="nav_title">
+                    <span>Game GIF</span>
+                  </div>
+                </a>
+                {isGifSliderImage && (
+                  <ul>
+                    <li>
+                      <Link to="create-game-GIF">
+                        <i className="fa-solid fa-circle"></i> Create GIF
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="update-game-GIF">
+                        <i className="fa-solid fa-circle"></i> Update GIF
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </li>
+              <li>
+                <a
+                  className={`has-arrow ${isInnerSliderImage ? "active" : ""}`}
+                  href="#"
+                  onClick={handleInnerImageSlider}
+                >
+                  <div className="nav_icon_small">
+                    <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+                  </div>
+                  <div className="nav_title">
+                    <span>Inner Image</span>
+                  </div>
+                </a>
+                {isInnerSliderImage && (
+                  <ul>
+                    <li>
+                      <Link to="create-inner-image">
+                        <i className="fa-solid fa-circle"></i> Create GIF
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="update-inner-image">
+                        <i className="fa-solid fa-circle"></i> Update GIF
+                      </Link>
+                    </li>
+                  </ul>
+                )}
+              </li>
+            </ul>
+          )}
+        </li>
 
       </ul>
-        {/* Announcement Management */}
-        {/* <li className={isAnnouncement ? 'active' : ''}>
+      {/* Announcement Management */}
+      {/* <li className={isAnnouncement ? 'active' : ''}>
           <a className="has-arrow" onClick={handleAnnouncementToggle}>
             <div className="nav_icon_small">
               <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
@@ -335,8 +393,8 @@ const Navside = () => {
             </ul>
           )}
         </li> */}
-        {/* Announcement Management Ends */}
-      
+      {/* Announcement Management Ends */}
+
       {/* List Of the Sidebar Ends */}
     </nav>
   );

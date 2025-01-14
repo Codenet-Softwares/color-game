@@ -1,35 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
-import GameService from "../../../Services/GameService";
-import { useAuth } from "../../../Utils/Auth";
 import { FaTrashAlt } from "react-icons/fa";
+import GameService from "../../../Services/GameService"; // Update the path to your GameService
+import { useAuth } from "../../../Utils/Auth"; // Ensure this is correct
 
-const UpdateGameSlider = () => {
+const UpdateInnerImage = () => {
   const auth = useAuth();
-  const [sliderImages, setSliderImages] = useState([]);
+  const [innerImages, setInnerImages] = useState([]);
 
-  // Fetch slider images on component mount
+  // Fetch images on component mount
   useEffect(() => {
-    fetchSliderImages();
+    fetchInnerImages();
   }, []);
-
-  const fetchSliderImages = async () => {
+  const fetchInnerImages = async () => {
     try {
-      const response = await GameService.getGameSliderImage(auth.user);
-      setSliderImages(response.data.data || []);
+      const response = await GameService.getInnerSliderImage(auth.user);
+      console.log(response.data); // Log the response to check its structure
+      setInnerImages(response.data.data || []);
     } catch (error) {
-      toast.error("Failed to fetch slider images.");
+      toast.error("Failed to fetch inner images.");
       console.error("Error fetching images:", error);
     }
   };
+  
 
   const handleDelete = async (imageId) => {
     try {
-      await GameService.deleteGameCreatedImage(auth.user, imageId);
+      await GameService.deleteCreateInnerImage(auth.user, imageId); 
       toast.success("Image deleted successfully!");
-      // Refresh the list after deletion
-      fetchSliderImages();
+      fetchInnerImages(); // Refresh the list after deletion
     } catch (error) {
       toast.error("Failed to delete the image. Please try again.");
       console.error("Error deleting image:", error);
@@ -47,7 +47,7 @@ const UpdateGameSlider = () => {
       );
 
       if (response && response.status === 200) {
-        setSliderImages((prev) =>
+        setInnerImages((prev) =>
           prev.map((image) =>
             image.imageId === imageId
               ? { ...image, isActive: newStatus }
@@ -76,19 +76,19 @@ const UpdateGameSlider = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center">Update Game Slider</h3>
+          <h3 className="mb-0 fw-bold text-center">Update Inner Images</h3>
         </div>
         <div className="card-body">
-          {sliderImages.length === 0 ? (
-            <div className="text-center">No slider images available.</div>
+          {innerImages.length === 0 ? (
+            <div className="text-center">No images available.</div>
           ) : (
             <div className="row">
-              {sliderImages.map((image, index) => (
+              {innerImages.map((image, index) => (
                 <div key={image.imageId} className="col-md-4 col-sm-4 mb-4">
                   <div className="card">
                     <img
-                      src={image.image}
-                      alt={`Slider ${index + 1}`}
+                      src={image.image} // Ensure the image path is correct
+                      alt={`Inner Image ${index + 1}`}
                       className="card-img-top"
                       style={{ height: "150px", objectFit: "cover" }}
                     />
@@ -125,7 +125,7 @@ const UpdateGameSlider = () => {
                         className="btn btn-danger mt-2"
                         onClick={() => handleDelete(image.imageId)}
                       >
-                        <FaTrashAlt /> 
+                        <FaTrashAlt /> Delete
                       </button>
                     </div>
                   </div>
@@ -139,4 +139,4 @@ const UpdateGameSlider = () => {
   );
 };
 
-export default UpdateGameSlider;
+export default UpdateInnerImage;

@@ -3,55 +3,54 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../../Utils/Auth";
 import GameService from "../../../Services/GameService";
 
-const CreateGameImage = () => {
+const AddGameGif = () => {
   const [file, setFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
-  const auth = useAuth();
+  const [gifPreview, setGifPreview] = useState(null);
+  const auth = useAuth(); 
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
-    // Create an image preview
     const reader = new FileReader();
     reader.onloadend = () => {
-      setImagePreview(reader.result);
+      setGifPreview(reader.result);
     };
     reader.readAsDataURL(selectedFile);
   };
 
-  const handleRemoveImage = () => {
+  const handleRemoveGif = () => {
     setFile(null);
-    setImagePreview(null);
+    setGifPreview(null);
   };
 
-  const handleUploadImage = async () => {
+  const handleUploadGif = async () => {
     if (!file) {
-      toast.error("Please select an image to upload.");
+      toast.error("Please select a GIF to upload.");
       return;
     }
 
     const reader = new FileReader();
     reader.onloadend = async () => {
-      const base64Image = reader.result.split(",")[1]; 
+      const base64Gif = reader.result.split(",")[1]; 
 
       const data = {
         data: [
           {
-            docBase: base64Image,
+            docBase: base64Gif,
             isActive: true,
           },
         ],
       };
 
       try {
-        const response = await GameService.gameSliderImage(auth.user, data);
-        toast.success("Image uploaded successfully!");
+        const response = await GameService.gifSliderImage(auth.user, data);
+        toast.success("GIF uploaded successfully!");
         console.log(response.data);
-        setFile(null);
-        setImagePreview(null);
+        setFile(null); 
+        setGifPreview(null); 
       } catch (error) {
-        toast.error("Failed to upload the image. Please try again.");
+        toast.error("Failed to upload the GIF. Please try again.");
         console.error(error);
       }
     };
@@ -66,7 +65,7 @@ const CreateGameImage = () => {
           className="card-header"
           style={{ backgroundColor: "#7D7D7D", color: "#FFFFFF" }}
         >
-          <h3 className="mb-0 fw-bold text-center">Create Game Image</h3>
+          <h3 className="mb-0 fw-bold text-center">Create GIF</h3>
         </div>
         <div className="card-body">
           <div className="mb-4 text-center">
@@ -85,12 +84,12 @@ const CreateGameImage = () => {
                 position: "relative",
               }}
             >
-              <h4 className="fw-bold">Choose Image</h4>
+              <h4 className="fw-bold">Choose GIF</h4>
               <i className="fas fa-plus-circle"></i>
-              {imagePreview && (
+              {gifPreview && (
                 <img
-                  src={imagePreview}
-                  alt="Image Preview"
+                  src={gifPreview}
+                  alt="GIF Preview"
                   style={{
                     width: "100%",
                     height: "100%",
@@ -103,28 +102,29 @@ const CreateGameImage = () => {
                 />
               )}
             </div>
-            {imagePreview && (
+            {gifPreview && (
               <div
-                onClick={handleRemoveImage}
+                onClick={handleRemoveGif}
                 style={{
                   cursor: "pointer",
                   color: "#FF0000",
                   marginTop: "10px",
                 }}
               >
-                <i className="fas fa-times"></i> Remove Image
+                <i className="fas fa-times"></i> Remove GIF
               </div>
             )}
             <input
               id="file-input"
               type="file"
+              accept="image/gif" 
               onChange={handleFileChange}
               style={{ display: "none" }}
             />
           </div>
           <div className="text-center">
-            <button className="btn btn-primary" onClick={handleUploadImage}>
-              Upload Image
+            <button className="btn btn-primary" onClick={handleUploadGif}>
+              Upload GIF
             </button>
           </div>
         </div>
@@ -133,4 +133,4 @@ const CreateGameImage = () => {
   );
 };
 
-export default CreateGameImage;
+export default AddGameGif;

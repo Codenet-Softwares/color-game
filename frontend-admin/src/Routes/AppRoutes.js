@@ -25,6 +25,10 @@ import CreateImage from "../Pages/AddImages/SliderImages/CreateImage";
 import SliderImageDelete from "../Pages/AddImages/SliderImages/SliderImageDelete";
 import CreateGameImage from "../Pages/AddImages/AddGameImageSlider/CreateGameImage";
 import UpdateGameSlider from "../Pages/AddImages/AddGameImageSlider/UpdateGameSlider";
+import AddGameGif from "../Pages/AddImages/AddGameGIFimage/AddGameGif";
+import UpdateGifSlider from "../Pages/AddImages/AddGameGIFimage/UpdateGifSlider";
+import CreateInnerImage from "../Pages/AddImages/AddInnerImage/CreateInnerImage";
+import UpdateInnerImage from "../Pages/AddImages/AddInnerImage/UpdateInnerImage";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -165,48 +169,79 @@ const AppRoutes = () => {
                 <UserBetHistory />
               </RequireAuth>
             }
-          />  
+          />
           <Route
-          path="trash"
-          element={
-            <RequireAuth>
-              <DeleteBetHistory/>
-            </RequireAuth>
-          }
-          />        
+            path="trash"
+            element={
+              <RequireAuth>
+                <DeleteBetHistory />
+              </RequireAuth>
+            }
+          />
           <Route
-          path="create-image"
-          element={
-            <RequireAuth>
-              <CreateImage/>
-            </RequireAuth>
-          }
-          /> 
+            path="create-image"
+            element={
+              <RequireAuth>
+                <CreateImage />
+              </RequireAuth>
+            }
+          />
           <Route
-          path="slider-image-delete"
-          element={
-            <RequireAuth>
-              <SliderImageDelete/>
-            </RequireAuth>
-          }
-          /> 
+            path="slider-image-delete"
+            element={
+              <RequireAuth>
+                <SliderImageDelete />
+              </RequireAuth>
+            }
+          />
           <Route
-          path="GameImage-slider"
-          element={
-            <RequireAuth>
-              <CreateGameImage/>
-            </RequireAuth>
-          }
-          /> 
+            path="GameImage-slider"
+            element={
+              <RequireAuth>
+                <CreateGameImage />
+              </RequireAuth>
+            }
+          />
           <Route
-          path="UpdateGameImage-slider"
-          element={
-            <RequireAuth>
-              <UpdateGameSlider/>
-            </RequireAuth>
-          }
-          /> 
-
+            path="UpdateGameImage-slider"
+            element={
+              <RequireAuth>
+                <UpdateGameSlider />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="create-game-GIF"
+            element={
+              <RequireAuth>
+                <AddGameGif />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="update-game-GIF"
+            element={
+              <RequireAuth>
+                <UpdateGifSlider />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="create-inner-image"
+            element={
+              <RequireAuth>
+                <CreateInnerImage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="update-inner-image"
+            element={
+              <RequireAuth>
+                <UpdateInnerImage />
+              </RequireAuth>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
