@@ -623,6 +623,21 @@ export const externalResetPasswordSchema = [
     .withMessage("New Password is required")
 ];
 
+export const validateResetPassword = [
+  body("userName")
+    .trim()
+    .notEmpty()
+    .withMessage("Username is required"),
+  body("oldPassword")
+    .trim()
+    .notEmpty()
+    .withMessage("Old Password is required"),
+  body("newPassword")
+    .trim()
+    .notEmpty()
+    .withMessage("New Password is required")
+];
+
 export const validateLiveUsersBet = [
   param("marketId")
     .isUUID(4)
