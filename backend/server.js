@@ -158,56 +158,70 @@ sequelize
       console.log(`App is running on - http://localhost:${process.env.PORT || 7000}`);
     });
 
+    const updatedMarketsCache = new Map(); 
+
     cron.schedule('*/2 * * * * *', async () => {
       try {
         const currentTime = getISTTime();
-
+    
         const suspendMarkets = await Market.findAll({
           where: {
-            isActive : true,
+            isActive: true,
             [Op.or]: [
               { startTime: { [Op.gt]: currentTime } },
               { endTime: { [Op.lt]: currentTime } }
             ]
           },
         });
-
-        const updateMarket = [];
-
-        for (const market of suspendMarkets) {
-          market.isActive = false;
-          const response = await market.save();
-          updateMarket.push(JSON.parse(JSON.stringify(response)));
-        }
-
+    
         const activeMarkets = await Market.findAll({
           where: {
-            isActive : false,
+            isActive: false,
             startTime: { [Op.lte]: currentTime },
             endTime: { [Op.gte]: currentTime },
           },
         });
-
-        for (const market of activeMarkets) {
-          market.isActive = true;
-          market.hideMarketUser = false
-          const response = await market.save();
-          updateMarket.push(JSON.parse(JSON.stringify(response)));
-        }
-
-        clients.forEach((client) => {
-          try {
-            client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
-          } catch (err) {
-            console.error('[SSE] Error sending data to client:', err);
+    
+        const updateMarket = [];
+        
+        // Update suspend markets
+        for (const market of suspendMarkets) {
+          if (!updatedMarketsCache.has(market.marketId) || updatedMarketsCache.get(market.marketId).isActive !== false) {
+            market.isActive = false;
+            const response = await market.save();
+            updateMarket.push(response.toJSON());
+            updatedMarketsCache.set(market.marketId, response.toJSON());
           }
-        });
-
-        console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
+        }
+    
+        // Update active markets
+        for (const market of activeMarkets) {
+          if (!updatedMarketsCache.has(market.marketId) || updatedMarketsCache.get(market.marketId).isActive !== true) {
+            market.isActive = true;
+            market.hideMarketUser = false
+            const response = await market.save();
+            updateMarket.push(response.toJSON());
+            updatedMarketsCache.set(market.marketId, response.toJSON());
+          }
+        }
+    
+        if (updateMarket.length > 0) {
+          clients.forEach((client) => {
+            try {
+              client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
+            } catch (err) {
+              console.error('[SSE] Error sending data to client:', err);
+            }
+          });
+    
+          console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
+        }
+    
       } catch (error) {
         console.error('Error checking market statuses:', error);
       }
     });
+    
   })
   .catch((err) => {
     console.error('Unable to create tables:', err);
