@@ -64,7 +64,7 @@ export const UserRoute = (app) => {
   // done
   app.get('/api/user-runners/:marketId', customErrorHandler, authorize([string.User]), userRunners);
   // done
-  app.get('/api/user-all-gameData', customErrorHandler, getAllGameData);
+  app.get('/api/user-all-gameData',  getAllGameData);
   // done
   app.get('/api/user-filter-gameData/:gameId', customErrorHandler, filteredGameData);
   // done

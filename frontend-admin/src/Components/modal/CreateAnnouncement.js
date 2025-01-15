@@ -52,38 +52,41 @@ const CreateAnnouncement = ({
   };
 
   return (
-    <Modal show={show} onHide={handleClose} aria-labelledby="ModalHeader">
-      <Modal.Header closeButton>
-        <Modal.Title id="ModalHeader">Create Announcement</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form>
-          <Form.Group controlId="typeOfAnnouncement">
-            <Form.Label>Type of Announcement</Form.Label>
-            <Form.Control value={typeOfAnnouncement} readOnly />
-          </Form.Group>
+    <>
 
-          <Form.Group controlId="announcement">
-            <Form.Label>Create Announcement</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="Enter Announcement"
-              value={announcement}
-              onChange={(e) => setAnnouncement(e.target.value)}
-            />
-          </Form.Group>
-        </Form>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          Cancel
-        </Button>
-        <Button variant="primary" onClick={handleSubmit}>
-          Save
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    </>
+    // <Modal show={show} onHide={handleClose} aria-labelledby="ModalHeader">
+    //   <Modal.Header closeButton>
+    //     <Modal.Title id="ModalHeader">Create Announcement</Modal.Title>
+    //   </Modal.Header>
+    //   <Modal.Body>
+    //     <Form>
+    //       <Form.Group controlId="typeOfAnnouncement">
+    //         <Form.Label>Type of Announcement</Form.Label>
+    //         <Form.Control value={typeOfAnnouncement} readOnly />
+    //       </Form.Group>
+
+    //       <Form.Group controlId="announcement">
+    //         <Form.Label>Create Announcement</Form.Label>
+    //         <Form.Control
+    //           as="textarea"
+    //           rows={3}
+    //           placeholder="Enter Announcement"
+    //           value={announcement}
+    //           onChange={(e) => setAnnouncement(e.target.value)}
+    //         />
+    //       </Form.Group>
+    //     </Form>
+    //   </Modal.Body>
+    //   <Modal.Footer>
+    //     <Button variant="secondary" onClick={handleClose}>
+    //       Cancel
+    //     </Button>
+    //     <Button variant="primary" onClick={handleSubmit}>
+    //       Save
+    //     </Button>
+    //   </Modal.Footer>
+    // </Modal>
   );
 };
 
