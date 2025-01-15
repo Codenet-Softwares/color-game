@@ -508,10 +508,11 @@ export const getAllGameData = async (req, res) => {
         )
       );
   } catch (error) {
+    console.log("error",error)
     if (error.response) {
-      return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage, res));
+      return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
     } else {
-      return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message, res));
+      return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
     };
   }
 };
