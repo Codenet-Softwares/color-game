@@ -80,7 +80,7 @@ const Carousel = () => {
         ))}
       </div>
       <button
-        className="carousel-control-prev"
+        className="carousel-control-prev visually-hidden"
         type="button"
         data-bs-target="#carouselExampleCaptions"
         data-bs-slide="prev"

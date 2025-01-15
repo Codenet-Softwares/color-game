@@ -7,6 +7,7 @@ import strings from '../../utils/constant/stringConstant';
 
 function Layout() {
   const [user_allGames, setUser_allGames] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const { dispatch } = useAppContext();
 
@@ -32,16 +33,23 @@ function Layout() {
   function getNavBarOption() {
     return (
       <ul
-        className="mb-0 d-flex"
+        className="mb-0 d-flex bg-hover"
         style={{
           listStyleType: "none",
           overflowX: "auto",
           padding: 0,
           backgroundColor: "rgb(23 101 119)",
+          fontSize:"18px"
         }}
       >
-        <li key={0} className="p-2 text-white" style={{ fontWeight: 600 }}>
-          <a className=" text-decoration-none" href={`/home`}>
+        <li key={0} className="p-2 text-white" style={{ fontWeight: 600,
+             backgroundColor: activeIndex === 0 ? "#5ECBDD" : "transparent",
+            cursor: "pointer",
+        }}
+        onClick={() => setActiveIndex(0)}
+
+        >
+          <a className=" text-decoration-none text-white" href={`/home`} style={{}}>
             {"Home"}
           </a>
         </li>
@@ -49,7 +57,11 @@ function Layout() {
           <li
             key={index + 1}
             className="p-2 text-white"
-            style={{ fontWeight: 600 }}
+            style={{ fontWeight: 600,
+              backgroundColor: activeIndex === index + 1 ? "#5ECBDD" : "transparent",
+              cursor: "pointer",
+             }}
+             onClick={() => setActiveIndex(index + 1)}
           >
             <a
               className={`text-white text-decoration-none text-nowrap ${

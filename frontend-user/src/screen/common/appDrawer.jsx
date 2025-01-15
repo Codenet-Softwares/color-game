@@ -76,7 +76,7 @@ function AppDrawer({
 
   function getLeftNavBar() {
     return (
-      <div className="sidebar" style={{ overflowY: "auto", height: "100vh" }}>
+      <div className="sidebar border" style={{ overflowY: "auto", height: "100vh" }}>
         <span
           style={{
             background: "#2cb3d1",
@@ -97,13 +97,12 @@ function AppDrawer({
           />
         </span>
 
-        <ul>
-
+        <ul className="">
           <li
-            className="MenuHead lottery-section"
+            className="MenuHead lottery-section text-center"
             onClick={handleLotteryToggle}
           >
-            <div className="lottery-wrapper">
+            <div className="lottery-wrapper mt-2">
               <span className="new-tag">New</span>
               Lottery
               <span
@@ -181,7 +180,6 @@ function AppDrawer({
           <div
             className="col-md-2 position-fixed d-none d-md-block vertical-navbar p-0"
             style={{
-              border: "1px solid red",
               height: "100vh",
               marginTop: isHomePage ? "0px" : "93px",
             }}

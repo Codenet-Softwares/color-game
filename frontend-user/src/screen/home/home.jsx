@@ -37,8 +37,8 @@ const Home = () => {
       <Carousel />
       <HitGames />
       <Gif />
-      <DownloadApp />
       <GameWithMarketList isSingleMarket={false} />
+      <DownloadApp />
       <Footer />
       <Login showLogin={showLogin} setShowLogin={setShowLogin} />
     </div>

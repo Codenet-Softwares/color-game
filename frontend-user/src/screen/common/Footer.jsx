@@ -32,8 +32,8 @@ const Footer = () => {
   return (
     <div className="footerBox">
       <div className="container">
-        <footer className="py-2 my-2">
-          <ul className="nav justify-content-center pb-3 mb-2">
+        <footer className="">
+          <ul className="nav justify-content-center">
             {footerImageData.map((item, index) => (
               <li className="nav-item row" key={index}>
                 <img

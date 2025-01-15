@@ -7,8 +7,9 @@
 
 /* Adjusting the height of the carousel images */
 .carousel-inner img {
-  max-height: 500px;
-  object-fit: cover;
+  height: 740px;
+  /* height: 100vh; */
+  /* object-fit: cover; */
 }
 
 /* Adjusting the height of the carousel caption */
@@ -23,14 +24,15 @@
 .card-deck {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-top: 108px;
   /* margin-top: 5px; */
-  overflow-x: scroll;
+  /* overflow-x: scroll; */
+  padding: 10px;
 }
 
 .card {
   flex: 1;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .card:last-child {
@@ -88,12 +90,7 @@
 }
 .footerBox {
   /* position: fixed; */
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 0.969625350140056) 0%,
-    rgba(9, 102, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
+  background-color: #045662;
 }
 @media (min-width: 100px) {
   .imagecontainer {

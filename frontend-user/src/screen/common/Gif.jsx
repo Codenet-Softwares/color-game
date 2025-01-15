@@ -27,15 +27,15 @@ const Gif = () => {
     <div className="row m-0">
       {gifData.map((item, index) => (
         <div
-          className={`col-sm-6 p-0 ${index !== 0 ? "ps-md-3" : ""}`}
+          className={`col-sm-6 p-1 ${index !== 0 ? "ps-md-3" : ""}`}
           key={index}
         >
-          <div className="card">
+          <div className="card rounded-0 border-0">
             <img
               src={item.image}
-              className="card-img-top"
+              className="card-img-top  rounded-0"
               alt={`Gif ${index}`}
-              style={{ maxHeight: "200px", objectFit: "cover" }}
+              style={{ maxHeight: "200px" }}
             />
           </div>
         </div>
