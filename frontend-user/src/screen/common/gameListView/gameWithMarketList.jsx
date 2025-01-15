@@ -990,14 +990,14 @@ function GameWithMarketList({ isSingleMarket }) {
                             className="col-4"
                             style={{ backgroundColor: "lightblue" }}
                           >
-                            {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
+                            {/* {marketData?.runners[0]?.rate[0]?.back ?? "N/A"} */}
                           </div>
 
                           <div
                             className="col-4"
                             style={{ backgroundColor: "pink" }}
                           >
-                            {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
+                            {/* {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"} */}
                           </div>
                         </div>
                         {/* );

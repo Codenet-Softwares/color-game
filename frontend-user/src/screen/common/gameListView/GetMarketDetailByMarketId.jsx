@@ -63,18 +63,36 @@ const GetMarketDetailByMarketId = () => {
   }, [store.user.wallet?.marketListExposure]);
 
   useEffect(() => {
+    console.log("[SSE] Connecting to market updates...");
+  
     const eventSource = updateMarketEventEmitter();
+  
     eventSource.onmessage = function (event) {
-      const update = JSON.parse(event.data);
-      if (update?.length) {
-        setIsActive(false);
-        update?.forEach((market) => {
-          toast.info(`${market.marketName} has been Suspended`);
+      const updates = JSON.parse(event.data);
+      console.log("[SSE] Update received:", updates);
+  
+      if (updates?.length) {
+        updates.forEach((market) => {
+          if (market.isActive) {
+            console.log(`[SSE] Market Active: ${market.marketName}`);
+            setIsActive(true);
+            toast.success(`${market.marketName} is now Active`);
+          } else {
+            console.log(`[SSE] Market Suspended: ${market.marketName}`);
+            setIsActive(false);
+            toast.info(`${market.marketName} has been Suspended`);
+          }
         });
       }
     };
+  
     eventSource.onerror = (err) => {
-      console.error("EventSource failed:", err);
+      console.error("[SSE] Connection error:", err);
+      eventSource.close();
+    };
+  
+    return () => {
+      console.log("[SSE] Cleaning up EventSource...");
       eventSource.close();
     };
   }, []);
