@@ -13,6 +13,7 @@ import DownloadApp from "../DownloadApp";
 import Footer from "../common/Footer";
 import Login from "../loginModal/loginModal";
 import AOS from "aos";
+import GetwholeMarket from "../common/gameListView/GetwholeMarket";
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -26,8 +27,15 @@ const Home = () => {
 
   const getLoginHomePage = () => (
     <div className="global-margin-top-logged">
-      <AppDrawer showCarousel={true} isMobile={false} isHomePage={true} showResetModal={showResetModal} setShowResetModal={setShowResetModal}>
-        <GameWithMarketList isSingleMarket={false} />
+      <AppDrawer
+        showCarousel={true}
+        isMobile={false}
+        isHomePage={true}
+        showResetModal={showResetModal}
+        setShowResetModal={setShowResetModal}
+      >
+        {/* <GameWithMarketList isSingleMarket={false} /> */}
+        <GetwholeMarket />
       </AppDrawer>
     </div>
   );
@@ -38,7 +46,8 @@ const Home = () => {
       <HitGames />
       <Gif />
       <DownloadApp />
-      <GameWithMarketList isSingleMarket={false} />
+      {/* <GameWithMarketList isSingleMarket={false} /> */}
+      <GetwholeMarket />
       <Footer />
       <Login showLogin={showLogin} setShowLogin={setShowLogin} />
     </div>
