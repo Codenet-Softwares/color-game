@@ -489,29 +489,30 @@ export const getAllGameData = async (req, res) => {
         ),
       })),
     }));
+    const baseURL = process.env.LOTTERY_URL;
 
+    const response = await axios.get(
+      `${baseURL}/api/get-active-market`,
+    );
+    const data = response.data.data
+
+    const combinedData = [...formattedGameData, ...data];
     res
       .status(statusCode.success)
       .json(
         apiResponseSuccess(
-          formattedGameData,
+          combinedData,
           true,
           statusCode.success,
           "Success"
         )
       );
   } catch (error) {
-    console.error("Error retrieving game data:", error);
-    res
-      .status(statusCode.internalServerError)
-      .json(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    if (error.response) {
+      return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage, res));
+    } else {
+      return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message, res));
+    };
   }
 };
 // done
@@ -536,7 +537,6 @@ export const filteredGameData = async (req, res) => {
           ],
           where: {
             isVoid: false,
-            hideMarketUser: false
           },
           include: [
             {
@@ -549,9 +549,6 @@ export const filteredGameData = async (req, res) => {
                 "back",
                 "lay",
               ],
-              where: {
-                isWin: false,
-              },
             },
           ],
         },
@@ -761,8 +758,8 @@ export const filterMarketData = async (req, res) => {
       {
         where: {
           [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } },
-            { endTime: { [Op.lt]: currentTime } }
+            { startTime: { [Op.gt]: currentTime } }, 
+            { endTime: { [Op.lt]: currentTime } }   
           ]
         },
       }
