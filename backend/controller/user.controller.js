@@ -489,40 +489,30 @@ export const getAllGameData = async (req, res) => {
         ),
       })),
     }));
-console.log("formattedGameData.........",formattedGameData)
     const baseURL = process.env.LOTTERY_URL;
 
     const response = await axios.get(
       `${baseURL}/api/get-active-market`,
     );
-    const data = response.data
-    console.log("response...........",response.data)
+    const data = response.data.data
 
     const combinedData = [...formattedGameData, ...data];
-
-
     res
       .status(statusCode.success)
       .json(
         apiResponseSuccess(
-          updatedData,
+          combinedData,
           true,
           statusCode.success,
           "Success"
         )
       );
   } catch (error) {
-    console.error("Error retrieving game data:", error);
-    res
-      .status(statusCode.internalServerError)
-      .json(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    if (error.response) {
+      return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage, res));
+    } else {
+      return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message, res));
+    };
   }
 };
 // done
