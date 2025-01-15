@@ -4,19 +4,19 @@ import Modal from "react-bootstrap/Modal";
 import GameService from "../../Services/GameService";
 import { useAuth } from "../../Utils/Auth";
 import { toast } from "react-toastify";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
+import moment from "moment";
 import { customErrorHandler } from "../../Utils/helper";
 
 const CreateMarket = ({ show, setShow, id }) => {
   const [marketName, setMarketName] = useState("");
   const [participant, setParticipant] = useState("");
-  const [startDateTime, setStartDateTime] = useState(new Date());
-  const [endDateTime, setEndDateTime] = useState(
-    new Date(new Date().getTime() + 60000)
-  );
-
+  const [startDatevalue, SetStartDateValue] = useState(new Date());
+  const [endDatevalue, setEndDateValue] = useState(new Date());
+  const today = new Date();
   const auth = useAuth();
+
   const handleClose = () => {
     resetForm(); // Reset form when closing modal
     setShow(false);
@@ -25,75 +25,73 @@ const CreateMarket = ({ show, setShow, id }) => {
   const resetForm = () => {
     setMarketName("");
     setParticipant("");
-    setStartDateTime(new Date());
-    setEndDateTime(new Date(new Date().getTime() + 60000));
+    SetStartDateValue(new Date());
+    setEndDateValue(new Date());
   };
 
-  const now = new Date();
-  now.setSeconds(0);
-  now.setMilliseconds(0);
-console.log("now",now)
-  const handleStartDateChange = (date) => {
-    if (date) {
-      setStartDateTime(date);
-
-      // Automatically set end time to 1 minute after start time
-      const newEndDateTime = new Date(date);
-      newEndDateTime.setMinutes(newEndDateTime.getMinutes() + 1);
-      setEndDateTime(newEndDateTime);
-    }
+  const disablePastDates = (current) => {
+    return current.isAfter(today);
   };
 
-  const handleEndDateChange = (date) => {
-    if (date && date >= startDateTime) {
-      setEndDateTime(date);
-    } else {
-      toast.error("End time must be after the start time.");
+  const disablePastTimes = (current) => {
+    const now = moment();
+    if (current.isSame(now, "day")) {
+      return current.isAfter(now);
     }
+    return true;
+  };
+
+  const adjustTime = (date) => {
+    return moment(date).add(5, "hours").add(30, "minutes").toISOString();
+  };
+
+  const handleStartDatevalue = (e) => {
+    SetStartDateValue(e);
+  };
+
+  const handleEndDatevalue = (e) => {
+    setEndDateValue(e);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!startDateTime || !endDateTime) {
-      toast.error("Start and end times are required.");
+    if (!marketName || !participant) {
+      toast.error("Market Name and Participants are required.", { autoClose: 2000 });
       return;
     }
 
-    const formattedStartTime = startDateTime;
-    const formattedEndTime = endDateTime;
+    if (!startDatevalue || !endDatevalue) {
+      toast.error("Start and end times are required.", { autoClose: 2000 });
+      return;
+    }
+
+    // Adjust start and end times by adding 5 hours 30 minutes
+    const adjustedStartTime = adjustTime(startDatevalue);
+    const adjustedEndTime = adjustTime(endDatevalue);
+
+    // Compare the adjusted times to ensure end time is not smaller than start time
+    if (moment(adjustedEndTime).isBefore(adjustedStartTime)) {
+      toast.error("End time must be after the start time.", { autoClose: 2000 });
+      return;
+    }
+
     const data = {
-      marketName: marketName,
+      marketName,
       participants: participant,
-      startTime: formattedStartTime,
-      endTime: formattedEndTime,
+      startTime: adjustedStartTime,
+      endTime: adjustedEndTime,
     };
 
     GameService.marketNameCreate(data, id, auth.user)
       .then((res) => {
-        toast.success(res.data.message);
+        toast.success(res.data.message, { autoClose: 2000 });
         resetForm();
         setShow(false);
       })
       .catch((err) => {
-        toast.error(customErrorHandler(err));
-        // if (startDateTime < new Date() || endDateTime <= startDateTime) {
-        //   toast.error("Start and end times must be in the future and the end time must be after the start time.");
-        // }
+        toast.error(customErrorHandler(err), { autoClose: 2000 });
       });
-  };
-
-  const isToday = (date) => {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
-  };
-
-  const getMinTime = (date) => {
-    return isToday(date) ? now : new Date(0, 0, 0, 0, 0);
   };
 
   return (
@@ -130,32 +128,26 @@ console.log("now",now)
           <div className="input-group-prepend">
             <span className="input-group-text w-100">Start Date & Time:</span>
           </div>
-          <DatePicker
-            selected={startDateTime}
-            onChange={handleStartDateChange}
-            showTimeSelect
+          <Datetime
+            value={startDatevalue}
+            onChange={handleStartDatevalue}
+            dateFormat="DD-MM-YYYY"
             timeFormat="HH:mm"
-            dateFormat="yyyy-MM-dd HH:mm"
-            minDate={now}
-            minTime={getMinTime(startDateTime)}
-            maxTime={new Date(0, 0, 0, 23, 59)}
-            className="form-control"
+            isValidDate={disablePastDates}
+            isValidTime={disablePastTimes}
           />
         </div>
         <div className="input-group mb-3">
           <div className="input-group-prepend">
             <span className="input-group-text w-100">End Date & Time:</span>
           </div>
-          <DatePicker
-            selected={endDateTime}
-            onChange={handleEndDateChange}
-            showTimeSelect
+          <Datetime
+            value={endDatevalue}
+            onChange={handleEndDatevalue}
+            dateFormat="DD-MM-YYYY"
             timeFormat="HH:mm"
-            dateFormat="yyyy-MM-dd HH:mm"
-            minDate={startDateTime}
-            minTime={getMinTime(endDateTime)}
-            maxTime={new Date(0, 0, 0, 23, 59)}
-            className="form-control"
+            isValidDate={disablePastDates}
+            isValidTime={disablePastTimes}
           />
         </div>
       </Modal.Body>
