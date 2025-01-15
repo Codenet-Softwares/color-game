@@ -14,6 +14,8 @@ import CountdownTimer from "../../../globlaCommon/CountdownTimer";
 import updateMarketEventEmitter from "../updateMarketEvent";
 import AppDrawer from "../appDrawer";
 import Layout from "../../layout/layout";
+import moment from "moment";
+
 const GetMarketDetailByMarketId = () => {
   const [user_marketWithRunnerData, setUser_marketWithRunnerData] = useState(
     getMarketWithRunnerDataInitialState()
@@ -411,6 +413,7 @@ const GetMarketDetailByMarketId = () => {
               style={{ backgroundColor: "#a1aed4" }}
             >
               {user_marketWithRunnerData.marketName} |{" "}
+              {moment.utc(user_marketWithRunnerData.startTime).format("YYYY-MM-DD HH:mm")} |{" "}
               {console.log(
                 "user_marketWithRunnerData",
                 user_marketWithRunnerData
