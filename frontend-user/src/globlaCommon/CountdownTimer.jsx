@@ -5,10 +5,10 @@ const CountdownTimer = ({ endDate }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(endDate));
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const interval = setInterval(() => {
       setTimeLeft(calculateTimeLeft(endDate));
     }, 1000);
-    return () => clearTimeout(timer);
+    return () => clearInterval(interval);
   }, [endDate]);
 
   const { days, hours, minutes, seconds } = timeLeft;
@@ -46,7 +46,6 @@ const CountdownTimer = ({ endDate }) => {
 };
 
 const calculateTimeLeft = (endDate) => {
-  // Subtract 5 hours and 30 minutes from the endDate
   const adjustedEndDate = moment
     .utc(endDate)
     .subtract(5, "hours")

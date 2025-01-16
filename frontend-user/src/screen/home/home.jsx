@@ -34,22 +34,20 @@ const Home = () => {
         showResetModal={showResetModal}
         setShowResetModal={setShowResetModal}
       >
-        {/* <GameWithMarketList isSingleMarket={false} /> */}
         <GetwholeMarket />
       </AppDrawer>
     </div>
   );
 
   const homePage = () => (
-    <div className="global-margin-top">
+    <div className="global-margin-top" >
       <Carousel />
       <HitGames />
       <Gif />
       <DownloadApp />
-      {/* <GameWithMarketList isSingleMarket={false} /> */}
       <GetwholeMarket />
       <Footer />
-      <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+      <Login showLogin={showLogin} setShowLogin={setShowLogin}/>
     </div>
   );
 

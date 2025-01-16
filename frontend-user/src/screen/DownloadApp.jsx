@@ -7,47 +7,68 @@ const DownloadApp = () => {
     <>
       <br />
       <div
-        className="app-download-section"
+        className="app-download-section m-2"
         style={{
-          backgroundColor: "#080F1C",
+          backgroundImage: `linear-gradient(to bottom, #045662, #1FA5C3, #094359)`,
+          backgroundRepeat: "no-repeat",
           color: "white",
-          paddingTop: "50px",
-          paddingBottom: "50px",
+          borderRadius:"20px"
+          // paddingTop: "50px",
+          // paddingBottom: "50px",
         }}
       >
-        <div className="container">
-          <div className="row justify-content-center align-items-center">
-          
-            <div className="col-md-4 text-center mb-4 mb-md-0">
-              <img
-                src={HandImg}
-                alt="Betting Logo"
-                style={{
-                  maxWidth: "100%",
-                  height: "auto",
-                  marginBottom: "20px",
-                }}
-              />
-            </div>
-          
-            <div className="col-md-6 text-center">
+        <div className="container-fluid">
+          <div className="row ">
+            {/* Hand Logo Column */}
+            
+
+            {/* App Logo Column */}
+            <div className="col-md-6">
               <img
                 src={LogoImg}
                 alt="App Logo"
                 style={{
-                  width: "100%",
-                  maxWidth: "200px",
-                  marginBottom: "30px",
                 }}
               />
-              <h2 style={{ color: "#FFD700", marginBottom: "20px" }}>
-                Get in on the Action!
-              </h2>
-              <p style={{ marginBottom: "30px" }}>
+            </div>
+
+            {/* Text Content Column */}
+            <div className="col-md-6 d-flex flex-column align-items-center justify-content-center">
+              <h1
+                className="fw-bolder"
+                style={{
+                  color: "#e0dfdc",
+                  fontSize: "65px",
+                  textShadow: "-3px -3px 3px #111111, 4px 4px 1px #363636",
+                }}
+              >
+                Get In On The Action!
+              </h1>
+              <h5 className="text-center" style={{ marginBottom: "30px" }}>
                 Download our app now and enjoy the excitement of betting
                 anytime, anywhere!
-              </p>
-              <button className="btn btn-warning btn-lg">Download Now</button>
+              </h5>
+              <button
+                className="btn text-uppercase"
+                style={{
+                  background: "linear-gradient(45deg, rgb(220, 220, 220), rgb(150, 220, 240), rgba(180, 255, 255, 0.5))",
+                  border: "3px solid #075E6C",
+                  color: "#005870",
+                  fontSize: "1.4rem",
+                  fontWeight: "600",
+                  padding: "12px 28px",
+                  cursor: "pointer",
+                  borderRadius: "40px",
+                  boxShadow: "0 8px 16px rgba(0, 128, 148, 0.4), 0 0 15px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6)",
+                  textShadow: "1px 1px 3px rgba(0, 128, 148, 0.8), 0 0 5px rgba(255, 255, 255, 0.6)",
+                  transition: "background 0.3s ease, box-shadow 0.3s ease",
+                }}
+                
+                
+                
+              >
+                Download Now
+              </button>
             </div>
           </div>
         </div>

@@ -72,21 +72,21 @@ const NavTop = () => {
       oldPassword: oldPassword,  
       newPassword: newPassword
     };
-
     try {
-      const response = await AccountServices.ResetPassword(data,auth.user);
+      const response = await AccountServices.ResetPassword(data, auth.user);
       toast.success("Password reset successful");
-      closeModal();
+  
+      auth.logout();
+      toast.info("You have been logged out for security reasons. Please log in again.");
     } catch (error) {
-      toast.error("Error resetting password: " + error.message); 
+      toast.error("Error resetting password: " + error.message);
     }
   };
-  // Function to open the reset password modal
+  
   const openModal = () => {
     setIsModalOpen(true);
   };
 
-  // Function to close the reset password modal
   const closeModal = () => {
     setIsModalOpen(false);
   };

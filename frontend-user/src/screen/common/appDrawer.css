@@ -5,6 +5,16 @@
 
 .sidebar ul li {
   display: block;
+  border-bottom: 2px solid rgb(226, 225, 225);
+}
+.sidebar {
+  height: auto; /* Allow sidebar to grow with content */
+  overflow-y: auto; /* Enable scrolling for sidebar */
+}
+
+.subMenuItems {
+  max-height: none; /* Remove any max-height limit */
+  overflow-y: visible; /* Ensure content isn't hidden */
 }
 
 .sidebar ul li a {
@@ -21,17 +31,17 @@
 
 .sidebar ul li.subMenuItems a {
   display: block;
-  padding: 5px;
+  /* padding: 0px; */
   text-decoration: none;
   color: black;
   position: relative;
   transition:
     background-color 0.3s,
     color 0.3s;
-  background-color: #adc2c7;
+  background-color: #d3d8ea;
   font-size: small;
-  opacity: 50%;
-  text-indent: 10px;
+  /* opacity: 50%; */
+  margin:0px;
 }
 
 .sidebar ul li.MenuHead a::after {
@@ -65,7 +75,7 @@
 }
 
 .sidebar ul li.subMenuItems a:hover {
-  background-color: #3b3d3d;
+  background-color: #2cb3d1;
   color: white;
 }
 
@@ -74,11 +84,10 @@
   position: relative;
   font-size: 16px;
   font-weight: bold;
-  color: #2cb3d1;
+  color: #fff;
   padding: 10px;
-  background-color: #e6f7ff;
-  border-radius: 8px;
-  margin: 10px 0;
+  background-color: #27A6C3;
+  /* margin: 10px 0; */
   list-style-type: none;
   cursor: pointer; /* Change cursor to pointer for better UX */
   transition: background-color 0.3s; /* Smooth transition on hover */
@@ -102,7 +111,7 @@
 }
 
 .lottery-section:hover {
-  background-color: #cceeff; /* Change background color on hover */
+  background-color: #27A6C3; /* Change background color on hover */
 }
 
 .dropdown-icon {
@@ -120,21 +129,19 @@
 }
 
 .subMenuHead {
-  padding: 10px 14px;
   font-size: 15px;
   color: #444;
   font-weight: bold;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-radius: 8px;
   background: linear-gradient(135deg, #e6f7ff, #fff); /* Light background */
   transition: all 0.3s ease;
   cursor: pointer;
+  border: 1px solid rgb(211, 208, 208);
 }
 
 .subMenuHead:hover {
-  background: linear-gradient(135deg, #ffd700, #ffa500); /* Gold/Orange gradient */
   color: #333;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow on hover */
 }

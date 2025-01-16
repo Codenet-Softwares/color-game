@@ -10,6 +10,7 @@ import HamburgerNavBar from "./hamburgerNavBar";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../utils/constant/stringConstant";
 import InnerCarousel from "./InnerCarousel";
+import Footer from "./Footer";
 
 function AppDrawer({
   children,
@@ -77,7 +78,7 @@ function AppDrawer({
 
   function getLeftNavBar() {
     return (
-      <div className="sidebar" style={{ overflowY: "auto", height: "100vh" }}>
+      <div className="sidebar border" style={{ overflowY: "auto", height: "88vh" }}>
         <span
           style={{
             background: "#2cb3d1",
@@ -98,12 +99,13 @@ function AppDrawer({
           />
         </span>
 
-        <ul>
+
+        <ul className="overflow-auto">
           <li
-            className="MenuHead lottery-section"
+            className="MenuHead lottery-section text-center"
             onClick={handleLotteryToggle}
           >
-            <div className="lottery-wrapper">
+            <div className="lottery-wrapper mt-2">
               <span className="new-tag">New</span>
               Lottery
               <span
@@ -132,12 +134,12 @@ function AppDrawer({
             </ul>
           )}
 
-          <li
+          {/* <li
             className={toggleStates["inPlay"] ? "subMenuHead" : "MenuHead"}
             onClick={() => handleToggle("inPlay")}
           >
             <a href="#">In-Play</a>
-          </li>
+          </li> */}
           {user_allGames?.map((gameObj, index) => (
             <React.Fragment key={index}>
               <li
@@ -189,7 +191,6 @@ function AppDrawer({
           <div
             className="col-md-2 position-fixed d-none d-md-block vertical-navbar p-0"
             style={{
-              border: "1px solid red",
               height: "100vh",
               marginTop: isHomePage ? "0px" : "93px",
             }}
@@ -201,12 +202,12 @@ function AppDrawer({
             style={{
               // border: '1px solid red',
               height: "100vh",
-              // overflowY: 'auto',
+              overflowY: 'auto',
             }}
           >
             <div
               className="col-md-12"
-              style={{ background: "green", overflowX: "auto" }}
+              // style={{ background: "green", overflowX: "auto" }}
             >
               {showCarousel && <InnerCarousel />}
             </div>

@@ -35,14 +35,15 @@ const HitGames = () => {
       <div className="card-deck">
         {sliderData.map((item, index) => (
           <div
-            className="card rounded-lg"
+            className="card border-0"
             key={item.id || index}
             onClick={handleImageClick}
             style={{ cursor: "pointer" }}
           >
             <img
               src={item.image}
-              className="card-img-top rounded"
+              className="card-img-top"
+              style={{borderRadius:"20px"}}
               alt={`Card ${index}`}
             />
           </div>

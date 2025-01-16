@@ -53,23 +53,24 @@ const SubNavbar = () => {
     return (
         <>
             <nav
-                className="navbar navbar-dark bg-dark p-0"
+                className="navbar p-0"
                 style={{
                     backgroundImage:
-                        "linear-gradient(to bottom, #0a262c, #114651, #17687a, #1b8da6, #20b3d4)",
+                        "linear-gradient(to bottom, #0a262c, #03354C, #17687a, #1b8da6, #20b3d4)",
+                        
                 }}
             >
                 {!store.user.isLogin && (
                     <div
-                        className="w-100 d-flex justify-content-between"
-                        style={{ background: "#25616a" }}
+                        className="w-100 d-flex justify-content-between "
+                        style={{ background: "#045662" }}
                     >
                         <img
                             src={ansmt}
                             alt="Announcement"
                             style={{ width: "30px", height: "30px", marginLeft: "10px" }}
                         />
-                        <marquee className="text-white">
+                        <marquee className="text-white" style={{fontSize:"18px"}}>
                             {announcementData.map((item) => item.announcement).join(" | ")}
                         </marquee>
                         <span
@@ -89,8 +90,8 @@ const SubNavbar = () => {
                     >
                         ☰
                     </button>
-                    <a className="navbar-brand" href={`/home`}>
-                        <img src={Logo} alt="Logo" style={{ width: "150px" }} />
+                    <a className="navbar-brand " href={`/home`}>
+                        <img src={Logo} alt="Logo" style={{ width: "170px" }} />
                     </a>
                     <button className="navbar-toggler border-0" type="button">
                         {store.user.isLogin ? (
@@ -127,11 +128,13 @@ const SubNavbar = () => {
                             </span>
                         ) : (
                             <span
-                                className="btn text-white border border-white col"
+                                className="btn text-white col p-2 px-3"
                                 style={{
                                     backgroundImage:
-                                        "linear-gradient(to top, #114551, #226575, #34879b, #47abc2, #5ad0eb)",
-                                    fontSize: "13px",
+                                        "linear-gradient(to top, #21778A, #21778A, #34879b, #47abc2, #5ad0eb)",
+                                    fontSize: "14px",
+                                    border:"2px solid #72BBEF",
+                                    borderRadius:"12px"
                                 }}
                                 onClick={() => setShowModalLogin(true)}
                             >
