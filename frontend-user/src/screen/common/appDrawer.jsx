@@ -31,13 +31,14 @@ function AppDrawer({
   useEffect(() => {
     user_getAllGames();
     fetchLotteryMarkets();
-  }, []);
+  }, [lotteryToggle]);
 
   // Function to fetch draw times from API
   async function fetchLotteryMarkets() {
     const response = await getLotteryMarketsApi(store);
     if (response?.success) {
       setLotteryDrawTimes(response.data);
+      // window.location.reload();
     } else {
       console.warn("Failed to fetch lottery markets. Response:", response);
       setLotteryDrawTimes([]);
@@ -70,6 +71,8 @@ function AppDrawer({
 
   const handleLotteryToggle = () => {
     setLotteryToggle(!lotteryToggle);
+    
+  
   };
 
   function getLeftNavBar() {
@@ -115,7 +118,12 @@ function AppDrawer({
             <ul className="subMenuItems">
               {lotteryDrawTimes.map((market) => (
                 <li key={market.marketId} className="subMenuHead">
-                  <Link to={`/lottery/${market.marketId}`}>
+                  <Link to={`/lottery/${market.marketId}`}
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent default client-side navigation
+                    window.location.href = `/lottery/${market.marketId}`; // Force page reload
+                  }}
+                  >
                     <span className="draw-date-icon">🎟️</span>
                     {market.marketName}
                   </Link>
