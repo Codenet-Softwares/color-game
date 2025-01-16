@@ -28,7 +28,6 @@ import BetHistory from './models/betHistory.model.js';
 import MarketBalance from './models/marketBalance.js';
 import { InactiveGameRoute } from './routes/inactiveGame.route.js';
 import InactiveGame from './models/inactiveGame.model.js';
-import { startMarketCountdown } from './cron/startMarketCountdown.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Op } from "sequelize";
@@ -160,7 +159,7 @@ sequelize
 
     const updatedMarketsCache = new Map(); 
 
-    cron.schedule('*/2 * * * * *', async () => {
+    cron.schedule('* * * * * * *', async () => {
       try {
         const currentTime = getISTTime();
             
@@ -205,7 +204,6 @@ sequelize
           }
         }
    
-        if (updateMarket.length > 0) {
           clients.forEach((client) => {
             try {
               client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
@@ -215,7 +213,6 @@ sequelize
           });
     
           console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
-        }
     
       } catch (error) {
         console.error('Error checking market statuses:', error);
