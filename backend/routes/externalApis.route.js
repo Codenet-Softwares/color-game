@@ -1,4 +1,4 @@
-import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte } from "../controller/externalApis.controller.js";
+import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte, getAllLotteryMarket } from "../controller/externalApis.controller.js";
 import { currentOrderHistory } from "../controller/user.controller.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
 import { authenticateAdmin } from "../middleware/lottery.auth.js";
@@ -33,6 +33,8 @@ export const externalApisRoute = (app) => {
     app.post('/api/external/revoke-liveBet-lottery', validateRevokeLiveMarket, customErrorHandler, authenticateAdmin, revokeLiveBet)
 
     app.get('/api/external/user-live-bet/:marketId', validateUserLiveBet, customErrorHandler, authenticateSuperAdmin, userLiveBte)
+
+    app.get('/api/external/get-allLottery-game', getAllLotteryMarket)
 
 
 
