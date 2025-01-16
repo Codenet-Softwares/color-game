@@ -3,11 +3,16 @@ import { useParams } from "react-router-dom";
 import { getUserLotteryMarket_api } from "../../../utils/apiService";
 import AppDrawer from "../appDrawer";
 import Layout from "../../layout/layout";
+import { useAppContext } from "../../../contextApi/context";
+import Login from "../../loginModal/loginModal";
 
 const LotteryMarketDashBoard = () => {
+  const { dispatch, store } = useAppContext();
   const { gameName, marketId } = useParams();
   const [marketData, setMarketData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  console.log("store", store.user.isLogin);
 
   // Fetch market data
   const fetchMarketData = async () => {
@@ -30,10 +35,14 @@ const LotteryMarketDashBoard = () => {
   // Function to render the body
   const getBody = () => {
     const handleMarketClick = (marketId) => {
-      console.log("Navigating to market:", marketId);
-      window.location.href = `/lottery/${marketId}`;
+      if (store.user.isLogin) {
+        console.log("Navigating to market:", marketId);
+        window.location.href = `/lottery/${marketId}`;
+      } else {
+        setShowLogin(true);
+      }
     };
-  
+
     return (
       <div className="mt-5">
         {loading ? (
@@ -59,11 +68,13 @@ const LotteryMarketDashBoard = () => {
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = "scale(1.05)";
-                e.currentTarget.style.boxShadow = "0 16px 32px rgba(0, 0, 0, 0.15)";
+                e.currentTarget.style.boxShadow =
+                  "0 16px 32px rgba(0, 0, 0, 0.15)";
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.1)";
+                e.currentTarget.style.boxShadow =
+                  "0 8px 16px rgba(0, 0, 0, 0.1)";
               }}
             >
               {/* Market Header */}
@@ -83,13 +94,17 @@ const LotteryMarketDashBoard = () => {
                     paddingBottom: "12px",
                     transition: "color 0.3s ease",
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "#E67E22")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "#F1C40F")}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = "#E67E22")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = "#F1C40F")
+                  }
                 >
                   Market: {marketDataItem?.marketName ?? "Unknown"}
                 </span>
               </div>
-  
+
               {/* Range Details */}
               <div className="row mx-0 px-2 mt-3 text-muted">
                 <div className="col-md-3 col-sm-6 mb-3">
@@ -130,6 +145,8 @@ const LotteryMarketDashBoard = () => {
                   </p>
                 </div>
               </div>
+              {showLogin && <Login showLogin={showLogin} setShowLogin={setShowLogin} />}
+
             </div>
           ))
         ) : (
@@ -142,8 +159,6 @@ const LotteryMarketDashBoard = () => {
       </div>
     );
   };
-  
-  
 
   // Main return
   return (
