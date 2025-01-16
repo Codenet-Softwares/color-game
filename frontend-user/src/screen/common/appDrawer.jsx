@@ -20,8 +20,6 @@ function AppDrawer({
   setShowResetModal,
   showResetModal,
   onMarketSelect, // New prop for market selection callback
-  
-
 }) {
   const [toggleStates, setToggleStates] = useState({});
   const [user_allGames, setUser_allGames] = useState(
@@ -34,13 +32,14 @@ function AppDrawer({
   useEffect(() => {
     user_getAllGames();
     fetchLotteryMarkets();
-  }, []);
+  }, [lotteryToggle]);
 
   // Function to fetch draw times from API
   async function fetchLotteryMarkets() {
     const response = await getLotteryMarketsApi(store);
     if (response?.success) {
       setLotteryDrawTimes(response.data);
+      // window.location.reload();
     } else {
       console.warn("Failed to fetch lottery markets. Response:", response);
       setLotteryDrawTimes([]);
@@ -73,6 +72,8 @@ function AppDrawer({
 
   const handleLotteryToggle = () => {
     setLotteryToggle(!lotteryToggle);
+    
+  
   };
 
   function getLeftNavBar() {
@@ -98,6 +99,7 @@ function AppDrawer({
           />
         </span>
 
+
         <ul className="overflow-auto">
           <li
             className="MenuHead lottery-section text-center"
@@ -118,7 +120,12 @@ function AppDrawer({
             <ul className="subMenuItems">
               {lotteryDrawTimes.map((market) => (
                 <li key={market.marketId} className="subMenuHead">
-                  <Link to={`/lottery/${market.marketId}`}>
+                  <Link to={`/lottery/${market.marketId}`}
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent default client-side navigation
+                    window.location.href = `/lottery/${market.marketId}`; // Force page reload
+                  }}
+                  >
                     <span className="draw-date-icon">🎟️</span>
                     {market.marketName}
                   </Link>
@@ -133,37 +140,40 @@ function AppDrawer({
           >
             <a href="#">In-Play</a>
           </li> */}
-          {user_allGames.map((gameObj, index) => (
+          {user_allGames?.map((gameObj, index) => (
             <React.Fragment key={index}>
               <li
                 className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
                 onClick={() => handleToggle(index)}
               >
-                <Link>{gameObj.gameName}</Link>
+                <Link>{gameObj?.gameName}</Link>
               </li>
               {/* Mapping over markets inside each gameName */}
               {toggleStates[index] && gameObj.markets.length > 0
-                ? gameObj.markets.map((marketObj, marketIndex) => (
-                    <li
-                      className="subMenuItems"
-                      key={marketIndex}
-                      onClick={() =>
-                        handleAllId(gameObj?.gameId, marketObj?.marketId)
-                      }
-                    >
-                      <Link
-                        to={`/gameView/${gameObj?.gameName?.replace(
-                          /\s/g,
-                          ""
-                        )}-${marketObj?.marketName?.replace(
-                          /\s/g,
-                          ""
-                        )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                ? gameObj?.markets?.map((marketObj, marketIndex) => {
+                    console.log("====", marketObj);
+                    return (
+                      <li
+                        className="subMenuItems"
+                        key={marketIndex}
+                        onClick={() =>
+                          handleAllId(gameObj?.gameId, marketObj?.marketId)
+                        }
                       >
-                        {marketObj.marketName}
-                      </Link>
-                    </li>
-                  ))
+                        <Link
+                          to={`/gameView/${gameObj?.gameName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                        >
+                          {marketObj.marketName}
+                        </Link>
+                      </li>
+                    );
+                  })
                 : null}
             </React.Fragment>
           ))}

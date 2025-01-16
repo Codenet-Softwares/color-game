@@ -13,6 +13,8 @@ import moment from "moment";
 import CountDownTimerLottery from "../common/CountTimerLottery";
 import { useParams } from "react-router-dom";
 import { FixedSizeGrid as Grid } from "react-window";
+import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
+import { toast } from "react-toastify";
 
 const LotteryNewPage = ({ drawId }) => {
   console.log("====>>>> line number 10", drawId);
@@ -106,7 +108,6 @@ const LotteryNewPage = ({ drawId }) => {
             const start = moment.utc(currentMarket.start_time);
             const end = moment.utc(currentMarket.end_time);
             console.log("object============>>>>>>>>", start);
-            setIsSuspend(currentMarket.isActive);
             setStartTime(
               moment.utc(currentMarket.start_time).format("YYYY-MM-DD HH:mm")
             );
@@ -129,6 +130,37 @@ const LotteryNewPage = ({ drawId }) => {
             //   setShowCountdown(false);
             //   console.log("Countdown will not be shown.");
             // }
+            console.log("setIsSuspend....1", isSuspend)
+            const eventSource = updateLotteryMarketEventEmitter();
+            console.log("eventSource", eventSource)
+            eventSource.onmessage = function (event) {
+              const updates = JSON.parse(event.data);
+              console.log("[SSE] lottery Update received:", updates);
+
+              if (updates?.length) {
+                updates.forEach((market) => {
+                  if (market.isActive) {
+                    console.log(`[SSE] lottery Market Active: ${market.marketName}`);
+                    setIsSuspend(true);
+                    toast.success(`${market.marketName} is now Active`);
+                  } else {
+                    console.log(`[SSE] lottery Market Suspended: ${market.marketName}`);
+                    setIsSuspend(false);
+                    toast.info(`${market.marketName} has been Suspended`);
+                  }
+                });
+              }
+            };
+
+            eventSource.onerror = (err) => {
+              console.error("[SSE] Connection error:", err);
+              eventSource.close();
+            };
+
+            return () => {
+              console.log("[SSE] Cleaning up EventSource...");
+              eventSource.close();
+            };
           } else {
             console.warn("No market found matching the given drawId");
             setMarketName("Unknown Market");
@@ -142,7 +174,7 @@ const LotteryNewPage = ({ drawId }) => {
     };
 
     handleLotteryRange();
-  }, [drawId]);
+  }, [drawId, isSuspend]);
 
   const handleSemChange = (e) => {
     setSem(e.target.value);
@@ -343,7 +375,7 @@ const LotteryNewPage = ({ drawId }) => {
           style={{
             ...style,
           }}
-          // className="m-1"
+        // className="m-1"
         >
           <button
             style={{

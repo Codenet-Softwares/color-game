@@ -1,4 +1,4 @@
-const eventSource = new EventSource("http://localhost:7000/events");
+const eventSource = new EventSource("https://cg.server.dummydoma.in/events");
 
 const updateMarketEventEmitter = () => {
     console.log("updatemarketEventemitter");
@@ -11,4 +11,6 @@ const updateMarketEventEmitter = () => {
     eventSource.close();
   };
 };
+
 export default updateMarketEventEmitter;
+

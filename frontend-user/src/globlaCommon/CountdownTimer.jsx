@@ -8,7 +8,6 @@ const CountdownTimer = ({ endDate }) => {
     const interval = setInterval(() => {
       setTimeLeft(calculateTimeLeft(endDate));
     }, 1000);
-
     return () => clearInterval(interval);
   }, [endDate]);
 
@@ -47,7 +46,6 @@ const CountdownTimer = ({ endDate }) => {
 };
 
 const calculateTimeLeft = (endDate) => {
-  // Adjust the end date by subtracting 5 hours and 30 minutes
   const adjustedEndDate = moment
     .utc(endDate)
     .subtract(5, "hours")

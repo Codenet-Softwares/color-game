@@ -1002,14 +1002,14 @@ function GameWithMarketList({ isSingleMarket }) {
                             className="col-3 rounded p-1"
                             style={{ backgroundColor: "#80C2F1" }}
                           >
-                            {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
+                            {/* {marketData?.runners[0]?.rate[0]?.back ?? "N/A"} */}
                           </div>
 
                           <div
                             className="col-3 rounded p-1"
                             style={{ backgroundColor: "#FAA9BA"}}
                           >
-                            {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
+                            {/* {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"} */}
                           </div>
                         </div>
                         {/* );

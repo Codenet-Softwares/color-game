@@ -489,29 +489,55 @@ export const getAllGameData = async (req, res) => {
         ),
       })),
     }));
+    const baseURL = process.env.LOTTERY_URL;
 
+    const response = await axios.get(
+      `${baseURL}/api/get-active-market`,
+    );
+    const data = response.data.data
+    const foramtedData = [{
+        gameName    : data[0]?.gameName,
+        markets     : data.map((game)=>({
+        marketId    : game.marketId,
+        marketName  : game.marketName,
+        group_start : game.group_start,
+        group_end   : game.group_end,
+        series_start: game.series_start,
+        series_end  : game.series_end,
+        number_start: game.number_start,
+        number_end  : game.number_end,
+        start_time  : game.start_time,
+        end_time    : game.end_time,
+        date        : game.date,
+        price       : game.price,
+        isActive    : game.isActive,
+        isWin       : game.isWin,
+        isVoid      : game.isVoid,
+        createdAt   : game.createdAt,
+        updatedAt   : game.updatedAt
+
+        }))
+    }]
+
+  //console.log("formatedData........",foramtedData)
+    const combinedData = [...formattedGameData, ...foramtedData];
     res
       .status(statusCode.success)
       .json(
         apiResponseSuccess(
-          formattedGameData,
+          combinedData,
           true,
           statusCode.success,
           "Success"
         )
       );
   } catch (error) {
-    console.error("Error retrieving game data:", error);
-    res
-      .status(statusCode.internalServerError)
-      .json(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    console.log("error",error)
+    if (error.response) {
+      return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
+    } else {
+      return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+    };
   }
 };
 // done
@@ -536,7 +562,6 @@ export const filteredGameData = async (req, res) => {
           ],
           where: {
             isVoid: false,
-            hideMarketUser: false
           },
           include: [
             {
@@ -549,9 +574,6 @@ export const filteredGameData = async (req, res) => {
                 "back",
                 "lay",
               ],
-              where: {
-                isWin: false,
-              },
             },
           ],
         },
@@ -761,8 +783,8 @@ export const filterMarketData = async (req, res) => {
       {
         where: {
           [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } },
-            { endTime: { [Op.lt]: currentTime } }
+            { startTime: { [Op.gt]: currentTime } }, 
+            { endTime: { [Op.lt]: currentTime } }   
           ]
         },
       }
