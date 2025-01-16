@@ -11,4 +11,6 @@ const updateMarketEventEmitter = () => {
     eventSource.close();
   };
 };
+
 export default updateMarketEventEmitter;
+
