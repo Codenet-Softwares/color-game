@@ -78,10 +78,8 @@ function AppDrawer({
 
   function getLeftNavBar() {
     return (
-      <div
-        className="sidebar border"
-        style={{ overflowY: "auto", height: "88vh" }}
-      >
+      <div className="sidebar border mt-4" style={{ overflowY: "auto", height: "82vh" }}>
+
         <span
           style={{
             background: "#2cb3d1",
@@ -92,7 +90,7 @@ function AppDrawer({
           }}
           className="text-white"
         >
-          Popular{" "}
+          {/* Popular{" "} */}
           <button
             type="button"
             className="btn-close d-xl-none d-lg-none "
