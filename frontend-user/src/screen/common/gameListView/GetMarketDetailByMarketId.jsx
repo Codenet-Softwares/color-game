@@ -450,7 +450,7 @@ const GetMarketDetailByMarketId = () => {
             )}
             <div
               className="col-12 p-1 mt-2"
-              style={{ backgroundColor: "#a1aed4" }}
+              style={{ backgroundColor: "#2CB3D1" }}
             >
               {user_marketWithRunnerData.marketName} |{" "}
               {console.log(
@@ -468,13 +468,13 @@ const GetMarketDetailByMarketId = () => {
               <div className="col-4"></div>
               <div
                 className="col-4 rounded-top-3"
-                style={{ backgroundColor: "lightblue" }}
+                style={{ backgroundColor: "#80C2F1" }}
               >
                 Back
               </div>
               <div
                 className="col-4 rounded-top-3"
-                style={{ backgroundColor: "pink" }}
+                style={{ backgroundColor: "#FAA9BA" }}
               >
                 Lay
               </div>
@@ -598,7 +598,7 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4"
-                            style={{ backgroundColor: "lightblue" }}
+                            style={{ backgroundColor: "#80C2F1" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
@@ -614,7 +614,7 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4"
-                            style={{ backgroundColor: "pink" }}
+                            style={{ backgroundColor: "#FAA9BA" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
@@ -734,7 +734,7 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4"
-                            style={{ backgroundColor: "lightblue" }}
+                            style={{ backgroundColor: "#80C2F1" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
@@ -751,7 +751,7 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4"
-                            style={{ backgroundColor: "pink" }}
+                            style={{ backgroundColor: "#FAA9BA" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,

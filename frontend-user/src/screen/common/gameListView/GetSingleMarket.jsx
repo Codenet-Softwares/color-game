@@ -28,7 +28,16 @@ const GetSingleMarket = () => {
       payload: { marketId: id },
     });
   };
-
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    const day = date.getDate();
+    const month = date.toLocaleString("default", { month: "short" });
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th"; // To get 1st, 2nd, etc.
+    const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${minutes < 10 ? "0" + minutes : minutes}`;
+    return formattedTime;
+  };
   async function user_getGameWithMarketData() {
     const response = await user_getGameWithMarketData_api({
       gameId: gameIdFromUrl,
@@ -46,8 +55,8 @@ const GetSingleMarket = () => {
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           <div className="row p-0 m-0">
             <div
-              className="col-12 p-1 mt-2"
-              style={{ backgroundColor: "#a1aed4" }}
+              className="col-12 p-2 mt-2 text-white fw-bold h6"
+              style={{ backgroundColor: "#18ADC5", }}
             >
               {user_gameWithMarketData[0]?.gameName}
             </div>
@@ -55,9 +64,16 @@ const GetSingleMarket = () => {
               user_gameWithMarketData[0]?.markets.map((marketData) => {
                 console.log("first", marketData);
                 return (
-                  <div className="row py-1 px-0 m-0 border">
-                    <Link
-                      className={`col-4 text-dark text-decoration-none text-nowrap`}
+                     <div
+                        className="row py-1 px-0 m-0"
+                        style={{
+                          backgroundColor: "white",
+                          borderTop: "1px solid #ccc",
+                        }}
+                        key={marketData.marketId}
+                      >
+                          <Link
+                      className={`col-8 text-dark text-decoration-none text-nowrap`}
                       to={`/gameView/${user_gameWithMarketData[0]?.gameName?.replace(
                         /\s/g,
                         ""
@@ -66,17 +82,22 @@ const GetSingleMarket = () => {
                       }`}
                       onClick={() => handleMarketId(marketData?.marketId)}
                     >
-                      <span>{marketData.timeSpan}</span> |{" "}
-                      <span> {marketData.marketName}</span>
+                      <span className="fw-bold">{formatDate(marketData.startTime)}</span> |{" "}
+                      <span className="fw-bold text-primary"> {marketData.marketName}</span>
                     </Link>
-
-                    <div
-                      className="col-8"
-                      style={{ backgroundColor: "orange" }}
-                    >
-                      col-8
-                    </div>
-                  </div>
+                        <div
+                          className="col-2 rounded fw-bold "
+                          style={{ backgroundColor: "#80C2F1" }}
+                        >
+                          {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
+                        </div>
+                        <div
+                          className="col-2 rounded fw-bold"
+                          style={{ backgroundColor: "#FAA9BA" }}
+                        >
+                          {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
+                        </div>
+                      </div>
                 );
               })}
           </div>

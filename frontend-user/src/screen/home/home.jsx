@@ -44,8 +44,8 @@ const Home = () => {
       <Carousel />
       <HitGames />
       <Gif />
-      <DownloadApp />
       <GetwholeMarket />
+      <DownloadApp />
       <Footer />
       <Login showLogin={showLogin} setShowLogin={setShowLogin}/>
     </div>

@@ -947,10 +947,10 @@ function GameWithMarketList({ isSingleMarket }) {
                   <span>{marketData.timeSpan}</span> |{" "}
                   <span> {marketData.marketName}</span>
                 </a>
-
+{/* 
                 <div className="col-8" style={{ backgroundColor: "orange" }}>
                   col-8
-                </div>
+                </div> */}
               </div>
             );
           })}
@@ -1032,7 +1032,7 @@ function GameWithMarketList({ isSingleMarket }) {
                     }}
                     onClick={() => handleGameId(gameWithMarketData?.gameId)}
                   >
-                    View More...
+                    {/* View More... */}
                   </a>
                 ) : (
                   <p
