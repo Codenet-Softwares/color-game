@@ -1452,4 +1452,31 @@ export const userLiveBte = async (req, res) => {
   }
 };
 
+export const getAllLotteryMarket = async (req, res) => {
+  try {
+    const baseURL = process.env.LOTTERY_URL;
+    const response = await axios.get(
+      `${baseURL}/api/get-active-market`,
+    );
+    const data = response.data.data
+    res
+      .status(statusCode.success)
+      .json(
+        apiResponseSuccess(
+          data ,
+          true,
+          statusCode.success,
+          "Success"
+        )
+      );
+  } catch (error) {
+    console.log("error",error)
+    if (error.response) {
+      return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
+    } else {
+      return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+    };
+  }
+};
+
 
