@@ -78,7 +78,10 @@ function AppDrawer({
 
   function getLeftNavBar() {
     return (
-      <div className="sidebar border" style={{ overflowY: "auto", height: "88vh" }}>
+      <div
+        className="sidebar border"
+        style={{ overflowY: "auto", height: "88vh" }}
+      >
         <span
           style={{
             background: "#2cb3d1",
@@ -98,7 +101,6 @@ function AppDrawer({
             style={{ marginLeft: "70%" }}
           />
         </span>
-
 
         <ul className="overflow-auto">
           <li
@@ -120,11 +122,12 @@ function AppDrawer({
             <ul className="subMenuItems">
               {lotteryDrawTimes.map((market) => (
                 <li key={market.marketId} className="subMenuHead">
-                  <Link to={`/lottery/${market.marketId}`}
-                  onClick={(e) => {
-                    e.preventDefault(); // Prevent default client-side navigation
-                    window.location.href = `/lottery/${market.marketId}`; // Force page reload
-                  }}
+                  <Link
+                    to={`/lottery/${market.marketId}`}
+                    onClick={(e) => {
+                      e.preventDefault(); // Prevent default client-side navigation
+                      window.location.href = `/lottery/${market.marketId}`; // Force page reload
+                    }}
                   >
                     <span className="draw-date-icon">🎟️</span>
                     {market.marketName}
@@ -142,39 +145,44 @@ function AppDrawer({
           </li> */}
           {user_allGames?.map((gameObj, index) => (
             <React.Fragment key={index}>
-              <li
-                className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
-                onClick={() => handleToggle(index)}
-              >
-                <Link>{gameObj?.gameName}</Link>
-              </li>
-              {/* Mapping over markets inside each gameName */}
-              {toggleStates[index] && gameObj.markets.length > 0
-                ? gameObj?.markets?.map((marketObj, marketIndex) => {
-                    console.log("====", marketObj);
-                    return (
-                      <li
-                        className="subMenuItems"
-                        key={marketIndex}
-                        onClick={() =>
-                          handleAllId(gameObj?.gameId, marketObj?.marketId)
-                        }
-                      >
-                        <Link
-                          to={`/gameView/${gameObj?.gameName?.replace(
-                            /\s/g,
-                            ""
-                          )}/${marketObj?.marketName?.replace(
-                            /\s/g,
-                            ""
-                          )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
-                        >
-                          {marketObj.marketName}
-                        </Link>
-                      </li>
-                    );
-                  })
-                : null}
+              {gameObj?.gameName === "colorgame" && (
+                <>
+                  <li
+                    className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
+                    onClick={() => handleToggle(index)}
+                  >
+                    <Link>{gameObj?.gameName}</Link>
+                    {console.log("====>>>123", gameObj)}
+                  </li>
+                  {/* Mapping over markets inside each gameName */}
+                  {toggleStates[index] && gameObj.markets.length > 0
+                    ? gameObj?.markets?.map((marketObj, marketIndex) => {
+                        console.log("====>>>123", marketObj);
+                        return (
+                          <li
+                            className="subMenuItems"
+                            key={marketIndex}
+                            onClick={() =>
+                              handleAllId(gameObj?.gameId, marketObj?.marketId)
+                            }
+                          >
+                            <Link
+                              to={`/gameView/${gameObj?.gameName?.replace(
+                                /\s/g,
+                                ""
+                              )}/${marketObj?.marketName?.replace(
+                                /\s/g,
+                                ""
+                              )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                            >
+                              {marketObj.marketName}
+                            </Link>
+                          </li>
+                        );
+                      })
+                    : null}
+                </>
+              )}
             </React.Fragment>
           ))}
         </ul>
