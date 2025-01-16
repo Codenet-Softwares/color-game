@@ -434,7 +434,7 @@ const GetMarketDetailByMarketId = () => {
                 }}
               >
                 <h1
-                  className="fw-bold fs-3 text-white"
+                  className="fw-bold fs-3 text-danger"
                   style={{
                     zIndex: 11,
                     width: "100% ",
@@ -453,13 +453,12 @@ const GetMarketDetailByMarketId = () => {
               style={{ backgroundColor: "#a1aed4" }}
             >
               {user_marketWithRunnerData.marketName} |{" "}
-              {moment.utc(user_marketWithRunnerData.startTime).format("YYYY-MM-DD HH:mm")} |{" "}
               {console.log(
                 "user_marketWithRunnerData",
                 user_marketWithRunnerData
               )}
               {new Date(convertUTCtoIST(user_marketWithRunnerData.endTime)) <
-                new Date() ? null : (
+              new Date() ? null : (
                 <>
                   <CountdownTimer endDate={user_marketWithRunnerData.endTime} />
                 </>
@@ -489,16 +488,16 @@ const GetMarketDetailByMarketId = () => {
                   toggle.indexNo === runnerData.id &&
                   (winBalance !== 0 ||
                     Number(runnerData.runnerName.bal) -
-                    Math.round(Math.abs(winBalance)) !==
-                    0);
+                      Math.round(Math.abs(winBalance)) !==
+                      0);
 
                 const shouldDisplayTempBack =
                   toggle.mode === "back" &&
                   toggle.indexNo === runnerData.id &&
                   (winBalance !== 0 ||
                     Number(runnerData.runnerName.bal) -
-                    Math.round(Math.abs(winBalance)) !==
-                    0);
+                      Math.round(Math.abs(winBalance)) !==
+                      0);
                 return (
                   <>
                     {toggle.mode === "lay" ? (
@@ -514,7 +513,7 @@ const GetMarketDetailByMarketId = () => {
                               {shouldDisplayTempLay && (
                                 <>
                                   {Number(runnerData.runnerName.bal) === 0 &&
-                                    !bidding.amount ? (
+                                  !bidding.amount ? (
                                     ""
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
@@ -538,7 +537,7 @@ const GetMarketDetailByMarketId = () => {
 
                                   {Number(runnerData.runnerName.bal) -
                                     Math.round(Math.abs(winBalance)) >
-                                    0 ? (
+                                  0 ? (
                                     <span className=" text-success fw-bold b">
                                       {bidding.amount != 0 && (
                                         <span>
@@ -568,7 +567,7 @@ const GetMarketDetailByMarketId = () => {
                             {!shouldDisplayTempLay && (
                               <>
                                 {Number(runnerData.runnerName.bal) === 0 &&
-                                  !bidding.amount ? (
+                                !bidding.amount ? (
                                   ""
                                 ) : Number(runnerData.runnerName.bal) > 0 ? (
                                   <span className="text-success fw-bold c" mx-2>
@@ -643,7 +642,7 @@ const GetMarketDetailByMarketId = () => {
                               {shouldDisplayTempBack && (
                                 <>
                                   {Number(runnerData.runnerName.bal) &&
-                                    !bidding.amount ? (
+                                  !bidding.amount ? (
                                     ""
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
@@ -667,7 +666,7 @@ const GetMarketDetailByMarketId = () => {
 
                                   {Number(runnerData.runnerName.bal) +
                                     Math.round(Math.abs(winBalance)) >
-                                    0 ? (
+                                  0 ? (
                                     <span className=" text-success  fw-bold">
                                       {bidding.amount != 0 && (
                                         <span>
@@ -697,19 +696,20 @@ const GetMarketDetailByMarketId = () => {
                             {!shouldDisplayTempBack && (
                               <>
                                 {Number(runnerData.runnerName.bal) === 0 &&
-                                  !bidding.amount ? (
+                                !bidding.amount ? (
                                   ""
                                 ) : Number(runnerData.runnerName.bal) > 0 ? (
                                   <span className="text-success  fw-bold" mx-2>
                                     {bidding.amount != 0 &&
                                       runnerData.runnerName.bal}
                                     <span
-                                      className={`3 text-${Number(runnerData.runnerName.bal) -
-                                        Math.round(bidding.amount) >
+                                      className={`3 text-${
+                                        Number(runnerData.runnerName.bal) -
+                                          Math.round(bidding.amount) >
                                         0
-                                        ? "success"
-                                        : "danger"
-                                        } fw-bold`}
+                                          ? "success"
+                                          : "danger"
+                                      } fw-bold`}
                                     >
                                       (
                                       {Number(runnerData.runnerName.bal) -
@@ -771,8 +771,9 @@ const GetMarketDetailByMarketId = () => {
                     {toggle.indexNo === runnerData.id && !toggle.toggleOpen && (
                       <div
                         style={{
-                          background: `${toggle.mode === "lay" ? "#f1e0e3" : "#c6e7ee"
-                            }`,
+                          background: `${
+                            toggle.mode === "lay" ? "#f1e0e3" : "#c6e7ee"
+                          }`,
                         }}
                       >
                         <div className="row py-1 px-0 m-0">
@@ -811,16 +812,16 @@ const GetMarketDetailByMarketId = () => {
                               onClick={
                                 bidding.amount >= 100
                                   ? () =>
-                                    handleBiddingAmount(
-                                      "amount",
-                                      Number(bidding.amount) - 100
-                                    )
+                                      handleBiddingAmount(
+                                        "amount",
+                                        Number(bidding.amount) - 100
+                                      )
                                   : () =>
-                                    handleBiddingAmount(
-                                      "amount",
-                                      Number(bidding.amount) -
-                                      Number(bidding.amount)
-                                    )
+                                      handleBiddingAmount(
+                                        "amount",
+                                        Number(bidding.amount) -
+                                          Number(bidding.amount)
+                                      )
                               }
                             >
                               -

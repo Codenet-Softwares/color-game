@@ -154,43 +154,47 @@ const GetwholeMarket = () => {
                 ) : (
                   <>
                     <div
-                      className="col-12 p-1 mt-2"
-                      style={{ backgroundColor: "#a1aed4" }}
+                      className="col-12 p-2 mt-2 fw-bold h6 text-white shadow-lg border"
+                      style={{ backgroundColor: "#18ADC5" }}
                     >
                       {gameWithMarketData.gameName}
-                      {console.log("gameWithMarketData", gameWithMarketData)}
                     </div>
+                    {/* <div  className="col-12 p-1 mt-2 fw-bold h6 text-white"></div> */}
+                    {/* <div className="row px-0 m-0 text-center">
+                      <span className=" col-6 text-dark text-decoration-none text-nowrap fw-bold h6"></span>
+                      <div className="col-3 rounded p-1 fw-bold">1</div>
+                      <div className="col-3 rounded p-1 fw-bold">2</div>
+                    </div> */}
                     {gameWithMarketData &&
                       gameWithMarketData.markets
-                        .slice(0, 3)
+                        .slice(0, 2)
                         .map((marketData) => {
                           return (
                             <div
-                              className="row p-0 m-0"
-                              style={{ backgroundColor: "white" }}
+                              className=" p-0 m-0 "
+                              style={{
+                                backgroundColor: "white",
+                                borderTop: "1px solid #ccc",
+                              }}
                             >
                               <div className="row py-1 px-0 m-0 ">
                                 {/* Runner Name and Balance */}
-                                <span className="col-4 text-dark text-decoration-none text-nowrap">
+                                <span className="col-6 text-dark text-decoration-none text-nowrap fw-bold h6">
                                   {marketData?.marketName}
                                 </span>
-                                {console.log("marketData", marketData)}
-
                                 {/* Back and Lay Rates */}
                                 <div
-                                  className="col-4"
-                                  style={{ backgroundColor: "lightblue" }}
+                                  className="col-3 rounded p-1"
+                                  style={{ backgroundColor: "#80C2F1" }}
                                 >
-                                  {marketData?.runners[0]?.rate[0]?.back ??
-                                    "N/A"}
+                                  {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
                                 </div>
 
                                 <div
-                                  className="col-4"
-                                  style={{ backgroundColor: "pink" }}
+                                  className="col-3 rounded p-1"
+                                  style={{ backgroundColor: "#FAA9BA" }}
                                 >
-                                  {marketData?.runners[0]?.rate[0]?.lay ??
-                                    "N/A"}
+                                  {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
                                 </div>
                               </div>
                               {/* );
@@ -200,21 +204,29 @@ const GetwholeMarket = () => {
                           );
                         })}
                     {gameWithMarketData.markets.length > 0 ? (
-                      <Link
-                        className={`col-12 text-dark text-decoration-none text-nowrap`}
-                        to={`/gameView/${gameWithMarketData?.gameName?.replace(
+                      <a
+                        className={`col-12 text-dark text-decoration-none text-nowrap border-top fw-bold`}
+                        href={`/gameView/${gameWithMarketData?.gameName?.replace(
                           /\s/g,
                           ""
                         )}/${gameWithMarketData?.gameId}`}
-                        style={{ textAlign: "right" }}
+                        style={{
+                          textAlign: "right",
+                          padding: "2px",
+                          display: "block",
+                        }}
                         onClick={() => handleGameId(gameWithMarketData?.gameId)}
                       >
-                        View more
-                      </Link>
+                        View More...
+                      </a>
                     ) : (
                       <p
                         className="text-center pt-1"
-                        style={{ backgroundColor: "orange" }}
+                        style={{
+                          backgroundColor: "orange",
+                          margin: 0,
+                          borderTop: "1px solid #ccc",
+                        }}
                       >
                         No market
                       </p>
