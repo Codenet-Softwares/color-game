@@ -77,7 +77,7 @@ function AppDrawer({
 
   function getLeftNavBar() {
     return (
-      <div className="sidebar border" style={{ overflowY: "auto", height: "100vh" }}>
+      <div className="sidebar border" style={{ overflowY: "auto", height: "88vh" }}>
         <span
           style={{
             background: "#2cb3d1",
@@ -127,12 +127,12 @@ function AppDrawer({
             </ul>
           )}
 
-          <li
+          {/* <li
             className={toggleStates["inPlay"] ? "subMenuHead" : "MenuHead"}
             onClick={() => handleToggle("inPlay")}
           >
             <a href="#">In-Play</a>
-          </li>
+          </li> */}
           {user_allGames.map((gameObj, index) => (
             <React.Fragment key={index}>
               <li

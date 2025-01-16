@@ -7,6 +7,15 @@
   display: block;
   border-bottom: 2px solid rgb(226, 225, 225);
 }
+.sidebar {
+  height: auto; /* Allow sidebar to grow with content */
+  overflow-y: auto; /* Enable scrolling for sidebar */
+}
+
+.subMenuItems {
+  max-height: none; /* Remove any max-height limit */
+  overflow-y: visible; /* Ensure content isn't hidden */
+}
 
 .sidebar ul li a {
   display: block;

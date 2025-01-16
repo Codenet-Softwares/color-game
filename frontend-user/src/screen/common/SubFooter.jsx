@@ -25,13 +25,11 @@ const SubFooter = () => {
 
     return (
         <nav
-            className="navbar p-0"
+            className="navbar p-1"
             style={{
-                backgroundImage:
-                    "linear-gradient(to bottom, #0a262c, #114651, #17687a, #1b8da6, #20b3d4)",
+                background: "linear-gradient(to bottom, #18ADC5,rgb(63, 125, 139))",
                 color: "white",
-                height: "40px",
-                display: "flex",
+               
                 alignItems: "center",
                 overflow: "hidden",
             }}

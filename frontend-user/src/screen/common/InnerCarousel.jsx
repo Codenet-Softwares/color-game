@@ -29,10 +29,11 @@ const InnerCarousel = () => {
       className="carousel slide "
       data-bs-ride="carousel"
       style={{
-        height:"300px",
+        height:"350px",
         overflow:"hidden",
-        backgroundSize: "contain",
-        backgroundPosition:"center"
+        // backgroundSize: "contain",
+        backgroundPosition:"center",
+        objectFit: "cover"
       }}
     >
       <div className="carousel-indicators">
