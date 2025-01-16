@@ -55,11 +55,11 @@ function Layout() {
           }}
           onClick={() => setActiveIndex(0)}
         >
-          <a
+          <Link 
             className=" text-decoration-none text-white"
-            href={`/home`}
+            to={`/home`}
             style={{}}
-          >
+            >
             {"Home"}
           </Link>
         </li>
