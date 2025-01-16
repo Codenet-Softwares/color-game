@@ -22,17 +22,17 @@
 
 .sidebar ul li.subMenuItems a {
   display: block;
-  padding: 5px;
+  /* padding: 0px; */
   text-decoration: none;
   color: black;
   position: relative;
   transition:
     background-color 0.3s,
     color 0.3s;
-  background-color: #adc2c7;
+  background-color: #d3d8ea;
   font-size: small;
-  opacity: 50%;
-  text-indent: 10px;
+  /* opacity: 50%; */
+  margin:0px;
 }
 
 .sidebar ul li.MenuHead a::after {
@@ -66,7 +66,7 @@
 }
 
 .sidebar ul li.subMenuItems a:hover {
-  background-color: #3b3d3d;
+  background-color: #2cb3d1;
   color: white;
 }
 

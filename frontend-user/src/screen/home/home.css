@@ -1,8 +1,20 @@
 /* =====>css for component carrousel */
 
 #carouselExampleCaptions {
-  max-height: 600px;
+height: 600px;
   margin-bottom: 10px;
+}
+.carousel-indicators button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #000; /* Indicator color */
+  border: none;
+  margin: 0 5px;
+}
+
+.carousel-indicators .active {
+  background-color: #fff; /* Active indicator color */
 }
 
 /* Adjusting the height of the carousel images */
@@ -96,7 +108,6 @@
   .imagecontainer {
     height: 30px;
     width: 30px;
-    margin: 10px;
   }
 }
 @media (min-width: 246px) {

@@ -467,7 +467,7 @@ function GameWithMarketList({ isSingleMarket }) {
               }}
             >
               <h1
-                className="fw-bold fs-3 text-white"
+                className="fw-bold fs-3 text-danger"
                 style={{
                   zIndex: 11,
                   width: "100% ",

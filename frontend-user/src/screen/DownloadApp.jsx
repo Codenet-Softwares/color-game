@@ -20,17 +20,10 @@ const DownloadApp = () => {
         <div className="container-fluid">
           <div className="row ">
             {/* Hand Logo Column */}
-            <div className="col-md-3  mb-md-0">
-              <img
-                src={HandImg}
-                alt="Betting Logo"
-                style={{
-                }}
-              />
-            </div>
+            
 
             {/* App Logo Column */}
-            <div className="col-md-3">
+            <div className="col-md-6">
               <img
                 src={LogoImg}
                 alt="App Logo"
@@ -58,18 +51,21 @@ const DownloadApp = () => {
               <button
                 className="btn text-uppercase"
                 style={{
-                  background:
-                    "linear-gradient(45deg, rgb(177, 176, 180), rgb(72, 199, 228), rgba(0, 255, 255, 0.5))",
-                  border: "3px solid #128CA4",
-                  color: "#00304E",
-                  fontSize: "1.6rem",
-                  fontWeight: "bold",
-                  padding: "15px 30px",
+                  background: "linear-gradient(45deg, rgb(220, 220, 220), rgb(150, 220, 240), rgba(180, 255, 255, 0.5))",
+                  border: "3px solid #075E6C",
+                  color: "#005870",
+                  fontSize: "1.4rem",
+                  fontWeight: "600",
+                  padding: "12px 28px",
                   cursor: "pointer",
                   borderRadius: "40px",
-                  boxShadow: "0 4px 8px #128CA4, 0 0 10px #fff",
+                  boxShadow: "0 8px 16px rgba(0, 128, 148, 0.4), 0 0 15px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6)",
+                  textShadow: "1px 1px 3px rgba(0, 128, 148, 0.8), 0 0 5px rgba(255, 255, 255, 0.6)",
                   transition: "background 0.3s ease, box-shadow 0.3s ease",
                 }}
+                
+                
+                
               >
                 Download Now
               </button>

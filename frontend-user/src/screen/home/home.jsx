@@ -33,14 +33,14 @@ const Home = () => {
   );
 
   const homePage = () => (
-    <div className="global-margin-top">
+    <div className="global-margin-top" >
       <Carousel />
       <HitGames />
       <Gif />
       <GameWithMarketList isSingleMarket={false} />
       <DownloadApp />
       <Footer />
-      <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+      <Login showLogin={showLogin} setShowLogin={setShowLogin}/>
     </div>
   );
 

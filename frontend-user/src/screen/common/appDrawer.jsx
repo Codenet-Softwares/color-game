@@ -10,6 +10,7 @@ import HamburgerNavBar from "./hamburgerNavBar";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../utils/constant/stringConstant";
 import InnerCarousel from "./InnerCarousel";
+import Footer from "./Footer";
 
 function AppDrawer({
   children,
@@ -97,7 +98,7 @@ function AppDrawer({
           />
         </span>
 
-        <ul className="">
+        <ul className="overflow-auto">
           <li
             className="MenuHead lottery-section text-center"
             onClick={handleLotteryToggle}
@@ -191,12 +192,12 @@ function AppDrawer({
             style={{
               // border: '1px solid red',
               height: "100vh",
-              // overflowY: 'auto',
+              overflowY: 'auto',
             }}
           >
             <div
               className="col-md-12"
-              style={{ background: "green", overflowX: "auto" }}
+              // style={{ background: "green", overflowX: "auto" }}
             >
               {showCarousel && <InnerCarousel />}
             </div>

@@ -26,8 +26,14 @@ const InnerCarousel = () => {
   return (
     <div
       id="carouselExampleCaptions"
-      className="carousel slide"
+      className="carousel slide "
       data-bs-ride="carousel"
+      style={{
+        height:"300px",
+        overflow:"hidden",
+        backgroundSize: "contain",
+        backgroundPosition:"center"
+      }}
     >
       <div className="carousel-indicators">
         {sliderData.map((item, index) => (
@@ -80,7 +86,7 @@ const InnerCarousel = () => {
         ))}
       </div>
       <button
-        className="carousel-control-prev"
+        className="carousel-control-prev visually-hidden"
         type="button"
         data-bs-target="#carouselExampleCaptions"
         data-bs-slide="prev"
@@ -89,7 +95,7 @@ const InnerCarousel = () => {
         <span className="visually-hidden">Previous</span>
       </button>
       <button
-        className="carousel-control-next"
+        className="carousel-control-next visually-hidden"
         type="button"
         data-bs-target="#carouselExampleCaptions"
         data-bs-slide="next"
