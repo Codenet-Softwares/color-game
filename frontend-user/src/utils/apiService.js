@@ -726,3 +726,23 @@ export const getInnerAnnouncement = async () => {
     throw err;
   }
 };
+
+
+export const getUserLotteryMarket_api = async (body = {}, isToast = false) => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await makeCall(
+      urls.anonymousMarkets,
+      callParams,
+      isToast
+    );
+    return response;
+  } catch (err) {
+    throw err;
+  }
+};

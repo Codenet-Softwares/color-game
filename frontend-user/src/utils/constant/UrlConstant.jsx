@@ -59,7 +59,8 @@ class UrlConstant {
   getGameImg = `${this.url_dev}/admin/get-game-img`
   getInnerImg = `${this.url_dev}/admin/get-inner-game-img`
   getAannouncement = `${this.url_dev}/admin/get-announcements`
-  getInnerAannouncement = `${this.url_dev}/admin/get-inner-announcements`
+  getInnerAannouncement = `${this.url_dev}/admin/get-inner-announcements`;
+  anonymousMarkets = `${this.url_dev}/external/get-allLottery-game`;   
 }
 
 const urls = new UrlConstant();

@@ -131,10 +131,11 @@ const GetwholeMarket = () => {
                     {gameWithMarketData.markets.length > 0 ? (
                       <Link
                         className={`col-12 text-dark text-decoration-none text-nowrap`}
-                        to={`/gameView/${gameWithMarketData?.gameName?.replace(
-                          /\s/g,
-                          ""
-                        )}/${gameWithMarketData?.marketId}`}
+                        // to={`/gameView/${gameWithMarketData?.gameName?.replace(
+                        //   /\s/g,
+                        //   ""
+                        // )}/${gameWithMarketData?.marketId}`}
+                        to={`/lottery-home`}
                         style={{ textAlign: "right" }}
                         onClick={() =>
                           handleMarketId(gameWithMarketData?.marketId)
