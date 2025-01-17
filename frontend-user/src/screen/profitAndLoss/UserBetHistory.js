@@ -38,8 +38,8 @@ const UserBetHistory = ({ data, SetComponent }) => {
 
             {/* Button section for filtering bets (Back, Lay, Void) */}
             <div className="m-1 d-flex justify-content-end align-items-end">
-                <button style={{ margin: "4px", backgroundColor: "lightBlue" }}>Back</button>
-                <button style={{ margin: "4px", backgroundColor: "lightPink" }}>Lay</button>
+                <button style={{ margin: "4px", backgroundColor: "#80C2F1" }}>Back</button>
+                <button style={{ margin: "4px", backgroundColor: "#FAA9BA" }}>Lay</button>
                 <button style={{ margin: "4px", backgroundColor: "white" }}>Void</button>
             </div>
 

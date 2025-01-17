@@ -407,7 +407,10 @@ const GetMarketDetailByMarketId = () => {
     const nData = biddingButton.map((list) => (
       <div className={`${list.col} p-0`}>
         <button
-          className={`btn btn-sm bg-white border border-2 rounded-3 col-11`}
+          className={`btn btn-sm  rounded-2 col-11 fw-bold text-white`} 
+          style={{ background: `${
+            toggle.mode === "lay" ? "#F09397" : "#18ADC5"
+          }`}}
           onClick={() => handleBiddingAmount("amount", parseInt(list.name))}
         >
           {list.name}
@@ -539,12 +542,12 @@ const GetMarketDetailByMarketId = () => {
                       {toggle.mode === "lay" ? (
                         <>
                           {/* Lay */}
-                          <div className="row py-1 px-0 m-0 border">
+                          <div className="row py-1 px-0 m-0 border fw-bold">
                             <span
                               className={`col-4 text-dark text-decoration-none text-nowrap`}
                             >
                               {runnerData.runnerName.name}{" "}
-                              <span>
+                              <span className="">
                                 {/* Display bidding amount if conditions met */}
                                 {shouldDisplayTempLay && (
                                   <>
@@ -640,7 +643,7 @@ const GetMarketDetailByMarketId = () => {
                             </span>
 
                             <div
-                              className="col-4"
+                              className="col-4 rounded p-1"
                               style={{ backgroundColor: "#80C2F1" }}
                               onClick={() =>
                                 handleToggle(
@@ -656,7 +659,7 @@ const GetMarketDetailByMarketId = () => {
                             </div>
 
                             <div
-                              className="col-4"
+                              className="col-4 rounded p-1"
                               style={{ backgroundColor: "#FAA9BA" }}
                               onClick={() =>
                                 handleToggle(
@@ -826,14 +829,14 @@ const GetMarketDetailByMarketId = () => {
                           <div
                             style={{
                               background: `${
-                                toggle.mode === "lay" ? "#f1e0e3" : "#c6e7ee"
+                                toggle.mode === "lay" ? "#F3DCE2" : "#BEDDF4"
                               }`,
                             }}
                           >
                             <div className="row py-1 px-0 m-0">
                               <div className="d-none d-sm-block d-md-block d-lg-block d-xl-block col-sm-2 col-md-2 col-lg-2 col-xl-2">
                                 <button
-                                  className=" btn btn-sm bg-white border border-2 rounded-3"
+                                  className=" btn btn-sm text-white border border-2 rounded-3 fw-bold" style={{background:"#F84769"}}
                                   onClick={() => handleCancel()}
                                 >
                                   Cancel
@@ -841,19 +844,19 @@ const GetMarketDetailByMarketId = () => {
                               </div>
                               <div className="col-6 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                 <button
-                                  className="col-3 rounded-start-4"
-                                  style={{ width: "18%", border: "0" }}
+                                  className="col-3 rounded-start-4 fw-bold text-white"
+                                  style={{ width: "18%", border: "0" , background:"#A9A9A9" }}
                                 >
                                   -
                                 </button>
                                 <input
-                                  className="col-6 "
+                                  className="col-6 border-0 text-center fw-bold"
                                   type="number"
                                   value={bidding.rate}
                                 />
                                 <button
-                                  className="col-3 rounded-end-3"
-                                  style={{ width: "18%", border: "0" }}
+                                  className="col-3 rounded-end-3 fw-bold text-white"
+                                  style={{ width: "18%", border: "0", background:"#A9A9A9"  }}
                                 >
                                   +
                                 </button>
@@ -863,8 +866,8 @@ const GetMarketDetailByMarketId = () => {
                                   disabled={
                                     bidding.amount == 0 ? " disabled" : ""
                                   }
-                                  className={`col-3  rounded-start-3 `}
-                                  style={{ width: "18%", border: "0" }}
+                                  className={`col-3  rounded-start-3 fw-bold text-white`}
+                                  style={{ width: "15%", border: "0", background:"#A9A9A9", }}
                                   onClick={
                                     bidding.amount >= 100
                                       ? () =>
@@ -883,7 +886,7 @@ const GetMarketDetailByMarketId = () => {
                                   -
                                 </button>
                                 <input
-                                  className="col-6"
+                                  className="col-6 border-0 text-center fw-bold "
                                   type="number"
                                   value={bidding.amount}
                                   onChange={(e) =>
@@ -894,8 +897,8 @@ const GetMarketDetailByMarketId = () => {
                                   }
                                 />
                                 <button
-                                  className="col-3 rounded-end-3"
-                                  style={{ width: "18%", border: "0" }}
+                                  className="col-3 rounded-end-3 fw-bold text-white"
+                                  style={{ width: "18%", border: "0", background:"#A9A9A9"  }}
                                   onClick={() =>
                                     handleBiddingAmount(
                                       "amount",
@@ -908,7 +911,7 @@ const GetMarketDetailByMarketId = () => {
                               </div>
                               <div className="d-none d-sm-block d-md-block d-lg-block d-xl-block col-sm-2 col-md-2 col-lg-2 col-xl-2">
                                 <button
-                                  className="btn btn-sm bg-white border border-2 rounded-3"
+                                  className="btn btn-sm border text-white border-2 rounded-3 fw-bold" style={{background:"#06A706"}}
                                   onClick={() =>
                                     handleUserBidding(
                                       index,
@@ -927,7 +930,7 @@ const GetMarketDetailByMarketId = () => {
                             <div className="row py-1 px-0 m-0">
                               <div className="d-block col-6 d-sm-none d-md-none d-lg-none d-xl-none">
                                 <button
-                                  className=" btn btn-sm bg-white border border-2 rounded-3 col-12"
+                                  className=" btn btn-sm bg-white border border-2 rounded-3 col-12 fw-bold" style={{background:"#F84769"}}
                                   onClick={() => handleCancel()}
                                 >
                                   Cancel
@@ -935,7 +938,7 @@ const GetMarketDetailByMarketId = () => {
                               </div>
                               <div className="d-block col-6 d-sm-none d-md-none d-lg-none d-xl-none">
                                 <button
-                                  className="btn btn-sm bg-white border border-2 rounded-3 col-12"
+                                  className="btn btn-sm  border border-2 rounded-3 col-12 fw-bold"style={{background:"#06A706"}}
                                   onClick={() =>
                                     handleUserBidding(
                                       index,

@@ -103,7 +103,7 @@ const GetwholeMarket = () => {
                                   style={{
                                     fontSize: "16px",
                                     borderBottom: "2px solid #ddd",
-                                    paddingBottom: "5px",
+                                    // paddingBottom: "5px",
                                   }}
                                 >
                                   💹 {marketData?.marketName ?? "Unknown"} |{" "}
@@ -117,7 +117,7 @@ const GetwholeMarket = () => {
                               </div>
 
                               {/* Range Details */}
-                              <div className="row  mt-2">
+                              <div className="row mt-1 " >
                                 <div className="col-3">
                                   <p className="m-0">
                                     <strong>Group Range:</strong>
@@ -159,19 +159,19 @@ const GetwholeMarket = () => {
 
                       {gameWithMarketData.markets.length > 0 ? (
                         <Link
-                          className={`col-12 text-dark text-decoration-none text-nowrap`}
+                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold`}
                           // to={`/gameView/${gameWithMarketData?.gameName?.replace(
                           //   /\s/g,
                           //   ""
                           // )}/${gameWithMarketData?.marketId}`}
                           to={`/lottery-home`}
-                          style={{ textAlign: "right" }}
+                          style={{ textAlign: "right", margin:"16px" }}
                         >
                           View more.....
                         </Link>
                       ) : (
                         <p
-                          className="text-center pt-1 fw-bold"
+                          className="text-center fw-bold"
                           style={{ backgroundColor: "orange" }}
                         >
                           No market Available
