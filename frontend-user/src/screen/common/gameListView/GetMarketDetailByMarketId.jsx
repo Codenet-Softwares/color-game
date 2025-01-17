@@ -64,6 +64,13 @@ const GetMarketDetailByMarketId = () => {
       exposure: currentExposure,
     });
   }, [store.user.wallet?.marketListExposure]);
+
+  const handleRunnerId = (id) => {
+    dispatch({
+      type: strings.placeBidding,
+      payload: { runnerId: id },
+    });
+  };
   // const formatDate = (dateStr) => {
   //   const date = new Date(dateStr);
 
@@ -118,46 +125,30 @@ const GetMarketDetailByMarketId = () => {
     };
   }, []);
 
-  // lottery cron ......
-
-  // useEffect(() => {
-  //   console.log("[SSE] Connecting to market updates... lottery");
-
-  //   const eventSource = updateLotteryMarketEventEmitter();
-  //   console.log("eventSource", eventSource)
-  //   eventSource.onmessage = function (event) {
-  //     const updates = JSON.parse(event.data);
-  //     console.log("[SSE] lottery Update received:", updates);
-
-  //     if (updates?.length) {
-  //       updates.forEach((market) => {
-  //         if (market.isActive) {
-  //           console.log(`[SSE] lottery Market Active: ${market.marketName}`);
-  //           setIsActive(true);
-  //           toast.success(`${market.marketName} is now Active`);
-  //         } else {
-  //           console.log(`[SSE] lottery Market Suspended: ${market.marketName}`);
-  //           setIsActive(false);
-  //           toast.info(`${market.marketName} has been Suspended`);
-  //         }
-  //       });
-  //     }
-  //   };
-
-  //   eventSource.onerror = (err) => {
-  //     console.error("[SSE] Connection error:", err);
-  //     eventSource.close();
-  //   };
-
-  //   return () => {
-  //     console.log("[SSE] Cleaning up EventSource...");
-  //     eventSource.close();
-  //   };
-  // }, []);
 
   useEffect(() => {
     user_getMarketsWithRunnerData();
   }, [marketIdFromUrl]);
+
+  const winBalance =
+  bidding.amount *
+  (Number(bidding.rate) === 0
+    ? Number(bidding.rate)
+    : Number(bidding.rate) - 1);
+
+    function lowestNegativeNumber(arr) {
+      let lowestNegative = Number.POSITIVE_INFINITY;
+      let foundNegative = false;
+  
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] < 0 && arr[i] < lowestNegative) {
+          lowestNegative = arr[i];
+          foundNegative = true;
+        }
+      }
+  
+      return foundNegative ? lowestNegative : 0;
+    }
 
   function getMaxNegativeBalance(runners) {
     let maxNegativeRunner = 0;
@@ -193,14 +184,8 @@ const GetMarketDetailByMarketId = () => {
     }
   }
 
-  const handleBiddingAmount = (name, value) => {
-    setBidding((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
   const handleToggle = (runnerid, rate, value, id) => {
+    console.log("runnerId",runnerid)
     if (toggle.toggleOpen || toggle.indexNo !== runnerid) {
       setToggle({
         toggleOpen: false,
@@ -243,10 +228,11 @@ const GetMarketDetailByMarketId = () => {
     }
   };
 
-  const handleCancel = () => {
-    handleBiddingAmount("rate", "");
-    handleBiddingAmount("amount", 0);
-    setToggle({ toggleOpen: true });
+  const handleBiddingAmount = (name, value) => {
+    setBidding((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleUserBidding = async (index, amount, mode) => {
@@ -396,7 +382,13 @@ const GetMarketDetailByMarketId = () => {
     }
 
     handleCancel();
-    handleRefreshOrGetInitialData();
+    user_getMarketsWithRunnerData();
+  };
+
+  const handleCancel = () => {
+    handleBiddingAmount("rate", "");
+    handleBiddingAmount("amount", 0);
+    setToggle({ toggleOpen: true });
   };
 
   function convertUTCtoIST(utcDateString) {
