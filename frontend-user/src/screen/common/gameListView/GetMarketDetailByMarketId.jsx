@@ -64,7 +64,24 @@ const GetMarketDetailByMarketId = () => {
       exposure: currentExposure,
     });
   }, [store.user.wallet?.marketListExposure]);
+  // const formatDate = (dateStr) => {
+  //   const date = new Date(dateStr);
 
+  //   if (isNaN(date)) {
+  //     return "Invalid Date"; 
+  //   }
+
+  //   const day = date.getDate();
+  //   const month = date.toLocaleString("default", { month: "short" });
+  //   const hours = date.getHours();
+  //   const minutes = date.getMinutes();
+  //   const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th"; 
+  //   const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${
+  //     minutes < 10 ? "0" + minutes : minutes
+  //   }`;
+  //   return formattedTime;
+  // };
+  
   // color game cron ......
   useEffect(() => {
     console.log("[SSE] Connecting to market updates...");
@@ -448,22 +465,35 @@ const GetMarketDetailByMarketId = () => {
                 </h1>
               </div>
             )}
-            <div
-              className="col-12 p-1 mt-2 fw-bold"
-              style={{ backgroundColor: "#2CB3D1" }}
-            >
-              {user_marketWithRunnerData.marketName} |{" "}
-              {console.log(
-                "user_marketWithRunnerData",
-                user_marketWithRunnerData
-              )}
-              {new Date(convertUTCtoIST(user_marketWithRunnerData.endTime)) <
-              new Date() ? null : (
-                <>
-                  <CountdownTimer endDate={user_marketWithRunnerData.endTime} />
-                </>
-              )}
-            </div>
+<div
+  className="col-12 p-1 mt-2 fw-bold d-flex justify-content-between align-items-center"
+  style={{ backgroundColor: "#2CB3D1" }}
+>
+  {/* Left side: Market Name and Countdown Timer */}
+  <div>
+    {user_marketWithRunnerData.marketName}{" "}
+    {new Date(moment.utc(user_marketWithRunnerData.endTime).local().toDate()) > new Date() && (
+      <CountdownTimer endDate={user_marketWithRunnerData.endTime} />
+    )}
+  </div>
+
+  {/* Right side: Start Time and End Time with Headings */}
+  <div style={{ color: "#022C44", textAlign: "right" }}>
+    <div>
+      <strong>Start Time:</strong>{" "}
+      {moment.utc(user_marketWithRunnerData.startTime).format("DD MMM YYYY, HH:mm")}
+    </div>
+    <div>
+      <strong>End Time:</strong>{" "}
+      {moment.utc(user_marketWithRunnerData.endTime).format("DD MMM YYYY, HH:mm")}
+    </div>
+  </div>
+</div>
+
+
+
+
+
             <div className="row py-1 px-0 m-0 border-bottom">
               <div className="col-4"></div>
               <div
@@ -734,7 +764,10 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4 p-1 fw-bold border-bottom"
-                            style={{ backgroundColor: "#80C2F1", borderRadius:"7px" }}
+                            style={{
+                              backgroundColor: "#80C2F1",
+                              borderRadius: "7px",
+                            }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
@@ -751,7 +784,10 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4 p-1 fw-bold"
-                            style={{ backgroundColor: "#FAA9BA", borderRadius:"7px" }}
+                            style={{
+                              backgroundColor: "#FAA9BA",
+                              borderRadius: "7px",
+                            }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
