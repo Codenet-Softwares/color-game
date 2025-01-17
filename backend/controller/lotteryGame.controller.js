@@ -450,17 +450,53 @@ export const createLotteryP_L = async (req, res) => {
 
 export const getLotteryP_L = async (req, res) => {
   try {
-    const user = req.user
-    const lotteryProfitLossRecords = await LotteryProfit_Loss.findAll({
+    const user = req.user;
+    const { page = 1, limit = 10 } = req.query;
+
+    const currentPage = parseInt(page); 
+    const parsedLimit = parseInt(limit);
+    const offset = (currentPage - 1) * parsedLimit;
+
+    const { count: totalItems, rows: lotteryProfitLossRecords } = await LotteryProfit_Loss.findAndCountAll({
       where: { userId: user.userId },
-      attributes: ['gameName', 'marketName', 'marketId', 'profitLoss']
+      attributes: ['gameName', 'marketName', 'marketId', 'profitLoss'],
+      limit: parsedLimit,
+      offset,
     });
 
-    return res.status(statusCode.success).send(apiResponseSuccess(lotteryProfitLossRecords, true, statusCode.success, 'Success'));
+    const totalPages = Math.ceil(totalItems / parsedLimit);
+    const pagination = {
+      page: currentPage,
+      limit: parsedLimit,
+      totalPages,
+      totalItems,
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          lotteryProfitLossRecords,
+          true,
+          statusCode.success,
+          'Success',
+          pagination
+        )
+      );
   } catch (error) {
-    return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
   }
-}
+};
+
 
 export const getLotteryBetHistory = async (req, res) => {
   try {
