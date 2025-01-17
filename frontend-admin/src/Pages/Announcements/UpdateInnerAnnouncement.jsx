@@ -35,24 +35,24 @@ const UpdateInnerAnnouncement = () => {
   };
 
   return (
-    <div className="container my-5">
+    <div className="container my-5 p-5">
       <div className="card shadow-sm">
         <div
           className="card-header"
           style={{
-            backgroundColor: "#7D7D7D",
+            backgroundColor: "#3E5879",
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center">Update Inner Announcement</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase">Update Inner Announcement</h3>
         </div>
-        <div className="card-body">
+        <div className="card-body" style={{ background: "#D8C4B6" }}>
           {announcements.length === 0 ? (
             <div className="text-center">No inner announcements available.</div>
           ) : (
             <div className="row">
               {announcements.map((announcement) => (
-                <div key={announcement.announceId} className="col-md-4 col-sm-4 mb-4">
+                <div key={announcement.announceId} className="col mb-4">
                   <div className="card">
                     <div className="card-body text-center">
                       <h5 className="card-title">{announcement.announcement || "No Title"}</h5> 

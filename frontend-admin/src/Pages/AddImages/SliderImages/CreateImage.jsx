@@ -65,15 +65,15 @@ const CreateImage = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container p-5">
       <div className="card shadow-sm">
         <div
           className="card-header"
-          style={{ backgroundColor: "#7D7D7D", color: "#FFFFFF" }}
+          style={{ backgroundColor: "#3E5879", color: "#FFFFFF" }}
         >
           <h3 className="mb-0 fw-bold text-center">Create Slider Image</h3>
         </div>
-        <div className="card-body">
+        <div className="card-body" style={{ background: "#D8C4B6" }}>
           <div className="mb-4 text-center">
             <div
               onClick={() => document.getElementById("file-input").click()}

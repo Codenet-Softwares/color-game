@@ -63,18 +63,18 @@ const BetHistoryPage = () => {
   };
   return (
     <div>
-      <div className="container my-5 ">
+      <div className="container my-5 p-5">
         <div className="card shadow-sm">
           <div
             className="card-header"
             style={{
-              backgroundColor: "#7D7D7D",
+              backgroundColor: "#3E5879",
               color: "#FFFFFF",
             }}
           >
             <h3 className="mb-0 fw-bold text-center">Bet History</h3>
           </div>
-          <div className="card-body">
+          <div className="card-body" style={{background:"#D8C4B6",}}>
             {/* Search and Entries Selection */}
             <div className="row mb-4">
               <div className="col-md-6 position-relative">

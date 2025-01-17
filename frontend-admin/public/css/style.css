@@ -2571,6 +2571,7 @@ span > .bg-secondary {
 .header_more_tool .dropdown .dropdown-menu a {
   padding: 8px 15px;
   font-size: 13px;
+  z-index: 12;
 }
 
 /* line 1892, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -3514,7 +3515,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   position: relative;
   border-radius: 0px;
   margin: 0;
-  background: #F6F7FB;
+  background: #D8C4B6;
   border-radius: 0;
   margin: 0;
   border-radius: 0px;
@@ -4255,11 +4256,11 @@ table.dataTable {
   z-index: 99;
   padding-bottom: 50px;
   position: fixed;
-  width: 270px;
+  width: 290px;
   z-index: 999;
   overflow: hidden;
   overflow-y: auto;
-  background: #FFFFFF;
+  background: #D8C4B6;
   box-shadow: 0 12px 30px rgba(80, 143, 244, 0.1);
   transition: .3s;
 }
@@ -4305,9 +4306,10 @@ table.dataTable {
 /* line 40, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .logo {
   margin: 0px;
-  background: #F3F6F9;
+  background: #D8C4B6;
   padding: 24px;
   margin-bottom: 20px;
+  border-bottom: 1px solid #F5EFE7;
 }
 
 /* line 46, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4604,7 +4606,7 @@ table.dataTable {
 /************ sidebar css end ************/
 /* line 275, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li {
-  margin-left: 0px;
+  /* margin-left: 0px; */
 }
 
 /* line 278, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4612,14 +4614,13 @@ table.dataTable {
   font-size: 15px;
   font-weight: 400;
   color: #144339;
-  padding: 0px 25px 0px 0px;
-  background: #fff;
-  transition: .3s;
-  position: relative;
+  /* background: #fff; */
+  /* transition: .3s; */
+  /* position: relative; */
   z-index: 0;
   display: grid;
   grid-template-columns: 34px auto;
-  grid-gap: 15px;
+  /* grid-gap: 15px; */
   align-items: center;
   position: relative;
   background: transparent;
@@ -4634,7 +4635,7 @@ table.dataTable {
 /* line 299, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li a:hover {
   color: #F65365 !important;
-  background: #F6F7FB;
+  /* background: #F6F7FB; */
 }
 
 /* line 303, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4650,14 +4651,14 @@ table.dataTable {
   transform: rotate(-90deg) translate(0, -50%);
   opacity: 1;
   font-size: 10px;
-  right: 15px;
+  /* right: 15px; */
   color: #A1A4B9;
 }
 
 /* line 332, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li a i {
   font-size: 15px;
-  margin-right: 12px;
+  /* margin-right: 12px; */
   color: #A5ADC6;
   -webkit-transition: 0.5s;
   transition: 0.5s;
@@ -4672,21 +4673,26 @@ table.dataTable {
 
 /* line 353, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li > a {
-  color: #144339;
+  color:#3E5879 ;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid #3E5879;
 }
 
 /* line 358, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li.mm-active > a {
   background: #fff;
   border-radius: 30px;
-  color: #144339;
+  color: #3E5879;
   border-radius: 4px 4px 0 0;
   background: transparent;
+  border: 2px solid #3E5879;
+
 }
 
 /* line 364, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li.mm-active > a::after {
-  color: #8890B5;
+  color: #3E5879;
   transform: rotate(0deg) translate(0, -50%);
   opacity: 1;
   font-size: 10px;
@@ -4714,11 +4720,12 @@ table.dataTable {
 
 /* line 390, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li ul {
-  padding: 0px 0px 5px 40px;
+  /* padding: 0px 0px 5px 40px; */
   background: transparent;
-  border-radius: 0 0 4px 4px;
-  margin-left: 30px;
+  border-radius:15px;
+  /* margin-left: -23px; */
   background: #fff;
+  
 }
 
 /* line 403, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4729,11 +4736,10 @@ table.dataTable {
 /* line 407, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li ul li a {
   font-size: 14px;
-  color: #8890B5;
-  font-weight: 400;
+  color: #3E5879;
+  font-weight: bold;
   padding: 0;
   white-space: nowrap;
-  padding: 0;
   padding: 10px 0 10px 8px !important;
   margin-top: 0;
   margin-left: 0;
@@ -5185,6 +5191,7 @@ body::-webkit-scrollbar {
   min-height: 100vh;
   padding-bottom: 70px;
   overflow: hidden;
+  background-color: #F5EFE7;
 }
 
 /* line 13, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
@@ -5244,7 +5251,6 @@ body::-webkit-scrollbar {
   min-height: 68vh;
   transition: .5s;
   position: relative;
-  background: #F6F7FB;
   margin: 0;
   z-index: 22;
   border-radius: 0px;
@@ -13089,7 +13095,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   margin-bottom: 12px;
   border-radius: 4px;
   padding: 20px;
-  background: #f1f5fa;
+  background: #D8C4B6;
 }
 
 /* line 45, G:/admin_project/8 admin/management_html/scss/_board.scss */
