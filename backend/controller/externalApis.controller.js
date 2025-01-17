@@ -1080,23 +1080,12 @@ export const getRevokeMarket = async (req, res) => {
         );
     }
 
+    // Fetch profit/loss data for the market
     const usersFromProfitLoss = await LotteryProfit_Loss.findAll({
       where: { marketId },
       attributes: ["marketId", "userId", "price", "profitLoss"],
+      raw: true,
     });
-
-    if(!usersFromProfitLoss){
-      return res
-      .status(statusCode.notFound)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.notFound,
-          "Market is not available"
-        )
-      );
-    }
 
     if (!usersFromProfitLoss || usersFromProfitLoss.length === 0) {
       return res
@@ -1111,8 +1100,19 @@ export const getRevokeMarket = async (req, res) => {
         );
     }
 
-    const userIds = usersFromProfitLoss.map((entry) => entry.userId);
+    // Aggregate profit/loss and price for each user
+    const userProfitLossMap = {};
+    usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
+      if (!userProfitLossMap[userId]) {
+        userProfitLossMap[userId] = { totalProfitLoss: 0, totalPrice: 0 };
+      }
+      userProfitLossMap[userId].totalProfitLoss += Number(profitLoss);
+      userProfitLossMap[userId].totalPrice += Number(price);
+    });
 
+    const userIds = Object.keys(userProfitLossMap);
+
+    // Fetch user data
     const users = await userSchema.findAll({
       where: { userId: userIds },
     });
@@ -1131,28 +1131,26 @@ export const getRevokeMarket = async (req, res) => {
     }
 
     for (const user of users) {
-      const userProfitLoss = usersFromProfitLoss.find(
-        (entry) => entry.userId === user.userId
-      );
-
+      const userProfitLoss = userProfitLossMap[user.userId];
       if (!userProfitLoss) continue;
 
-      if (userProfitLoss.profitLoss > 0) {
-        user.balance -= (Number(userProfitLoss.profitLoss) + Number(userProfitLoss.price)); 
+      const { totalProfitLoss, totalPrice } = userProfitLoss;
+
+      if (totalProfitLoss > 0) {
+        user.balance -= totalProfitLoss + totalPrice;
       }
 
-      const newExposure = { [marketId]: Number(userProfitLoss.price) };
+      // Add all prices for the market to the user's exposure
+      const newExposure = { [marketId]: totalPrice };
       user.marketListExposure = [...(user.marketListExposure || []), newExposure];
 
+      // Calculate total exposure
       const marketExposure = user.marketListExposure;
-
       let totalExposure = 0;
-      marketExposure.forEach(market => {
+      marketExposure.forEach((market) => {
         const exposure = Object.values(market)[0];
         totalExposure += exposure;
       });
-
-      console.log("totalExposure...777", totalExposure)
 
       const dataToSend = {
         amount: user.balance,
@@ -1160,7 +1158,6 @@ export const getRevokeMarket = async (req, res) => {
         exposure: totalExposure,
       };
 
-      console.log("testing.....", dataToSend)
       const baseURL = process.env.WHITE_LABEL_URL;
       const response = await axios.post(
         `${baseURL}/api/admin/extrnal/balance-update`,
@@ -1184,11 +1181,12 @@ export const getRevokeMarket = async (req, res) => {
   
 
     }
+
+    // Remove all profit/loss entries for the market
     await LotteryProfit_Loss.destroy({
-      where: { marketId},
+      where: { marketId },
     });
 
-    
     return res
       .status(statusCode.success)
       .send(
