@@ -923,10 +923,26 @@ export const liveUserBet = async (req, res) => {
 export const getExternalLotteryP_L = async (req, res) => {
   try {
     const userName = req.params.userName;
-    const lotteryProfitLossRecords = await LotteryProfit_Loss.findAll({
+    const { page = 1, limit = 10 } = req.query;
+
+    const currentPage = parseInt(page); 
+    const parsedLimit = parseInt(limit); 
+    const offset = (currentPage - 1) * parsedLimit;
+
+    const { count: totalItems, rows: lotteryProfitLossRecords } = await LotteryProfit_Loss.findAndCountAll({
       where: { userName },
       attributes: ["gameName", "marketName", "marketId", "profitLoss"],
+      limit: parsedLimit,
+      offset,
     });
+
+    const totalPages = Math.ceil(totalItems / parsedLimit);
+    const pagination = {
+      page: currentPage,
+      limit: parsedLimit,
+      totalPages,
+      totalItems,
+    };
 
     return res
       .status(statusCode.success)
@@ -935,7 +951,8 @@ export const getExternalLotteryP_L = async (req, res) => {
           lotteryProfitLossRecords,
           true,
           statusCode.success,
-          "Success"
+          "Success",
+          pagination
         )
       );
   } catch (error) {
