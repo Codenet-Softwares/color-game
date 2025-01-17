@@ -21,8 +21,7 @@ const LiveUserBet = () => {
     totalData: 0,
   });
 
-
-  console.log("userBets", userBets)
+  console.log("userBets", userBets);
   useEffect(() => {
     if (marketId) fetchLiveUserBet();
   }, [marketId, userBets.currentPage, userBets.totalEntries, userBets.search]);
@@ -30,7 +29,7 @@ const LiveUserBet = () => {
   const fetchLiveUserBet = async () => {
     try {
       const response = await GameService.userLiveBetGame(
-        auth.user,  
+        auth.user,
         marketId,
         userBets.currentPage,
         userBets.totalEntries,
@@ -48,23 +47,25 @@ const LiveUserBet = () => {
   };
 
   const handleDelete = async (marketId, runnerId, userId, betId) => {
-    const isConfirmed = window.confirm("Are you sure you want to delete this market and bet?");
-  
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this market and bet?"
+    );
+
     if (!isConfirmed) {
       return;
     }
-  
+
     console.log("delete", marketId);
-    
+
     try {
       const response = await GameService.DeleteMarket(
         auth.user,
         userId,
         marketId,
         runnerId,
-        betId,
+        betId
       );
-  
+
       if (response.status === 200) {
         toast.success("Market and bet deleted successfully!");
         fetchLiveUserBet();
@@ -73,7 +74,7 @@ const LiveUserBet = () => {
       toast.error(customErrorHandler(error));
     }
   };
-  
+
   const handleClearSearch = () => {
     setUserBets((prev) => ({ ...prev, search: "" }));
   };
@@ -102,7 +103,14 @@ const LiveUserBet = () => {
   return (
     <div className="container my-5">
       <div className="card shadow-lg" style={{ background: "#ADD8E6" }}>
-        <div className="card-header bg-secondary text-white" style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div
+          className="card-header bg-secondary text-white"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <div
             style={{
               display: "flex",
@@ -120,7 +128,12 @@ const LiveUserBet = () => {
           >
             <FaArrowLeft />
           </div>
-          <h3 className="mb-0 fw-bold" style={{ flexGrow: 1, textAlign: "center" }}>Live Bets</h3>
+          <h3
+            className="mb-0 fw-bold"
+            style={{ flexGrow: 1, textAlign: "center" }}
+          >
+            Live Bets
+          </h3>
         </div>
 
         <div className="card-body">
@@ -201,14 +214,27 @@ const LiveUserBet = () => {
                       <td>{bet.userName}</td>
                       <td>{bet.runnerName}</td>
                       <td>{bet.rate}</td>
-                      <td className={`text-uppercase fw-bold ${bet.type === "back" ? "text-success" : "text-danger"}`}>
+                      <td
+                        className={`text-uppercase fw-bold ${
+                          bet.type === "back" ? "text-success" : "text-danger"
+                        }`}
+                      >
                         {bet.type}
                       </td>
-                      <td>{Math.round(bet.value)}({Math.round(bet.bidAmount)})</td>
+                      <td>
+                        {Math.round(bet.value)}({Math.round(bet.bidAmount)})
+                      </td>
                       <td>
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleDelete(bet.marketId, bet.runnerId, bet.userId, bet.betId)}
+                          onClick={() =>
+                            handleDelete(
+                              bet.marketId,
+                              bet.runnerId,
+                              bet.userId,
+                              bet.betId
+                            )
+                          }
                         >
                           <FaTrashAlt />
                         </button>
@@ -223,16 +249,17 @@ const LiveUserBet = () => {
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
-          <Pagination
-            currentPage={userBets.currentPage}
-            totalPages={userBets.totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={userBets.totalData}
-          />
+          {userBets.bets.length > 0 && (
+            <Pagination
+              currentPage={userBets.currentPage}
+              totalPages={userBets.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={userBets.totalData}
+            />
+          )}
+         
         </div>
       </div>
     </div>

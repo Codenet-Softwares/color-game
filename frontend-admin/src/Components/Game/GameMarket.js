@@ -51,7 +51,7 @@ const GameMarket = ({ marketId }) => {
     if (auth.user) {
       GameService.GameInfo(auth.user, currentPage, totalEntries, search)
         .then((res) => {
-          console.log("==========> line 26", res);
+          console.log("==========> line 26", res.data.data.pagination);
           setGames(res.data.data.games);
           setTotalPages(res.data.data.pagination.totalPages);
           setTotalData(res.data.data.pagination.totalItems);
@@ -391,7 +391,7 @@ const GameMarket = ({ marketId }) => {
                               </div>
                             );
                           })}
-                          <div>
+                          {/* <div>
                             <Pagination
                               currentPage={currentPage}
                               totalPages={totalPages}
@@ -400,7 +400,7 @@ const GameMarket = ({ marketId }) => {
                               endIndex={endIndex}
                               totalData={totalData}
                             />
-                          </div>
+                          </div> */}
                         </div>
                       ) : (
                         <div className="board_card_list">

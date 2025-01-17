@@ -212,7 +212,7 @@ const DeleteBetHistory = () => {
                         selectedMarketDetails={selectedMarketDetails}
                         marketName={selectedMarketName}
                         deleteMarketTrash={deleteMarketTrash}
-                        restoreMarketTrash={restoreMarketTrash} 
+                        restoreMarketTrash={restoreMarketTrash}
                       />
                     )}
                   </div>
@@ -229,18 +229,20 @@ const DeleteBetHistory = () => {
             </div>
           )}
         </div>
-        <Pagination
-          currentPage={pagination.currentPage}
-          totalPages={totalPages}
-          handlePageChange={handlePageChange}
-          startIndex={startIndex + 1}
-          endIndex={endIndex}
-          totalData={totalData}
-        />
+
+        {paginatedMarkets.length > 0 && (
+          <Pagination
+            currentPage={pagination.currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+            startIndex={startIndex + 1}
+            endIndex={endIndex}
+            totalData={totalData}
+          />
+        )}
       </div>
     </div>
   );
 };
 
 export default DeleteBetHistory;
-
