@@ -470,7 +470,7 @@ const GetMarketDetailByMarketId = () => {
   </div>
 
   {/* Right side: Start Time and End Time with Headings */}
-  <div style={{ color: "#022C44", textAlign: "right" }}>
+  <div style={{ color: "#022C44", textAlign: "right" ,fontSize: "12px" }}>
     <div>
       <strong>Start Time:</strong>{" "}
       {moment.utc(user_marketWithRunnerData.startTime).format("DD MMM YYYY, HH:mm")}
