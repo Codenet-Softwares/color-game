@@ -886,12 +886,6 @@ export const deleteGame = async (req, res) => {
       },
     });
 
-    await announcementSchema.destroy({
-      where: {
-        gameId: gameId,
-      },
-    });
-
     const deletedGameCount = await Game.destroy({
       where: {
         gameId: gameId,
@@ -917,6 +911,7 @@ export const deleteGame = async (req, res) => {
         )
       );
   } catch (error) {
+    console.log("error",error)
     res
       .status(statusCode.internalServerError)
       .send(
