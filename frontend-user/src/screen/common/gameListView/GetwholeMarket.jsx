@@ -8,10 +8,10 @@ import AppDrawer from "../appDrawer";
 import { Link } from "react-router-dom";
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
-  
+
   // Check if the date is valid
   if (isNaN(date)) {
-    return "Invalid Date";  // Return a fallback message if the date is invalid
+    return "Invalid Date"; // Return a fallback message if the date is invalid
   }
 
   const day = date.getDate();
@@ -19,7 +19,9 @@ const formatDate = (dateStr) => {
   const hours = date.getHours();
   const minutes = date.getMinutes();
   const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th"; // To get 1st, 2nd, etc.
-  const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${minutes < 10 ? "0" + minutes : minutes}`;
+  const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${
+    minutes < 10 ? "0" + minutes : minutes
+  }`;
   return formattedTime;
 };
 
@@ -99,10 +101,10 @@ const GetwholeMarket = () => {
                                 }}
                               >
                                 💹 {marketData?.marketName ?? "Unknown"} |{" "}
-                                <span className="" style={{color:"#022C44"}}>
+                                <span className="" style={{ color: "#022C44" }}>
                                   {formatDate(marketData.start_time)}
                                 </span>
-                                </span>
+                              </span>
                             </div>
 
                             {/* Range Details */}
@@ -155,15 +157,6 @@ const GetwholeMarket = () => {
                         // )}/${gameWithMarketData?.marketId}`}
                         to={`/lottery-home`}
                         style={{ textAlign: "right" }}
-                        className={`col-12 text-dark text-decoration-none text-nowrap fw-bold`}
-                        to={`/gameView/${gameWithMarketData?.gameName?.replace(
-                          /\s/g,
-                          ""
-                        )}/${gameWithMarketData?.marketId}`}
-                        style={{ textAlign: "right", color: "white" }}
-                        onClick={() =>
-                          handleMarketId(gameWithMarketData?.marketId)
-                        }
                       >
                         View more.....
                       </Link>
@@ -184,18 +177,21 @@ const GetwholeMarket = () => {
                     >
                       {gameWithMarketData.gameName}
                     </div>
-                    <div  className="col-12 fw-bold h6 text-white"></div>
-                    <div className="row px-0 m-0 text-center">
-                      <span className=" col-6 text-dark text-decoration-none text-nowrap fw-bold h6"></span>
-                      <div className="col-3 rounded fw-bold">1</div>
-                      <div className="col-3 rounded fw-bold">2</div>
-                    </div>
+                    <div className="col-12 fw-bold h6 text-white"></div>
+                    {/* Render only if markets are available */}
+                    {gameWithMarketData &&
+                      gameWithMarketData.markets.length > 0 && (
+                        <div className="row px-0 m-0 text-center">
+                          <span className="col-6 text-dark text-decoration-none text-nowrap fw-bold h6"></span>
+                          <div className="col-3 rounded fw-bold">1</div>
+                          <div className="col-3 rounded fw-bold">2</div>
+                        </div>
+                      )}
                     {gameWithMarketData &&
                       gameWithMarketData.markets
                         .slice(0, 2)
                         .map((marketData) => {
                           return (
-                            
                             <div
                               className=" p-0 m-0 "
                               style={{
@@ -203,13 +199,19 @@ const GetwholeMarket = () => {
                                 borderTop: "1px solid #ccc",
                               }}
                             >
-                              <div className="row py-1 px-0 m-0 ">                               
+                              <div className="row py-1 px-0 m-0 ">
                                 {/* Runner Name and Balance */}
                                 <span className="col-6 text-dark text-decoration-none text-nowrap fw-bold h6 d-flex">
-                                   <span className="" style={{color:"#022C44"}}>
-                                  {formatDate(marketData.startTime)}
-                                </span>|{" "}
-                                 <h6 className="text-primary px-1 fw-bold">{marketData?.marketName}</h6> 
+                                  <span
+                                    className=""
+                                    style={{ color: "#022C44" }}
+                                  >
+                                    {formatDate(marketData.startTime)}
+                                  </span>
+                                  |{" "}
+                                  <h6 className="text-primary px-1 fw-bold">
+                                    {marketData?.marketName}
+                                  </h6>
                                 </span>
                                 {/* Back and Lay Rates */}
                                 <div
