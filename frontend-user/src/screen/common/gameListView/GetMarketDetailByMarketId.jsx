@@ -449,8 +449,8 @@ const GetMarketDetailByMarketId = () => {
               </div>
             )}
             <div
-              className="col-12 p-1 mt-2"
-              style={{ backgroundColor: "#a1aed4" }}
+              className="col-12 p-1 mt-2 fw-bold"
+              style={{ backgroundColor: "#2CB3D1" }}
             >
               {user_marketWithRunnerData.marketName} |{" "}
               {console.log(
@@ -464,17 +464,17 @@ const GetMarketDetailByMarketId = () => {
                 </>
               )}
             </div>
-            <div className="row py-1 px-0 m-0 ">
+            <div className="row py-1 px-0 m-0 border-bottom">
               <div className="col-4"></div>
               <div
-                className="col-4 rounded-top-3"
-                style={{ backgroundColor: "lightblue" }}
+                className="col-4 rounded-top-3 p-1 fw-bold"
+                style={{ backgroundColor: "#80C2F1" }}
               >
                 Back
               </div>
               <div
-                className="col-4 rounded-top-3"
-                style={{ backgroundColor: "pink" }}
+                className="col-4 rounded-top-3 p-1 fw-bold"
+                style={{ backgroundColor: "#FAA9BA" }}
               >
                 Lay
               </div>
@@ -598,7 +598,7 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4"
-                            style={{ backgroundColor: "lightblue" }}
+                            style={{ backgroundColor: "#80C2F1" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
@@ -614,7 +614,7 @@ const GetMarketDetailByMarketId = () => {
 
                           <div
                             className="col-4"
-                            style={{ backgroundColor: "pink" }}
+                            style={{ backgroundColor: "#FAA9BA" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
@@ -632,9 +632,9 @@ const GetMarketDetailByMarketId = () => {
                     ) : (
                       <>
                         {/* Back */}
-                        <div className="row py-1 px-0 m-0 border">
+                        <div className="row py-1 px-0 m-0 border-bottom">
                           <span
-                            className={`col-4 text-dark text-decoration-none text-nowrap`}
+                            className={`col-4 text-dark text-decoration-none text-nowrap fw-bold`}
                           >
                             {runnerData.runnerName.name}
                             <span>
@@ -718,7 +718,7 @@ const GetMarketDetailByMarketId = () => {
                                     </span>
                                   </span>
                                 ) : (
-                                  <span className="text-danger fw-bold f" mx-2>
+                                  <span className="text-danger fw-bold " mx-2>
                                     {runnerData.runnerName.bal != 0 &&
                                       bidding.amount != 0 &&
                                       runnerData.runnerName.bal}
@@ -733,8 +733,8 @@ const GetMarketDetailByMarketId = () => {
                           </span>
 
                           <div
-                            className="col-4"
-                            style={{ backgroundColor: "lightblue" }}
+                            className="col-4 p-1 fw-bold border-bottom"
+                            style={{ backgroundColor: "#80C2F1", borderRadius:"7px" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,
@@ -750,8 +750,8 @@ const GetMarketDetailByMarketId = () => {
                           </div>
 
                           <div
-                            className="col-4"
-                            style={{ backgroundColor: "pink" }}
+                            className="col-4 p-1 fw-bold"
+                            style={{ backgroundColor: "#FAA9BA", borderRadius:"7px" }}
                             onClick={() =>
                               handleToggle(
                                 runnerData.id,

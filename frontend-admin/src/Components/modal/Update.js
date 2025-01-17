@@ -7,11 +7,11 @@ import GameService from "../../Services/GameService";
 import { useAuth } from "../../Utils/Auth";
 import { toast } from "react-toastify";
 import { customErrorHandler } from "../../Utils/helper";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import DateTime from "react-datetime";
+import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
+import moment from "moment";
 
+const today = new Date();
 const Update = ({ show, setShow, data, Update }) => {
   console.log("data = >>>>", data);
   const [newValue, setNewValue] = useState({
@@ -32,14 +32,21 @@ const Update = ({ show, setShow, data, Update }) => {
   console.log("data1 = >>>>", newValue);
 
   useEffect(() => {
+    const adjustTime = (date) => {
+      const adjustedDate = new Date(date);
+      adjustedDate.setMinutes(adjustedDate.getMinutes() - 330); // Subtract 330 minutes (5 hours 30 minutes)
+      return adjustedDate;
+    };
+
     setNewValue((prev) => ({
       ...prev,
       marketName: data.marketName,
       participants: data.participants,
-      startTime: new Date(data.startTime),
-      endTime: new Date(data.endTime),
+      startTime: adjustTime(data.startTime),
+      endTime: adjustTime(data.endTime),
     }));
   }, [data]);
+
 
   const auth = useAuth();
 
@@ -71,10 +78,21 @@ const Update = ({ show, setShow, data, Update }) => {
     }));
   };
 
-  const handleEndDateTimeChange = (date) => {
+  const handleStartDatevalue = (date) => {
     setNewValue((prevState) => ({
       ...prevState,
-      endTime: date,
+      startTime: date, // Update startTime
+    }));
+    setEditedData((prev) => ({
+      ...prev,
+      startTime: date,
+    }));
+  };
+
+  const handleEndDatevalue = (date) => {
+    setNewValue((prevState) => ({
+      ...prevState,
+      endTime: date, // Update endTime
     }));
     setEditedData((prev) => ({
       ...prev,
@@ -82,9 +100,23 @@ const Update = ({ show, setShow, data, Update }) => {
     }));
   };
 
+
+  const disablePastDates = (current) => {
+    return current.isAfter(today);
+  };
+
+  const disablePastTimes = (current) => {
+    const now = moment();
+    if (current.isSame(now, "day")) {
+      return current.isAfter(now);
+    }
+    return true;
+  };
+
   const handleNewValue = (event) => {
     const { name, value } = event.target;
     const updateKey = Update.toLowerCase();
+
 
     switch (updateKey) {
       case "game":
@@ -132,6 +164,8 @@ const Update = ({ show, setShow, data, Update }) => {
     console.log("=>>>>>", newValue);
     const updateKey = Update.toLowerCase();
 
+
+
     switch (updateKey) {
       case "game":
         const gameApiData = {
@@ -150,10 +184,23 @@ const Update = ({ show, setShow, data, Update }) => {
 
         break;
       case "market":
+        const addTimeOffset = (date) => {
+          if (!date) return date; // Ensure the date is not undefined or null
+          const adjustedDate = new Date(date);
+          adjustedDate.setMinutes(adjustedDate.getMinutes() + 330); // Add 330 minutes (5 hours 30 minutes)
+          return adjustedDate.toISOString(); // Convert to ISO string if needed for the API
+        };
+        if (moment(editedData.endTime).isBefore(editedData.startTime)) {
+          toast.error("End time must be after the start time.", { autoClose: 2000 });
+          return;
+        }
         const marketApiData = {
           marketId: data.marketId,
           ...editedData,
+          startTime: addTimeOffset(editedData.startTime), // Add offset to startTime
+          endTime: addTimeOffset(editedData.endTime), // Add offset to endTime
         };
+
         GameService.marketUpdate(marketApiData, auth.user)
           .then((res) => {
             toast.success(res.data.message);
@@ -163,8 +210,8 @@ const Update = ({ show, setShow, data, Update }) => {
           .catch((err) => {
             toast.error(customErrorHandler(err));
           });
-        console.log(newValue);
         break;
+
       case "runner":
         const runnerApiData = {
           runnerId: data.runnerId,
@@ -248,19 +295,19 @@ const Update = ({ show, setShow, data, Update }) => {
                 Update === "Game"
                   ? "gameName"
                   : Update === "Market"
-                  ? "marketName"
-                  : Update === "Runner"
-                  ? "runnerName"
-                  : ""
+                    ? "marketName"
+                    : Update === "Runner"
+                      ? "runnerName"
+                      : ""
               }
               value={
                 Update === "Game"
                   ? newValue.gameName
                   : Update === "Market"
-                  ? newValue.marketName
-                  : Update === "Runner"
-                  ? newValue.runnerName
-                  : ""
+                    ? newValue.marketName
+                    : Update === "Runner"
+                      ? newValue.runnerName
+                      : ""
               }
               onChange={handleNewValue}
             />
@@ -308,12 +355,13 @@ const Update = ({ show, setShow, data, Update }) => {
                   Start Date & Time
                 </span>
               </div>
-              <DateTime
+              <Datetime
                 value={newValue.startTime}
-                onChange={handleStartDateTimeChange}
-                dateFormat="YYYY-MM-DD"
-                timeFormat="HH:mm:ss"
-                utc={true} // To handle UTC
+                onChange={handleStartDatevalue} // Update startTime
+                dateFormat="DD-MM-YYYY"
+                timeFormat="HH:mm"
+                isValidDate={disablePastDates}
+                isValidTime={disablePastTimes}
               />
             </div>
 
@@ -321,12 +369,13 @@ const Update = ({ show, setShow, data, Update }) => {
               <div className="input-group-prepend">
                 <span className="input-group-text w-100">End Date & Time</span>
               </div>
-              <DateTime
+              <Datetime
                 value={newValue.endTime}
-                onChange={handleEndDateTimeChange}
-                dateFormat="YYYY-MM-DD"
-                timeFormat="HH:mm:ss"
-                utc={true} // To handle UTC
+                onChange={handleEndDatevalue} // Update endTime
+                dateFormat="DD-MM-YYYY"
+                timeFormat="HH:mm"
+                isValidDate={disablePastDates}
+                isValidTime={disablePastTimes}
               />
             </div>
           </>
