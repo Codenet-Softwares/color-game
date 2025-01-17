@@ -8,6 +8,27 @@ const OuterAnnouncement = () => {
   const [announcementData, setAnnouncementData] = useState({
     announcement: "",
   });
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);  
+  const emojis = [
+    "😊", "😂", "😍", "😎", "🤔", "🥺", "💯", "🎉", "👍", "🙏",  
+    "❤️", "💙", "💚", "💛", "💜", "🧡", "🤍", "🤎",  
+    "⚽", "🏀", "🏈", "⚾", "🎾", "🏐", "🏉", "🎱", "🎮", "🎲",  
+    "🌞", "🌈", "🌧️", "⛅", "🌨️", "❄️", "🌬️", "🌪️", "🌟", "🌙",  
+    "🚗", "🚕", "🚙", "🚌", "🚎", "🏎️", "🚓", "🚑", "🚒", "🚐",  
+    "🎵", "🎶", "🎤", "🎧", "🎼", "🎷", "🎸", "🎻", "🥁", "🎺",  
+    "🎬", "📽️", "🍿", "🎥", "📺", "📷", "📸", "📡", "🎮", "🎧", 
+    "💻", "🖥️", "📱", "📞", "📡", "💾", "🖱️", "🖲️", "⌨️", "💻", 
+    "🎁", "💌", "🎀", "🎉", "🎊", "🎈", "🧧", "🧸", "🛍️", "📦",  
+    "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "0️⃣"
+  ];
+  
+  const handleEmojiClick = (emoji) => {
+    setAnnouncementData((prev) => ({
+      ...prev,
+      announcement: prev.announcement + emoji, 
+    }));
+    setShowEmojiPicker(false); 
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,29 +61,52 @@ const OuterAnnouncement = () => {
     }
   };
   
-  
-  
   return (
     <div className="container my-5">
       <h1>Create Outer Announcement</h1>
       <div className="mt-4">
         <div className="mb-3">
-          <label htmlFor="title" className="form-label">
-            Title
-          </label>
-          <input
-            type="text"
-            id="announcement"
-            name="announcement"
-            className="form-control"
-            value={announcementData.announcement}
-            onChange={handleChange}
-            placeholder="Enter title"
-          />
+          <div className="d-flex">
+            <input
+              type="text"
+              id="announcement"
+              name="announcement"
+              className="form-control"
+              value={announcementData.announcement}
+              onChange={handleChange}
+              placeholder="Enter Outer Announcement"
+            />
+            <button
+              type="button"
+              className="btn btn-info ms-2"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}  
+            >
+              <h5 className="fw-bold">Choose Emojis 😊</h5>  
+            </button>
+          </div>
+
+          {/* Emoji Picker */}
+          {showEmojiPicker && (
+            <div className="emoji-picker mt-2">
+              <div className="emoji-grid">
+                {emojis.map((emoji, index) => (
+                  <button
+                    key={index}
+                    className="btn btn-light emoji-button"
+                    style={{ fontSize: "1.5rem", margin: "5px" }}
+                    onClick={() => handleEmojiClick(emoji)}  
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
+
         <div className="text-center">
           <button className="btn btn-primary" onClick={handleCreateAnnouncement}>
-            Create Announcement
+            Create Outer Announcement
           </button>
         </div>
       </div>
