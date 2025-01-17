@@ -1,13 +1,4 @@
 import dotenv from 'dotenv';
-
-if (process.env.NODE_ENV === 'production') {
-  dotenv.config({ path: '.env.production' });
-} else {
-  dotenv.config({ path: '.env' });
-}
-
-console.log('Running in environment:', process.env.NODE_ENV);
-
 import mysql from 'mysql2';
 import express from 'express';
 import bodyParser from 'body-parser';
@@ -41,6 +32,14 @@ import { voidGameRoute } from './routes/voidGame.route.js';
 import { DeleteRoutes } from './routes/delete.route.js';
 import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
 import { getISTTime } from './helper/commonMethods.js';
+
+if (process.env.NODE_ENV === 'production') {
+  dotenv.config({ path: '.env.production' });
+} else {
+  dotenv.config({ path: '.env' });
+}
+
+console.log('Running in environment:', process.env.NODE_ENV);
 
 
 dotenv.config();
