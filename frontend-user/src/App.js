@@ -22,8 +22,8 @@ import ActivityLog from "./screen/activityLog/activityLog";
 import ResultLayout from "./screen/Lottery/ResultLayout";
 import GetMarketDetailByMarketId from "./screen/common/gameListView/GetMarketDetailByMarketId";
 import GetSingleMarket from "./screen/common/gameListView/GetSingleMarket";
+import LotteryMarketDashBoard from "./screen/common/gameListView/LotteryMarketDashBoard";
 // import GameWithMarketList from "./screen/common/gameListView/gameWithMarketList";
-
 
 function App() {
   return (
@@ -47,17 +47,17 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/passwordReset" element={<ResetPassword />} />
           <Route path="/gameView/:gameName/:id" element={<GetSingleMarket />} />
-          <Route path="/gameView/:gameName/:market/:id" element={<GetMarketDetailByMarketId />} />
+          <Route
+            path="/gameView/:gameName/:market/:id"
+            element={<GetMarketDetailByMarketId />}
+          />
           <Route path="/lottery/:marketId" element={<LotteryCards />} />
           <Route
             path="/LotteryPurchaseHistory"
             element={<LotteryPurchaseLayout />}
           />
-
-          <Route
-            path="/WinningResult"
-            element={<ResultLayout />}
-          />
+          <Route path="/lottery-home" element={<LotteryMarketDashBoard />} />
+          <Route path="/WinningResult" element={<ResultLayout />} />
 
           {/* private routes */}
           <Route
