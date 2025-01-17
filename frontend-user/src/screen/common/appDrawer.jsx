@@ -143,8 +143,8 @@ function AppDrawer({
           </li> */}
           {user_allGames?.map((gameObj, index) => (
             <React.Fragment key={index}>
-              {gameObj?.gameName === "colorgame" && (
-                <>
+              {gameObj?.gameName === "Lottery" ?
+                <> </> : <>
                   <li
                     className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
                     onClick={() => handleToggle(index)}
@@ -155,32 +155,32 @@ function AppDrawer({
                   {/* Mapping over markets inside each gameName */}
                   {toggleStates[index] && gameObj.markets.length > 0
                     ? gameObj?.markets?.map((marketObj, marketIndex) => {
-                        console.log("====>>>123", marketObj);
-                        return (
-                          <li
-                            className="subMenuItems"
-                            key={marketIndex}
-                            onClick={() =>
-                              handleAllId(gameObj?.gameId, marketObj?.marketId)
-                            }
+                      console.log("====>>>123", marketObj);
+                      return (
+                        <li
+                          className="subMenuItems"
+                          key={marketIndex}
+                          onClick={() =>
+                            handleAllId(gameObj?.gameId, marketObj?.marketId)
+                          }
+                        >
+                          <Link
+                            to={`/gameView/${gameObj?.gameName?.replace(
+                              /\s/g,
+                              ""
+                            )}/${marketObj?.marketName?.replace(
+                              /\s/g,
+                              ""
+                            )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
                           >
-                            <Link
-                              to={`/gameView/${gameObj?.gameName?.replace(
-                                /\s/g,
-                                ""
-                              )}/${marketObj?.marketName?.replace(
-                                /\s/g,
-                                ""
-                              )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
-                            >
-                              {marketObj.marketName}
-                            </Link>
-                          </li>
-                        );
-                      })
+                            {marketObj.marketName}
+                          </Link>
+                        </li>
+                      );
+                    })
                     : null}
                 </>
-              )}
+              }
             </React.Fragment>
           ))}
         </ul>
