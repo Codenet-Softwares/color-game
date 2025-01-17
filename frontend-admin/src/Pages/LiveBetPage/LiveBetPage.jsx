@@ -172,7 +172,7 @@ const LiveBetPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tbody>
+                  
                     {liveBets.liveBets.length > 0 ? (
                       <>
                         {liveBets.liveBets.map((bet, index) => (
@@ -199,7 +199,7 @@ const LiveBetPage = () => {
                       </tr>
                     )}
                   </tbody>
-                </tbody>
+            
               </table>
             </div>
           </SingleCard>

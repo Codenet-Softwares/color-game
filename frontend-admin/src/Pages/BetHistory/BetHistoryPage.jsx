@@ -144,7 +144,7 @@ const BetHistoryPage = () => {
 
             {/* Table */}
             <SingleCard
-              className=" mb-5 text-center"
+              className="mb-5 text-center"
               style={{
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
               }}
@@ -173,33 +173,31 @@ const BetHistoryPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tbody>
-                      {betHistory.betHistory.length > 0 ? (
-                        <>
-                          {betHistory.betHistory.map((bet, index) => (
-                            <tr key={bet.gameId}>
-                              <td>{index + 1}</td>
-                              <td>{bet.gameName}</td>
-                              <td>{bet.marketName}</td>
-                              <td>
-                                <button
-                                  className="btn btn-primary"
-                                  onClick={() => handleNavigate(bet.marketId)}
-                                >
-                                  Bet History
-                                </button>
-                              </td>
-                            </tr>
-                          ))}
-                        </>
-                      ) : (
-                        <tr>
-                          <td colSpan="4" className="text-center">
-                            No data found
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
+                    {betHistory.betHistory.length > 0 ? (
+                      <>
+                        {betHistory.betHistory.map((bet, index) => (
+                          <tr key={bet.gameId}>
+                            <td>{index + 1}</td>
+                            <td>{bet.gameName}</td>
+                            <td>{bet.marketName}</td>
+                            <td>
+                              <button
+                                className="btn btn-primary"
+                                onClick={() => handleNavigate(bet.marketId)}
+                              >
+                                Bet History
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    ) : (
+                      <tr>
+                        <td colSpan="4" className="text-center">
+                          No data found
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
