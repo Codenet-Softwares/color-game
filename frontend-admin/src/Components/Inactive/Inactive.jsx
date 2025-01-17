@@ -255,16 +255,16 @@ const Inactive = () => {
               </table>
             </div>
           </SingleCard>
-
-          {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={totalData}
-          />
+          {inactiveGames.length > 0 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={totalData}
+            />
+          )}
         </div>
       </div>
     </div>

@@ -23,7 +23,7 @@ const BetHistoryPage = () => {
   useEffect(() => {
     fetchBetHistory();
   }, [betHistory.currentPage, betHistory.totalEntries, betHistory.name]);
-  
+
   const fetchBetHistory = () => {
     GameService.betHistory(
       auth.user,
@@ -116,30 +116,30 @@ const BetHistoryPage = () => {
                   />
                 )}
               </div>
-              
-            <div className="col-md-6 text-end">
-              <label className="me-2 fw-bold">Show</label>
-              <select
-                className="form-select rounded-pill d-inline-block w-auto"
-                value={betHistory.totalEntries}
-                style={{
-                  borderRadius: "50px",
-                  border: "2px solid #6c757d",
-                }}
-                onChange={(e) =>
+
+              <div className="col-md-6 text-end">
+                <label className="me-2 fw-bold">Show</label>
+                <select
+                  className="form-select rounded-pill d-inline-block w-auto"
+                  value={betHistory.totalEntries}
+                  style={{
+                    borderRadius: "50px",
+                    border: "2px solid #6c757d",
+                  }}
+                  onChange={(e) =>
                     setBetHistory((prev) => ({
-                    ...prev,
-                    totalEntries: parseInt(e.target.value),
-                  }))
-                }
-              >
-                <option value={10}>10</option>
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-              </select>
-              <label className="ms-2 fw-bold">Entries</label>
-            </div>
+                      ...prev,
+                      totalEntries: parseInt(e.target.value),
+                    }))
+                  }
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+                <label className="ms-2 fw-bold">Entries</label>
+              </div>
             </div>
 
             {/* Table */}
@@ -173,33 +173,48 @@ const BetHistoryPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {betHistory.betHistory.map((betHistory, index) => (
-                      <tr key={betHistory.gameId}>
-                        <td>{index + 1}</td>
-                        <td>{betHistory.gameName}</td>
-                        <td>{betHistory.marketName}</td>
-                        <td>
-                          <button
-                            className="btn btn-primary"
-                            onClick={() => handleNavigate(betHistory.marketId)}
-                          >
-                            Bet History
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    <tbody>
+                      {betHistory.betHistory.length > 0 ? (
+                        <>
+                          {betHistory.betHistory.map((bet, index) => (
+                            <tr key={bet.gameId}>
+                              <td>{index + 1}</td>
+                              <td>{bet.gameName}</td>
+                              <td>{bet.marketName}</td>
+                              <td>
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() => handleNavigate(bet.marketId)}
+                                >
+                                  Bet History
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </>
+                      ) : (
+                        <tr>
+                          <td colSpan="4" className="text-center">
+                            No data found
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
                   </tbody>
                 </table>
               </div>
             </SingleCard>
-            <Pagination
-              currentPage={betHistory.currentPage}
-              totalPages={betHistory.totalPages}
-              handlePageChange={handlePageChange}
-              startIndex={startIndex}
-              endIndex={endIndex}
-              totalData={betHistory.totalData}
-            />
+
+            {betHistory.betHistory.length > 0 && (
+              <Pagination
+                currentPage={betHistory.currentPage}
+                totalPages={betHistory.totalPages}
+                handlePageChange={handlePageChange}
+                startIndex={startIndex}
+                endIndex={endIndex}
+                totalData={betHistory.totalData}
+              />
+            )}
           </div>
         </div>
       </div>{" "}

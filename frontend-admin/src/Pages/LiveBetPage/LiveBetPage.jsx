@@ -172,33 +172,48 @@ const LiveBetPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {liveBets.liveBets.map((bet, index) => (
-                    <tr key={bet.gameId}>
-                      <td>{index + 1}</td>
-                      <td>{bet.gameName}</td>
-                      <td>{bet.marketName}</td>
-                      <td>
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => handleNavigate(bet.marketId)}
-                        >
-                          Live Game
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  <tbody>
+                    {liveBets.liveBets.length > 0 ? (
+                      <>
+                        {liveBets.liveBets.map((bet, index) => (
+                          <tr key={bet.gameId}>
+                            <td>{index + 1}</td>
+                            <td>{bet.gameName}</td>
+                            <td>{bet.marketName}</td>
+                            <td>
+                              <button
+                                className="btn btn-primary"
+                                onClick={() => handleNavigate(bet.marketId)}
+                              >
+                                Live Game
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </>
+                    ) : (
+                      <tr>
+                        <td colSpan="" className="text-center">
+                          No data found
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
                 </tbody>
               </table>
             </div>
           </SingleCard>
-          <Pagination
-            currentPage={liveBets.currentPage}
-            totalPages={liveBets.totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={liveBets.totalData}
-          />
+
+          {liveBets.liveBets.length > 0 && (
+            <Pagination
+              currentPage={liveBets.currentPage}
+              totalPages={liveBets.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={liveBets.totalData}
+            />
+          )}
         </div>
       </div>
     </div>

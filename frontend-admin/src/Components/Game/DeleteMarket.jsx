@@ -211,14 +211,16 @@ const DeleteMarket = () => {
           )}
 
           {/* Pagination */}
-          <Pagination
-            currentPage={pagination.page}
-            totalPages={pagination.totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={pagination.totalItems}
-          />
+          {markets.length > 0 && (
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          handlePageChange={handlePageChange}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          totalData={pagination.totalItems}
+        />
+      )}
         </div>
       </div>
     </div>
