@@ -126,7 +126,7 @@ app.get('/events', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
-  res.setHeader('Access-Control-Allow-Origin', 'https://cg.user.dummydoma.in'); // change with server URl when deploy
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // change with server URl when deploy
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   res.flushHeaders();
@@ -180,6 +180,18 @@ sequelize
           },
         });
 
+        const winRunner = await Runner.findAll({
+          where: {
+            isWin: true,
+            clientMessage: false
+          },
+          attributes: { 
+            exclude: ['isActive'] 
+          }
+        });
+
+        console.log("winRunner",winRunner)
+
         const updateMarket = [];
 
         // Update active markets
@@ -202,17 +214,27 @@ sequelize
             updatedMarketsCache.set(market.marketId, response.toJSON());
           }
         }
-   
-          clients.forEach((client) => {
-            try {
-              client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
-            } catch (err) {
-              console.error('[SSE] Error sending data to client:', err);
-            }
-          });
-    
-          console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
-    
+
+        for (const runner of winRunner) {
+          if (!updatedMarketsCache.has(runner.runnerId) || updatedMarketsCache.get(runner.runnerId).isWin !== true) {
+            runner.clientMessage = true;
+            const response = await runner.save();
+            updateMarket.push(response.toJSON());
+            updatedMarketsCache.set(runner.runnerId, response.toJSON());
+          }
+        }
+
+
+        clients.forEach((client) => {
+          try {
+            client.write(`data: ${JSON.stringify(updateMarket)}\n\n`);
+          } catch (err) {
+            console.error('[SSE] Error sending data to client:', err);
+          }
+        });
+
+        console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
+
       } catch (error) {
         console.error('Error checking market statuses:', error);
       }
