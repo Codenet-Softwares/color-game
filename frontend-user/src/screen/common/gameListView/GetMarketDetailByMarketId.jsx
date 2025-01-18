@@ -5,7 +5,7 @@ import {
   user_getMarketWithRunnerData_api,
 } from "../../../utils/apiService";
 import { getMarketWithRunnerDataInitialState } from "../../../utils/getInitiateState";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import biddingButton from "../../../utils/constant/biddingButton";
 import { useAppContext } from "../../../contextApi/context";
 import strings from "../../../utils/constant/stringConstant";
@@ -19,6 +19,7 @@ import updateLotteryMarketEventEmitter from "../updateLotteryMarketEventEmitter"
 import ShimmerEffect from "../../../globlaCommon/ShimmerEffect";
 
 const GetMarketDetailByMarketId = () => {
+  const navigate = useNavigate();
   const [user_marketWithRunnerData, setUser_marketWithRunnerData] = useState(
     getMarketWithRunnerDataInitialState()
   );
@@ -28,6 +29,10 @@ const GetMarketDetailByMarketId = () => {
     exposure: null,
     wallet: null,
   });
+
+  const handleNaviagteHome = () => {
+    navigate(`/home`);
+  };
 
   const { store, dispatch } = useAppContext();
   console.log("store", store);
@@ -102,6 +107,9 @@ const GetMarketDetailByMarketId = () => {
 
       if (updates?.length) {
         updates.forEach((market) => {
+          if (market.clientMessage) {
+            handleNaviagteHome();
+          }
           if (market.isActive) {
             console.log(`[SSE] Market Active: ${market.marketName}`);
             setIsActive(true);
@@ -407,10 +415,10 @@ const GetMarketDetailByMarketId = () => {
     const nData = biddingButton.map((list) => (
       <div className={`${list.col} p-0`}>
         <button
-          className={`btn btn-sm  rounded-2 col-11 fw-bold text-white`} 
-          style={{ background: `${
-            toggle.mode === "lay" ? "#F09397" : "#18ADC5"
-          }`}}
+          className={`btn btn-sm  rounded-2 col-11 fw-bold text-white`}
+          style={{
+            background: `${toggle.mode === "lay" ? "#F09397" : "#18ADC5"}`,
+          }}
           onClick={() => handleBiddingAmount("amount", parseInt(list.name))}
         >
           {list.name}
@@ -836,7 +844,8 @@ const GetMarketDetailByMarketId = () => {
                             <div className="row py-1 px-0 m-0">
                               <div className="d-none d-sm-block d-md-block d-lg-block d-xl-block col-sm-2 col-md-2 col-lg-2 col-xl-2">
                                 <button
-                                  className=" btn btn-sm text-white border border-2 rounded-3 fw-bold" style={{background:"#F84769"}}
+                                  className=" btn btn-sm text-white border border-2 rounded-3 fw-bold"
+                                  style={{ background: "#F84769" }}
                                   onClick={() => handleCancel()}
                                 >
                                   Cancel
@@ -845,7 +854,11 @@ const GetMarketDetailByMarketId = () => {
                               <div className="col-6 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                                 <button
                                   className="col-3 rounded-start-4 fw-bold text-white"
-                                  style={{ width: "18%", border: "0" , background:"#A9A9A9" }}
+                                  style={{
+                                    width: "18%",
+                                    border: "0",
+                                    background: "#A9A9A9",
+                                  }}
                                 >
                                   -
                                 </button>
@@ -856,7 +869,11 @@ const GetMarketDetailByMarketId = () => {
                                 />
                                 <button
                                   className="col-3 rounded-end-3 fw-bold text-white"
-                                  style={{ width: "18%", border: "0", background:"#A9A9A9"  }}
+                                  style={{
+                                    width: "18%",
+                                    border: "0",
+                                    background: "#A9A9A9",
+                                  }}
                                 >
                                   +
                                 </button>
@@ -867,7 +884,11 @@ const GetMarketDetailByMarketId = () => {
                                     bidding.amount == 0 ? " disabled" : ""
                                   }
                                   className={`col-3  rounded-start-3 fw-bold text-white`}
-                                  style={{ width: "15%", border: "0", background:"#A9A9A9", }}
+                                  style={{
+                                    width: "15%",
+                                    border: "0",
+                                    background: "#A9A9A9",
+                                  }}
                                   onClick={
                                     bidding.amount >= 100
                                       ? () =>
@@ -898,7 +919,11 @@ const GetMarketDetailByMarketId = () => {
                                 />
                                 <button
                                   className="col-3 rounded-end-3 fw-bold text-white"
-                                  style={{ width: "18%", border: "0", background:"#A9A9A9"  }}
+                                  style={{
+                                    width: "18%",
+                                    border: "0",
+                                    background: "#A9A9A9",
+                                  }}
                                   onClick={() =>
                                     handleBiddingAmount(
                                       "amount",
@@ -911,7 +936,8 @@ const GetMarketDetailByMarketId = () => {
                               </div>
                               <div className="d-none d-sm-block d-md-block d-lg-block d-xl-block col-sm-2 col-md-2 col-lg-2 col-xl-2">
                                 <button
-                                  className="btn btn-sm border text-white border-2 rounded-3 fw-bold" style={{background:"#06A706"}}
+                                  className="btn btn-sm border text-white border-2 rounded-3 fw-bold"
+                                  style={{ background: "#06A706" }}
                                   onClick={() =>
                                     handleUserBidding(
                                       index,
@@ -930,7 +956,8 @@ const GetMarketDetailByMarketId = () => {
                             <div className="row py-1 px-0 m-0">
                               <div className="d-block col-6 d-sm-none d-md-none d-lg-none d-xl-none">
                                 <button
-                                  className=" btn btn-sm bg-white border border-2 rounded-3 col-12 fw-bold" style={{background:"#F84769"}}
+                                  className=" btn btn-sm bg-white border border-2 rounded-3 col-12 fw-bold"
+                                  style={{ background: "#F84769" }}
                                   onClick={() => handleCancel()}
                                 >
                                   Cancel
@@ -938,7 +965,8 @@ const GetMarketDetailByMarketId = () => {
                               </div>
                               <div className="d-block col-6 d-sm-none d-md-none d-lg-none d-xl-none">
                                 <button
-                                  className="btn btn-sm  border border-2 rounded-3 col-12 fw-bold"style={{background:"#06A706"}}
+                                  className="btn btn-sm  border border-2 rounded-3 col-12 fw-bold"
+                                  style={{ background: "#06A706" }}
                                   onClick={() =>
                                     handleUserBidding(
                                       index,
@@ -958,7 +986,7 @@ const GetMarketDetailByMarketId = () => {
                 })}
             </div>
           ) : (
-            <ShimmerEffect/>
+            <ShimmerEffect />
           )}
         </AppDrawer>
       </div>
