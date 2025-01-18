@@ -255,7 +255,7 @@ export const calculateExternalProfitLoss = async (req, res) => {
           totalProfitLoss: item.dataValues.totalProfitLoss,
         })),
     ];
-    
+
     const totalItems = combinedProfitLossData.length;
     const totalPages = Math.ceil(totalItems / limit);
     const paginatedCombinedData = combinedProfitLossData.slice(
@@ -272,12 +272,12 @@ export const calculateExternalProfitLoss = async (req, res) => {
 
     return res.status(statusCode.success).send(
       apiResponseSuccess(
-        paginatedCombinedData, 
+        paginatedCombinedData,
         true,
         statusCode.success,
         "Success",
 
-        paginationData 
+        paginationData
       )
     );
   } catch (error) {
@@ -1117,13 +1117,22 @@ export const getRevokeMarket = async (req, res) => {
         );
     }
 
+    console.log("usersFromProfitLoss", usersFromProfitLoss)
     // Aggregate profit/loss and price for each user
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
       if (!userProfitLossMap[userId]) {
-        userProfitLossMap[userId] = { totalProfitLoss: 0, totalPrice: 0 };
+        userProfitLossMap[userId] = { totalProfitLoss: 0, totalPrice: 0 , exposurePrice : 0 };
       }
-      userProfitLossMap[userId].totalProfitLoss += Number(profitLoss);
+
+      if (profitLoss > 0) {
+        userProfitLossMap[userId].totalProfitLoss += Number(profitLoss);
+      }
+      else {
+        userProfitLossMap[userId].exposurePrice -= Number(profitLoss) ;
+      }
+      userProfitLossMap[userId].exposurePrice += Number(price) ;
+
       userProfitLossMap[userId].totalPrice += Number(price);
     });
 
@@ -1151,14 +1160,14 @@ export const getRevokeMarket = async (req, res) => {
       const userProfitLoss = userProfitLossMap[user.userId];
       if (!userProfitLoss) continue;
 
-      const { totalProfitLoss, totalPrice } = userProfitLoss;
-
+      const { totalProfitLoss, totalPrice ,exposurePrice} = userProfitLoss;
+      console.log("totalProfitLoss, totalPrice ", totalProfitLoss, totalPrice)
       if (totalProfitLoss > 0) {
         user.balance -= totalProfitLoss + totalPrice;
       }
 
       // Add all prices for the market to the user's exposure
-      const newExposure = { [marketId]: totalPrice };
+      const newExposure = { [marketId]: exposurePrice };
       user.marketListExposure = [...(user.marketListExposure || []), newExposure];
 
       // Calculate total exposure
@@ -1194,8 +1203,8 @@ export const getRevokeMarket = async (req, res) => {
           );
       }
 
-      await user.save({ fields: ["marketListExposure", "balance"] });        
-  
+      await user.save({ fields: ["marketListExposure", "balance"] });
+
 
     }
 
@@ -1271,7 +1280,7 @@ export const getDeleteLiveMarket = async (req, res) => {
         (item) => Object.keys(item)[0] === marketId
       );
 
-    
+
       for (const exposure of totalExposures) {
         exposureValue += Number(exposure[marketId]);
       }
@@ -1311,7 +1320,7 @@ export const getDeleteLiveMarket = async (req, res) => {
     });
 
     console.log("totalExposure...888", totalExposure)
-    
+
     const dataToSend = {
       amount: user.balance,
       userId: user.userId,
@@ -1384,17 +1393,17 @@ export const revokeLiveBet = async (req, res) => {
         );
     }
     const newBalance = user.balance - lotteryPrice;
-     user.balance = newBalance;
+    user.balance = newBalance;
 
     const newExposure = { [marketId]: Math.abs(lotteryPrice) };
     user.marketListExposure = [...(user.marketListExposure || []), newExposure];
 
     const marketExposure = user.marketListExposure;
     let totalExposure = 0;
-      marketExposure.forEach(market => {
-        const exposure = Object.values(market)[0];
-        totalExposure += exposure;
-      });
+    marketExposure.forEach(market => {
+      const exposure = Object.values(market)[0];
+      totalExposure += exposure;
+    });
 
     await user.save();
 
@@ -1478,14 +1487,14 @@ export const getAllLotteryMarket = async (req, res) => {
       .status(statusCode.success)
       .json(
         apiResponseSuccess(
-          data ,
+          data,
           true,
           statusCode.success,
           "Success"
         )
       );
   } catch (error) {
-    console.log("error",error)
+    console.log("error", error)
     if (error.response) {
       return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
     } else {
