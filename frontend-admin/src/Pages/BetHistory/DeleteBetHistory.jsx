@@ -131,10 +131,10 @@ const DeleteBetHistory = () => {
   return (
     <div>
     <div className="container mt-5" style={{width:"94%"}}>
-      <div className=" text1">
-        <h2 className="text-uppercase fw-bold text-center">Deleted Bets</h2>
+      <div className=" text1 rounded" style={{background:"#3E5879"}}>
+        <h2 className="text-uppercase fw-bold text-center text-white p-2 ">Deleted Bets</h2>
       </div>
-      <div className="col-md-6 position-relative ">
+      <div className="col-md-6 position-relative">
         <FaSearch
           style={{
             position: "absolute",

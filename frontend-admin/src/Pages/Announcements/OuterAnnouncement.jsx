@@ -63,7 +63,7 @@ const OuterAnnouncement = () => {
 
   return (
     <div className="container my-5 p-5">
-      <h2 className="fw-bold text-center text-uppercase">Create Outer Announcement</h2>
+      <h3 className="fw-bold text-center text-uppercase text-white p-3 rounded" style={{background:"#3E5879"}}>Create Outer Announcement</h3>
       <div className="mt-4">
         <div className="mb-3">
           <div className="d-flex">

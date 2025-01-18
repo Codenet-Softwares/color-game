@@ -71,7 +71,7 @@ const LiveBetPage = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center">Live Bet</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase">Live Bet</h3>
         </div>
         <div className="card-body"  style={{background:"#D8C4B6"}}>
           {/* Search and Entries Selection */}

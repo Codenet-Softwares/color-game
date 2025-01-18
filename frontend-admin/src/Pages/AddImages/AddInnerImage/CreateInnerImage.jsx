@@ -66,7 +66,7 @@ const CreateInnerImage = () => {
           className="card-header"
           style={{ backgroundColor: "#3E5879", color: "#FFFFFF" }}
         >
-          <h3 className="mb-0 fw-bold text-center">Add Inner Image</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Add Inner Image</h3>
         </div>
         <div className="card-body" style={{ background: "#D8C4B6" }}>
           <div className="mb-4 text-center">

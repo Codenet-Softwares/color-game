@@ -63,7 +63,7 @@ const InnerAnnouncement = () => {
 
   return (
     <div className="container my-5 p-5">
-      <h2 className="fw-bold text-center text-uppercase">Create Inner Announcement</h2>
+      <h3 className="fw-bold text-center text-uppercase p-3 text-white rounded" style={{background:"#3E5879"}}>Create Inner Announcement</h3>
       <div className="mt-4">
         <div className="mb-3">
           

@@ -9,13 +9,13 @@ console.log("auth",auth)
     <div>
       <div className="WelcomePage">
         <header className="App-header">
-          <h1 className="animated-header">Welcome to Color Game Application</h1>
-          <p className="text-dark">
+          <h1 className="animated-header fw-bold">Welcome to Color Game Application</h1>
+          <h5 className="text-dark fw-bolder mt-4">
             Manage your transactions efficiently and effectively.
-          </p>
+          </h5>
         </header>
-        <section className="welcome-message">
-          <h2>Welcome, {auth?.user?.userName}!</h2>
+        <section className="welcome-message fw-bolder">
+          <h2 fw-bold>Welcome, {auth?.user?.userName}!</h2>
           <p>We're glad to have you back. Here’s what you can do today:</p>
         </section>
         <section className="features">
@@ -39,9 +39,9 @@ console.log("auth",auth)
             </div>
           </div>
         </section>
-        <section className="cta">
+        {/* <section className="cta">
           <button>Get Started</button>
-        </section>
+        </section> */}
       </div>
     </div>
   );

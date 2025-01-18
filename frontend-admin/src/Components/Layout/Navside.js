@@ -63,15 +63,10 @@ const Navside = () => {
     <nav className="sidebar">
       <div className="logo d-flex justify-content-between">
         <a className="large_logo text-decoration-none" href="#">
-          {/* <img src="../../../../../../img/logo.png" alt="" /> */}
-          <h4 className="text-decoration-none fw-bolder" style={{color:"#3E5879"}}>Color Game Admin</h4>
+          <img src="https://static.vecteezy.com/system/resources/previews/019/194/935/non_2x/global-admin-icon-color-outline-vector.jpg" alt="" />
+          {/* <h4 className="text-decoration-none fw-bolder" style={{color:"#3E5879"}}>Color Game Admin</h4> */}
         </a>
-        <a className="small_logo" href="#">
-          <img src="../../../../../../img/mini_logo.png" alt="" />
-        </a>
-        <div className="sidebar_close_icon d-lg-none">
-          <i className="ti-close"></i>
-        </div>
+       
       </div>
       {/*  List Of the Sidebar Starts */}
       <ul id="sidebar_menu" class="metismenu p-2 ">
@@ -372,12 +367,12 @@ const Navside = () => {
             <ul>
               <li>
                 <Link to="inner-announcement">
-                  <i className="fa-solid fa-circle"></i> Create Announcement
+                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Announcement
                 </Link>
               </li>
               <li>
                 <Link to="update-inner-announcement">
-                  <i className="fa-solid fa-circle"></i> Update Announcement
+                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Announcement
                 </Link>
               </li>
             </ul>

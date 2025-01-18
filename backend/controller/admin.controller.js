@@ -687,13 +687,11 @@ export const afterWining = async (req, res) => {
                 await userDetails.save();
 
                 const marketExposure = userDetails.marketListExposure;
-                console.log("marketExposure....", marketExposure)
                 let totalExposure = 0;
                 marketExposure.forEach(market => {
                   const exposure = Object.values(market)[0];
                   totalExposure += exposure;
                 });
-                console.log("totalExposure...22.", totalExposure)
 
                 const dataToSend = {
                   amount: userDetails.balance,
@@ -889,7 +887,7 @@ export const revokeWinningAnnouncement = async (req, res) => {
     );
 
     await Runner.update(
-      { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true },
+      { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true , clientMessage : false },
       { where: { runnerId }, transaction }
     );
 

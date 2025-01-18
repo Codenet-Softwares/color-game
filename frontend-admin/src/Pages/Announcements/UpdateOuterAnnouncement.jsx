@@ -44,7 +44,7 @@ const UpdateOuterAnnouncement = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center">Update Outer Announcement</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Update Outer Announcement</h3>
         </div>
         <div className="card-body" style={{ background: "#D8C4B6" }}>
           {announcements.length === 0 ? (
