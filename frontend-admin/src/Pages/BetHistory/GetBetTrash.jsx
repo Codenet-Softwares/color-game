@@ -53,7 +53,7 @@ const GetBetTrash = ({
   const paginatedData = selectedMarketDetails.slice(startIndex, endIndex);
 
   return (
-    <div className="card shadow-lg p-3 m-2 rounded" style={{ background: "#E2E0B8" }}>
+    <div className="card shadow-lg p-3 m-2 rounded p-5" style={{ background: "#D8C4B6" }}>
       <div className="mt-3 text-end">
         <label className="me-2 fw-bold">Show</label>
         <select

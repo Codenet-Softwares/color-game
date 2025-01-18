@@ -9,23 +9,25 @@
 	align-items: center;
 	justify-content: center;
 	height: 100vh;
-	background-color: #f0f2f5;
+	background-color: #F5EFE7;
 	font-family: Arial, sans-serif;
 }
 
 .login-box {
-	background-color: #ffffff;
+	background-color: #D8C4B6;
 	padding: 40px;
 	border-radius: 8px;
 	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 	width: 100%;
-	max-width: 400px;
+	max-width: 500px;
+	border: 2px solid #3E5879;
 }
 
 .login-title {
 	text-align: center;
-	margin-bottom: 30px;
-	color: #333333;
+	/* margin-bottom: 30px; */
+	color: #3E5879;
+	font-weight: bold;
 }
 
 .login-input {
@@ -42,7 +44,7 @@
 	padding: 12px;
 	border-radius: 4px;
 	border: none;
-	background-color: #4caf50;
+	background-color: #3E5879;
 	color: #ffffff;
 	font-size: 16px;
 	cursor: pointer;

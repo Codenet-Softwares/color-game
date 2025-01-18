@@ -192,12 +192,14 @@ const GameMarket = ({ marketId }) => {
 
   return (
     <div className="main_content_iner overly_inner ">
-      <div className="container-fluid p-0 ">
+      <div className="container-fluid p-5 ">
         <div className="row">
           <div className="col-12">
             <div className="page_title_box d-flex align-items-center justify-content-between">
               <div className="page_title_left">
-                <h3 className="f_s_30 f_w_700 dark_text">Game Market</h3>
+                <h3 className="f_s_30 f_w_700 dark_text text-uppercase text-center">
+                  Game Market
+                </h3>
               </div>
               <button className="btn btn-primary" onClick={handleShow}>
                 <span className="me-2">
@@ -254,19 +256,15 @@ const GameMarket = ({ marketId }) => {
                 <div className="board_wrapper">
                   <div className="single_board">
                     <div className="main_board_card">
-                      <div className="white_card_header ps-0 pe-0 pt-0">
-                        <div className="box_header m-0">
-                          <div className="main-title">
-                            <h3 className="m-0">Available Games</h3>
-                          </div>
-                        </div>
-                      </div>
+                      <h3 className="m-0 text-center fw-bold mb-2 text-uppercase">
+                        Available Games
+                      </h3>
                       {games.length > 0 ? (
                         <div className="board_card_list">
                           {games.map((game, index) => {
                             return (
                               <div className="card border-0" key={index}>
-                                <div className="card-body m-0 p-2">
+                                <div className="card-body m-0 p-3">
                                   <div className="card_head d-flex justify-content-between align-items-center">
                                     <div className="d-flex justify-content-between align-items-center">
                                       <i className="far fa-circle f_s_14 text_color_4 me-2"></i>
@@ -293,12 +291,19 @@ const GameMarket = ({ marketId }) => {
                                           className="dropdown-menu dropdown-menu-right"
                                           aria-labelledby="dropdownMenuButton"
                                           x-placement="bottom-end"
+                                          // style={{
+                                          //   position: "absolute",
+                                          //   transform:
+                                          //     "translate3d(-148px, 20px, 0px)",
+                                          //   top: "0px",
+                                          //   left: "0px",
+                                          // }}
                                           style={{
                                             position: "absolute",
-                                            transform:
-                                              "translate3d(-148px, 20px, 0px)",
-                                            top: "0px",
-                                            left: "0px",
+                                            right: 0, // Align dropdown to the right of its container
+                                            top: "100%", // Position it directly below the button
+                                            zIndex: 1050, // Ensure it is above other elements
+                                            overflow: "visible", // Allow overflow to ensure visibility
                                           }}
                                         >
                                           <a className="dropdown-item" href="#">

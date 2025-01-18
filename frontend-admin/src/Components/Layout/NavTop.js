@@ -96,15 +96,19 @@ const NavTop = () => {
       <div className="container-fluid g-0">
         <div className="row">
           <div className="col-lg-12 p-0 ">
-            <div className="header_iner d-flex justify-content-between align-items-center">
+            <div className="header_iner d-flex justify-content-between align-items-center p-4">
               <div className="sidebar_icon d-lg-none">
                 <i className="ti-menu"></i>
               </div>
-              <div className="line_icon open_miniSide d-none d-lg-block">
+              {/* <div className="line_icon open_miniSide d-none d-lg-block">
                 <img src="../../../../../../img/line_img.png" alt="" />
+              </div> */}
+              <div>
+                
               </div>
-
-              <div className="header_right d-flex justify-content-between align-items-center">
+          {/* <h3 className="text-decoration-none fw-bolder text-uppercase" style={{color:"#3E5879"}}>Admin</h3> */}
+          <div class="text">WELCOME TO COLORGAME ADMIN</div>
+          <div className="header_right d-flex justify-content-center align-items-center">
                 <div className="mx-4"></div>
                 <div className="profile_info">
                   <img src="../../../../../../img/client_img.png" alt="#" />

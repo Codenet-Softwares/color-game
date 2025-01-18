@@ -216,9 +216,9 @@ p {
   line-height: 24px;
   font-size: 14px;
   margin-bottom: 0px;
-  color: #828BB2;
+  color: #3E5879;
   font-family: "Mulish", sans-serif;
-  font-weight: 300;
+  font-weight: 800;
 }
 
 /* line 130, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -2571,6 +2571,8 @@ span > .bg-secondary {
 .header_more_tool .dropdown .dropdown-menu a {
   padding: 8px 15px;
   font-size: 13px;
+  background-color: #F5EFE7;
+  font-weight: bold;
 }
 
 /* line 1892, G:/admin_project/8 admin/management_html/scss/_reset.scss */
@@ -3514,18 +3516,73 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   position: relative;
   border-radius: 0px;
   margin: 0;
-  background: #F6F7FB;
+  background: #D8C4B6;
   border-radius: 0;
   margin: 0;
   border-radius: 0px;
   border-bottom: 2px solid #E8E8E8;
 }
-
-/* line 29, G:/admin_project/8 admin/management_html/scss/_header.scss */
-.header_iner.default_header {
-  background: #F65365;
-  border-radius: 0;
+.text {
+  font-size: 2.3rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  position: relative;
+  -webkit-text-stroke: 2px #3E5879;
+  color: transparent;
+  filter: drop-shadow(0 0 15px rgba(255, 99, 132, 0.2));
 }
+
+.text::before {
+  content: 'WELCOME TO COLORGAME ADMIN';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+  background: linear-gradient(90deg, #3E5879, #ff6b6b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  clip-path: inset(0 50% 0 50%);
+  animation: fillTextFromCenter 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.text::after {
+  content: 'WELCOME TO COLORGAME ADMIN';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: blur(10px);
+  animation: moveGlow 4s linear infinite;
+  z-index: -1;
+}
+
+@keyframes fillTextFromCenter {
+  0%, 100% {
+    clip-path: inset(0 50% 0 50%);
+  }
+  50% {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes moveGlow {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+/* line 29, G:/admin_project/8 admin/management_html/scss/_header.scss */
+
 
 @media (max-width: 575.98px) {
   /* line 2, G:/admin_project/8 admin/management_html/scss/_header.scss */
@@ -4255,11 +4312,11 @@ table.dataTable {
   z-index: 99;
   padding-bottom: 50px;
   position: fixed;
-  width: 270px;
+  width: 290px;
   z-index: 999;
   overflow: hidden;
   overflow-y: auto;
-  background: #FFFFFF;
+  background: #D8C4B6;
   box-shadow: 0 12px 30px rgba(80, 143, 244, 0.1);
   transition: .3s;
 }
@@ -4304,15 +4361,19 @@ table.dataTable {
 
 /* line 40, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .logo {
-  margin: 0px;
-  background: #F3F6F9;
-  padding: 24px;
-  margin-bottom: 20px;
+  margin-top: 20px;
+  background: #D8C4B6;
+  /* padding: 24px; */
+  margin-left: 95px;
+  
+
+  /* border-bottom: 1px solid #F5EFE7; */
 }
 
 /* line 46, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .logo .large_logo img {
-  width: 100%;
+  width: 80px;
+  border-radius: 50%;
 }
 
 @media (max-width: 991px) {
@@ -4604,7 +4665,7 @@ table.dataTable {
 /************ sidebar css end ************/
 /* line 275, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li {
-  margin-left: 0px;
+  /* margin-left: 0px; */
 }
 
 /* line 278, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4612,14 +4673,13 @@ table.dataTable {
   font-size: 15px;
   font-weight: 400;
   color: #144339;
-  padding: 0px 25px 0px 0px;
-  background: #fff;
-  transition: .3s;
-  position: relative;
+  /* background: #fff; */
+  /* transition: .3s; */
+  /* position: relative; */
   z-index: 0;
   display: grid;
   grid-template-columns: 34px auto;
-  grid-gap: 15px;
+  /* grid-gap: 15px; */
   align-items: center;
   position: relative;
   background: transparent;
@@ -4634,7 +4694,7 @@ table.dataTable {
 /* line 299, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li a:hover {
   color: #F65365 !important;
-  background: #F6F7FB;
+  /* background: #F6F7FB; */
 }
 
 /* line 303, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4650,14 +4710,14 @@ table.dataTable {
   transform: rotate(-90deg) translate(0, -50%);
   opacity: 1;
   font-size: 10px;
-  right: 15px;
+  /* right: 15px; */
   color: #A1A4B9;
 }
 
 /* line 332, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li a i {
   font-size: 15px;
-  margin-right: 12px;
+  /* margin-right: 12px; */
   color: #A5ADC6;
   -webkit-transition: 0.5s;
   transition: 0.5s;
@@ -4672,21 +4732,26 @@ table.dataTable {
 
 /* line 353, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li > a {
-  color: #144339;
+  color:#3E5879 ;
+  font-weight: bold;
+  text-decoration: none;
+  border: 1px solid #3E5879;
 }
 
 /* line 358, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li.mm-active > a {
   background: #fff;
   border-radius: 30px;
-  color: #144339;
+  color: #3E5879;
   border-radius: 4px 4px 0 0;
   background: transparent;
+  border: 2px solid #3E5879;
+
 }
 
 /* line 364, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li.mm-active > a::after {
-  color: #8890B5;
+  color: #3E5879;
   transform: rotate(0deg) translate(0, -50%);
   opacity: 1;
   font-size: 10px;
@@ -4714,11 +4779,12 @@ table.dataTable {
 
 /* line 390, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li ul {
-  padding: 0px 0px 5px 40px;
+  /* padding: 0px 0px 5px 40px; */
   background: transparent;
-  border-radius: 0 0 4px 4px;
-  margin-left: 30px;
+  border-radius:15px;
+  /* margin-left: -23px; */
   background: #fff;
+  
 }
 
 /* line 403, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -4729,11 +4795,10 @@ table.dataTable {
 /* line 407, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar #sidebar_menu > li ul li a {
   font-size: 14px;
-  color: #8890B5;
-  font-weight: 400;
+  color: #3E5879;
+  font-weight: bold;
   padding: 0;
   white-space: nowrap;
-  padding: 0;
   padding: 10px 0 10px 8px !important;
   margin-top: 0;
   margin-left: 0;
@@ -5185,6 +5250,7 @@ body::-webkit-scrollbar {
   min-height: 100vh;
   padding-bottom: 70px;
   overflow: hidden;
+  background-color: #F5EFE7;
 }
 
 /* line 13, G:/admin_project/8 admin/management_html/scss/_main_content.scss */
@@ -5244,7 +5310,6 @@ body::-webkit-scrollbar {
   min-height: 68vh;
   transition: .5s;
   position: relative;
-  background: #F6F7FB;
   margin: 0;
   z-index: 22;
   border-radius: 0px;
@@ -13075,7 +13140,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
 
 /* line 25, G:/admin_project/8 admin/management_html/scss/_board.scss */
 .board_wrapper .single_board .main_board_card {
-  max-height: 100%;
+  /* max-height: 100%; */
   overflow: hidden;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -13086,19 +13151,21 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   flex-direction: column;
   -ms-flex-pack: distribute;
   justify-content: space-around;
-  margin-bottom: 12px;
+  /* margin-bottom: 12px; */
   border-radius: 4px;
-  padding: 20px;
-  background: #f1f5fa;
+  padding: 80px;
+  background: #D8C4B6;
+  
 }
 
 /* line 45, G:/admin_project/8 admin/management_html/scss/_board.scss */
 .board_wrapper .single_board .main_board_card .board_card_list .card {
   -webkit-box-shadow: 0px 2px 4px rgba(31, 30, 47, 0.03);
   box-shadow: 0px 2px 4px rgba(31, 30, 47, 0.03);
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   background-color: #fff;
   border: 1px solid #eceff5;
+  
 }
 
 /* line 51, G:/admin_project/8 admin/management_html/scss/_board.scss */
@@ -13106,8 +13173,9 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  min-height: 1px;
+  /* min-height: 1px; */
   padding: 1.25rem;
+  
 }
 
 /* line 4, G:/admin_project/8 admin/management_html/scss/_product.scss */

@@ -180,7 +180,7 @@ const MarketPlace = () => {
 
   return (
     <div className="main_content_iner overly_inner ">
-      <div className="container-fluid p-0 ">
+      <div className="container-fluid p-5">
         <div className="row">
           <div className="col-12">
             <div className="page_title_box d-flex align-items-center justify-content-between">

@@ -129,9 +129,10 @@ const DeleteBetHistory = () => {
   const paginatedMarkets = marketHistory.markets.slice(startIndex, endIndex);
 
   return (
-    <div className="container mt-5">
-      <div className=" text1">
-        <h1 className="text-uppercase">Deleted Bets</h1>
+    <div>
+    <div className="container mt-5" style={{width:"94%"}}>
+      <div className=" text1 rounded" style={{background:"#3E5879"}}>
+        <h2 className="text-uppercase fw-bold text-center text-white p-2 ">Deleted Bets</h2>
       </div>
       <div className="col-md-6 position-relative">
         <FaSearch
@@ -174,8 +175,8 @@ const DeleteBetHistory = () => {
       </div>
 
       <div
-        className="card shadow-lg rounded  mt-4"
-        style={{ background: "#FFFDD0" }}
+        className="card shadow-lg rounded mt-4 p-4"
+        style={{ background: "#D8C4B6" }}
       >
         <div className="accordion" id="marketAccordion">
           {paginatedMarkets.length > 0 ? (
@@ -241,6 +242,7 @@ const DeleteBetHistory = () => {
           />
         )}
       </div>
+    </div>
     </div>
   );
 };

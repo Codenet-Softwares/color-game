@@ -44,7 +44,7 @@ const LotteryMarketDashBoard = () => {
     };
 
     return (
-      <div className="mt-5">
+      <div className="">
         {loading ? (
           <div className="text-center py-5">
             <div className="spinner-border text-primary" role="status">
@@ -58,24 +58,24 @@ const LotteryMarketDashBoard = () => {
               key={index}
               className="row mx-0 my-3 p-4"
               style={{
-                backgroundColor: "#1F2A44", // Dark background for cards
+                backgroundColor: "#2CB3D1", 
                 borderRadius: "16px",
-                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
-                transition: "transform 0.3s ease, box-shadow 0.3s ease",
+                // boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+                // transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 cursor: "pointer",
                 overflow: "hidden",
-                borderLeft: "8px solid #F1C40F", // Golden accent border
+                // borderLeft: "8px solid #F1C40F",
               }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = "scale(1.05)";
-                e.currentTarget.style.boxShadow =
-                  "0 16px 32px rgba(0, 0, 0, 0.15)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.boxShadow =
-                  "0 8px 16px rgba(0, 0, 0, 0.1)";
-              }}
+              // onMouseEnter={(e) => {
+              //   e.currentTarget.style.transform = "scale(1.05)";
+              //   e.currentTarget.style.boxShadow =
+              //     "0 16px 32px rgba(0, 0, 0, 0.15)";
+              // }}
+              // onMouseLeave={(e) => {
+              //   e.currentTarget.style.transform = "scale(1)";
+              //   e.currentTarget.style.boxShadow =
+              //     "0 8px 16px rgba(0, 0, 0, 0.1)";
+              // }}
             >
               {/* Market Header */}
               <div
@@ -88,8 +88,8 @@ const LotteryMarketDashBoard = () => {
                 <span
                   className="col-12 text-light font-weight-bold text-uppercase text-center"
                   style={{
-                    fontSize: "22px", // Larger size for prominence
-                    color: "#F1C40F", // Elegant golden color for market name
+                    fontSize: "22px", 
+                    color: "#F1C40F", 
                     borderBottom: "2px solid #ddd",
                     paddingBottom: "12px",
                     transition: "color 0.3s ease",
@@ -101,7 +101,7 @@ const LotteryMarketDashBoard = () => {
                     (e.currentTarget.style.color = "#F1C40F")
                   }
                 >
-                  Market: {marketDataItem?.marketName ?? "Unknown"}
+               <h6 className="fw-bold text-warning">Market: {marketDataItem?.marketName ?? "Unknown"}</h6> 
                 </span>
               </div>
 
@@ -109,36 +109,36 @@ const LotteryMarketDashBoard = () => {
               <div className="row mx-0 px-2 mt-3 text-muted">
                 <div className="col-md-3 col-sm-6 mb-3">
                   <p className="m-0">
-                    <strong className="text-light">Group Range:</strong>
+                    <strong className="text-dark">Group Range:</strong>
                   </p>
-                  <p className="m-0 text-white">
+                  <p className="m-0 text-dark">
                     {marketDataItem?.group_start ?? "N/A"} -{" "}
                     {marketDataItem?.group_end ?? "N/A"}
                   </p>
                 </div>
                 <div className="col-md-3 col-sm-6 mb-3">
-                  <p className="m-0 text-white">
-                    <strong className="text-light">Series Range:</strong>
+                  <p className="m-0 text-dark">
+                    <strong className="text-dark">Series Range:</strong>
                   </p>
-                  <p className="m-0 text-white">
+                  <p className="m-0 text-dark">
                     {marketDataItem?.series_start ?? "N/A"} -{" "}
                     {marketDataItem?.series_end ?? "N/A"}
                   </p>
                 </div>
                 <div className="col-md-3 col-sm-6 mb-3">
-                  <p className="m-0 text-white">
-                    <strong className="text-light">Number Range:</strong>
+                  <p className="m-0 text-dark">
+                    <strong className="text-dark">Number Range:</strong>
                   </p>
-                  <p className="m-0 text-white">
+                  <p className="m-0 text-dark">
                     {marketDataItem?.number_start ?? "N/A"} -{" "}
                     {marketDataItem?.number_end ?? "N/A"}
                   </p>
                 </div>
                 <div className="col-md-3 col-sm-6 mb-3">
-                  <p className="m-0 text-white">
-                    <strong className="text-light">Price:</strong>
+                  <p className="m-0 text-dark">
+                    <strong className="text-dark">Price:</strong>
                   </p>
-                  <p className="m-0 text-white">
+                  <p className="m-0 text-dark">
                     {marketDataItem?.price
                       ? `₹ ${marketDataItem.price}`
                       : "N/A"}

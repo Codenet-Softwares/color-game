@@ -62,8 +62,8 @@ const InnerAnnouncement = () => {
   };
 
   return (
-    <div className="container my-5">
-      <h1>Create Inner Announcement</h1>
+    <div className="container my-5 p-5">
+      <h3 className="fw-bold text-center text-uppercase p-3 text-white rounded" style={{background:"#3E5879"}}>Create Inner Announcement</h3>
       <div className="mt-4">
         <div className="mb-3">
           
@@ -72,7 +72,12 @@ const InnerAnnouncement = () => {
               type="text"
               id="announcement"
               name="announcement"
-              className="form-control"
+              className="form-control fw-bold"
+              style={{
+                background:"#D8C4B6",
+                border:"2px solid #3E5879",
+
+              }}
               value={announcementData.announcement}
               onChange={handleChange}
               placeholder="Enter Inner Announcement"

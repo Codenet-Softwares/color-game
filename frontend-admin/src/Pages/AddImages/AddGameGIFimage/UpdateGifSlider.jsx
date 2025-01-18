@@ -69,24 +69,24 @@ const UpdateGifSlider = () => {
   
 
   return (
-    <div className="container my-5">
+    <div className="container my-5 p-5">
       <div className="card shadow-sm">
         <div
           className="card-header"
           style={{
-            backgroundColor: "#7D7D7D",
+            backgroundColor: "#3E5879",
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center">Update GIF Slider</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Update GIF Slider</h3>
         </div>
-        <div className="card-body">
+        <div className="card-body" style={{ background: "#D8C4B6" }}>
           {gifImages.length === 0 ? (
             <div className="text-center">No GIF images available.</div>
           ) : (
             <div className="row">
               {gifImages.map((gif, index) => (
-                <div key={gif.imageId} className="col-md-4 col-sm-4 mb-4">
+                <div key={gif.imageId} className="col-md-6 col-sm-6 mb-4">
                   <div className="card">
                     <img
                       src={gif.url}

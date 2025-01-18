@@ -14,12 +14,15 @@ const Navside = () => {
   const [isGifSliderImage, setisGifSliderImage] = useState(false);
   const [isInnerSliderImage, setIsInnerSliderImage] = useState(false);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
-  const [isInnerAnnouncement, setIsInnerAnnouncement] = useState(true);
+  const [isInnerAnnouncement, setIsInnerAnnouncement] = useState(false);
+  const [isOuterAnnouncement, setIsOuterAnnouncement] = useState(false);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
 
   const navigate = useNavigate();
-
+  const toggleMenu = (menuSetter) => {
+    menuSetter((prev) => !prev);
+  };
   const handleUserToggle = () => {
     setIsUser(!isUser);
   };
@@ -59,81 +62,21 @@ const Navside = () => {
   return (
     <nav className="sidebar">
       <div className="logo d-flex justify-content-between">
-        <a className="large_logo" href="#">
-          <img src="../../../../../../img/logo.png" alt="" />
+        <a className="large_logo text-decoration-none" href="#">
+          <img src="https://static.vecteezy.com/system/resources/previews/019/194/935/non_2x/global-admin-icon-color-outline-vector.jpg" alt="" />
+          {/* <h4 className="text-decoration-none fw-bolder" style={{color:"#3E5879"}}>Color Game Admin</h4> */}
         </a>
-        <a className="small_logo" href="#">
-          <img src="../../../../../../img/mini_logo.png" alt="" />
-        </a>
-        <div className="sidebar_close_icon d-lg-none">
-          <i className="ti-close"></i>
-        </div>
+       
       </div>
-
       {/*  List Of the Sidebar Starts */}
-      <ul id="sidebar_menu" class="metismenu">
-        {/* User Management Starts */}
-        {/* {isUser ? (
-          <li className="" onClick={handleUserToggle}>
-            <a className="has-arrow">
-              <div className="nav_icon_small">
-                <img
-                  src="../../../../../../../img/menu-icon/dashboard.svg"
-                  alt=""
-                />
-              </div>
-              <div className="nav_title">
-                <span>User Management</span>
-              </div>
-            </a>
-          </li>
-        ) : (
-          <li className="" onClick={handleUserToggle}>
-            <a className="has-arrow">
-              <div className="nav_icon_small">
-                <img
-                  src="../../../../../../img/menu-icon/dashboard.svg"
-                  alt=""
-                />
-              </div>
-              <div className="nav_title">
-                <span>User Management</span>
-              </div>
-            </a>
-            <ul>
-              <li>
-                <Link to="/userCreate">
-                  <span>
-                    <i class="fa-solid fa-circle"></i>Create User
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/viewUserList">
-                  <span>
-                    <i class="fa-solid fa-circle"></i>View User
-                  </span>
-                </Link>
-                <Link to="/homePageCarousel">
-                  <span>
-                    <i class="fa-solid fa-circle"></i>Set Carousel
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </li>
-        )} */}
-        {/* User Management Ends */}
-
+      <ul id="sidebar_menu" class="metismenu p-2 ">
         {/* Game Management Starts */}
         {isGame ? (
-          <li className="" onClick={handleGameToggle}>
+          <li className="m-2" onClick={handleGameToggle}>
             <a className="has-arrow " href="#" aria-expanded="false">
               <div className="nav_icon_small">
-                <img
-                  src="../../.../../../../img/menu-icon/dashboard.svg"
-                  alt=""
-                />
+              <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize:"20px" }}></i>
+
               </div>
               <div className="nav_title">
                 <span>Game Management</span>
@@ -144,10 +87,7 @@ const Navside = () => {
           <li className="" onClick={handleGameToggle}>
             <a className="has-arrow" href="#" aria-expanded="false">
               <div className="nav_icon_small">
-                <img
-                  src="../../../../../../img/menu-icon/dashboard.svg"
-                  alt=""
-                />
+              <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize:"20px" }}></i>
               </div>
               <div className="nav_title">
                 <span>Game Management</span>
@@ -157,14 +97,16 @@ const Navside = () => {
               <li>
                 <Link to="/gameMarket">
                   <span>
-                    <i class="fa-solid fa-circle"></i>Game Market
+                  <i className="fa-solid fa-store" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px" }}></i>
+                  Game Market
                   </span>
                 </Link>
               </li>
               <li>
                 <Link to="/deleteMarket">
                   <span>
-                    <i class="fa-solid fa-circle"></i>delete Market
+                  <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px" }}></i>
+                  delete Market
                   </span>
                 </Link>
               </li>
@@ -172,74 +114,63 @@ const Navside = () => {
           </li>
         )}
         {/* Game Management Ends */}
-        <li className="" onClick={handleInactive}>
+        <li className="m-2" onClick={handleInactive}>
           <Link to="/announcedGame" className="d-flex align-items-center">
             <div className="nav_icon_small">
-              <img
-                src="../../.../../../../img/menu-icon/dashboard.svg"
-                alt=""
-              />
+            <i class="fa-solid fa-ban" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
             </div>
             <span className="ms-3">Inactive Games</span>
           </Link>
         </li>
-        <li className="">
+        <li className="m-2">
           <Link to="/voidMarket" className="d-flex align-items-center">
-            <div className="nav_icon_small">
-              <img
-                src="../../.../../../../img/menu-icon/dashboard.svg"
-                alt=""
-              />
+            <div className="nav_icon_small" >
+            <i class="fa-solid fa-eraser" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
+
             </div>
             <span className="ms-3">Void Games</span>
           </Link>
         </li>
-        <li className="">
+        <li className="m-2">
           <Link to="/liveBet" className="d-flex align-items-center">
             <div className="nav_icon_small">
-              <img
-                src="../../.../../../../img/menu-icon/dashboard.svg"
-                alt=""
-              />
+            <i class="fa-solid fa-broadcast-tower" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
+
             </div>
             <span className="ms-3">Live Bet</span>
           </Link>
         </li>
-        <li className="">
+        <li className="m-2">
           <Link
             to="/get-bet-markets-afterWin"
             className="d-flex align-items-center"
           >
             <div className="nav_icon_small">
-              <img
-                src="../../.../../../../img/menu-icon/dashboard.svg"
-                alt=""
-              />
+            <i class="fa-solid fa-history" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
+
             </div>
             <span className="ms-3">Bet History</span>
           </Link>
         </li>
-        <li className="">
+        <li className="m-2">
           <Link to="/trash" className="d-flex align-items-center">
             <div className="nav_icon_small">
-              <img
-                src="../../.../../../../img/menu-icon/dashboard.svg"
-                alt=""
-              />
+            <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px"}}></i>
+
             </div>
             <span className="ms-3">Trash Bets</span>
           </Link>
         </li>
 
         {/* Image Management */}
-        <li>
+        <li className="m-2">
           <a
             className={`has-arrow ${isImage ? "active" : ""}`}
             href="#"
             onClick={handleImageToggle}
           >
             <div className="nav_icon_small">
-              <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+            <i class="fa-solid fa-image" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px"}}></i>
             </div>
             <div className="nav_title">
               <span>Add Image</span>
@@ -255,10 +186,8 @@ const Navside = () => {
                   onClick={handleSliderImageToggle}
                 >
                   <div className="nav_icon_small">
-                    <img
-                      src="../../../../../../img/menu-icon/dashboard.svg"
-                      alt=""
-                    />
+                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+
                   </div>
                   <div className="nav_title">
                     <span>Slider Image</span>
@@ -268,12 +197,12 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="create-image">
-                        <i className="fa-solid fa-circle"></i> Create Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Slider
                       </Link>
                     </li>
                     <li>
                       <Link to="slider-image-delete">
-                        <i className="fa-solid fa-circle"></i> Update Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Slider
                       </Link>
                     </li>
                   </ul>
@@ -286,10 +215,8 @@ const Navside = () => {
                   onClick={handleGameImageSlider}
                 >
                   <div className="nav_icon_small">
-                    <img
-                      src="../../../../../../img/menu-icon/dashboard.svg"
-                      alt=""
-                    />
+                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+
                   </div>
                   <div className="nav_title">
                     <span>Game Image</span>
@@ -299,12 +226,12 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="GameImage-slider">
-                        <i className="fa-solid fa-circle"></i> Create Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Slider
                       </Link>
                     </li>
                     <li>
                       <Link to="UpdateGameImage-slider">
-                        <i className="fa-solid fa-circle"></i> Update Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Slider
                       </Link>
                     </li>
                   </ul>
@@ -317,10 +244,8 @@ const Navside = () => {
                   onClick={handleGifImageSlider}
                 >
                   <div className="nav_icon_small">
-                    <img
-                      src="../../../../../../img/menu-icon/dashboard.svg"
-                      alt=""
-                    />
+                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+
                   </div>
                   <div className="nav_title">
                     <span>Game GIF</span>
@@ -330,12 +255,12 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="create-game-GIF">
-                        <i className="fa-solid fa-circle"></i> Create GIF
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create GIF
                       </Link>
                     </li>
                     <li>
                       <Link to="update-game-GIF">
-                        <i className="fa-solid fa-circle"></i> Update GIF
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update GIF
                       </Link>
                     </li>
                   </ul>
@@ -348,10 +273,8 @@ const Navside = () => {
                   onClick={handleInnerImageSlider}
                 >
                   <div className="nav_icon_small">
-                    <img
-                      src="../../../../../../img/menu-icon/dashboard.svg"
-                      alt=""
-                    />
+                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+
                   </div>
                   <div className="nav_title">
                     <span>Inner Image</span>
@@ -361,13 +284,13 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="create-inner-image">
-                        <i className="fa-solid fa-circle"></i> Create Inner
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Inner
                         Image
                       </Link>
                     </li>
                     <li>
                       <Link to="update-inner-image">
-                        <i className="fa-solid fa-circle"></i> Update Inner
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Inner
                         Image
                       </Link>
                     </li>
@@ -379,88 +302,85 @@ const Navside = () => {
           )}
         </li>
 
-        {/* Announcement Management */}
-        <li className="" onClick={handleAnnouncementToggle}>
+         {/* Game Announcement */}
+         <li className="game-announcement m-2">
+    <a
+      className={`has-arrow ${isAnnouncement ? "active" : ""}`}
+      href="#"
+      onClick={() => toggleMenu(setIsAnnouncement)}
+    >
+      <div className="nav_icon_small">
+      <i class="fa-solid fa-bullhorn" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px"}}></i>
+      </div>
+      <div className="nav_title">
+        <span>Game Announcement</span>
+      </div>
+    </a>
+    {isAnnouncement && (
+      <ul>
+        {/* Outer Announcement */}
+        <li className="outer-announcement">
           <a
-            className="has-arrow"
+            className={`has-arrow ${isOuterAnnouncement ? "active" : ""}`}
             href="#"
-            aria-expanded={isAnnouncement ? "true" : "false"}
+            onClick={() => toggleMenu(setIsOuterAnnouncement)}
           >
             <div className="nav_icon_small">
-              <img src="../../../../../../img/menu-icon/dashboard.svg" alt="" />
+            <i class="fa-solid fa-bell" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+
             </div>
             <div className="nav_title">
-              <span>Game Announcement</span>
+              <span>Outer Announcement</span>
             </div>
           </a>
-          {/* Submenu */}
-          {isAnnouncement && (
+          {isOuterAnnouncement && (
             <ul>
               <li>
-                <a
-                  className={`has-arrow ${isSliderImage ? "active" : ""}`}
-                  href="#"
-                  onClick={handleSliderImageToggle}
-                >
-                  <div className="nav_icon_small">
-                    <img
-                      src="../../../../../../img/menu-icon/dashboard.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="nav_title">
-                    <span>Outer Announcement</span>
-                  </div>
-                </a>
-                {isInnerAnnouncement && (
-                  <ul>
-                    <li>
-                      <Link to="outer-announcement">
-                        <i className="fa-solid fa-circle"></i> Create
-                        Announcement
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="update-outer-announcement">
-                        <i className="fa-solid fa-circle"></i> Update Slider
-                      </Link>
-                    </li>
-                  </ul>
-                )}
-                 <a
-                  className={`has-arrow ${isSliderImage ? "active" : ""}`}
-                  href="#"
-                  onClick={handleInnerAnnouncementToggle}
-                >
-                  <div className="nav_icon_small">
-                    <img
-                      src="../../../../../../img/menu-icon/dashboard.svg"
-                      alt=""
-                    />
-                  </div>
-                  <div className="nav_title">
-                    <span>Inner Announcement</span>
-                  </div>
-                  {isInnerAnnouncement && (
-                  <ul>
-                    <li>
-                      <Link to="inner-announcement">
-                        <i className="fa-solid fa-circle"></i> Create
-                        Announcement
-                      </Link>
-                    </li>
-                    <li>
-                      <Link to="update-inner-announcement">
-                        <i className="fa-solid fa-circle"></i> Update Slider
-                      </Link>
-                    </li>
-                  </ul>
-                )}
-                </a>
+                <Link to="outer-announcement">
+                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Announcement
+                </Link>
+              </li>
+              <li>
+                <Link to="update-outer-announcement">
+                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Announcement
+                </Link>
               </li>
             </ul>
           )}
         </li>
+        {/* Inner Announcement */}
+        <li className="inner-announcement">
+          <a
+            className={`has-arrow ${isInnerAnnouncement ? "active" : ""}`}
+            href="#"
+            onClick={() => toggleMenu(setIsInnerAnnouncement)}
+          >
+            <div className="nav_icon_small">
+            <i class="fa-solid fa-bell" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+
+            </div>
+            <div className="nav_title">
+              <span>Inner Announcement</span>
+            </div>
+          </a>
+          {isInnerAnnouncement && (
+            <ul>
+              <li>
+                <Link to="inner-announcement">
+                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Announcement
+                </Link>
+              </li>
+              <li>
+                <Link to="update-inner-announcement">
+                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Announcement
+                </Link>
+              </li>
+            </ul>
+          )}
+        </li>
+      </ul>
+    )}
+  </li>
 
         {/* Announcement Management Ends */}
       </ul>

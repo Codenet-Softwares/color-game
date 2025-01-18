@@ -22,28 +22,13 @@ html, body {
   align-items: center;
   justify-content: center;
 }
-
-.App-header {
-  margin-bottom: 20px;
-}
-
-.App-header h1 {
-  font-size: 3em;
-  margin-bottom: 0.5em;
-  opacity: 0;
-  transform: translateY(-20px);
-  animation: fadeInSlideIn 1.5s forwards;
-}
-
-@keyframes fadeInSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+h1 {
+  font-family: 'Reggae One', CenturyGothic, "AppleGothic", sans-serif;
+  font-size: 55px;
+  /* padding: 80px 50px; */
+  text-align: center;
+  text-transform: uppercase;
+  text-rendering: optimizeLegibility;
 }
 
 .welcome-message {
