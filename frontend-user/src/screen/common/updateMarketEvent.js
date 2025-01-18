@@ -1,4 +1,6 @@
-const eventSource = new EventSource("https://cg.server.dummydoma.in/events");
+const originalUrl = process.env.REACT_APP_API_URL;
+const newUrl = originalUrl.replace("/api", "");
+const eventSource = new EventSource(`${newUrl}/events`);
 
 const updateMarketEventEmitter = () => {
     console.log("updatemarketEventemitter");

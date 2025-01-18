@@ -1,5 +1,6 @@
-
-const lotteryEventSource = new EventSource("http://localhost:8080/lottery-events");
+const originalUrl = process.env.REACT_APP_API_LOTTERY_URL;
+const newUrl = originalUrl.replace("/api", "");
+const lotteryEventSource = new EventSource(`${newUrl}/lottery-events`);
 
 const updateLotteryMarketEventEmitter = () => {
     console.log("updatemarketEventemitte......loytteryr");
