@@ -10,7 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "aos": "^2.3.4",
     "bootstrap": "^5.3.3",
-    "dotenv": "^16.4.5",
+    "dotenv": "^16.4.7",
     "fa-icons": "^0.2.0",
     "formik": "^2.4.5",
     "history": "^5.3.0",
@@ -38,7 +38,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "npx prettier --write . --config .prettier"
+    "format": "npx prettier --write . --config .prettier",
+    "start:prod": "cross-env REACT_APP_ENV=production react-scripts start",
+    "build:prod": "cross-env REACT_APP_ENV=production react-scripts build"
   },
   "browserslist": {
     "production": [

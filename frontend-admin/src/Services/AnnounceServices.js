@@ -1,6 +1,6 @@
 /* eslint-disable import/no-anonymous-default-export */
 import axios from "axios";
-const API_HOST = process.env.REACT_APP_API_HOST;
+const API_HOST = process.env.REACT_APP_API_URL;
 
 class AnnounceServices {
     announceCreate(data, user) {
