@@ -1,7 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db.js';
 
-class Runner extends Model {}
+class Runner extends Model { }
 
 Runner.init(
   {
@@ -21,7 +21,7 @@ Runner.init(
     runnerId: {
       type: DataTypes.CHAR(36),
       allowNull: false,
-      unique: true, 
+      unique: true,
     },
     runnerName: {
       type: DataTypes.STRING(255),
@@ -47,19 +47,23 @@ Runner.init(
       allowNull: true,
       defaultValue: null,
     },
-    hideRunner : {
+    hideRunner: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    hideRunnerUser :{
+    hideRunnerUser: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    isBidding : {
+    isBidding: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
-    isRunnerCreate : {
+    isRunnerCreate: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
+    clientMessage: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     }
@@ -68,7 +72,7 @@ Runner.init(
     sequelize,
     modelName: 'Runner',
     tableName: 'runner',
-    timestamps: true, 
+    timestamps: true,
     updatedAt: false,
     paranoid: true, // Enable soft delete
     deletedAt: 'deletedAt',
