@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.7",
     "install": "^0.13.0",
     "jwt-decode": "^4.0.0",
     "npm": "^10.8.2",
@@ -26,7 +27,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:prod": "cross-env REACT_APP_ENV=production react-scripts start",
+    "build:prod": "cross-env REACT_APP_ENV=production react-scripts build"
   },
   "eslintConfig": {
     "extends": [

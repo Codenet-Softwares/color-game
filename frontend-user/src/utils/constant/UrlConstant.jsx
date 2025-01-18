@@ -3,9 +3,8 @@
 class UrlConstant {
   constructor() {}
 
-  url_dev = "https://cg.server.dummydoma.in/api";
-  // url_dev = "http://localhost:7000/api";
-
+  url_dev = process.env.REACT_APP_API_URL;
+  
   // user api
   user = "user";
   login = `${this.url_dev}/${this.user}-login`;
@@ -49,18 +48,18 @@ class UrlConstant {
   userLotteryBetHistoryById = `${this.url_dev}/lottery-bet-history`;
   getProfitLossLotteryEvent = `${this.url_dev}/lottery-profit-loss`;
   getUserLotteryBetList = `${this.url_dev}/lottery-betHistory-profitLoss`;
-  getResultMarkets= `${this.url_dev}/${this.user}/markets-dateWise`;
-  GetResult=`${this.url_dev}/${this.user}-lottery-results`; 
-  getPurchaseMarketTime = `${this.url_dev}/${this.user}/getMarkets`; 
+  getResultMarkets = `${this.url_dev}/${this.user}/markets-dateWise`;
+  GetResult = `${this.url_dev}/${this.user}-lottery-results`;
+  getPurchaseMarketTime = `${this.url_dev}/${this.user}/getMarkets`;
   getUpdateMarketStatus = `${this.url_dev}/update-market-status`;
-  liveUsersBet =`${this.url_dev}/live-users-bet`;
+  liveUsersBet = `${this.url_dev}/live-users-bet`;
   getSliderTextImg = `${this.url_dev}/admin/slider-text-img`;
   getGifImg = `${this.url_dev}/admin/get-gif`;
-  getGameImg = `${this.url_dev}/admin/get-game-img`
-  getInnerImg = `${this.url_dev}/admin/get-inner-game-img`
-  getAannouncement = `${this.url_dev}/admin/get-announcements`
+  getGameImg = `${this.url_dev}/admin/get-game-img`;
+  getInnerImg = `${this.url_dev}/admin/get-inner-game-img`;
+  getAannouncement = `${this.url_dev}/admin/get-announcements`;
   getInnerAannouncement = `${this.url_dev}/admin/get-inner-announcements`;
-  anonymousMarkets = `${this.url_dev}/external/get-allLottery-game`;   
+  anonymousMarkets = `${this.url_dev}/external/get-allLottery-game`;
 }
 
 const urls = new UrlConstant();
