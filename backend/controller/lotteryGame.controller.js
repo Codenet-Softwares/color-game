@@ -74,7 +74,7 @@ export const purchaseLottery = async (req, res) => {
         return exposure;
       });
     }
-    
+
 
     if (!updatedMarketListExposure.some(exposure => exposure.hasOwnProperty(marketId))) {
       const newExposure = { [marketId]: lotteryPrice };
@@ -293,7 +293,7 @@ export const getMarkets = async (req, res) => {
 export const updateBalance = async (req, res) => {
   try {
     const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
-    console.log("Received userId:", userId, "Received prizeAmount:", prizeAmount, "Received marketId:", marketId , lotteryPrice);
+    console.log("Received userId:", userId, "Received prizeAmount:", prizeAmount, "Received marketId:", marketId, lotteryPrice);
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
@@ -301,18 +301,24 @@ export const updateBalance = async (req, res) => {
     }
 
     let totalBalanceUpdate = prizeAmount;
-    let exposureValue = 0;
+    let updatedMarketListExposure = user.marketListExposure; // Start with the current value
 
-    if (user.marketListExposure) {
-      const marketExposure = user.marketListExposure.find(exposure => exposure[marketId]);
-      if (marketExposure) {
-        exposureValue = marketExposure[marketId];
-        totalBalanceUpdate += lotteryPrice;
-        user.marketListExposure = user.marketListExposure.filter(exposure => !exposure[marketId]);
+    totalBalanceUpdate += lotteryPrice;
+
+    // Modify the market exposure for the given marketId
+    const marketExposures = user.marketListExposure;
+
+    updatedMarketListExposure = marketExposures.map(exposure => {
+      if (exposure.hasOwnProperty(marketId)) {
+        exposure[marketId] -= lotteryPrice; // Decrease exposure for the given marketId
       }
-    }
+      return exposure;
+    });
+
+    console.log("updatedMarketListExposure....11", updatedMarketListExposure);
 
     user.balance += totalBalanceUpdate;
+    user.marketListExposure = updatedMarketListExposure;
 
     const marketExposure = user.marketListExposure;
 
@@ -337,7 +343,8 @@ export const updateBalance = async (req, res) => {
 
     let message = response.success ? "Sync data successful" : "Sync not successful";
 
-    await user.save();
+    await user.save({ fields: ["balance", "marketListExposure"] });
+
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update" + " " + message));
   } catch (error) {
@@ -378,6 +385,28 @@ export const removeExposer = async (req, res) => {
         });
 
       }
+
+
+      const marketExposures = user.marketListExposure;
+
+      let totalExposure = 0;
+      marketExposures.forEach(market => {
+        const exposure = Object.values(market)[0];
+        totalExposure += exposure;
+      });
+
+      console.log("totalExposure...1010", totalExposure)
+
+      const dataToSend = {
+        amount: user.balance,
+        userId,
+        exposure: totalExposure
+      };
+      const baseURL = process.env.WHITE_LABEL_URL;
+      const { data: response } = await axios.post(
+        `${baseURL}/api/admin/extrnal/balance-update`,
+        dataToSend,
+      );
     }
 
     await user.save();
