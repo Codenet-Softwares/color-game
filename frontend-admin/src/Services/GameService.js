@@ -450,7 +450,7 @@ class GameService {
       },
     });
   }
-  activeInactiveGameImage(user, imageId, isActive) {
+  InnerActiveInactiveGameImage(user, imageId, isActive) {
     return axios({
       method: "POST",
       url: `${API_HOST}/api/admin/inner-game-img/${imageId}`,

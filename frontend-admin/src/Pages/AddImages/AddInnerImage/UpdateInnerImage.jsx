@@ -40,7 +40,7 @@ const UpdateInnerImage = () => {
     const newStatus = !currentStatus;
 
     try {
-      const response = await GameService.activeInactiveGameImage(
+      const response = await GameService.InnerActiveInactiveGameImage(
         auth.user,
         imageId,
         newStatus
