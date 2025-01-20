@@ -328,7 +328,6 @@ export const updateBalance = async (req, res) => {
       totalExposure += exposure;
     });
 
-    console.log("totalExposure...1010", totalExposure)
 
     const dataToSend = {
       amount: user.balance,
@@ -395,7 +394,6 @@ export const removeExposer = async (req, res) => {
         totalExposure += exposure;
       });
 
-      console.log("totalExposure...1010", totalExposure)
 
       const dataToSend = {
         amount: user.balance,
