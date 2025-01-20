@@ -29,6 +29,7 @@ const BetHistory = () => {
   const [selectedGameName, setSelectedGameName] = useState("");
   const [selectedGameId, setSelectedGameId] = useState(null);
   const [flag, setFlag] = useState(true);
+  const [gameType, setGameType] = useState("");
   const defaultStartDate = new Date();
   const [selected, setSelected] = useState(<Date />);
   // <Date/>
@@ -96,6 +97,7 @@ const BetHistory = () => {
       setBetHistoryData(response?.data);
       setTotalPages(response?.pagination?.totalPages);
       setTotalItems(response?.pagination?.totalItems);
+      setGameType("Colorgame");
     } else {
       //add loading part //
     }
@@ -118,6 +120,7 @@ const BetHistory = () => {
       setBetHistoryData(response?.data);
       setTotalPages(response?.pagination?.totalPages);
       setTotalItems(response?.pagination?.totalItems);
+      setGameType("Lottery");
     } else {
       //add loading part //
     }
@@ -384,7 +387,7 @@ const BetHistory = () => {
 
               <div style={{ overflow: "auto" }}>
                 <table className="table table-bordered">
-                  {selectedGameId === "lottery" ? (
+                  {gameType === "Lottery" ? (
                     <>
                       <thead>
                         <tr align="center">
