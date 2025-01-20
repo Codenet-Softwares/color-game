@@ -787,7 +787,7 @@ export const getAllRunners = async (req, res) => {
 
     const totalPages = Math.ceil(totalItems / pageSize);
 
-    const paginationData = apiResponsePagination(page, totalPages, totalItems);
+    const paginationData = apiResponsePagination(page, pageSize, totalPages, totalItems);
 
     res
       .status(statusCode.success)
