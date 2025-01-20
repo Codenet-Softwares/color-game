@@ -134,13 +134,14 @@ export const purchaseLottery = async (req, res) => {
 export const purchaseHistory = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { page, limit, sem } = req.query;
+    const { page, limit, sem,date } = req.query;
     const { marketId } = req.params;
 
     const params = {
       page,
       limit,
-      sem
+      sem,
+      date
     };
 
     const baseURL = process.env.LOTTERY_URL;
