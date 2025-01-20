@@ -925,8 +925,8 @@ export const getExternalLotteryP_L = async (req, res) => {
     const userName = req.params.userName;
     const { page = 1, limit = 10 } = req.query;
 
-    const currentPage = parseInt(page); 
-    const parsedLimit = parseInt(limit); 
+    const currentPage = parseInt(page);
+    const parsedLimit = parseInt(limit);
     const offset = (currentPage - 1) * parsedLimit;
 
     const { count: totalItems, rows: lotteryProfitLossRecords } = await LotteryProfit_Loss.findAndCountAll({
@@ -1098,7 +1098,7 @@ export const getRevokeMarket = async (req, res) => {
     }
 
     // Fetch profit/loss data for the market
-    const usersFromProfitLoss = await LotteryProfit_Loss.findAll({
+    let usersFromProfitLoss = await LotteryProfit_Loss.findAll({
       where: { marketId },
       attributes: ["marketId", "userId", "price", "profitLoss"],
       raw: true,
@@ -1117,23 +1117,32 @@ export const getRevokeMarket = async (req, res) => {
         );
     }
 
+    // Deduplicate entries based on `marketId`, `userId`, `price`, and `profitLoss`
+    usersFromProfitLoss = Array.from(
+      new Map(
+        usersFromProfitLoss.map((entry) =>
+          [
+            `${entry.marketId}-${entry.userId}-${entry.price}-${entry.profitLoss}`,
+            entry
+          ]
+        )
+      ).values()
+    );
     console.log("usersFromProfitLoss", usersFromProfitLoss)
     // Aggregate profit/loss and price for each user
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
       if (!userProfitLossMap[userId]) {
-        userProfitLossMap[userId] = { totalProfitLoss: 0, totalPrice: 0 , exposurePrice : 0 };
+        userProfitLossMap[userId] = { totalProfitLoss: 0, totalPrice: 0, exposurePrice: 0 };
       }
 
       if (profitLoss > 0) {
         userProfitLossMap[userId].totalProfitLoss += Number(profitLoss);
+        userProfitLossMap[userId].totalPrice += Number(price);
       }
-      else {
-        userProfitLossMap[userId].exposurePrice -= Number(profitLoss) ;
-      }
-      userProfitLossMap[userId].exposurePrice += Number(price) ;
 
-      userProfitLossMap[userId].totalPrice += Number(price);
+      userProfitLossMap[userId].exposurePrice += Number(price);
+
     });
 
     const userIds = Object.keys(userProfitLossMap);
@@ -1160,8 +1169,10 @@ export const getRevokeMarket = async (req, res) => {
       const userProfitLoss = userProfitLossMap[user.userId];
       if (!userProfitLoss) continue;
 
-      const { totalProfitLoss, totalPrice ,exposurePrice} = userProfitLoss;
-      console.log("totalProfitLoss, totalPrice ", totalProfitLoss, totalPrice)
+      const { totalProfitLoss, totalPrice, exposurePrice } = userProfitLoss;
+
+      console.log("totalProfitLoss, totalPrice,", totalProfitLoss, totalPrice,)
+
       if (totalProfitLoss > 0) {
         user.balance -= totalProfitLoss + totalPrice;
       }
@@ -1204,8 +1215,6 @@ export const getRevokeMarket = async (req, res) => {
       }
 
       await user.save({ fields: ["marketListExposure", "balance"] });
-
-
     }
 
     // Remove all profit/loss entries for the market
@@ -1237,6 +1246,7 @@ export const getRevokeMarket = async (req, res) => {
       );
   }
 };
+
 
 export const getDeleteLiveMarket = async (req, res) => {
   const t = await sequelize.transaction();
