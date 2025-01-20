@@ -62,7 +62,7 @@ const Navside = () => {
   return (
     <nav className="sidebar">
       <div className="logo d-flex justify-content-between">
-        <a className="large_logo text-decoration-none" href="#">
+        <a className="large_logo text-decoration-none" href="welcome">
           <img src="https://static.vecteezy.com/system/resources/previews/019/194/935/non_2x/global-admin-icon-color-outline-vector.jpg" alt="" />
           {/* <h4 className="text-decoration-none fw-bolder" style={{color:"#3E5879"}}>Color Game Admin</h4> */}
         </a>

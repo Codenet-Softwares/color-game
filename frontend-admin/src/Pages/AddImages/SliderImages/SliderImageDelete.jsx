@@ -32,7 +32,6 @@ const SliderImageDelete = () => {
       });
   };
 
-
   const handleDelete = async (imageId) => {
     try {
       await GameService.deleteCreatedImage(auth.user, imageId);
@@ -86,80 +85,77 @@ const SliderImageDelete = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Slider Images</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">
+            Slider Images
+          </h3>
         </div>
         <div className="card-body" style={{ background: "#D8C4B6" }}>
-          <div className="table-responsive">
-            <table
-              className="table table-striped table-hover rounded-table"
-              style={{
-                border: "2px solid #6c757d",
-                borderRadius: "10px",
-              }}
-            >
-              <thead
-                className="table-primary"
-                style={{
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 1,
-                }}
-              >
-                <tr>
-                  <th>Serial Number</th>
-                  <th>Slider Image</th>
-                  <th>Status</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sliderImages.data.length === 0 ? (
-                  <tr>
-                    <td colSpan="4" className="text-center">
-                      No images available.
-                    </td>
-                  </tr>
-                ) : (
-                  sliderImages.data.map((slider, index) => (
-                    <tr key={slider.imageId}>
-                      <td>{index + 1}</td>
-                      <td>
-                        <img
-                          src={slider.image}
-                          alt="Slider"
-                          style={{ width: "100px", height: "100px" }}
-                        />
-                      </td>
-                      <td>
-                        <div className="form-check form-switch">
-                          <input
-                            className="form-check-input"
-                            type="checkbox"
-                            id={`flexSwitch-${slider.imageId}`}
-                            checked={slider.isActive}
-                            onChange={() =>
-                              handleToggleActiveStatus(slider.imageId, slider.isActive)
-                            }
-                          />
-                          <label className="form-check-label">
-                            {slider.isActive ? "Active" : "Inactive"}
-                          </label>
-                        </div>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-danger"
-                          onClick={() => handleDelete(slider.imageId)}
-                        >
-                          <FaTrashAlt /> Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-
-            </table>
+          <div
+            className="card-container"
+            style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}
+          >
+            {sliderImages.data.length === 0 ? (
+              <div className="text-center" style={{ width: "100%" }}>
+                No images available.
+              </div>
+            ) : (
+              sliderImages.data.map((slider, index) => (
+                <div
+                  key={slider.imageId}
+                  className="card"
+                  style={{
+                    width: "385px",
+                    border: "2px solid #6c757d",
+                    borderRadius: "10px",
+                    padding: "16px",
+                    backgroundColor: "#f8f9fa",
+                  }}
+                >
+                  <div className="card-body text-center">
+                    <img
+                      src={slider.image}
+                      alt="Slider"
+                      style={{
+                        width: "100%",
+                        height: "200px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
+                      }}
+                    />
+                  </div>
+                  <div className="card-footer">
+                    <div
+                      className="form-check form-switch d-flex justify-content-center align-items-center"
+                      style={{ marginBottom: "16px" }}
+                    >
+                      <input
+                        className="form-check-input"
+                        type="checkbox"
+                        id={`flexSwitch-${slider.imageId}`}
+                        checked={slider.isActive}
+                        onChange={() =>
+                          handleToggleActiveStatus(
+                            slider.imageId,
+                            slider.isActive
+                          )
+                        }
+                      />
+                      <label className="form-check-label ms-2">
+                        {slider.isActive ? "Active" : "Inactive"}
+                      </label>
+                    </div>
+                    <div className="text-center">
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(slider.imageId)}
+                      >
+                        <FaTrashAlt /> Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>
