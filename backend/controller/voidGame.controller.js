@@ -81,8 +81,6 @@ export const voidMarket = async (req, res) => {
             totalExposure += exposure;
           });
 
-          console.log("totalExposure...12012", totalExposure)
-
           const dataToSend = {
             amount: userDetails.balance,
             userId: userDetails.userId,

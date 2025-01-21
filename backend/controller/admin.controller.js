@@ -601,8 +601,6 @@ export const afterWining = async (req, res) => {
                   totalExposure += exposure;
                 });
 
-                console.log("totalExposure.... 1", totalExposure)
-
                 const dataToSend = {
                   amount: userDetails.balance,
                   userId: user.userId,
@@ -826,8 +824,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
           totalExposure += exposure;
         });
 
-        console.log("totalExposure...333", totalExposure)
-
         const dataToSend = {
           amount: user.balance,
           userId: user.userId,
@@ -875,7 +871,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
       { where: { marketId, runnerId }, transaction }
     );
 
-    console.log("Updating Market and Runner...");
     await Market.update(
       {
         isRevoke: true,
@@ -892,7 +887,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
     );
 
     await transaction.commit();
-    console.log("Transaction Committed");
 
     return res
       .status(statusCode.success)

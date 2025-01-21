@@ -193,7 +193,6 @@ export const calculateExternalProfitLoss = async (req, res) => {
       distinct: true,
       col: "gameId",
     });
-    console.log("totalGames............", totalGames);
 
     const profitLossData = await ProfitLoss.findAll({
       attributes: [
@@ -1027,8 +1026,6 @@ export const getVoidMarket = async (req, res) => {
           totalExposure += exposure;
         });
 
-        console.log("totalExposure...66", totalExposure)
-
         const dataToSend = {
           amount: user.balance,
           userId: user.userId,
@@ -1129,7 +1126,6 @@ export const getRevokeMarket = async (req, res) => {
       ).values()
     );
     console.log("usersFromProfitLoss", usersFromProfitLoss)
-    // Aggregate profit/loss and price for each user
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
       if (!userProfitLossMap[userId]) {
@@ -1147,7 +1143,6 @@ export const getRevokeMarket = async (req, res) => {
 
     const userIds = Object.keys(userProfitLossMap);
 
-    // Fetch user data
     const users = await userSchema.findAll({
       where: { userId: userIds },
     });
@@ -1177,11 +1172,18 @@ export const getRevokeMarket = async (req, res) => {
         user.balance -= totalProfitLoss + totalPrice;
       }
 
-      // Add all prices for the market to the user's exposure
-      const newExposure = { [marketId]: exposurePrice };
-      user.marketListExposure = [...(user.marketListExposure || []), newExposure];
+      const marketListExposure = user.marketListExposure || [];
 
-      // Calculate total exposure
+      const existingMarket = marketListExposure.find(
+        (market) => market[marketId] !== undefined
+      );
+      
+      if (existingMarket) {
+        existingMarket[marketId] += exposurePrice;
+      } else {
+        marketListExposure.push({ [marketId]: exposurePrice });
+      }
+
       const marketExposure = user.marketListExposure;
       let totalExposure = 0;
       marketExposure.forEach((market) => {
@@ -1328,8 +1330,6 @@ export const getDeleteLiveMarket = async (req, res) => {
       const exposure = Object.values(market)[0];
       totalExposure += exposure;
     });
-
-    console.log("totalExposure...888", totalExposure)
 
     const dataToSend = {
       amount: user.balance,

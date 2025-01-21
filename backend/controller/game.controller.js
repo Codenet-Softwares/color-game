@@ -723,7 +723,6 @@ export const updateRate = async (req, res) => {
     }
 
     const runnerAfterUpdate = await Runner.findOne({ where: { runnerId } });
-    console.log("Runner after update:", runnerAfterUpdate.toJSON());
 
     return res
       .status(statusCode.success)
