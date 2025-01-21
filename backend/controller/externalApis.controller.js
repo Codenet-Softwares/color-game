@@ -1129,7 +1129,6 @@ export const getRevokeMarket = async (req, res) => {
       ).values()
     );
     console.log("usersFromProfitLoss", usersFromProfitLoss)
-    // Aggregate profit/loss and price for each user
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
       if (!userProfitLossMap[userId]) {
@@ -1147,7 +1146,6 @@ export const getRevokeMarket = async (req, res) => {
 
     const userIds = Object.keys(userProfitLossMap);
 
-    // Fetch user data
     const users = await userSchema.findAll({
       where: { userId: userIds },
     });
@@ -1177,11 +1175,18 @@ export const getRevokeMarket = async (req, res) => {
         user.balance -= totalProfitLoss + totalPrice;
       }
 
-      // Add all prices for the market to the user's exposure
-      const newExposure = { [marketId]: exposurePrice };
-      user.marketListExposure = [...(user.marketListExposure || []), newExposure];
+      const marketListExposure = user.marketListExposure || [];
 
-      // Calculate total exposure
+      const existingMarket = marketListExposure.find(
+        (market) => market[marketId] !== undefined
+      );
+      
+      if (existingMarket) {
+        existingMarket[marketId] += exposurePrice;
+      } else {
+        marketListExposure.push({ [marketId]: exposurePrice });
+      }
+
       const marketExposure = user.marketListExposure;
       let totalExposure = 0;
       marketExposure.forEach((market) => {
