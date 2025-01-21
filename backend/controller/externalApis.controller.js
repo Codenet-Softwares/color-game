@@ -193,7 +193,6 @@ export const calculateExternalProfitLoss = async (req, res) => {
       distinct: true,
       col: "gameId",
     });
-    console.log("totalGames............", totalGames);
 
     const profitLossData = await ProfitLoss.findAll({
       attributes: [
@@ -1027,8 +1026,6 @@ export const getVoidMarket = async (req, res) => {
           totalExposure += exposure;
         });
 
-        console.log("totalExposure...66", totalExposure)
-
         const dataToSend = {
           amount: user.balance,
           userId: user.userId,
@@ -1333,8 +1330,6 @@ export const getDeleteLiveMarket = async (req, res) => {
       const exposure = Object.values(market)[0];
       totalExposure += exposure;
     });
-
-    console.log("totalExposure...888", totalExposure)
 
     const dataToSend = {
       amount: user.balance,

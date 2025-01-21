@@ -208,13 +208,11 @@ export const resetPassword = async (req, res) => {
     const { userName, oldPassword, newPassword } = req.body;
 
     const existingUser = await userSchema.findOne({ where: { userName } });
-    console.log('existingUser', existingUser)
 
     const isPasswordMatch = await bcrypt.compare(oldPassword, existingUser.password);
     if (!isPasswordMatch) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid old password.'));
     }
-    console.log('existingUser', existingUser)
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);

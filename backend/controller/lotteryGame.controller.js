@@ -64,6 +64,8 @@ export const purchaseLottery = async (req, res) => {
     user.balance -= lotteryPrice;
     let updatedMarketListExposure;
 
+    console.log('updatedMarketListExposure',updatedMarketListExposure)
+
     if (!marketListExposure || marketListExposure.length === 0) {
       updatedMarketListExposure = [{ [marketId]: lotteryPrice }];
     } else {
@@ -74,6 +76,7 @@ export const purchaseLottery = async (req, res) => {
         return exposure;
       });
     }
+    console.log('updatedMarketListExposure ....1',updatedMarketListExposure)
 
 
     if (!updatedMarketListExposure.some(exposure => exposure.hasOwnProperty(marketId))) {
