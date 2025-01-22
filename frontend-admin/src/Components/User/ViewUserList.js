@@ -104,7 +104,7 @@ const ViewUserList = () => {
                         </select>
                       </div>
 
-                      <div class="box_right d-flex lms_block">
+                      <div class="box_right d-flex lms_block p-2">
                         <div class="serach_field_2">
                           <div class="search_inner">
                             <form Active="#">

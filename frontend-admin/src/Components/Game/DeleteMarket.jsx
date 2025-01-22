@@ -105,7 +105,7 @@ const DeleteMarket = () => {
         <div className="card-header text-white text-center text-uppercase" style={{background:"#3E5879"}}>
           <h3 className="mb-0">Delete Markets</h3>
         </div>
-        <div className="card-body" style={{background:"#D8C4B6"}}>
+        <div className="card-body" style={{background:"#E1D1C7"}}>
           <div className="row mb-4">
             <div className="col-md-6 position-relative">
               <div className="input-group">

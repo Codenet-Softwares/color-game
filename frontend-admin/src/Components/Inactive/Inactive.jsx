@@ -83,7 +83,7 @@ const Inactive = () => {
         >
           <h3 className="mb-0 fw-bold  text-center">Announced Game</h3>
         </div>
-        <div className="card-body" style={{background:"#D8C4B6"}}>
+        <div className="card-body" style={{background:"#E1D1C7"}}>
           {/* Search and Entries Selection */}
           <div className="row mb-4">
             <div className="col-md-6 position-relative">

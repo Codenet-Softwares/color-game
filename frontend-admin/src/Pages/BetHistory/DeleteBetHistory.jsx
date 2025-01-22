@@ -176,7 +176,7 @@ const DeleteBetHistory = () => {
 
       <div
         className="card shadow-lg rounded mt-4 p-4"
-        style={{ background: "#D8C4B6" }}
+        style={{ background: "#E1D1C7" }}
       >
         <div className="accordion" id="marketAccordion">
           {paginatedMarkets.length > 0 ? (

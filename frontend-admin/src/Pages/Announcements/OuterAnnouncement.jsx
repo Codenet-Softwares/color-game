@@ -73,7 +73,7 @@ const OuterAnnouncement = () => {
               name="announcement"
               className="form-control fw-bold"
               style={{
-                background: "#D8C4B6",
+                background: "#E1D1C7",
                 border:"2px solid #3E5879",
               }}
               value={announcementData.announcement}
