@@ -139,12 +139,13 @@ export const purchaseHistory = async (req, res) => {
     const userId = req.user.userId;
     const { page, limit, sem,date } = req.query;
     const { marketId } = req.params;
+    const currentDate = new Date().toISOString().split('T')[0]; 
 
     const params = {
       page,
       limit,
       sem,
-      date
+      date: date || currentDate,
     };
 
     const baseURL = process.env.LOTTERY_URL;
