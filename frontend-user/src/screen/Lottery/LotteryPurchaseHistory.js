@@ -5,6 +5,7 @@ import {
   GetPurchaseHistoryMarketTimings,
   lotteryPurchaseHIstoryUserNew,
 } from "../../utils/apiService";
+import { format } from "date-fns";
 
 const LotteryPurchaseHistory = ({ MarketId }) => {
   const [purchaseHistory, setPurchaseHistory] = useState([]);
@@ -15,11 +16,12 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
     totalPages: 0,
     totalItems: 0,
   });
-
+  const today = format(new Date(), "yyyy-MM-dd");
   const [markets, setMarkets] = useState([]);
   const [selectedMarketId, setSelectedMarketId] = useState(MarketId);
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
+  const [selectedDate, setSelectedDate] = useState(today);
   const visibleCount = 5;
   const handleLeftClick = () => {
     setVisibleStartIndex((prev) => Math.max(0, prev - 1));
@@ -38,26 +40,24 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   const toggleDropdown = (id) => {
     setDropdownOpen(dropdownOpen === id ? null : id);
   };
-
-  useEffect(() => {
-    const fetchMarketData = async () => {
-      try {
-        const response = await GetPurchaseHistoryMarketTimings();
-        if (response?.success) {
-          setMarkets(response.data || []);
-          if (!selectedMarketId && response.data.length > 0) {
-            setSelectedMarketId(response.data[0].marketId);
-          }
-        } else {
-          console.error("Failed to fetch markets");
+  const fetchMarketData = async () => {
+    try {
+      const response = await GetPurchaseHistoryMarketTimings({ date: selectedDate});
+      if (response?.success) {
+        setMarkets(response.data || []);
+        if (!selectedMarketId && response.data.length > 0) {
+          setSelectedMarketId(response.data[0].marketId);
         }
-      } catch (error) {
-        console.error("Error fetching markets:", error);
+      } else {
+        console.error("Failed to fetch markets");
       }
-    };
-
+    } catch (error) {
+      console.error("Error fetching markets:", error);
+    }
+  };
+  useEffect(() => {
     fetchMarketData();
-  }, [MarketId]);
+  }, [MarketId, selectedDate]);
 
   useEffect(() => {
     const fetchPurchaseHistory = async () => {
@@ -99,6 +99,12 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
     fetchPurchaseHistory();
   }, [selectedMarketId, pagination.page, pagination.limit]);
 
+  const handleDateChange = (event) => {
+    const newDate = event.target.value;
+    const formattedDate = format(new Date(newDate), "yyyy-MM-dd");
+    setSelectedDate(formattedDate);
+    fetchMarketData();
+  };
   const handleMarketClick = (marketId) => {
     setSelectedMarketId(marketId);
     setPagination((prev) => ({ ...prev, page: 1 })); // Reset pagination on market change
@@ -138,6 +144,20 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         boxShadow: "0 0 15px rgba(0,0,0,0.1)",
       }}
     >
+        {/* Date Filter UI */}
+        <div className="date-filter-container">
+        <label htmlFor="date-filter" className="date-filter-label">
+          Select Date:
+        </label>
+        <input
+          type="date"
+          id="date-filter"
+          className="date-filter-input"
+          value={selectedDate}
+          onChange={handleDateChange}
+          max={today} // Prevent selecting future dates
+        />
+      </div>
       <div className="d-flex justify-content-between align-items-center mb-3 position-relative mt-4">
         <h4 className="mb-0 fw-bold">Markets</h4>
         <div className="position-absolute start-50 translate-middle-x">
