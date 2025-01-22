@@ -80,7 +80,7 @@ const UpdateGifSlider = () => {
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Update GIF Slider</h3>
         </div>
-        <div className="card-body" style={{ background: "#D8C4B6" }}>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
           {gifImages.length === 0 ? (
             <div className="text-center">No GIF images available.</div>
           ) : (

@@ -89,7 +89,7 @@ const SliderImageDelete = () => {
             Slider Images
           </h3>
         </div>
-        <div className="card-body" style={{ background: "#D8C4B6" }}>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
           <div
             className="card-container"
             style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}

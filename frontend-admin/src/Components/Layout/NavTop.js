@@ -103,9 +103,7 @@ const NavTop = () => {
               {/* <div className="line_icon open_miniSide d-none d-lg-block">
                 <img src="../../../../../../img/line_img.png" alt="" />
               </div> */}
-              <div>
-                
-              </div>
+              <div> </div>
           {/* <h3 className="text-decoration-none fw-bolder text-uppercase" style={{color:"#3E5879"}}>Admin</h3> */}
           <div class="text">WELCOME TO COLORGAME ADMIN</div>
           <div className="header_right d-flex justify-content-center align-items-center">

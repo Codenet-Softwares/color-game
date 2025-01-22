@@ -102,7 +102,7 @@ const LiveUserBet = () => {
 
   return (
     <div className="container my-5 p-5">
-      <div className="card shadow-lg" style={{ background: "#D8C4B6" }}>
+      <div className="card shadow-lg" style={{ background: "#E1D1C7" }}>
         <div
           className="card-header  text-white"
           style={{

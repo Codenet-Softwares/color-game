@@ -63,7 +63,7 @@ const LiveBetPage = () => {
 
   return (
     <div className="container my-5 p-5">
-      <div className="card shadow-sm">
+      <div className="card shadow-lg">
         <div
           className="card-header"
           style={{
@@ -73,7 +73,7 @@ const LiveBetPage = () => {
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase">Live Bet</h3>
         </div>
-        <div className="card-body"  style={{background:"#D8C4B6"}}>
+        <div className="card-body"  style={{background:"#E1D1C7"}}>
           {/* Search and Entries Selection */}
           <div className="row mb-4">
             <div className="col-md-6 position-relative">
