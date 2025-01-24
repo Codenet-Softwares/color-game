@@ -8,6 +8,7 @@ import {
 import userSchema from "../models/user.model.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import sequelize from "../db.js";
+import { user_Balance } from "./admin.controller.js";
 
 export const searchTicket = async (req, res) => {
   try {
@@ -16,8 +17,8 @@ export const searchTicket = async (req, res) => {
     const baseURL = process.env.LOTTERY_URL;
 
     const token = jwt.sign(
-      { roles: req.user.roles }, 
-      process.env.JWT_SECRET_KEY, 
+      { roles: req.user.roles },
+      process.env.JWT_SECRET_KEY,
       { expiresIn: '1h' }
     );
 
@@ -61,10 +62,8 @@ export const purchaseLottery = async (req, res) => {
     }
 
     const user = await userSchema.findOne({ where: { userId }, transaction: t });
-    user.balance -= lotteryPrice;
-    let updatedMarketListExposure;
 
-    console.log('updatedMarketListExposure',updatedMarketListExposure)
+    let updatedMarketListExposure;
 
     if (!marketListExposure || marketListExposure.length === 0) {
       updatedMarketListExposure = [{ [marketId]: lotteryPrice }];
@@ -76,8 +75,6 @@ export const purchaseLottery = async (req, res) => {
         return exposure;
       });
     }
-    console.log('updatedMarketListExposure ....1',updatedMarketListExposure)
-
 
     if (!updatedMarketListExposure.some(exposure => exposure.hasOwnProperty(marketId))) {
       const newExposure = { [marketId]: lotteryPrice };
@@ -85,7 +82,7 @@ export const purchaseLottery = async (req, res) => {
     }
 
     user.marketListExposure = updatedMarketListExposure;
-    await user.save({ fields: ["balance", "marketListExposure"], transaction: t });
+    await user.save({ fields: ["marketListExposure"], transaction: t });
 
     const marketExposure = user.marketListExposure;
 
@@ -105,20 +102,20 @@ export const purchaseLottery = async (req, res) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       ),
-      axios.post(`${whiteLabelUrl}/api/admin/extrnal/balance-update`, {
-        userId,
-        amount: balance - lotteryPrice,
-        exposure: totalExposure
-      }),
+      // axios.post(`${whiteLabelUrl}/api/admin/extrnal/balance-update`, {
+      //   userId,
+      //   amount: balance - lotteryPrice,
+      //   exposure: totalExposure
+      // }),
     ]);
 
     if (!rs1.data.success) {
       return res.status(statusCode.success).send(rs1.data);
     }
 
-    if (!rs2.data.success) {
-      return res.status(statusCode.success).send(rs2.data);
-    }
+    // if (!rs2.data.success) {
+    //   return res.status(statusCode.success).send(rs2.data);
+    // }
 
     await t.commit();
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.create, "Lottery purchased successfully"));

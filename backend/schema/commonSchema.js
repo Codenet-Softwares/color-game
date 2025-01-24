@@ -287,8 +287,8 @@ export const exUpdateBalanceSchema = [
   body("type")
     .notEmpty()
     .withMessage("type is required")
-    .isIn(["credit", "debit"])
-    .withMessage('type must be either "credit" or "debit".'),
+    .isIn(["credit", "withdrawal"])
+    .withMessage('type must be either "credit" or "withdrawal".'),
 ];
 
 export const validateRevokeWinningAnnouncement = [

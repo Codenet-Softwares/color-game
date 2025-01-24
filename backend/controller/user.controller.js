@@ -22,6 +22,7 @@ import CustomError from "../helper/extendError.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
+import { user_Balance } from "./admin.controller.js";
 
 // done
 export const createUser = async (req, res) => {
@@ -682,9 +683,11 @@ export const getUserWallet = async (req, res) => {
         );
     }
 
+    const userBalance = await user_Balance(userId)
+
     const getBalance = {
       walletId: userData.walletId,
-      balance: userData.balance,
+      balance: userBalance,
       exposure: userData.exposure,
       marketListExposure: userData.marketListExposure,
     };

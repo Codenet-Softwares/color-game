@@ -10,23 +10,11 @@ userSchema.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    lastName: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
     userName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     userId: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    },
-    phoneNumber: {
       type: DataTypes.STRING,
       allowNull: true,
     },
@@ -46,14 +34,6 @@ userSchema.init(
       type: DataTypes.UUID,
       defaultValue: uuid4(),
       allowNull: true,
-    },
-    balance: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0.0,
-    },
-    exposure: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0.0,
     },
     marketListExposure: {
       type: DataTypes.JSON,

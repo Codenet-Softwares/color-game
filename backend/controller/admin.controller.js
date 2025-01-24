@@ -312,14 +312,16 @@ export const updateByAdmin = async (req, res) => {
     const {
       amount,
       userId,
-      type,
       transactionId,
       transactionType,
       date,
       remarks,
       transferFromUserAccount,
       transferToUserAccount,
+      userName
     } = req.body;
+
+    console.log("req.body", req.body)
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
@@ -330,13 +332,6 @@ export const updateByAdmin = async (req, res) => {
         );
     }
 
-    const currentAmount = type === "credit" ? amount : -amount;
-
-    await userSchema.update(
-      { balance: user.balance + currentAmount },
-      { where: { userId } }
-    );
-
     const createTransaction = await transactionRecord.create({
       userId: userId,
       transactionId: transactionId,
@@ -344,10 +339,11 @@ export const updateByAdmin = async (req, res) => {
       amount: amount,
       date: date,
       remarks: remarks,
-      trDone: "wl",
+      userName: userName,
       transferFromUserAccount: transferFromUserAccount,
       transferToUserAccount: transferToUserAccount,
     });
+
     if (!createTransaction) {
       return res
         .status(statusCode.badRequest)
@@ -478,13 +474,14 @@ export const storePreviousState = async (
     allRunnerBalancesObj[item.runnerId] = Number(item.bal);
   });
 
+  const balance = await user_Balance(user.userId)
   // Create the previous state object
   const previousState = {
     userId: user.userId,
     marketId: marketId,
     runnerId: runnerId,
     gameId: gameId,
-    balance: user.balance,
+    balance: balance,
     marketListExposure: JSON.stringify(user.marketListExposure),
     runnerBalance: runnerBalanceValue,
     allRunnerBalances: JSON.stringify(allRunnerBalancesObj),
@@ -601,18 +598,18 @@ export const afterWining = async (req, res) => {
                   totalExposure += exposure;
                 });
 
-                const dataToSend = {
-                  amount: userDetails.balance,
-                  userId: user.userId,
-                  exposure: marketExposure
-                };
-                const baseURL = process.env.WHITE_LABEL_URL;
-                const { data: response } = await axios.post(
-                  `${baseURL}/api/admin/extrnal/balance-update`,
-                  dataToSend
-                );
+                // const dataToSend = {
+                //   amount: userDetails.balance,
+                //   userId: user.userId,
+                //   exposure: marketExposure
+                // };
+                // const baseURL = process.env.WHITE_LABEL_URL;
+                // const { data: response } = await axios.post(
+                //   `${baseURL}/api/admin/extrnal/balance-update`,
+                //   dataToSend
+                // );
 
-                message = response.success ? "Sync data successful" : "Sync not successful";
+                // message = response.success ? "Sync data successful" : "Sync not successful";
 
                 await MarketBalance.destroy({
                   where: { marketId, runnerId, userId: user.userId },
@@ -657,10 +654,13 @@ export const afterWining = async (req, res) => {
               if (marketExposureEntry) {
                 const marketExposureValue = Number(marketExposureEntry[marketId]);
                 const runnerBalanceValue = Number(runnerBalance.bal);
+                let updateBalance
 
                 if (isWin) {
-                  userDetails.balance += runnerBalanceValue + marketExposureValue;
+                  updateBalance = runnerBalanceValue + marketExposureValue;
                 }
+                console.log("updateBalance", updateBalance)
+                await user_Balance(userDetails.userId, updateBalance)
 
                 await ProfitLoss.create({
                   userId: user.userId,
@@ -691,18 +691,18 @@ export const afterWining = async (req, res) => {
                   totalExposure += exposure;
                 });
 
-                const dataToSend = {
-                  amount: userDetails.balance,
-                  userId: userDetails.userId,
-                  exposure: totalExposure
-                };
-                const baseURL = process.env.WHITE_LABEL_URL;
-                const { data: response } = await axios.post(
-                  `${baseURL}/api/admin/extrnal/balance-update`,
-                  dataToSend
-                );
+                // const dataToSend = {
+                //   amount: userDetails.balance,
+                //   userId: userDetails.userId,
+                //   exposure: totalExposure
+                // };
+                // const baseURL = process.env.WHITE_LABEL_URL;
+                // const { data: response } = await axios.post(
+                //   `${baseURL}/api/admin/extrnal/balance-update`,
+                //   dataToSend
+                // );
 
-                message = response.success ? "Sync data successful" : "Sync not successful";
+                // message = response.success ? "Sync data successful" : "Sync not successful";
 
                 await MarketBalance.destroy({
                   where: { marketId, runnerId, userId: user.userId },
@@ -1269,5 +1269,43 @@ export const getBetMarketsAfterWin = async (req, res) => {
           error.message
         )
       );
+  }
+};
+
+export const user_Balance = async (userId, getBalance) => {
+  try {
+    let balance = 0;
+    const user_transactions = await transactionRecord.findAll({
+      where: { userId },
+    });
+
+    for (const transaction of user_transactions) {
+      if (transaction.transactionType === 'credit') {
+        balance += parseFloat(transaction.amount);
+      }
+      if (transaction.transactionType === 'withdrawal') {
+        balance -= parseFloat(transaction.amount);
+      }
+    }
+
+    const getExposure = await userSchema.findOne({ where: { userId } })
+    const exposure = getExposure.marketListExposure
+
+    if (Array.isArray(exposure)) {
+      for (const item of exposure) {
+        const exposureValue = Object.values(item)[0];
+        balance -= parseFloat(exposureValue);
+      }
+    }
+
+    console.log("getBalance..2", (balance + getBalance))
+    if (getBalance) {
+      balance += parseFloat(getBalance);
+    }
+
+
+    return balance;
+  } catch (error) {
+    throw new Error(`Error calculating balance: ${error.message}`);
   }
 };
