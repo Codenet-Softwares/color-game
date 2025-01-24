@@ -25,6 +25,8 @@ import InactiveGame from "../models/inactiveGame.model.js";
 import CustomError from "../helper/extendError.js";
 import { PreviousState } from "../models/previousState.model.js";
 import sequelize from "../db.js";
+import WinningAmount from "../models/winningAmount.model.js";
+import { getISTTime } from "../helper/commonMethods.js";
 
 dotenv.config();
 const globalName = [];
@@ -205,107 +207,6 @@ export const deposit = async (req, res) => {
       );
   }
 };
-// done
-export const sendBalance = async (req, res) => {
-  try {
-    const { balance, adminId, userId } = req.body;
-
-    const admin = await admins.findOne({ where: { adminId } });
-    if (!admin) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Admin Not Found")
-        );
-    }
-
-    const user = await userSchema.findOne({ where: { userId } });
-    if (!user) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "User Not Found")
-        );
-    }
-
-    const parsedDepositAmount = parseFloat(balance);
-    if (isNaN(parsedDepositAmount)) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Invalid Balance")
-        );
-    }
-
-    if (admin.balance < parsedDepositAmount) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "Insufficient Balance For Transfer"
-          )
-        );
-    }
-
-    await Sequelize.transaction(async (t) => {
-      await admins.update(
-        { balance: Sequelize.literal(`balance - ${parsedDepositAmount}`) },
-        { where: { adminId }, transaction: t }
-      );
-
-      await userSchema.update(
-        {
-          balance: Sequelize.literal(`balance + ${parsedDepositAmount}`),
-          walletId: user.walletId,
-        },
-        { where: { userId }, transaction: t }
-      );
-
-      await transactionRecord.create(
-        {
-          userId,
-          transactionType: "credit",
-          amount: parsedDepositAmount,
-          date: Date.now(),
-        },
-        { transaction: t }
-      );
-    });
-
-    const successResponse = {
-      userId,
-      balance: user.balance,
-      walletId: user.walletId,
-    };
-    return res
-      .status(statusCode.create)
-      .send(
-        apiResponseSuccess(
-          null,
-          true,
-          statusCode.create,
-          "Send balance to User successful"
-        )
-      );
-  } catch (error) {
-    console.error("Error sending balance:", error);
-    res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
-  }
-};
-
-// Authenticate by user Password
 
 export const updateByAdmin = async (req, res) => {
   try {
@@ -474,14 +375,11 @@ export const storePreviousState = async (
     allRunnerBalancesObj[item.runnerId] = Number(item.bal);
   });
 
-  const balance = await user_Balance(user.userId)
-  // Create the previous state object
   const previousState = {
     userId: user.userId,
     marketId: marketId,
     runnerId: runnerId,
     gameId: gameId,
-    balance: balance,
     marketListExposure: JSON.stringify(user.marketListExposure),
     runnerBalance: runnerBalanceValue,
     allRunnerBalances: JSON.stringify(allRunnerBalancesObj),
@@ -496,6 +394,20 @@ export const afterWining = async (req, res) => {
   try {
     const { marketId, runnerId, isWin } = req.body;
     let gameId = null;
+
+    // const currentTime = getISTTime();
+
+    // const activeMarkets = await Market.findAll({
+    //   where: {
+    //     marketId,
+    //     startTime: { [Op.lte]: currentTime },
+    //     endTime: { [Op.gte]: currentTime },
+    //   },
+    // });
+
+    // if (activeMarkets) {
+    //   return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market time is not completed yet !"));
+    // }
 
     const market = await Market.findOne({
       where: { marketId },
@@ -565,7 +477,24 @@ export const afterWining = async (req, res) => {
                 const runnerBalanceValue = Number(runnerBalance);
 
                 if (isWin) {
-                  userDetails.balance += runnerBalanceValue + marketExposureValue;
+                  await WinningAmount.create({
+                    userId: userDetails.userId,
+                    userName: userDetails.userName,
+                    amount: runnerBalanceValue,
+                    type: "win",
+                    marketId: marketId,
+                    runnerId: runnerId,
+                  })
+                } else {
+                  await WinningAmount.create({
+                    userId: userDetails.userId,
+                    userName: userDetails.userName,
+                    amount: Math.abs(marketExposureValue),
+                    type: "loss",
+                    marketId: marketId,
+                    runnerId: runnerId,
+                  })
+
                 }
 
                 await ProfitLoss.create({
@@ -654,13 +583,27 @@ export const afterWining = async (req, res) => {
               if (marketExposureEntry) {
                 const marketExposureValue = Number(marketExposureEntry[marketId]);
                 const runnerBalanceValue = Number(runnerBalance.bal);
-                let updateBalance
 
                 if (isWin) {
-                  updateBalance = runnerBalanceValue + marketExposureValue;
+                  await WinningAmount.create({
+                    userId: userDetails.userId,
+                    userName: userDetails.userName,
+                    amount: runnerBalanceValue,
+                    type: "win",
+                    marketId: marketId,
+                    runnerId: runnerId,
+                  })
+
+                } else {
+                  await WinningAmount.create({
+                    userId: userDetails.userId,
+                    userName: userDetails.userName,
+                    amount: Math.abs(marketExposureValue),
+                    type: "loss",
+                    marketId: marketId,
+                    runnerId: runnerId,
+                  })
                 }
-                console.log("updateBalance", updateBalance)
-                await user_Balance(userDetails.userId, updateBalance)
 
                 await ProfitLoss.create({
                   userId: user.userId,
@@ -813,27 +756,27 @@ export const revokeWinningAnnouncement = async (req, res) => {
         const marketExposureValue = Number(marketExposureEntry[marketId]);
         console.log("market exposure value", marketExposureValue)
         if (runnerBalance > 0) {
-          user.balance -= Number(runnerBalance + marketExposureValue);
+          await WinningAmount.destroy({ where: { marketId } }, transaction)
         }
 
-        const marketExposure = user.marketListExposure;
+        // const marketExposure = user.marketListExposure;
 
-        let totalExposure = 0;
-        marketExposure.forEach(market => {
-          const exposure = Object.values(market)[0];
-          totalExposure += exposure;
-        });
+        // let totalExposure = 0;
+        // marketExposure.forEach(market => {
+        //   const exposure = Object.values(market)[0];
+        //   totalExposure += exposure;
+        // });
 
-        const dataToSend = {
-          amount: user.balance,
-          userId: user.userId,
-          exposure: totalExposure
-        };
-        const baseURL = process.env.WHITE_LABEL_URL;
-        await axios.post(
-          `${baseURL}/api/admin/extrnal/balance-update`,
-          dataToSend
-        );
+        // const dataToSend = {
+        //   amount: user.balance,
+        //   userId: user.userId,
+        //   exposure: totalExposure
+        // };
+        // const baseURL = process.env.WHITE_LABEL_URL;
+        // await axios.post(
+        //   `${baseURL}/api/admin/extrnal/balance-update`,
+        //   dataToSend
+        // );
 
         for (const [runnerId, balance] of Object.entries(allRunnerBalances)) {
           try {
@@ -882,7 +825,7 @@ export const revokeWinningAnnouncement = async (req, res) => {
     );
 
     await Runner.update(
-      { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true , clientMessage : false },
+      { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true, clientMessage: false },
       { where: { runnerId }, transaction }
     );
 
@@ -1056,16 +999,16 @@ export const getUsersLiveBetGames = async (req, res) => {
 
     const where_clause = search
       ? {
-          [Op.or]: [
-            { userName: { [Op.like]: `%${search}%` } },
-            { marketName: { [Op.like]: `%${search}%` } },
-          ],
-        }
+        [Op.or]: [
+          { userName: { [Op.like]: `%${search}%` } },
+          { marketName: { [Op.like]: `%${search}%` } },
+        ],
+      }
       : {};
 
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
       attributes: ["gameId", "gameName", "marketId", "marketName", "userName"],
-      where : where_clause,
+      where: where_clause,
       raw: true,
     });
 
@@ -1094,7 +1037,7 @@ export const getUsersLiveBetGames = async (req, res) => {
       gameName: order.gameName,
       marketId: order.marketId,
       marketName: order.marketName,
-      userName : order.userName
+      userName: order.userName
     }));
 
     const totalPages = Math.ceil(uniqueOrders.length / limit);
@@ -1210,10 +1153,10 @@ export const getBetMarketsAfterWin = async (req, res) => {
 
     const filteredOrders = search
       ? betHistoryOrders.filter(
-          (order) =>
-            order.gameName?.toLowerCase().includes(search.toLowerCase()) ||
-            order.marketName?.toLowerCase().includes(search.toLowerCase())
-        )
+        (order) =>
+          order.gameName?.toLowerCase().includes(search.toLowerCase()) ||
+          order.marketName?.toLowerCase().includes(search.toLowerCase())
+      )
       : betHistoryOrders;
 
     if (filteredOrders.length === 0) {
@@ -1272,7 +1215,8 @@ export const getBetMarketsAfterWin = async (req, res) => {
   }
 };
 
-export const user_Balance = async (userId, getBalance) => {
+// Generic user Balance function
+export const user_Balance = async (userId) => {
   try {
     let balance = 0;
     const user_transactions = await transactionRecord.findAll({
@@ -1298,11 +1242,18 @@ export const user_Balance = async (userId, getBalance) => {
       }
     }
 
-    console.log("getBalance..2", (balance + getBalance))
-    if (getBalance) {
-      balance += parseFloat(getBalance);
-    }
+    const winningAmounts = await WinningAmount.findAll({
+      where: { userId },
+    });
 
+    for (const trans of winningAmounts) {
+      if (trans.type === 'win') {
+        balance += parseFloat(trans.amount);
+      }
+      if (trans.transactionType === 'loss') {
+        balance -= parseFloat(trans.amount);
+      }
+    }
 
     return balance;
   } catch (error) {
