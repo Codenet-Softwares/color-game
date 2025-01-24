@@ -581,7 +581,7 @@ export async function getProfitLossLotteryEvent(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getProfitLossLotteryEvent}?page=${body.page}&limit=${body.limit}`,
+      `${urls.getProfitLossLotteryEvent}?page=${body.pageNumber}&limit=${body.dataLimit}`,
       callParams,
       isToast
     );

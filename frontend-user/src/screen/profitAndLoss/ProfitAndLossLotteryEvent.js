@@ -10,6 +10,7 @@ const ProfitAndLossLotteryEvent = ({
   currentPage,
   SetToggle,
   totalItems,
+  handlePageChange
 }) => {
   console.log("data", data);
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
@@ -176,7 +177,10 @@ const ProfitAndLossLotteryEvent = ({
               <Pagination
                 currentPage={data.currentPage}
                 totalPages={data.totalPages}
-                handlePageChange={data.handlePageChange}
+                handlePageChange={(page) => {
+                  console.log('Changing page to:', page);
+                  handlePageChange(page); 
+                }}
                 startIndex={startIndex}
                 endIndex={endIndex}
                 totalData={data.totalData}
