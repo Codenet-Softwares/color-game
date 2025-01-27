@@ -19,16 +19,27 @@ const LiveBetPage = () => {
     name: "",
     totalData: 0,
   });
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   useEffect(() => {
+    // Debouncing logic: Update `debouncedSearchTerm` after 500ms
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer); // Clear the timer on cleanup
+  }, [searchTerm]);
+  useEffect(() => {
+    auth.showLoader();
     fetchLiveBets();
-  }, [liveBets.currentPage, liveBets.totalEntries, liveBets.name]);
+  }, [liveBets.currentPage, liveBets.totalEntries,debouncedSearchTerm]);
 
   const fetchLiveBets = () => {
     GameService.liveBetGame(
       auth.user,
       liveBets.currentPage,
       liveBets.totalEntries,
-      liveBets.name
+      debouncedSearchTerm
     )
       .then((res) => {
         setLiveBets((prev) => ({
@@ -40,9 +51,13 @@ const LiveBetPage = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
       });
   };
   const handleClearSearch = () => {
+    setSearchTerm(""); // Reset the search term
     setLiveBets({ ...liveBets, name: "" });
   };
   const handlePageChange = (pageNumber) => {
@@ -91,17 +106,16 @@ const LiveBetPage = () => {
                 type="text"
                 className="form-control"
                 placeholder="Search by game name or market name..."
-                value={liveBets.name}
-                onChange={(e) =>
-                  setLiveBets({ ...liveBets, name: e.target.value })
-                }
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
                   border: "2px solid #6c757d",
                 }}
               />
-              {liveBets.name && (
+              {searchTerm && (
                 <FaTimes
                   onClick={handleClearSearch}
                   style={{

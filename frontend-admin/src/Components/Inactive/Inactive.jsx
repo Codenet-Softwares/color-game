@@ -13,18 +13,28 @@ const Inactive = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [totalPages, setTotalPages] = useState("");
   const [totalData, setTotalData] = useState("");
+ useEffect(() => {
+    // Debouncing logic: Update `debouncedSearchTerm` after 500ms
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
 
+    return () => clearTimeout(timer); // Clear the timer on cleanup
+  }, [searchTerm]);
   useEffect(() => {
+    auth.showLoader();
     fetchInactiveGames();
-  }, [currentPage, itemsPerPage, searchTerm]);
+  }, [currentPage, itemsPerPage, debouncedSearchTerm]);
+
   const fetchInactiveGames = () => {
     AccountServices.getInactiveGames(
       auth.user,
       currentPage,
       itemsPerPage,
-      searchTerm
+      debouncedSearchTerm
     )
       .then((res) => {
         const gamesData = res.data?.data || [];
@@ -35,11 +45,15 @@ const Inactive = () => {
       })
       .catch((err) => {
         console.error("Error fetching inactive games:", err);
+      })
+      .finally(() => {
+        auth.hideLoader();
       });
   };
 
   const handleClearSearch = () => {
     setSearchTerm("");
+    setInactiveGames((prev) => ({ ...prev, name: "" }));
   };
 
   const handleRevokeAnnouncement = (marketId, runnerId) => {

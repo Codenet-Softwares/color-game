@@ -16,6 +16,7 @@ const SliderImageDelete = () => {
   });
 
   useEffect(() => {
+    auth.showLoader();
     fetchSliderImages();
   }, []);
 
@@ -29,6 +30,10 @@ const SliderImageDelete = () => {
       })
       .catch((err) => {
         toast.error("Failed to load slider images.");
+      })
+      .finally(() => {
+        // Hide the loader after the request is complete (success or error)
+        auth.hideLoader();
       });
   };
 
