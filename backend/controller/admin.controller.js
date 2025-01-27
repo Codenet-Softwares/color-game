@@ -525,20 +525,7 @@ export const afterWining = async (req, res) => {
                 marketExposure.forEach(market => {
                   const exposure = Object.values(market)[0];
                   totalExposure += exposure;
-                });
-
-                // const dataToSend = {
-                //   amount: userDetails.balance,
-                //   userId: user.userId,
-                //   exposure: marketExposure
-                // };
-                // const baseURL = process.env.WHITE_LABEL_URL;
-                // const { data: response } = await axios.post(
-                //   `${baseURL}/api/admin/extrnal/balance-update`,
-                //   dataToSend
-                // );
-
-                // message = response.success ? "Sync data successful" : "Sync not successful";
+                });           
 
                 await MarketBalance.destroy({
                   where: { marketId, runnerId, userId: user.userId },
@@ -634,19 +621,6 @@ export const afterWining = async (req, res) => {
                   totalExposure += exposure;
                 });
 
-                // const dataToSend = {
-                //   amount: userDetails.balance,
-                //   userId: userDetails.userId,
-                //   exposure: totalExposure
-                // };
-                // const baseURL = process.env.WHITE_LABEL_URL;
-                // const { data: response } = await axios.post(
-                //   `${baseURL}/api/admin/extrnal/balance-update`,
-                //   dataToSend
-                // );
-
-                // message = response.success ? "Sync data successful" : "Sync not successful";
-
                 await MarketBalance.destroy({
                   where: { marketId, runnerId, userId: user.userId },
                 });
@@ -712,7 +686,7 @@ export const afterWining = async (req, res) => {
           null,
           true,
           statusCode.success,
-          "Success" + " " + message
+          "Success" 
         )
       );
   } catch (error) {
@@ -758,25 +732,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
         if (runnerBalance > 0) {
           await WinningAmount.destroy({ where: { marketId } }, transaction)
         }
-
-        // const marketExposure = user.marketListExposure;
-
-        // let totalExposure = 0;
-        // marketExposure.forEach(market => {
-        //   const exposure = Object.values(market)[0];
-        //   totalExposure += exposure;
-        // });
-
-        // const dataToSend = {
-        //   amount: user.balance,
-        //   userId: user.userId,
-        //   exposure: totalExposure
-        // };
-        // const baseURL = process.env.WHITE_LABEL_URL;
-        // await axios.post(
-        //   `${baseURL}/api/admin/extrnal/balance-update`,
-        //   dataToSend
-        // );
 
         for (const [runnerId, balance] of Object.entries(allRunnerBalances)) {
           try {

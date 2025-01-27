@@ -1177,7 +1177,7 @@ export const getRevokeMarket = async (req, res) => {
       const existingMarket = marketListExposure.find(
         (market) => market[marketId] !== undefined
       );
-      
+
       if (existingMarket) {
         existingMarket[marketId] += exposurePrice;
       } else {
@@ -1466,7 +1466,6 @@ export const revokeLiveBet = async (req, res) => {
   }
 };
 
-
 export const userLiveBte = async (req, res) => {
   try {
     const { marketId } = req.params
@@ -1513,4 +1512,21 @@ export const getAllLotteryMarket = async (req, res) => {
   }
 };
 
+export const getExposure = async (req, res) => {
+  try {
+    const { userId } = req.params
+    const getExposure = await userSchema.findOne({ where: { userId } })
+    const userExposures = getExposure.marketListExposure
+    let exposure = 0
+    if (Array.isArray(userExposures)) {
+      for (const item of userExposures) {
+        const exposureValue = Object.values(item)[0];
+        exposure += parseFloat(exposureValue);
+      }
+    }
+    res.json({ exposure });
+  } catch (error) {
+    return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
 
+  }
+}

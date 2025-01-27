@@ -145,26 +145,6 @@ export const deleteLiveBetMarkets = async (req, res) => {
         marketListExposure: user.marketListExposure,
       }, { transaction });
 
-      // const marketExposure = user.marketListExposure;
-
-      // let totalExposure = 0;
-      // marketExposure.forEach(market => {
-      //   const exposure = Object.values(market)[0];
-      //   totalExposure += exposure;
-      // });
-
-      // const dataToSend = {
-      //   amount: user.balance,
-      //   userId: userId,
-      //   exposure: totalExposure
-      // };
-
-      // const baseURL = process.env.WHITE_LABEL_URL;
-      // await axios.post(
-      //   `${baseURL}/api/admin/extrnal/balance-update`,
-      //   dataToSend
-      // );
-
     }
     await transaction.commit();
 
@@ -644,26 +624,6 @@ export const restoreMarketData = async (req, res) => {
     if (!user) {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
-
-    // const marketExposure = user.marketListExposure;
-
-    // let totalExposure = 0;
-    // marketExposure.forEach(market => {
-    //   const exposure = Object.values(market)[0];
-    //   totalExposure += exposure;
-    // });
-
-    // const dataToSend = {
-    //   amount: user.balance,
-    //   userId: userId,
-    //   exposure: totalExposure
-    // };
-
-    // const baseURL = process.env.WHITE_LABEL_URL;
-    // await axios.post(
-    //   `${baseURL}/api/admin/extrnal/balance-update`,
-    //   dataToSend
-    // );
 
     const marketDataRows = await Market.findAll({
       where: { marketId },

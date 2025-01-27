@@ -94,7 +94,7 @@ export const purchaseLottery = async (req, res) => {
 
     console.log("totalExposure...999", totalExposure)
 
-    const [rs1, rs2] = await Promise.all([
+    const [rs1] = await Promise.all([
       axios.post(
         `${baseURL}/api/purchase-lottery/${marketId}`,
         { generateId, userId, userName, lotteryPrice },
@@ -102,20 +102,12 @@ export const purchaseLottery = async (req, res) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       ),
-      // axios.post(`${whiteLabelUrl}/api/admin/extrnal/balance-update`, {
-      //   userId,
-      //   amount: balance - lotteryPrice,
-      //   exposure: totalExposure
-      // }),
+ 
     ]);
 
     if (!rs1.data.success) {
       return res.status(statusCode.success).send(rs1.data);
     }
-
-    // if (!rs2.data.success) {
-    //   return res.status(statusCode.success).send(rs2.data);
-    // }
 
     await t.commit();
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.create, "Lottery purchased successfully"));

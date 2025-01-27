@@ -28,7 +28,7 @@ const WinningAmount = sequelize.define(
         },
         runnerId: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
     },
     {
