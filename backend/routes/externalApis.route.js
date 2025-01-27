@@ -1,3 +1,4 @@
+import { user_Balance } from "../controller/admin.controller.js";
 import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte, getAllLotteryMarket } from "../controller/externalApis.controller.js";
 import { currentOrderHistory } from "../controller/user.controller.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
@@ -36,6 +37,14 @@ export const externalApisRoute = (app) => {
 
     app.get('/api/external/get-allLottery-game', getAllLotteryMarket)
 
-
+    app.get('/api/external/get-user-balance/:userId', async (req, res) => {
+        try {
+          const { userId } = req.params;
+          const balance = await user_Balance(userId);
+          res.json({ balance });
+        } catch (error) {
+          res.status(500).json({ error: `Error fetching balance: ${error.message}` });
+        }
+      });
 
 }
