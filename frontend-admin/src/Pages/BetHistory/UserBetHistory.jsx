@@ -12,6 +12,7 @@ const UserBetHistory = () => {
   const { marketId } = useParams();
   const navigate = useNavigate();
   const auth = useAuth();
+  const [marketName, setMarketName] = useState(""); // State for market name
   const [betAfterWin, setBetAfterWin] = useState({
     winBetHistory: [],
     currentPage: 1,
@@ -68,6 +69,11 @@ const UserBetHistory = () => {
         totalPages: pagination?.totalPages || 1,
         totalData: pagination?.totalItems || 0,
       }));
+      if (data.length > 0) {
+        setMarketName(data[0].marketName);
+      } else {
+        setMarketName("Unknown Market");
+      }
     } catch (error) {
       console.error("Error fetching bet history:", error);
       toast.error(customErrorHandler(error));
@@ -142,7 +148,7 @@ const UserBetHistory = () => {
               className="mb-0 fw-bold text-uppercase"
               style={{ flexGrow: 1, textAlign: "center" }}
             >
-              Bet History
+              Bet History - {marketName}
             </h3>
           </div>
 

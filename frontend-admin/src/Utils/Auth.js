@@ -4,8 +4,14 @@ import './loader.css'; // Import the loader CSS
 
 const Loader = () => (
   <div className="loader">
-  <div className="spinner"></div>
+  <div className="rotating-cube">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
 </div>
+
 
 
 );
