@@ -1166,8 +1166,6 @@ export const getRevokeMarket = async (req, res) => {
 
       const { totalProfitLoss, totalPrice, exposurePrice } = userProfitLoss;
 
-      console.log("totalProfitLoss, totalPrice,", totalProfitLoss, totalPrice,)
-
       if (totalProfitLoss > 0) {
         user.balance -= totalProfitLoss + totalPrice;
       }
@@ -1177,11 +1175,12 @@ export const getRevokeMarket = async (req, res) => {
       const existingMarket = marketListExposure.find(
         (market) => market[marketId] !== undefined
       );
-      
       if (existingMarket) {
         existingMarket[marketId] += exposurePrice;
       } else {
-        marketListExposure.push({ [marketId]: exposurePrice });
+        const newExposure = { [marketId]: exposurePrice };
+        user.marketListExposure = [...(user.marketListExposure || []), newExposure];
+
       }
 
       const marketExposure = user.marketListExposure;
