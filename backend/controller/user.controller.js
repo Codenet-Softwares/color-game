@@ -22,6 +22,7 @@ import CustomError from "../helper/extendError.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
+import { user_Balance } from "./admin.controller.js";
 
 // done
 export const createUser = async (req, res) => {
@@ -682,9 +683,11 @@ export const getUserWallet = async (req, res) => {
         );
     }
 
+    const userBalance = await user_Balance(userId)
+
     const getBalance = {
       walletId: userData.walletId,
-      balance: userData.balance,
+      balance: userBalance,
       exposure: userData.exposure,
       marketListExposure: userData.marketListExposure,
     };
@@ -1077,8 +1080,6 @@ export const createBid = async (req, res) => {
       const adjustedRate = runner[bidType.toLowerCase()] - 1;
       const mainValue = Math.round(adjustedRate * value);
       const betAmount = bidType === "back" ? value : mainValue;
-      user.balance = wallet;
-      user.exposure = exposure;
       user.marketListExposure = marketListExposure;
       await CurrentOrder.create({
         betId: uuidv4(),
@@ -1098,38 +1099,6 @@ export const createBid = async (req, res) => {
         exposure: exposure,
       });
       await user.save();
-    }
-
-    const marketExposure = user.marketListExposure;
-
-    let totalExposure = 0;
-    marketExposure.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
-    });
-
-    const dataToSend = {
-      amount: user.balance,
-      userId: userId,
-      exposure: totalExposure,
-    };
-    const baseURL = process.env.WHITE_LABEL_URL;
-    const response = await axios.post(
-      `${baseURL}/api/admin/extrnal/balance-update`,
-      dataToSend
-    );
-
-    if (!response.data.success) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "Failed to fetch data"
-          )
-        );
     }
 
     await Runner.update({ isBidding: true }, { where: { marketId } });

@@ -38,9 +38,7 @@ export const voidMarket = async (req, res) => {
         );
 
         if (marketExposureEntry) {
-          const marketExposureValue = Number(marketExposureEntry[marketId]);
 
-          userDetails.balance += marketExposureValue;
           userDetails.marketListExposure = userDetails.marketListExposure.filter(
             (item) => Object.keys(item)[0] !== marketId
           );
@@ -71,32 +69,6 @@ export const voidMarket = async (req, res) => {
               placeDate: order.createdAt,
               isVoid: true
             });
-          }
-
-          const marketExposure = userDetails.marketListExposure;
-
-          let totalExposure = 0;
-          marketExposure.forEach(market => {
-            const exposure = Object.values(market)[0];
-            totalExposure += exposure;
-          });
-
-          const dataToSend = {
-            amount: userDetails.balance,
-            userId: userDetails.userId,
-            exposure: totalExposure
-          };
-          const baseURL = process.env.WHITE_LABEL_URL
-
-          const response = await axios.post(
-            `${baseURL}/api/admin/extrnal/balance-update`,
-            dataToSend
-          );
-
-          if (!response.data.success) {
-            return res
-              .status(statusCode.badRequest)
-              .send(apiResponseErr(null, false, statusCode.badRequest, "Failed to update balance"));
           }
 
           await MarketBalance.destroy({

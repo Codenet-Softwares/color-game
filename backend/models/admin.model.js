@@ -27,15 +27,6 @@ const admins = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
-    walletId: {
-      type: DataTypes.UUID,
-      defaultValue: uuidv4(),
-      allowNull: true,
-    },
-    balance: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
-    }
   },
   {
     timestamps: false,

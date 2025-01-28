@@ -15,6 +15,7 @@ import Runner from "../models/runner.model.js";
 import { log } from "console";
 import { currentOrderSchema } from "../schema/commonSchema.js";
 import { type } from "os";
+import { user_Balance } from "./admin.controller.js";
 // import ProfitLoss from "../models/profitLoss.js";
 // import Market from "../models/market.model.js";
 // import Runner from "../models/runner.model.js";
@@ -41,42 +42,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
 
-    const marketListExposure = user.marketListExposure || [];
-    const updatedExposure = marketListExposure.filter(market => {
-      const [key, value] = Object.entries(market)[0];
-      if (key === marketId) {
-        user.balance += value;
-        return false;
-      }
-      return true;
-    });
-
     await getMarket.destroy({ transaction });
-
-    const marketExposure = user.marketListExposure;
-
-    let totalExposure = 0;
-    marketExposure.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
-    });
-
-    const dataToSend = {
-      amount: user.balance,
-      userId: userId,
-      exposure: totalExposure
-    };
-
-    const baseURL = process.env.WHITE_LABEL_URL;
-    await axios.post(
-      `${baseURL}/api/admin/extrnal/balance-update`,
-      dataToSend
-    );
-
-    await user.update({
-      marketListExposure: updatedExposure,
-      balance: user.balance,
-    }, { transaction });
 
     const marketDataRows = await Market.findAll({
       where: { marketId },
@@ -117,6 +83,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
         ],
       });
     });
+
     if (userId) {
       const remainingMarket = await CurrentOrder.findAll({
         where: {
@@ -173,58 +140,21 @@ export const deleteLiveBetMarkets = async (req, res) => {
         user.marketListExposure = [updatedExposure];
       });
 
-    
+
       await user.update({
         marketListExposure: user.marketListExposure,
       }, { transaction });
 
-      const marketListExposureData = user.marketListExposure || [];
-
-
-      marketListExposureData.filter(market => {
-        const [key, value] = Object.entries(market)[0];
-        if (key === marketId) {
-          user.balance -= value;
-          return false;
-        }
-        return true;
-      });
-
-
-      await user.update({
-        balance: user.balance,
-      }, { transaction });
-
-      const marketExposure = user.marketListExposure;
-
-      let totalExposure = 0;
-      marketExposure.forEach(market => {
-        const exposure = Object.values(market)[0];
-        totalExposure += exposure;
-      });
-  
-      const dataToSend = {
-        amount: user.balance,
-        userId: userId,
-        exposure: totalExposure
-      };
-  
-      const baseURL = process.env.WHITE_LABEL_URL;
-      await axios.post(
-        `${baseURL}/api/admin/extrnal/balance-update`,
-        dataToSend
-      );
-      
     }
-      await transaction.commit();
+    await transaction.commit();
 
-      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
-    } catch (error) {
-      await transaction.rollback();
-      console.error("Error deleting live bet markets:", error);
-      return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
-    }
-  };
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Error deleting live bet markets:", error);
+    return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+  }
+};
 
 // export const deleteAfterWinBetMarkets = async (req, res) => {
 //     const transaction = await sequelize.transaction();
@@ -514,9 +444,6 @@ export const getMarket = async (req, res) => {
   }
 };
 
-
-//Done 
-
 export const getTrashMarketDetails = async (req, res) => {
   try {
     let { page = 1, pageSize = 10 } = req.query;
@@ -642,7 +569,6 @@ export const deleteMarketTrash = async (req, res) => {
   }
 }
 
-
 export const restoreMarketData = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
@@ -653,8 +579,6 @@ export const restoreMarketData = async (req, res) => {
     if (!trash_data) { return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Market trash data not found')) }
 
     const trash_markets = trash_data.dataValues.trashMarkets;
-
-    console.log("trash_markets", trash_markets);
 
     const map_trash_data = trash_markets.map((data) => ({
       userId: data.userId,
@@ -678,8 +602,6 @@ export const restoreMarketData = async (req, res) => {
       updatedAt: data.updatedAt
     }));
 
-    console.log("map_trash_data", map_trash_data);
-
     const { marketId, userId, runnerId, betId } = map_trash_data[0];
 
     const checkMarket = await Market.findOne({ where: { marketId }, transaction });
@@ -702,42 +624,6 @@ export const restoreMarketData = async (req, res) => {
     if (!user) {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
-
-    const marketListExposure = user.marketListExposure || [];
-    const updatedExposure = marketListExposure.filter(market => {
-      const [key, value] = Object.entries(market)[0];
-      if (key === marketId) {
-        user.balance += value;
-        return false;
-      }
-      return true;
-    });
-
-
-    const marketExposure = user.marketListExposure;
-
-    let totalExposure = 0;
-    marketExposure.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
-    });
-
-    const dataToSend = {
-      amount: user.balance,
-      userId: userId,
-      exposure: totalExposure
-    };
-
-    const baseURL = process.env.WHITE_LABEL_URL;
-    await axios.post(
-      `${baseURL}/api/admin/extrnal/balance-update`,
-      dataToSend
-    );
-
-    await user.update({
-      marketListExposure: updatedExposure,
-      balance: user.balance,
-    }, { transaction });
 
     const marketDataRows = await Market.findAll({
       where: { marketId },
@@ -834,21 +720,6 @@ export const restoreMarketData = async (req, res) => {
       marketListExposure: user.marketListExposure,
     }, { transaction });
 
-    const marketListExposureData = user.marketListExposure || [];
-
-    marketListExposureData.filter(market => {
-      const [key, value] = Object.entries(market)[0];
-      if (key === marketId) {
-        user.balance -= value;
-        return false;
-      }
-      return true;
-    });
-
-    await user.update({
-      balance: user.balance,
-    }, { transaction });
-
     await transaction.commit();
 
     await MarketTrash.destroy({ where: { trashMarketId } })
@@ -856,7 +727,7 @@ export const restoreMarketData = async (req, res) => {
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Restore data successfully"));
 
   } catch (error) {
-    console.log("error",error)
+    console.log("error", error)
     await transaction.rollback();
     return res
       .status(statusCode.internalServerError)

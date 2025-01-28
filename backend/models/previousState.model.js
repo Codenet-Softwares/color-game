@@ -23,10 +23,6 @@ export const PreviousState = sequelize.define('PreviousState', {
     type: DataTypes.BIGINT,
     allowNull: false,
   },
-  balance: {
-    type: DataTypes.DECIMAL(10, 2),
-    allowNull: false,
-  },
   marketListExposure: {
     type: DataTypes.JSON,
     allowNull: false,
