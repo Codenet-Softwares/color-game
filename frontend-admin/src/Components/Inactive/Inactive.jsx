@@ -95,7 +95,7 @@ const Inactive = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold  text-center">Announced Game</h3>
+          <h3 className="mb-0 fw-bold  text-center text-uppercase">Announced Game</h3>
         </div>
         <div className="card-body" style={{background:"#E1D1C7"}}>
           {/* Search and Entries Selection */}
@@ -167,7 +167,7 @@ const Inactive = () => {
           >
             <div className="table-responsive">
               <table
-                className="table table-striped table-hover rounded-table"
+                className="table table-striped table-hover rounded-table text-center"
                 style={{
                   border: "2px solid #6c757d",
                   borderRadius: "10px",

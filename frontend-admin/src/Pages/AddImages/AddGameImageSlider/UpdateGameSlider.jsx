@@ -11,6 +11,7 @@ const UpdateGameSlider = () => {
 
   // Fetch slider images on component mount
   useEffect(() => {
+    auth.showLoader();
     fetchSliderImages();
   }, []);
 
@@ -21,6 +22,10 @@ const UpdateGameSlider = () => {
     } catch (error) {
       toast.error("Failed to fetch slider images.");
       console.error("Error fetching images:", error);
+    }
+    finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
     }
   };
 
@@ -34,6 +39,7 @@ const UpdateGameSlider = () => {
       toast.error("Failed to delete the image. Please try again.");
       console.error("Error deleting image:", error);
     }
+    
   };
 
   const handleToggleActiveStatus = async (imageId, currentStatus) => {

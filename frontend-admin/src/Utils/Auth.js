@@ -4,8 +4,10 @@ import './loader.css'; // Import the loader CSS
 
 const Loader = () => (
   <div className="loader">
-    <div className="spinner"></div>
-  </div>
+  <div className="spinner"></div>
+</div>
+
+
 );
 
 const AuthContext = createContext(null);

@@ -11,6 +11,7 @@ const UpdateGifSlider = () => {
 
   // Fetch GIF slider images on component mount
   useEffect(() => {
+    auth.showLoader();
     fetchGifImages();
   }, []);
 
@@ -23,6 +24,10 @@ const UpdateGifSlider = () => {
     } catch (error) {
       toast.error("Failed to fetch GIF slider images.");
       console.error("Error fetching GIF images:", error);
+    }
+    finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
     }
   };
 

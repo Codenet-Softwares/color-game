@@ -15,10 +15,16 @@ const DeleteMarket = () => {
     totalItems: 0,
   });
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500); // Debounce delay of 500ms
 
+    return () => clearTimeout(timer); // Cleanup the timer on every new change
+  }, [searchTerm]);
   const fetchMarkets = async (page = 1, pageSize = 10, search = "") => {
-    setLoading(true);
+    auth.showLoader();
     try {
       const response = await GameService.deleteGameMarket(
         auth.user,
@@ -37,7 +43,7 @@ const DeleteMarket = () => {
     } catch (error) {
       console.error("Error fetching markets:", error);
     } finally {
-      setLoading(false);
+      auth.hideLoader();
     }
   };
 
@@ -63,13 +69,13 @@ const DeleteMarket = () => {
   };
 
   const handlePageChange = (newPage) => {
-    fetchMarkets(newPage, pagination.pageSize, searchTerm);
+    fetchMarkets(newPage, pagination.pageSize, debouncedSearchTerm);
   };
 
   const handlePageSizeChange = (event) => {
     const newPageSize = Number(event.target.value);
     setPagination((prev) => ({ ...prev, pageSize: newPageSize, page: 1 }));
-    fetchMarkets(1, newPageSize);
+    fetchMarkets(1, newPageSize,debouncedSearchTerm);
   };
 
   const handleDelete = async (approvalMarketId) => {
@@ -90,8 +96,8 @@ const DeleteMarket = () => {
   };
 
   useEffect(() => {
-    fetchMarkets(pagination.page, pagination.pageSize, searchTerm);
-  }, []);
+    fetchMarkets(pagination.page, pagination.pageSize, debouncedSearchTerm);
+  }, [debouncedSearchTerm, pagination.page, pagination.pageSize]);
 
   const startIndex = (pagination.page - 1) * pagination.pageSize + 1;
   const endIndex = Math.min(
@@ -120,7 +126,7 @@ const DeleteMarket = () => {
                   className="form-control border-2"
                   placeholder="Search by market name..."
                   value={searchTerm}
-                  onChange={handleSearch}
+                  onChange={(e) => setSearchTerm(e.target.value)} // Set search term on change
                   style={{ borderRadius: "0 30px 30px 0" }}
                 />
                 {searchTerm && (
@@ -159,9 +165,8 @@ const DeleteMarket = () => {
           </div>
 
           {/* Table */}
-          {loading ? (
-            <p>Loading...</p>
-          ) : markets.length > 0 ? (
+         
+          {markets.length > 0 ? (
             <div className="table-responsive mx-auto">
               <table className="table table-striped table-hover">
                 <thead className="table-secondary text-center">

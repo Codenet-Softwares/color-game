@@ -32,7 +32,6 @@ const SliderImageDelete = () => {
         toast.error("Failed to load slider images.");
       })
       .finally(() => {
-        // Hide the loader after the request is complete (success or error)
         auth.hideLoader();
       });
   };

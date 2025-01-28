@@ -19,6 +19,7 @@ const LiveUserBet = () => {
     totalEntries: 10,
     search: "",
     totalData: 0,
+    marketName: "",
   });
 
   console.log("userBets", userBets);
@@ -35,11 +36,14 @@ const LiveUserBet = () => {
         userBets.totalEntries,
         userBets.search
       );
+      const bets = response.data?.data || [];
+      const marketName = bets.length > 0 ? bets[0].marketName : "Unknown Market";
       setUserBets((prev) => ({
         ...prev,
         bets: response.data?.data || [],
         totalPages: response?.data.pagination?.totalPages || 1,
         totalData: response?.data.pagination?.totalItems || 0,
+        marketName,
       }));
     } catch (error) {
       toast.error(customErrorHandler(error));
@@ -47,16 +51,15 @@ const LiveUserBet = () => {
   };
 
   const handleDelete = async (marketId, runnerId, userId, betId) => {
+    auth.showLoader();
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this market and bet?"
     );
-
+  
     if (!isConfirmed) {
       return;
     }
-
-    console.log("delete", marketId);
-
+  
     try {
       const response = await GameService.DeleteMarket(
         auth.user,
@@ -65,15 +68,22 @@ const LiveUserBet = () => {
         runnerId,
         betId
       );
-
+  
       if (response.status === 200) {
         toast.success("Market and bet deleted successfully!");
-        fetchLiveUserBet();
+        setUserBets((prev) => ({
+          ...prev,
+          bets: prev.bets.filter((bet) => bet.betId !== betId),
+          totalData: prev.totalData - 1,
+        }));
       }
     } catch (error) {
       toast.error(customErrorHandler(error));
+    } finally {
+      auth.hideLoader();
     }
   };
+  
 
   const handleClearSearch = () => {
     setUserBets((prev) => ({ ...prev, search: "" }));
@@ -130,10 +140,10 @@ const LiveUserBet = () => {
             <FaArrowLeft />
           </div>
           <h3
-            className="mb-0 fw-bold"
+            className="mb-0 fw-bold text-uppercase"
             style={{ flexGrow: 1, textAlign: "center" }}
           >
-            Live Bets
+           Live Bets - {userBets.marketName}
           </h3>
         </div>
 

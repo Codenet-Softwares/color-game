@@ -9,6 +9,7 @@ const UpdateInnerAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
+    auth.showLoader();
     fetchAnnouncements();
   }, []);
 
@@ -20,6 +21,9 @@ const UpdateInnerAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to fetch inner announcements.");
       console.error("Error fetching inner announcements:", error);
+    }finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
     }
   };
 

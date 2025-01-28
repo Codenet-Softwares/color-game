@@ -11,6 +11,7 @@ const UpdateInnerImage = () => {
 
   // Fetch images on component mount
   useEffect(() => {
+    auth.showLoader();
     fetchInnerImages();
   }, []);
   const fetchInnerImages = async () => {
@@ -21,6 +22,10 @@ const UpdateInnerImage = () => {
     } catch (error) {
       toast.error("Failed to fetch inner images.");
       console.error("Error fetching images:", error);
+    }
+    finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
     }
   };
   

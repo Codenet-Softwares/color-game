@@ -9,6 +9,7 @@ const UpdateOuterAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
+    auth.showLoader();
     fetchAnnouncements();
   }, []);
 
@@ -20,6 +21,8 @@ const UpdateOuterAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to fetch announcements.");
       console.error("Error fetching announcements:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
   
