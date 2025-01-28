@@ -15,6 +15,7 @@ import userSchema from "../models/user.model.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import axios from "axios";
 import sequelize from "../db.js";
+import WinningAmount from "../models/winningAmount.model.js";
 
 export const getExternalUserBetHistory = async (req, res) => {
   try {
@@ -1013,42 +1014,10 @@ export const getVoidMarket = async (req, res) => {
       }
 
       if (totalExposureValue > 0) {
-        user.balance += totalExposureValue;
         user.marketListExposure = user.marketListExposure.filter(
           (item) => Object.keys(item)[0] !== marketId
         );
 
-        const marketExposure = user.marketListExposure;
-
-        let totalExposure = 0;
-        marketExposure.forEach(market => {
-          const exposure = Object.values(market)[0];
-          totalExposure += exposure;
-        });
-
-        const dataToSend = {
-          amount: user.balance,
-          userId: user.userId,
-          exposure: totalExposure,
-        };
-        const baseURL = process.env.WHITE_LABEL_URL;
-        const response = await axios.post(
-          `${baseURL}/api/admin/extrnal/balance-update`,
-          dataToSend
-        );
-
-        if (!response.data.success) {
-          return res
-            .status(statusCode.badRequest)
-            .send(
-              apiResponseErr(
-                null,
-                false,
-                statusCode.badRequest,
-                "Failed to update balance"
-              )
-            );
-        }
         await user.save();
       }
     }
@@ -1114,7 +1083,6 @@ export const getRevokeMarket = async (req, res) => {
         );
     }
 
-    // Deduplicate entries based on `marketId`, `userId`, `price`, and `profitLoss`
     usersFromProfitLoss = Array.from(
       new Map(
         usersFromProfitLoss.map((entry) =>
@@ -1125,6 +1093,7 @@ export const getRevokeMarket = async (req, res) => {
         )
       ).values()
     );
+
     console.log("usersFromProfitLoss", usersFromProfitLoss)
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
@@ -1166,60 +1135,28 @@ export const getRevokeMarket = async (req, res) => {
 
       const { totalProfitLoss, totalPrice, exposurePrice } = userProfitLoss;
 
-      console.log("totalProfitLoss, totalPrice,", totalProfitLoss, totalPrice,)
-
-      if (totalProfitLoss > 0) {
-        user.balance -= totalProfitLoss + totalPrice;
-      }
+      await WinningAmount.destroy({ where: { marketId } })
 
       const marketListExposure = user.marketListExposure || [];
 
       const existingMarket = marketListExposure.find(
         (market) => market[marketId] !== undefined
       );
-
       if (existingMarket) {
         existingMarket[marketId] += exposurePrice;
       } else {
-        marketListExposure.push({ [marketId]: exposurePrice });
+        const newExposure = { [marketId]: exposurePrice };
+        user.marketListExposure = [...(user.marketListExposure || []), newExposure];
+
       }
 
-      const marketExposure = user.marketListExposure;
-      let totalExposure = 0;
-      marketExposure.forEach((market) => {
-        const exposure = Object.values(market)[0];
-        totalExposure += exposure;
-      });
-
-      const dataToSend = {
-        amount: user.balance,
-        userId: user.userId,
-        exposure: totalExposure,
-      };
-
-      const baseURL = process.env.WHITE_LABEL_URL;
-      const response = await axios.post(
-        `${baseURL}/api/admin/extrnal/balance-update`,
-        dataToSend
+      await userSchema.update(
+        { marketListExposure: user.marketListExposure },
+        { where: { userId: user.userId } }
       );
 
-      if (!response.data.success) {
-        return res
-          .status(statusCode.badRequest)
-          .send(
-            apiResponseErr(
-              null,
-              false,
-              statusCode.badRequest,
-              "Failed to update balance"
-            )
-          );
-      }
-
-      await user.save({ fields: ["marketListExposure", "balance"] });
     }
 
-    // Remove all profit/loss entries for the market
     await LotteryProfit_Loss.destroy({
       where: { marketId },
     });
@@ -1248,7 +1185,6 @@ export const getRevokeMarket = async (req, res) => {
       );
   }
 };
-
 
 export const getDeleteLiveMarket = async (req, res) => {
   const t = await sequelize.transaction();

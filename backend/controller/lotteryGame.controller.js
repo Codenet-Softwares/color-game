@@ -9,6 +9,7 @@ import userSchema from "../models/user.model.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import sequelize from "../db.js";
 import { user_Balance } from "./admin.controller.js";
+import WinningAmount from "../models/winningAmount.model.js";
 
 export const searchTicket = async (req, res) => {
   try {
@@ -102,7 +103,7 @@ export const purchaseLottery = async (req, res) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       ),
- 
+
     ]);
 
     if (!rs1.data.success) {
@@ -126,7 +127,7 @@ export const purchaseLottery = async (req, res) => {
 export const purchaseHistory = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { page, limit, sem,date } = req.query;
+    const { page, limit, sem, date } = req.query;
     const { marketId } = req.params;
 
     const params = {
@@ -286,7 +287,6 @@ export const getMarkets = async (req, res) => {
 export const updateBalance = async (req, res) => {
   try {
     const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
-    console.log("Received userId:", userId, "Received prizeAmount:", prizeAmount, "Received marketId:", marketId, lotteryPrice);
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
@@ -308,37 +308,20 @@ export const updateBalance = async (req, res) => {
       return exposure;
     });
 
-    console.log("updatedMarketListExposure....11", updatedMarketListExposure);
-
-    user.balance += totalBalanceUpdate;
-    user.marketListExposure = updatedMarketListExposure;
-
-    const marketExposure = user.marketListExposure;
-
-    let totalExposure = 0;
-    marketExposure.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
-    });
-
-
-    const dataToSend = {
-      amount: user.balance,
-      userId,
-      exposure: totalExposure
-    };
-    const baseURL = process.env.WHITE_LABEL_URL;
-    const { data: response } = await axios.post(
-      `${baseURL}/api/admin/extrnal/balance-update`,
-      dataToSend,
+    await userSchema.update(
+      { marketListExposure: updatedMarketListExposure },
+      { where: { userId } }
     );
 
-    let message = response.success ? "Sync data successful" : "Sync not successful";
+    await WinningAmount.create({
+      userId: user.userId,
+      userName: user.userName,
+      amount: prizeAmount,
+      type: "win",
+      marketId,
+    });
 
-    await user.save({ fields: ["balance", "marketListExposure"] });
-
-
-    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update" + " " + message));
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update"));
   } catch (error) {
     console.log("Error:", error);
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
@@ -376,28 +359,15 @@ export const removeExposer = async (req, res) => {
           profitLoss: -marketListExposureValue,
         });
 
+        await WinningAmount.create({
+          userId: user.userId,
+          userName: user.userName,
+          amount: marketListExposureValue,
+          type: "loss",
+          marketId: marketId,
+        })
       }
 
-
-      const marketExposures = user.marketListExposure;
-
-      let totalExposure = 0;
-      marketExposures.forEach(market => {
-        const exposure = Object.values(market)[0];
-        totalExposure += exposure;
-      });
-
-
-      const dataToSend = {
-        amount: user.balance,
-        userId,
-        exposure: totalExposure
-      };
-      const baseURL = process.env.WHITE_LABEL_URL;
-      const { data: response } = await axios.post(
-        `${baseURL}/api/admin/extrnal/balance-update`,
-        dataToSend,
-      );
     }
 
     await user.save();
@@ -473,7 +443,7 @@ export const getLotteryP_L = async (req, res) => {
     const user = req.user;
     const { page = 1, limit = 10 } = req.query;
 
-    const currentPage = parseInt(page); 
+    const currentPage = parseInt(page);
     const parsedLimit = parseInt(limit);
     const offset = (currentPage - 1) * parsedLimit;
 

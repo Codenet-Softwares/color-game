@@ -1205,7 +1205,7 @@ export const user_Balance = async (userId) => {
       if (trans.type === 'win') {
         balance += parseFloat(trans.amount);
       }
-      if (trans.transactionType === 'loss') {
+      if (trans.type === 'loss') {
         balance -= parseFloat(trans.amount);
       }
     }
