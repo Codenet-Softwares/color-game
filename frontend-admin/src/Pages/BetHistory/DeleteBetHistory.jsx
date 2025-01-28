@@ -6,6 +6,7 @@ import { FaSearch, FaTimes, FaTrashAlt } from "react-icons/fa";
 import GameService from "../../Services/GameService";
 import GetBetTrash from "./GetBetTrash";
 import Pagination from "../../Components/Pagination";
+import { customErrorHandler } from "../../Utils/helper";
 
 const DeleteBetHistory = () => {
   const auth = useAuth();
@@ -37,7 +38,7 @@ const DeleteBetHistory = () => {
         }));
       })
       .catch((err) => {
-        toast.error("Failed to fetch market history");
+       toast.error(customErrorHandler(err));
       }).finally(() => {
         auth.hideLoader();
       });
