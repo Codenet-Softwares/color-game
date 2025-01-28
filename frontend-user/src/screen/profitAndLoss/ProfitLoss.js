@@ -56,7 +56,8 @@ const ProfitLoss = ({
       const response = await getProfitLossRunner({
         userName: UserName,
         marketId: marketId,
-        limit: profitLossRunnerData.itemPerPage,
+        pageNumber: profitLossRunnerData.currentPage,
+        dataLimit: profitLossRunnerData.itemPerPage,
         searchName: profitLossRunnerData.searchItem,
       });
 
@@ -92,6 +93,26 @@ const ProfitLoss = ({
     if (component === "UserLotteryBetHistory") getUserLotteryBetHistoryWise();
   }, [component]);
 
+  // useEffect(() => {
+  //   getProfitLossEventWise()
+  //   SetComponent("ProfitAndLossEvent")
+  // }, [profitLossEventData.currentPage]);
+
+  useEffect(() => {
+    if (profitLossLotteryEventData.currentPage > 1) {
+      getProfitLossLotteryEventWise()
+      SetComponent("ProfitAndLossLotteryEvent")
+    }
+  }, [profitLossLotteryEventData.currentPage]);
+
+  // useEffect(() => {
+  //   getProfitLossRunnerWise()
+  //   SetComponent("ProfitAndLossLotteryEvent")
+  // }, [profitLossLotteryEventData.currentPage]);
+
+
+  console.log("profitLossLotteryEventData.currentPage", profitLossLotteryEventData.currentPage, component)
+
   async function getProfitLossEventWise(gameId, componentName) {
     try {
       // Set toggle to false before hitting the endpoint
@@ -102,7 +123,8 @@ const ProfitLoss = ({
       const response = await getProfitLossEvent({
         userName: UserName,
         gameId: gameId,
-        // limit: profitLossEventData.itemPerPage,  //Work pending by serverSide
+        pageNumber: profitLossEventData.currentPage,
+        dataLimit: profitLossEventData.itemPerPage,
         searchName: profitLossEventData.searchItem,
       });
 
@@ -112,8 +134,8 @@ const ProfitLoss = ({
       SetProfitLossEventData((prevState) => ({
         ...prevState,
         data: response.data,
-        totalPages: response.pagination.totalPages,
-        totalData: response.pagination.totalItems,
+        totalPages: response?.pagination?.totalPages,
+        totalData: response?.pagination?.totalItems,
       }));
     } catch (error) {
       // Handle any errors that occur during the API call
@@ -138,6 +160,8 @@ const ProfitLoss = ({
       setUserBetHistory((prevState) => ({
         ...prevState,
         data: response.data,
+        totalPages: response?.pagination?.totalPages,
+        totalData: response?.pagination?.totalItems,
 
       }));
     } catch (error) {
@@ -157,8 +181,8 @@ const ProfitLoss = ({
       const response = await getProfitLossLotteryEvent({
         userName: UserName,
         gameId: gameId,
-        page: profitLossLotteryEventData.currentPage,
-        limit: profitLossLotteryEventData.itemPerPage,
+        pageNumber: profitLossLotteryEventData.currentPage,
+        dataLimit: profitLossLotteryEventData.itemPerPage,
         searchName: profitLossLotteryEventData.searchItem,
       });
 
@@ -184,12 +208,14 @@ const ProfitLoss = ({
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
       // Make the API call
-      const response = await getUserLotteryBetHistory_api({marketId:marketId});
+      const response = await getUserLotteryBetHistory_api({ marketId: marketId });
 
       // Update state with the response data
       setUserLotteryBetHistory((prevState) => ({
         ...prevState,
         data: response?.data,
+        totalPages: response?.pagination?.totalPages,
+        totalData: response?.pagination?.totalItems,
 
       }));
     } catch (error) {
@@ -198,6 +224,42 @@ const ProfitLoss = ({
 
     }
   }
+
+  const handelProfitLossEventDataPage = (page) => {
+    SetProfitLossEventData((prevState) => ({
+      ...prevState,
+      currentPage: page,
+    }));
+  };
+
+  const handelProfitLossRunnerDataPage = (page) => {
+    SetProfitLossRunnerData((prevState) => ({
+      ...prevState,
+      currentPage: page,
+    }));
+  };
+
+  const handelProfitLossLotteryEventDataPage = (page) => {
+    SetProfitLossLotteryEventData((prevState) => ({
+      ...prevState,
+      currentPage: page,
+    }));
+  };
+
+  const handelUserBetHistoryPage = (page) => {
+    setUserBetHistory((prevState) => ({
+      ...prevState,
+      currentPage: page,
+    }));
+  };
+
+  const handelUserLotteryBetHistoryPage = () => {
+    setUserLotteryBetHistory((prevState) => ({
+      ...prevState,
+      currentPage: page,
+    }));
+  };
+
 
   console.log("component", component);
   let componentToRender;
@@ -211,15 +273,16 @@ const ProfitLoss = ({
         currentPage={profitLossEventData.currentPage}
         SetToggle={SetToggle}
         totalItems={profitLossEventData.totalData}
+        handlePageChange={(page) => handelProfitLossEventDataPage(page)}
       />
     );
   } else if (component === "UserBetHistory") {
     componentToRender = (
-      <UserBetHistory SetComponent={SetComponent} data={userBetHistory} />
+      <UserBetHistory SetComponent={SetComponent} data={userBetHistory} handlePageChange={(page) => handelUserBetHistoryPage(page)} />
     );
   } else if (component === "UserLotteryBetHistory") {
     componentToRender = (
-      <UserLotteryBetHistory SetComponent={SetComponent} data={userLotteryBetHistory}  />
+      <UserLotteryBetHistory SetComponent={SetComponent} data={userLotteryBetHistory} handlePageChange={(page) => handelUserLotteryBetHistoryPage(page)} />
     );
   }
   else if (component === "ProfitAndLossLotteryEvent") {
@@ -232,6 +295,7 @@ const ProfitLoss = ({
         currentPage={profitLossLotteryEventData.currentPage}
         SetToggle={SetToggle}
         totalItems={profitLossLotteryEventData.totalData}
+        handlePageChange={(page) => handelProfitLossLotteryEventDataPage(page)}
       />
     )
   }
@@ -244,6 +308,7 @@ const ProfitLoss = ({
         currentPage={profitLossRunnerData.currentPage}
         totalItems={profitLossRunnerData.totalData}
         SetRunnerId={SetRunnerId}
+        handlePageChange={(page) => handelProfitLossRunnerDataPage(page)}
       />
     );
   }
@@ -256,6 +321,10 @@ const ProfitLoss = ({
       currentPage: Number(currentPage),
     }));
   };
+
+
+
+
 
   const handleSearch = (e) => {
     SetProfitLossData((prev) => ({

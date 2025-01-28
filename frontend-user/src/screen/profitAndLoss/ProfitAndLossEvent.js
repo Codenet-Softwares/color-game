@@ -10,6 +10,7 @@ const ProfitAndLossEvent = ({
   currentPage,
   SetToggle,
   totalItems,
+  handlePageChange
 }) => {
   console.log("data", data);
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
@@ -90,7 +91,7 @@ const ProfitAndLossEvent = ({
                 </div>
               ) : (
                 // Table
-                  <div className="QA_section" style={{ overflowX: "auto" }}>
+                <div className="QA_section" style={{ overflowX: "auto" }}>
                   <div className="QA_table mb_30">
                     <table className="table lms_table_active3 table-bordered">
                       <thead>
@@ -107,12 +108,12 @@ const ProfitAndLossEvent = ({
                           <th scope="col">
                             <b>Event Name</b>
                           </th>
-                            <th scope="col">
-                              <b>Profit & Loss</b>
-                            </th>
+                          <th scope="col">
+                            <b>Profit & Loss</b>
+                          </th>
                           <th scope="col">
                             <b>Commission</b>
-                          </th>                       
+                          </th>
                           <th scope="col">
                             <b>Total P&L</b>
                           </th>
@@ -143,11 +144,10 @@ const ProfitAndLossEvent = ({
                               </td>
                               <td>{data?.commission || 0}</td>
                               <td
-                                className={`fw-bold ${
-                                  data?.totalProfitLoss > 0
+                                className={`fw-bold ${data?.totalProfitLoss > 0
                                     ? "text-success"
                                     : "text-danger"
-                                }`}
+                                  }`}
                               >
                                 {data?.totalProfitLoss}
                               </td>
@@ -178,7 +178,10 @@ const ProfitAndLossEvent = ({
               <Pagination
                 currentPage={data.currentPage}
                 totalPages={data.totalPages}
-                handlePageChange={data.handlePageChange}
+                handlePageChange={(page) => {
+                  console.log('Changing page to:', page);
+                  handlePageChange(page);
+                }}
                 startIndex={startIndex}
                 endIndex={endIndex}
                 totalData={data.totalData}

@@ -18,17 +18,28 @@ const MarketVoidPage = () => {
     name: "",
     totalData: "",
   });
-
+const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+  
+    return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
+  }, [searchTerm]);
+    
+  useEffect(() => {
+    auth.showLoader();
     fetchVoidGames();
-  }, [voidGame.currentPage, voidGame.totalEntries, voidGame.name]);
+  }, [voidGame.currentPage, voidGame.totalEntries, debouncedSearchTerm,
+  ]);
 
   const fetchVoidGames = () => {
     GameService.voidMarketList(
       auth.user,
       voidGame.currentPage,
       voidGame.totalEntries,
-      voidGame.name
+      debouncedSearchTerm,
     )
       .then((res) => {
         console.log(
@@ -45,10 +56,14 @@ const MarketVoidPage = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
       });
   };
 
   const handleClearSearch = () => {
+    setSearchTerm(""); // Reset the search term
     setVoidGame({ ...voidGame, name: "" });
   };
 
@@ -73,9 +88,9 @@ const MarketVoidPage = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center text-uppercase">Void Game</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase ">Void Game</h3>
         </div>
-        <div className="card-body" style={{background:"#D8C4B6"}}>
+        <div className="card-body shadow-lg" style={{background:"#E1D1C7"}}>
           {/* Search and Entries Selection */}
           <div className="row mb-4">
             <div className="col-md-6 position-relative">
@@ -93,17 +108,16 @@ const MarketVoidPage = () => {
                 type="text"
                 className="form-control"
                 placeholder="Search by game name or market name..."
-                value={voidGame.name}
-                onChange={(e) =>
-                  setVoidGame({ ...voidGame, name: e.target.value })
-                }
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
                   border: "2px solid #6c757d",
                 }}
               />
-              {voidGame.name && (
+              {searchTerm && (
                 <FaTimes
                   onClick={handleClearSearch}
                   style={{

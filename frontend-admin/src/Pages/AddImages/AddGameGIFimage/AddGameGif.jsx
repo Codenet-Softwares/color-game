@@ -25,6 +25,7 @@ const AddGameGif = () => {
   };
 
   const handleUploadGif = async () => {
+    auth.showLoader();
     if (!file) {
       toast.error("Please select a GIF to upload.");
       return;
@@ -58,6 +59,8 @@ const AddGameGif = () => {
           toast.error("Failed to upload the GIF. Please try again."); // Fallback error message
         }
         console.error(error);
+      }finally {
+        auth.hideLoader();
       }
       
     };
@@ -74,7 +77,7 @@ const AddGameGif = () => {
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Create GIF</h3>
         </div>
-        <div className="card-body" style={{ background: "#D8C4B6" }}>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
           <div className="mb-4 text-center">
             <div
               onClick={() => document.getElementById("file-input").click()}

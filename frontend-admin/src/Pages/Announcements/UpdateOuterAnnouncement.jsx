@@ -9,6 +9,7 @@ const UpdateOuterAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
+    auth.showLoader();
     fetchAnnouncements();
   }, []);
 
@@ -20,10 +21,14 @@ const UpdateOuterAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to fetch announcements.");
       console.error("Error fetching announcements:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
   
   const handleDelete = async (announceId) => {
+    auth.showLoader();
+
     try {
       await GameService.deleteOuterAnnouncement(auth.user, announceId);  
       toast.success("Announcement deleted successfully!");
@@ -31,6 +36,8 @@ const UpdateOuterAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to delete the announcement. Please try again.");
       console.error("Error deleting announcement:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
 
@@ -46,7 +53,7 @@ const UpdateOuterAnnouncement = () => {
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Update Outer Announcement</h3>
         </div>
-        <div className="card-body" style={{ background: "#D8C4B6" }}>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
           {announcements.length === 0 ? (
             <div className="text-center">No announcements available.</div>
           ) : (

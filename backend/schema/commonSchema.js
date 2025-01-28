@@ -469,12 +469,6 @@ export const validatePurchaseHistory = [
     .optional()
     .isInt({ min: 1 })
     .withMessage('Limit must be a positive integer'),
-  query('sem')
-    .optional()
-    .isInt()
-    .withMessage('Sem must be an integer')
-    .isIn([5, 10, 25, 50, 100, 200])
-    .withMessage('Sem must be one of 5, 10, 25, 50, 100, 200'),
 ];
 
 export const validateUpdateBalance = [

@@ -9,7 +9,7 @@ const InnerAnnouncement = () => {
     announcement: "",
   });
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);  
-
+  const [isLoading, setIsLoading] = useState(false);
   const emojis = [
     "😊", "😂", "😍", "😎", "🤔", "🥺", "💯", "🎉", "👍", "🙏",  
     "❤️", "💙", "💚", "💛", "💜", "🧡", "🤍", "🤎",  
@@ -29,10 +29,14 @@ const InnerAnnouncement = () => {
   };
 
   const handleCreateAnnouncement = async () => {
+    setIsLoading(true);
+
     const { announcement } = announcementData;
 
     if (!announcement) {
       toast.error("Please provide an announcement.");
+      setIsLoading(false);
+
       return;
     }
 
@@ -50,6 +54,8 @@ const InnerAnnouncement = () => {
         toast.error("Failed to create announcement. Please try again.");
       }
       console.error("Error creating inner announcement:", error);
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -63,60 +69,75 @@ const InnerAnnouncement = () => {
 
   return (
     <div className="container my-5 p-5">
-      <h3 className="fw-bold text-center text-uppercase p-3 text-white rounded" style={{background:"#3E5879"}}>Create Inner Announcement</h3>
-      <div className="mt-4">
-        <div className="mb-3">
-          
-          <div className="d-flex">
-            <input
-              type="text"
-              id="announcement"
-              name="announcement"
-              className="form-control fw-bold"
-              style={{
-                background:"#D8C4B6",
-                border:"2px solid #3E5879",
+  <h3 className="fw-bold text-center text-uppercase p-3 text-white rounded" style={{background:"#3E5879"}}>
+    Create Inner Announcement
+  </h3>
 
-              }}
-              value={announcementData.announcement}
-              onChange={handleChange}
-              placeholder="Enter Inner Announcement"
-            />
-            <button
-              type="button"
-              className="btn btn-info ms-2"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}  
-            >
-           <h5 className="fw-bold">Choose Emojis 😊</h5>  
-            </button>
-          </div>
-          
-          {/* Emoji Picker */}
-          {showEmojiPicker && (
-            <div className="emoji-picker mt-2">
-              <div className="emoji-grid">
-                {emojis.map((emoji, index) => (
-                  <button
-                    key={index}
-                    className="btn btn-light emoji-button"
-                    style={{ fontSize: "1.5rem", margin: "5px" }}
-                    onClick={() => handleEmojiClick(emoji)}  
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="text-center">
-          <button className="btn btn-primary" onClick={handleCreateAnnouncement}>
-            Create Inner Announcement
-          </button>
-        </div>
+  {/* Show loading spinner */}
+  {isLoading && (
+    <div className="text-center my-3">
+      <div className="spinner-border text-primary" role="status">
+        <span className="visually-hidden">Loading...</span>
       </div>
     </div>
+  )}
+
+  <div className="mt-4">
+    <div className="mb-3">
+      <div className="d-flex">
+        <input
+          type="text"
+          id="announcement"
+          name="announcement"
+          className="form-control fw-bold"
+          style={{
+            background:"#E1D1C7",
+            border:"2px solid #3E5879",
+          }}
+          value={announcementData.announcement}
+          onChange={handleChange}
+          placeholder="Enter Inner Announcement"
+        />
+        <button
+          type="button"
+          className="btn btn-info ms-2"
+          onClick={() => setShowEmojiPicker(!showEmojiPicker)}  
+        >
+          <h5 className="fw-bold">Choose Emojis 😊</h5>  
+        </button>
+      </div>
+
+      {/* Emoji Picker */}
+      {showEmojiPicker && (
+        <div className="emoji-picker mt-2">
+          <div className="emoji-grid">
+            {emojis.map((emoji, index) => (
+              <button
+                key={index}
+                className="btn btn-light emoji-button"
+                style={{ fontSize: "1.5rem", margin: "5px" }}
+                onClick={() => handleEmojiClick(emoji)}  
+              >
+                {emoji}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div className="text-center">
+      <button
+        className="btn btn-primary"
+        onClick={handleCreateAnnouncement}
+        disabled={isLoading} // Disable button while loading
+      >
+        {isLoading ? "Creating..." : "Create Inner Announcement"}
+      </button>
+    </div>
+  </div>
+</div>
+
   );
 };
 

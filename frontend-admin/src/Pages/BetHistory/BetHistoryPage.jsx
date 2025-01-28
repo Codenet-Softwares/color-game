@@ -19,17 +19,28 @@ const BetHistoryPage = () => {
     name: "",
     totalData: 0,
   });
+ const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  useEffect(() => {
+    // Debouncing logic: Update `debouncedSearchTerm` after 500ms
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer); // Clear the timer on cleanup
+  }, [searchTerm]);
 
   useEffect(() => {
+    auth.showLoader();
     fetchBetHistory();
-  }, [betHistory.currentPage, betHistory.totalEntries, betHistory.name]);
+  }, [betHistory.currentPage, betHistory.totalEntries, debouncedSearchTerm]);
 
   const fetchBetHistory = () => {
     GameService.betHistory(
       auth.user,
       betHistory.currentPage,
       betHistory.totalEntries,
-      betHistory.name
+      debouncedSearchTerm
     )
       .then((res) => {
         setBetHistory((prev) => ({
@@ -41,9 +52,13 @@ const BetHistoryPage = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
       });
   };
   const handleClearSearch = () => {
+    setSearchTerm(""); // Reset the search term
     setBetHistory((prev) => ({ ...prev, name: "" }));
   };
   const handlePageChange = (pageNumber) => {
@@ -74,7 +89,7 @@ const BetHistoryPage = () => {
           >
             <h3 className="mb-0 fw-bold text-center text-uppercase">Bet History</h3>
           </div>
-          <div className="card-body" style={{background:"#D8C4B6",}}>
+          <div className="card-body" style={{background:"#E1D1C7",}}>
             {/* Search and Entries Selection */}
             <div className="row mb-4">
               <div className="col-md-6 position-relative">
@@ -92,17 +107,16 @@ const BetHistoryPage = () => {
                   type="text"
                   className="form-control"
                   placeholder="Search by game name or market name..."
-                  value={betHistory.name}
-                  onChange={(e) =>
-                    setBetHistory({ ...betHistory, name: e.target.value })
-                  }
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+
                   style={{
                     paddingLeft: "40px",
                     borderRadius: "30px",
                     border: "2px solid #6c757d",
                   }}
                 />
-                {betHistory.name && (
+                {searchTerm && (
                   <FaTimes
                     onClick={handleClearSearch}
                     style={{

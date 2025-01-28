@@ -169,6 +169,10 @@ export function getAccountStatement(body = {}) {
 export function getUserBetHistory(body = {}) {
   return {
     data: [],
+    totalPages: 0,
+    totalData: 0,
+    currentPage: 1,
+    itemPerPage: 10,
   };
 }
 
@@ -180,7 +184,7 @@ export function getLotteryRange(body = {}) {
     series_end: "",
     number_start: "",
     number_end: "",
-    isActive:null
+    isActive: null
   };
 }
 
@@ -198,5 +202,9 @@ export function getprofitLossLotteryEventDataState(body = {}) {
 export function getUserLotteryBetHistory(body = {}) {
   return {
     data: [],
+    totalPages: 0,
+    totalData: 0,
+    currentPage: 1,
+    itemPerPage: 10,
   };
 }

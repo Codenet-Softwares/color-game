@@ -12,6 +12,7 @@ const LiveUserBet = () => {
   const { marketId } = useParams();
   const navigate = useNavigate();
   const auth = useAuth();
+  const [marketName, setMarketName] = useState(""); // State for market name
   const [userBets, setUserBets] = useState({
     bets: [],
     currentPage: 1,
@@ -27,6 +28,8 @@ const LiveUserBet = () => {
   }, [marketId, userBets.currentPage, userBets.totalEntries, userBets.search]);
 
   const fetchLiveUserBet = async () => {
+    auth.showLoader();
+
     try {
       const response = await GameService.userLiveBetGame(
         auth.user,
@@ -35,18 +38,28 @@ const LiveUserBet = () => {
         userBets.totalEntries,
         userBets.search
       );
+      const bets = response.data?.data || [];
+
       setUserBets((prev) => ({
         ...prev,
         bets: response.data?.data || [],
         totalPages: response?.data.pagination?.totalPages || 1,
         totalData: response?.data.pagination?.totalItems || 0,
       }));
+      if (bets.length > 0) {
+        setMarketName(bets[0].marketName || "Unknown Market");
+      } else {
+        setMarketName("Unknown Market");
+      }
     } catch (error) {
       toast.error(customErrorHandler(error));
+    }finally {
+      auth.hideLoader();
     }
   };
 
   const handleDelete = async (marketId, runnerId, userId, betId) => {
+    auth.showLoader();
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this market and bet?"
     );
@@ -72,6 +85,8 @@ const LiveUserBet = () => {
       }
     } catch (error) {
       toast.error(customErrorHandler(error));
+    }finally {
+      auth.hideLoader();
     }
   };
 
@@ -102,7 +117,7 @@ const LiveUserBet = () => {
 
   return (
     <div className="container my-5 p-5">
-      <div className="card shadow-lg" style={{ background: "#D8C4B6" }}>
+      <div className="card shadow-lg" style={{ background: "#E1D1C7" }}>
         <div
           className="card-header  text-white"
           style={{
@@ -130,17 +145,17 @@ const LiveUserBet = () => {
             <FaArrowLeft />
           </div>
           <h3
-            className="mb-0 fw-bold"
+            className="mb-0 fw-bold text-uppercase"
             style={{ flexGrow: 1, textAlign: "center" }}
           >
-            Live Bets
+            Live Bets -  {marketName}
           </h3>
         </div>
 
         <div className="card-body">
           {/* Search and Entries Selection */}
           <div className="row mb-4">
-            <div className="col-md-6 position-relative">
+            {/* <div className="col-md-6 position-relative">
               <FaSearch
                 style={{
                   position: "absolute",
@@ -171,7 +186,7 @@ const LiveUserBet = () => {
                   onClick={handleClearSearch}
                 />
               )}
-            </div>
+            </div> */}
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
               <select

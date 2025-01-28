@@ -9,6 +9,7 @@ const UpdateInnerAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
+    auth.showLoader();
     fetchAnnouncements();
   }, []);
 
@@ -20,10 +21,13 @@ const UpdateInnerAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to fetch inner announcements.");
       console.error("Error fetching inner announcements:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
 
   const handleDelete = async (announceId) => {
+    auth.showLoader();
     try {
       await GameService.deleteInnerAnnouncement(auth.user, announceId);  
       toast.success("Inner Announcement deleted successfully!");
@@ -31,6 +35,8 @@ const UpdateInnerAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to delete the inner announcement. Please try again.");
       console.error("Error deleting inner announcement:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
 
@@ -46,7 +52,7 @@ const UpdateInnerAnnouncement = () => {
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Update Inner Announcement</h3>
         </div>
-        <div className="card-body" style={{ background: "#D8C4B6" }}>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
           {announcements.length === 0 ? (
             <div className="text-center">No inner announcements available.</div>
           ) : (

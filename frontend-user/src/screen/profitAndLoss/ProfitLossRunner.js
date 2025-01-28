@@ -8,7 +8,8 @@ const ProfitAndLossRunner = ({
   SetProfitLossRunnerData,
   currentPage,
   totalItems,
-  SetRunnerId
+  SetRunnerId,
+  handlePageChange
 }) => {
   console.log("data", data);
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
@@ -31,7 +32,7 @@ const ProfitAndLossRunner = ({
   };
 
   const handelGotoBetHistory = (runnerId, componentName) => {
-    console.log("qwerty",runnerId)
+    console.log("qwerty", runnerId)
     SetComponent(componentName);
     SetRunnerId(runnerId);
   };
@@ -91,7 +92,7 @@ const ProfitAndLossRunner = ({
                 </div>
               ) : (
                 // Table
-                  <div className="QA_section" style={{ overflowX: "auto" }}>
+                <div className="QA_section" style={{ overflowX: "auto" }}>
                   <div className="QA_table mb_30">
                     <table className="table lms_table_active3 table-bordered">
                       <thead>
@@ -184,7 +185,10 @@ const ProfitAndLossRunner = ({
               <Pagination
                 currentPage={data.currentPage}
                 totalPages={data.totalPages}
-                handlePageChange={data.handlePageChange}
+                handlePageChange={(page) => {
+                  console.log('Changing page to:', page);
+                  handlePageChange(page);
+                }}
                 startIndex={startIndex}
                 endIndex={endIndex}
                 totalData={data.totalData}

@@ -13,8 +13,9 @@ html, body {
 .WelcomePage {
   text-align: center;
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(to right, #4366da, #feb47b);
-  color: white;
+  background: linear-gradient(90deg, #F5EFE7, #3E5879);
+
+  color: #000;
   padding: 20px;
   min-height: 100vh;
   display: flex;

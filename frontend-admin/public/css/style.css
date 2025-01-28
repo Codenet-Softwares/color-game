@@ -3516,7 +3516,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   position: relative;
   border-radius: 0px;
   margin: 0;
-  background: #D8C4B6;
+  background: #3E5879;
   border-radius: 0;
   margin: 0;
   border-radius: 0px;
@@ -3527,7 +3527,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   font-weight: 900;
   text-transform: uppercase;
   position: relative;
-  -webkit-text-stroke: 2px #3E5879;
+  -webkit-text-stroke: 2px #fff;
   color: transparent;
   filter: drop-shadow(0 0 15px rgba(255, 99, 132, 0.2));
 }
@@ -3886,7 +3886,7 @@ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child::befor
   max-width: 42px;
   max-height: 42px;
   border-radius: 50%;
-  border: 2px solid #94C0D4;
+  border: 2px solid #ECE7E2;
   cursor: pointer;
 }
 
@@ -4316,7 +4316,7 @@ table.dataTable {
   z-index: 999;
   overflow: hidden;
   overflow-y: auto;
-  background: #D8C4B6;
+  background: #3E5879;
   box-shadow: 0 12px 30px rgba(80, 143, 244, 0.1);
   transition: .3s;
 }
@@ -4362,7 +4362,7 @@ table.dataTable {
 /* line 40, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
 .sidebar .logo {
   margin-top: 20px;
-  background: #D8C4B6;
+  background: #3E5879;
   /* padding: 24px; */
   margin-left: 95px;
   
@@ -4735,7 +4735,7 @@ table.dataTable {
   color:#3E5879 ;
   font-weight: bold;
   text-decoration: none;
-  border: 1px solid #3E5879;
+  border: 2px solid #000;
 }
 
 /* line 358, G:/admin_project/8 admin/management_html/scss/_sidebar.scss */
@@ -13154,7 +13154,7 @@ table.lms_table_active3.dataTable thead .sorting_desc::after {
   /* margin-bottom: 12px; */
   border-radius: 4px;
   padding: 80px;
-  background: #D8C4B6;
+  background:#E1D1C7;
   
 }
 

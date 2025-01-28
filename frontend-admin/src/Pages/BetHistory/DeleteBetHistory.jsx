@@ -23,6 +23,7 @@ const DeleteBetHistory = () => {
   });
 
   const fetchMarketHistory = () => {
+    auth.showLoader();
     GameService.trashLiveBetHistory(
       auth.user,
       marketHistory.currentPage,
@@ -37,6 +38,8 @@ const DeleteBetHistory = () => {
       })
       .catch((err) => {
         toast.error("Failed to fetch market history");
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
 
@@ -176,7 +179,7 @@ const DeleteBetHistory = () => {
 
       <div
         className="card shadow-lg rounded mt-4 p-4"
-        style={{ background: "#D8C4B6" }}
+        style={{ background: "#E1D1C7" }}
       >
         <div className="accordion" id="marketAccordion">
           {paginatedMarkets.length > 0 ? (

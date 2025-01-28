@@ -29,7 +29,8 @@ const RunnerView = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalEntries, setTotalEntries] = useState(10);
   const [totalData, setTotalData] = useState(0);
-  const [search, setSearch] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [rateShow, setRateShow] = useState({
     createRate: false,
     viewRate: false,
@@ -71,6 +72,8 @@ const RunnerView = () => {
   };
 
   const fetchDataPathName = () => {
+    auth.showLoader();
+
     GameService.getToPathname("store", auth.user, runner)
       .then((response) => {
         setPathData(response.data.data);
@@ -78,9 +81,20 @@ const RunnerView = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
   useEffect(() => {
+      const timer = setTimeout(() => {
+        setDebouncedSearchTerm(searchTerm);
+      }, 500);
+    
+      return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
+    }, [searchTerm]);
+      
+  useEffect(() => {
+    
     fetchDataPathName();
   }, []);
 
@@ -94,7 +108,7 @@ const RunnerView = () => {
         currentPage,
         totalEntries,
         pathdata[1]?.id,
-        search
+        debouncedSearchTerm
       )
         .then((res) => {
           console.log("============>>> line 48", res.data.data);
@@ -141,7 +155,7 @@ const RunnerView = () => {
     currentPage,
     totalEntries,
     pathdata[1]?.id,
-    search,
+    debouncedSearchTerm,
     showUpdateModal,
     runnerDeleteRes,
     rateShow.createRate,
@@ -211,7 +225,10 @@ const RunnerView = () => {
         toast.error(customErrorHandler(err));
       });
   };
-
+  const handleRunnerSearchChange = (e) => {
+    setSearchTerm(e.target.value); // Update the search term
+    setRunners((prev) => ({ ...prev, currentPage: 1 })); // Reset pagination
+  };
   return (
     <div className="container py-5">
       <div className="row">
@@ -248,8 +265,8 @@ const RunnerView = () => {
         <div className="row">
           <div className="col-md-6">
             <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchTerm}
+              onChange={handleRunnerSearchChange}
               type="text"
               className="form-control mb-3"
               placeholder="Search Content Here..."
