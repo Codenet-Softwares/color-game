@@ -1145,7 +1145,7 @@ export const getRevokeMarket = async (req, res) => {
       } else {
         const newExposure = { [marketId]: exposurePrice };
         user.marketListExposure = [...(user.marketListExposure || []), newExposure];
-      }
+
       }
 
       await userSchema.update(
