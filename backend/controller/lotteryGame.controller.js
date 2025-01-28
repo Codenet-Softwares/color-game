@@ -59,8 +59,8 @@ export const purchaseLottery = async (req, res) => {
     });
 
     const userBalance = await user_Balance(userId)
-
-    if (balance > userBalance) {
+    
+    if (userBalance < lotteryPrice) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Insufficient balance"));
     }
 
