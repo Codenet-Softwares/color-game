@@ -24,25 +24,28 @@ const UpdateGameSlider = () => {
       console.error("Error fetching images:", error);
     }
     finally {
-      // Hide the loader after the request is complete (success or error)
       auth.hideLoader();
     }
   };
 
   const handleDelete = async (imageId) => {
+    auth.showLoader();
     try {
       await GameService.deleteGameCreatedImage(auth.user, imageId);
       toast.success("Image deleted successfully!");
-      // Refresh the list after deletion
       fetchSliderImages();
     } catch (error) {
       toast.error("Failed to delete the image. Please try again.");
       console.error("Error deleting image:", error);
+    } finally {
+      auth.hideLoader();
     }
     
   };
 
   const handleToggleActiveStatus = async (imageId, currentStatus) => {
+    auth.showLoader();
+
     const newStatus = !currentStatus;
 
     try {
@@ -69,6 +72,8 @@ const UpdateGameSlider = () => {
     } catch (error) {
       toast.error("Failed to update image status. Please try again.");
       console.error("API Error:", error);
+    } finally {
+      auth.hideLoader();
     }
   };
 

@@ -57,6 +57,7 @@ const Inactive = () => {
   };
 
   const handleRevokeAnnouncement = (marketId, runnerId) => {
+    auth.showLoader();
     console.log("===>> runner id", runnerId);
     const data = {
       marketId: marketId,
@@ -70,6 +71,9 @@ const Inactive = () => {
       })
       .catch((err) => {
         toast.error("Error revoking announcement:", err);
+      }).finally(() => {
+        // Hide the loader after the request is complete (success or error)
+        auth.hideLoader();
       });
   };
 

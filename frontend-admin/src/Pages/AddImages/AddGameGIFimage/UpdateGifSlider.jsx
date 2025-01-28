@@ -33,6 +33,7 @@ const UpdateGifSlider = () => {
 
   // Function to delete a GIF image
   const handleDelete = async (imageId) => {
+    auth.showLoader();
     console.log("Deleting GIF ID:", imageId); // Debugging
     try {
       const response = await GameService.deleteCreateGif(auth.user, imageId);
@@ -45,10 +46,13 @@ const UpdateGifSlider = () => {
     } catch (error) {
       toast.error("Failed to delete the GIF. Please try again.");
       console.error("Error deleting GIF:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
 
   const handleToggleActiveStatus = async (imageId, currentStatus) => {
+    auth.showLoader();
     const newStatus = !currentStatus;
     console.log("Toggling status for imageId:", imageId, "to:", newStatus);
   
@@ -69,6 +73,8 @@ const UpdateGifSlider = () => {
     } catch (error) {
       toast.error("Failed to update GIF status. Please try again.");
       console.error("Error updating GIF status:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
   

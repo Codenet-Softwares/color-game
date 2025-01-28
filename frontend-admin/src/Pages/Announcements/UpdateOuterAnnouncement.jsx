@@ -27,6 +27,8 @@ const UpdateOuterAnnouncement = () => {
   };
   
   const handleDelete = async (announceId) => {
+    auth.showLoader();
+
     try {
       await GameService.deleteOuterAnnouncement(auth.user, announceId);  
       toast.success("Announcement deleted successfully!");
@@ -34,6 +36,8 @@ const UpdateOuterAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to delete the announcement. Please try again.");
       console.error("Error deleting announcement:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
 
