@@ -24,7 +24,7 @@ export const lotteryRoute = (app) => {
 
   app.post("/api/search-ticket", validateSearchTickets, customErrorHandler, authorize([string.User]), searchTicket);
 
-  //app.post("/api/purchase-lottery/:marketId", validatePurchaseLottery, customErrorHandler, authorize([string.User]), purchaseLottery);
+  app.post("/api/purchase-lottery/:marketId", validatePurchaseLottery, customErrorHandler, authorize([string.User]), purchaseLottery);
 
   app.post('/api/purchase-history/:marketId', validatePurchaseHistory, customErrorHandler, authorize([string.User]), purchaseHistory);
 
