@@ -24,6 +24,7 @@ const CreateImage = () => {
   };
 
   const handleAddImage = async () => {
+    auth.showLoader();
     if (!file) {
       toast.error("Please select an image to upload.");
       return;
@@ -57,6 +58,8 @@ const CreateImage = () => {
           toast.error("Failed to upload the image. Please try again."); 
         }
         console.error(error);
+      }finally {
+        auth.hideLoader();
       }
       
     };

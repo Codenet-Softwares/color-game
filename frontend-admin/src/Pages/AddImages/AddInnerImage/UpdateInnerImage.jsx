@@ -11,6 +11,7 @@ const UpdateInnerImage = () => {
 
   // Fetch images on component mount
   useEffect(() => {
+    auth.showLoader();
     fetchInnerImages();
   }, []);
   const fetchInnerImages = async () => {
@@ -22,21 +23,30 @@ const UpdateInnerImage = () => {
       toast.error("Failed to fetch inner images.");
       console.error("Error fetching images:", error);
     }
+    finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
+    }
   };
   
 
   const handleDelete = async (imageId) => {
+    auth.showLoader();
     try {
       await GameService.deleteCreateInnerImage(auth.user, imageId); 
       toast.success("Image deleted successfully!");
-      fetchInnerImages(); // Refresh the list after deletion
+      fetchInnerImages(); 
     } catch (error) {
       toast.error("Failed to delete the image. Please try again.");
       console.error("Error deleting image:", error);
+    } finally {
+      auth.hideLoader();
     }
   };
 
   const handleToggleActiveStatus = async (imageId, currentStatus) => {
+    auth.showLoader();
+
     const newStatus = !currentStatus;
 
     try {
@@ -63,6 +73,9 @@ const UpdateInnerImage = () => {
     } catch (error) {
       toast.error("Failed to update image status. Please try again.");
       console.error("API Error:", error);
+    } finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
     }
   };
 

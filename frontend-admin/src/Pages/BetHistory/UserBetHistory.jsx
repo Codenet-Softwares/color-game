@@ -12,6 +12,7 @@ const UserBetHistory = () => {
   const { marketId } = useParams();
   const navigate = useNavigate();
   const auth = useAuth();
+  const [marketName, setMarketName] = useState(""); // State for market name
   const [betAfterWin, setBetAfterWin] = useState({
     winBetHistory: [],
     currentPage: 1,
@@ -20,14 +21,24 @@ const UserBetHistory = () => {
     search: "",
     totalData: 0,
   });
-
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+  
+    return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
+  }, [searchTerm]);
+    
+  useEffect(() => {
+    auth.showLoader();
     if (marketId) fetchWinBetHistory();
   }, [
     marketId,
     betAfterWin.currentPage,
     betAfterWin.totalEntries,
-    betAfterWin.search,
+    debouncedSearchTerm,
   ]);
 
   const fetchWinBetHistory = async () => {
@@ -37,7 +48,7 @@ const UserBetHistory = () => {
         marketId,
         page: betAfterWin.currentPage,
         pageSize: betAfterWin.totalEntries,
-        search: betAfterWin.search,
+        debouncedSearchTerm
       });
 
       const response = await GameService.winBetHistory(
@@ -45,7 +56,7 @@ const UserBetHistory = () => {
         marketId,
         betAfterWin.currentPage,
         betAfterWin.totalEntries,
-        betAfterWin.search
+        debouncedSearchTerm
       );
 
       console.log("API Response:", response.data);
@@ -58,10 +69,19 @@ const UserBetHistory = () => {
         totalPages: pagination?.totalPages || 1,
         totalData: pagination?.totalItems || 0,
       }));
+      if (data.length > 0) {
+        setMarketName(data[0].marketName);
+      } else {
+        setMarketName("Unknown Market");
+      }
     } catch (error) {
       console.error("Error fetching bet history:", error);
       toast.error(customErrorHandler(error));
     }
+    finally {
+      auth.hideLoader();
+    }
+    
   };
 
   const handlePageChange = (pageNumber) => {
@@ -69,12 +89,10 @@ const UserBetHistory = () => {
   };
 
   const handleSearchChange = (e) => {
-    setBetAfterWin((prev) => ({
-      ...prev,
-      search: e.target.value,
-      currentPage: 1,
-    }));
+    setSearchTerm(e.target.value); // Update the search term
+    setBetAfterWin((prev) => ({ ...prev, currentPage: 1 })); // Reset pagination
   };
+  
 
   const handleEntriesChange = (e) => {
     setBetAfterWin((prev) => ({
@@ -127,10 +145,10 @@ const UserBetHistory = () => {
               <FaArrowLeft />
             </div>
             <h3
-              className="mb-0 fw-bold"
+              className="mb-0 fw-bold text-uppercase"
               style={{ flexGrow: 1, textAlign: "center" }}
             >
-              Bet History
+              Bet History - {marketName}
             </h3>
           </div>
 
@@ -152,7 +170,7 @@ const UserBetHistory = () => {
                   type="text"
                   className="form-control"
                   placeholder="Search by user or market name..."
-                  value={betAfterWin.search}
+                  value={searchTerm} // Bind to searchTerm
                   onChange={handleSearchChange}
                   style={{
                     paddingLeft: "40px",
@@ -184,12 +202,12 @@ const UserBetHistory = () => {
                   <tr>
                     <th>Serial Number</th>
                     <th>User Name</th>
-                    <th>Market Name</th>
+                    {/* <th>Market Name</th> */}
                     <th>Runner Name</th>
                     <th>Odds</th>
                     <th>Type</th>
                     <th>Stake</th>
-                    <th>Action</th>
+                    {/* <th>Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -200,7 +218,7 @@ const UserBetHistory = () => {
                         <tr key={winBet.userId}>
                           <td>{startIndex + index}</td>
                           <td>{winBet.userName}</td>
-                          <td>{winBet.marketName}</td>
+                          {/* <td>{winBet.marketName}</td> */}
                           <td>{winBet.runnerName}</td>
                           <td>{winBet.rate}</td>
                           <td
@@ -213,11 +231,11 @@ const UserBetHistory = () => {
                             {winBet.type}
                           </td>
                           <td>{winBet.value}</td>
-                          <td>
+                          {/* <td>
                             <button className="btn btn-danger">
                               <FaTrashAlt />
                             </button>
-                          </td>
+                          </td> */}
                         </tr>
                       );
                     })

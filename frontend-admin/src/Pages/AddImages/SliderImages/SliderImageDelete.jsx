@@ -16,6 +16,7 @@ const SliderImageDelete = () => {
   });
 
   useEffect(() => {
+    auth.showLoader();
     fetchSliderImages();
   }, []);
 
@@ -29,10 +30,14 @@ const SliderImageDelete = () => {
       })
       .catch((err) => {
         toast.error("Failed to load slider images.");
+      })
+      .finally(() => {
+        auth.hideLoader();
       });
   };
 
   const handleDelete = async (imageId) => {
+    auth.showLoader();
     try {
       await GameService.deleteCreatedImage(auth.user, imageId);
       toast.success(`Image Deleted successfully`);
@@ -40,12 +45,15 @@ const SliderImageDelete = () => {
     } catch (error) {
       toast.error("Failed to delete the image. Please try again.");
       console.error(error);
+    } finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
     }
   };
 
   const handleToggleActiveStatus = async (imageId, currentStatus) => {
+    auth.showLoader();
     const newStatus = !currentStatus;
-
     try {
       const response = await GameService.activeInactiveImage(
         auth.user,
@@ -72,6 +80,9 @@ const SliderImageDelete = () => {
     } catch (error) {
       toast.error("Failed to update image status. Please try again.");
       console.error("API Error:", error);
+    } finally {
+      // Hide the loader after the request is complete (success or error)
+      auth.hideLoader();
     }
   };
 

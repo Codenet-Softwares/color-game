@@ -23,6 +23,7 @@ const DeleteBetHistory = () => {
   });
 
   const fetchMarketHistory = () => {
+    auth.showLoader();
     GameService.trashLiveBetHistory(
       auth.user,
       marketHistory.currentPage,
@@ -37,6 +38,8 @@ const DeleteBetHistory = () => {
       })
       .catch((err) => {
         toast.error("Failed to fetch market history");
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
 

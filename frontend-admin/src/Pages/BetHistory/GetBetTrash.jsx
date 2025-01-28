@@ -10,7 +10,6 @@ const GetBetTrash = ({
   restoreMarketTrash,
 }) => {
   const auth = useAuth();
-
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalEntries: 10,
@@ -31,18 +30,33 @@ const GetBetTrash = ({
     });
   };
 
-  const handleDelete = (trashMarketId) => {
-    deleteMarketTrash(trashMarketId);
+  const handleDelete = async (trashMarketId) => {
+    auth.showLoader();
+    const isConfirmed = window.confirm(
+      "Are you sure you want to Delete this market?"
+    );
+    if (!isConfirmed) return;
+    try {
+      await deleteMarketTrash(trashMarketId);
+    } catch (error) {
+      console.error("Error deleting market:", error);
+    }finally {
+      auth.hideLoader();
+    }
   };
-
-  const handleRestore = (trashMarketId) => {
+  const handleRestore = async (trashMarketId) => {
+    auth.showLoader();
     const isConfirmed = window.confirm(
       "Are you sure you want to restore this market?"
     );
-
     if (!isConfirmed) return;
-
-    restoreMarketTrash(trashMarketId);
+    try {
+      await restoreMarketTrash(trashMarketId);
+    } catch (error) {
+      console.error("Error restoring market:", error);
+    }finally {
+      auth.hideLoader();
+    }
   };
 
   const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
@@ -53,7 +67,10 @@ const GetBetTrash = ({
   const paginatedData = selectedMarketDetails.slice(startIndex, endIndex);
 
   return (
-    <div className="card shadow-lg p-3 m-2 rounded p-5" style={{ background: "#E1D1C7" }}>
+    <div
+      className="card shadow-lg p-3 m-2 rounded"
+      style={{ background: "#E1D1C7" }}
+    >
       <div className="mt-3 text-end">
         <label className="me-2 fw-bold">Show</label>
         <select
@@ -95,12 +112,10 @@ const GetBetTrash = ({
                     {detail.type}
                   </td>
                   <td>
-                    {Math.round(detail.value)}(
-                    {Math.round(detail.bidAmount)})
+                    {Math.round(detail.value)}({Math.round(detail.bidAmount)})
                   </td>
                   <td>
-                   
-                    <button
+                  <button
                       className="btn btn-danger me-2"
                       onClick={() => handleDelete(detail.trashMarketId)}
                     >
@@ -136,5 +151,3 @@ const GetBetTrash = ({
 };
 
 export default GetBetTrash;
-
-

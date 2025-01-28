@@ -13,18 +13,28 @@ const Inactive = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [totalPages, setTotalPages] = useState("");
   const [totalData, setTotalData] = useState("");
+ useEffect(() => {
+    // Debouncing logic: Update `debouncedSearchTerm` after 500ms
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
 
+    return () => clearTimeout(timer); // Clear the timer on cleanup
+  }, [searchTerm]);
   useEffect(() => {
+    auth.showLoader();
     fetchInactiveGames();
-  }, [currentPage, itemsPerPage, searchTerm]);
+  }, [currentPage, itemsPerPage, debouncedSearchTerm]);
+
   const fetchInactiveGames = () => {
     AccountServices.getInactiveGames(
       auth.user,
       currentPage,
       itemsPerPage,
-      searchTerm
+      debouncedSearchTerm
     )
       .then((res) => {
         const gamesData = res.data?.data || [];
@@ -35,14 +45,19 @@ const Inactive = () => {
       })
       .catch((err) => {
         console.error("Error fetching inactive games:", err);
+      })
+      .finally(() => {
+        auth.hideLoader();
       });
   };
 
   const handleClearSearch = () => {
     setSearchTerm("");
+    setInactiveGames((prev) => ({ ...prev, name: "" }));
   };
 
   const handleRevokeAnnouncement = (marketId, runnerId) => {
+    auth.showLoader();
     console.log("===>> runner id", runnerId);
     const data = {
       marketId: marketId,
@@ -56,6 +71,9 @@ const Inactive = () => {
       })
       .catch((err) => {
         toast.error("Error revoking announcement:", err);
+      }).finally(() => {
+        // Hide the loader after the request is complete (success or error)
+        auth.hideLoader();
       });
   };
 
@@ -81,7 +99,7 @@ const Inactive = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold  text-center">Announced Game</h3>
+          <h3 className="mb-0 fw-bold  text-center text-uppercase">Announced Game</h3>
         </div>
         <div className="card-body" style={{background:"#E1D1C7"}}>
           {/* Search and Entries Selection */}
@@ -153,7 +171,7 @@ const Inactive = () => {
           >
             <div className="table-responsive">
               <table
-                className="table table-striped table-hover rounded-table"
+                className="table table-striped table-hover rounded-table text-center"
                 style={{
                   border: "2px solid #6c757d",
                   borderRadius: "10px",

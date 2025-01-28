@@ -9,6 +9,7 @@ const UpdateInnerAnnouncement = () => {
   const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
+    auth.showLoader();
     fetchAnnouncements();
   }, []);
 
@@ -20,10 +21,13 @@ const UpdateInnerAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to fetch inner announcements.");
       console.error("Error fetching inner announcements:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
 
   const handleDelete = async (announceId) => {
+    auth.showLoader();
     try {
       await GameService.deleteInnerAnnouncement(auth.user, announceId);  
       toast.success("Inner Announcement deleted successfully!");
@@ -31,6 +35,8 @@ const UpdateInnerAnnouncement = () => {
     } catch (error) {
       toast.error("Failed to delete the inner announcement. Please try again.");
       console.error("Error deleting inner announcement:", error);
+    }finally {
+      auth.hideLoader();
     }
   };
 

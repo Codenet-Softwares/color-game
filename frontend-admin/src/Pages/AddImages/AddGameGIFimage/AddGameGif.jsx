@@ -25,6 +25,7 @@ const AddGameGif = () => {
   };
 
   const handleUploadGif = async () => {
+    auth.showLoader();
     if (!file) {
       toast.error("Please select a GIF to upload.");
       return;
@@ -58,6 +59,8 @@ const AddGameGif = () => {
           toast.error("Failed to upload the GIF. Please try again."); // Fallback error message
         }
         console.error(error);
+      }finally {
+        auth.hideLoader();
       }
       
     };
