@@ -464,7 +464,7 @@ export async function lotteryPurchaseHIstoryUserNew(body = {}, isToast = false) 
   try {
     const callParams = await getCallParams(strings.POST, body, isToast); // Using POST method with `body`
     const response = await makeCall(
-      `${urls.userPurchaseHIstory}/${body.marketId}?page=${body.page}&limitPerPage=${body.limit}&searchTerm=${body. searchBySem}`, // Constructing URL with pagination and search term
+      `${urls.userPurchaseHIstory}/${body.marketId}?page=${body.page}&limitPerPage=${body.limit}&sem=${body. searchBySem}`, // Constructing URL with pagination and search term
       callParams,
       isToast
     );
