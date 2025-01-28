@@ -812,7 +812,7 @@ export const liveUserBet = async (req, res) => {
       announcementResult: marketDataRows[0].announcementResult,
       isActive: marketDataRows[0].isActive,
       runners: [],
-      usersDetails: [], // To hold balance for all users
+      usersDetails: [], 
     };
 
     // Populate runners data
@@ -888,7 +888,6 @@ export const liveUserBet = async (req, res) => {
           }
         });
 
-        // Add runner balance with runner name
         userMarketBalance.runnerBalance.push({
           runnerId: runner.runnerName.runnerId,
           runnerName: runner.runnerName.name,
@@ -896,7 +895,6 @@ export const liveUserBet = async (req, res) => {
         });
       });
 
-      // Push each user's balance to usersDetails array
       marketDataObj.usersDetails.push(userMarketBalance);
     }
 
@@ -1254,42 +1252,9 @@ export const getDeleteLiveMarket = async (req, res) => {
       user.set('marketListExposure', [...user.marketListExposure]);
       user.changed('marketListExposure', true);
 
-      user.balance += price;
-
-      await user.update({ balance: user.balance, marketListExposure: user.marketListExposure }, { transaction: t });
+      await user.update({ marketListExposure: user.marketListExposure }, { transaction: t });
     }
 
-    const marketExposureList = user.marketListExposure;
-
-    let totalExposure = 0;
-    marketExposureList.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
-    });
-
-    const dataToSend = {
-      amount: user.balance,
-      userId: user.userId,
-      exposure: totalExposure,
-    };
-    const baseURL = process.env.WHITE_LABEL_URL;
-    const response = await axios.post(
-      `${baseURL}/api/admin/extrnal/balance-update`,
-      dataToSend
-    );
-
-    if (!response.data.success) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "Failed to update balance"
-          )
-        );
-    }
     await user.save();
     await t.commit();
 
@@ -1338,8 +1303,6 @@ export const revokeLiveBet = async (req, res) => {
           )
         );
     }
-    const newBalance = user.balance - lotteryPrice;
-    user.balance = newBalance;
 
     const newExposure = { [marketId]: Math.abs(lotteryPrice) };
     user.marketListExposure = [...(user.marketListExposure || []), newExposure];
@@ -1352,30 +1315,6 @@ export const revokeLiveBet = async (req, res) => {
     });
 
     await user.save();
-
-    const dataToSend = {
-      amount: user.balance,
-      userId: user.userId,
-      exposure: totalExposure,
-    };
-    const baseURL = process.env.WHITE_LABEL_URL;
-    const response = await axios.post(
-      `${baseURL}/api/admin/extrnal/balance-update`,
-      dataToSend
-    );
-
-    if (!response.data.success) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "Failed to update balance"
-          )
-        );
-    }
 
     return res
       .status(statusCode.success)
