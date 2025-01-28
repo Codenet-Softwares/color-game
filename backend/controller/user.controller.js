@@ -1080,8 +1080,6 @@ export const createBid = async (req, res) => {
       const adjustedRate = runner[bidType.toLowerCase()] - 1;
       const mainValue = Math.round(adjustedRate * value);
       const betAmount = bidType === "back" ? value : mainValue;
-      user.balance = wallet;
-      user.exposure = exposure;
       user.marketListExposure = marketListExposure;
       await CurrentOrder.create({
         betId: uuidv4(),
@@ -1101,38 +1099,6 @@ export const createBid = async (req, res) => {
         exposure: exposure,
       });
       await user.save();
-    }
-
-    const marketExposure = user.marketListExposure;
-
-    let totalExposure = 0;
-    marketExposure.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
-    });
-
-    const dataToSend = {
-      amount: user.balance,
-      userId: userId,
-      exposure: totalExposure,
-    };
-    const baseURL = process.env.WHITE_LABEL_URL;
-    const response = await axios.post(
-      `${baseURL}/api/admin/extrnal/balance-update`,
-      dataToSend
-    );
-
-    if (!response.data.success) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "Failed to fetch data"
-          )
-        );
     }
 
     await Runner.update({ isBidding: true }, { where: { marketId } });
