@@ -496,7 +496,7 @@ export const getAllGameData = async (req, res) => {
     );
     const data = response.data.data
     const foramtedData = [{
-        gameName    : data[0]?.gameName,
+        gameName    : data[0]?.gameName === "Lottery" ?data[0]?.gameName : "Lottery",
         markets     : data.map((game)=>({
         marketId    : game.marketId,
         marketName  : game.marketName,
@@ -518,9 +518,9 @@ export const getAllGameData = async (req, res) => {
 
         }))
     }]
-
-  //console.log("formatedData........",foramtedData)
+   
     const combinedData = [...formattedGameData, ...foramtedData];
+   console.log("Testing........",combinedData)
     res
       .status(statusCode.success)
       .json(

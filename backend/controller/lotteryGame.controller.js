@@ -137,15 +137,13 @@ export const purchaseLottery = async (req, res) => {
 export const purchaseHistory = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { page, limit, sem,date } = req.query;
+    const { page, limit, sem,} = req.query;
     const { marketId } = req.params;
-    const currentDate = new Date().toISOString().split('T')[0]; 
 
     const params = {
       page,
       limit,
       sem,
-      date: date || currentDate,
     };
 
     const baseURL = process.env.LOTTERY_URL;
@@ -601,9 +599,12 @@ export const getAllMarket = async (req, res) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: "1h" }
     );
+    const { date } = req.query;
+    const currentDate = new Date();
+    const formattedDate = date || currentDate.toISOString().split("T")[0];
 
     const baseURL = process.env.LOTTERY_URL;
-    const response = await axios.get(`${baseURL}/api/user/get-markets`, {
+    const response = await axios.get(`${baseURL}/api/user/get-markets?date=${encodeURIComponent(formattedDate)}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
