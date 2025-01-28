@@ -369,13 +369,14 @@ export const getMarket = async (req, res) => {
 
 
     if (allMarkets.length === 0) {
-      return apiResponseErr(
-        null,
-        false,
-        statusCode.notFound,
-        "No markets found",
-        res
-      );
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(
+          null,
+          false,
+          statusCode.badRequest,
+          "No markets found",
+        ));
     }
 
     const filteredMarkets = search
@@ -387,13 +388,14 @@ export const getMarket = async (req, res) => {
       : allMarkets;
 
     if (filteredMarkets.length === 0) {
-      return apiResponseErr(
-        null,
-        false,
-        statusCode.notFound,
-        "No markets match the search criteria",
-        res
-      );
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(
+          null,
+          false,
+          statusCode.badRequest,
+          "No markets match the search criteria",
+        ));
     }
 
     const uniqueMarkets = [
