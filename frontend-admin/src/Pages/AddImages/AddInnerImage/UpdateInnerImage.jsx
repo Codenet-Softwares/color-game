@@ -17,11 +17,9 @@ const UpdateInnerImage = () => {
   const fetchInnerImages = async () => {
     try {
       const response = await GameService.getInnerSliderImage(auth.user);
-      console.log(response.data); // Log the response to check its structure
       setInnerImages(response.data.data || []);
     } catch (error) {
       toast.error("Failed to fetch inner images.");
-      console.error("Error fetching images:", error);
     }
     finally {
       // Hide the loader after the request is complete (success or error)
@@ -38,7 +36,6 @@ const UpdateInnerImage = () => {
       fetchInnerImages(); 
     } catch (error) {
       toast.error("Failed to delete the image. Please try again.");
-      console.error("Error deleting image:", error);
     } finally {
       auth.hideLoader();
     }
@@ -72,7 +69,6 @@ const UpdateInnerImage = () => {
       }
     } catch (error) {
       toast.error("Failed to update image status. Please try again.");
-      console.error("API Error:", error);
     } finally {
       // Hide the loader after the request is complete (success or error)
       auth.hideLoader();

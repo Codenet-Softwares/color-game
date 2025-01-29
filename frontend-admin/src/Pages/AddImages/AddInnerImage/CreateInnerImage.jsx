@@ -48,12 +48,10 @@ const CreateInnerImage = () => {
       try {
         const response = await GameService.innerSliderImage(auth.user, data);
         toast.success("Image uploaded successfully!");
-        console.log(response.data);
         setFile(null);
         setImagePreview(null);
       } catch (error) {
         toast.error("Failed to upload the image. Please try again.");
-        console.error(error);
       }finally {
         auth.hideLoader();
       }

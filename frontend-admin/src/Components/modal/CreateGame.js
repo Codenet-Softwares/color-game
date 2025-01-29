@@ -12,7 +12,6 @@ const CreateGame = ({ show, setShow }) => {
   const [blink, setBlink] = useState(false);
   const auth = useAuth();
   const handleClose = () => setShow(false);
-  console.log("====>> line15", auth);
 
   const handleBlinkToggle = () => {
     setBlink(!blink);

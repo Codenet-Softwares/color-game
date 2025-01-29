@@ -70,15 +70,11 @@ const MarketPlace = () => {
     fetchData();
   }, []);
 
-  console.log("temp", pathdata[0]?.id);
 
   const handleRunnerModalOpen = (Id, participant) => {
-    console.log("Id ", Id);
     setShowRunnerModal(true);
-    console.log(Id);
     setMarketId(Id);
     setNumberOfParticipants(participant);
-    console.log("....", participant);
   };
 
   const handleSuspensedMarket = (e, data, marketPlace) => {
@@ -103,7 +99,6 @@ const MarketPlace = () => {
         search
       ).then(
         (res) => (
-          console.log(res),
           setGameMarketData(res.data.data),
           setTotalPages(res.data.pagination.totalPages),
           setTotalData(res.data.pagination.totalItems)
@@ -123,18 +118,15 @@ const MarketPlace = () => {
     refresh,
   ]);
 
-  console.log("==========> LINE 53", gameMarketData);
 
   let startIndex = Math.min((currentPage - 1) * totalEntries + 1);
   let endIndex = Math.min(currentPage * totalEntries, totalData);
 
   const handlePageChange = (page) => {
-    console.log("Changing to page:", page);
 
     setCurrentPage(page);
     //  setIsLoading(false);
   };
-  console.log("=>>>94", gameMarketData);
 
   const handleShowUpdateModal = (data) => {
     setData(data);
@@ -143,7 +135,6 @@ const MarketPlace = () => {
 
   const handleDelete = (e, marketId) => {
     e.preventDefault();
-    console.log("=============....>>>>>", marketId);
     const flag = true;
 
     const data = {
@@ -161,7 +152,6 @@ const MarketPlace = () => {
 
   const handleVoidMarket = (e, marketId) => {
     e.preventDefault();
-    console.log("=============....>>>>>", marketId);
     const flag = true;
 
     const data = {
@@ -270,7 +260,6 @@ const MarketPlace = () => {
                       {gameMarketData.length > 0 ? (
                         <div className="board_card_list">
                           {gameMarketData.map((market, index) => {
-                            console.log(market);
                             return (
                               <div className="card border-0" key={index}>
                                 <div className="card-body">

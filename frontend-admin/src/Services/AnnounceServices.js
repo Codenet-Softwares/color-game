@@ -16,7 +16,6 @@ class AnnounceServices {
 
 
       UpdateAnnounce(data,user,announceId) {
-        console.log('=====> announce id',announceId)
         return axios({
           method: "PUT",
           url: API_HOST + `/api/admin/update-announcement/${announceId}`,

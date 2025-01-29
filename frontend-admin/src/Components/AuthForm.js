@@ -27,7 +27,6 @@ const Authform = () => {
     //     mobileNo,
     //     password
     // };
-    // console.log(formData);
     // Make your API call here
 };
   return (

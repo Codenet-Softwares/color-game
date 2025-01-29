@@ -38,13 +38,11 @@ const Inactive = () => {
     )
       .then((res) => {
         const gamesData = res.data?.data || [];
-        console.log("gamesData", res.data);
         setInactiveGames(gamesData);
         setTotalData(res.data.pagination.totalItems);
         setTotalPages(res.data.pagination.totalPages);
       })
       .catch((err) => {
-        console.error("Error fetching inactive games:", err);
       })
       .finally(() => {
         auth.hideLoader();
@@ -58,7 +56,6 @@ const Inactive = () => {
 
   const handleRevokeAnnouncement = (marketId, runnerId) => {
     auth.showLoader();
-    console.log("===>> runner id", runnerId);
     const data = {
       marketId: marketId,
       runnerId: runnerId,

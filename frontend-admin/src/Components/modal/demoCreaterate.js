@@ -20,7 +20,6 @@ const CreateRate = ({ show, setShow, runnerName, handleRateCreated }) => { // Re
 
     GameService.rateCreate(data, runnerName, auth.user)
       .then((res) => {
-        console.log('========>  line 25 create rate', res)
         toast.success(res.data.message);
         setShow(false);
         handleRateCreated(); // Call handleRateCreated after successful rate creation

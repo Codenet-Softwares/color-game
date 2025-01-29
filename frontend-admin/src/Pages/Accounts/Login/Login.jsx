@@ -14,6 +14,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
+    auth.showLoader(); 
     event.preventDefault();
 
     const error = [];
@@ -24,7 +25,6 @@ const Login = () => {
     const data = { userName: userName, password: password };
     AccountServices.Login(data)
       .then((res) => {
-        console.log("first", res);
         sessionStorage.setItem("user", res.data.data.accessToken);
         // sessionStorage.setItem("role", res.data.token.role);
         toast.success("Login Successful.");
@@ -32,10 +32,11 @@ const Login = () => {
         navigate("/welcome");
       })
       .catch((err) => {
-        console.log(err);
         toast.error(customErrorHandler(err));
         setUserName("");
         setPassword("");
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
 

@@ -50,7 +50,6 @@ const OuterAnnouncement = () => {
 
     try {
       const response = await GameService.CreateOuterAnnouncement(user, data);
-      console.log("Create API Response:", response.data);
       toast.success("Announcement created successfully!");
       setAnnouncementData({ announcement: "" });
     } catch (error) {

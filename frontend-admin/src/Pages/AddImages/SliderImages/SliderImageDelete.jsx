@@ -44,7 +44,6 @@ const SliderImageDelete = () => {
       fetchSliderImages();
     } catch (error) {
       toast.error("Failed to delete the image. Please try again.");
-      console.error(error);
     } finally {
       // Hide the loader after the request is complete (success or error)
       auth.hideLoader();

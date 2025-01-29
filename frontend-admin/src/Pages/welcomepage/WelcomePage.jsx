@@ -4,7 +4,6 @@ import { useAuth } from "../../Utils/Auth";
 
 const WelcomePage = () => {
  const auth=useAuth()
-console.log("auth",auth)
   return (
     <div>
       <div className="WelcomePage">

@@ -9,7 +9,6 @@ const Upload = ({
   updateCarouselData,
 }) => {
   const [carouselData, setCarouselData] = useState(CarouselImgData);
-  console.log(carouselData);
 
   useEffect(() => {
     // Ensure carouselData has values before calling updateCarouselData
@@ -25,7 +24,6 @@ const Upload = ({
       ...prevCarouselData,
       [name]: value,
     }));
-    console.log(carouselData);
   };
 
   const handleOnChange = (e) => {
