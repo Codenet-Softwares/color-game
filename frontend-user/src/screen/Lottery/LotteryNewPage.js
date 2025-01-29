@@ -38,6 +38,7 @@ const LotteryNewPage = ({ drawId }) => {
   const [debounceTimeout, setDebounceTimeout] = useState(null);
   const [seriesList, setSeriesList] = useState([]);
   const [startTime, setStartTime] = useState(null);
+  const [startTimeForShowCountdown, setStartTimeForShowCountdown] = useState(null);
   const [start, setStart] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [endTimeForTimer, setEndTimeForTimer] = useState(null);
@@ -47,7 +48,13 @@ const LotteryNewPage = ({ drawId }) => {
   const [setIsTimeUp, setSetIsTimeUp] = useState(false);
   const [isSuspend, setIsSuspend] = useState();
   const [priceEach, setPriceEach] = useState("");
-  console.log("===>> marketName", marketName);
+  console.log("===>> startTime", new Date(
+    moment(startTimeForShowCountdown)
+      .local()
+      .subtract(5, "hours")
+      .subtract(30, "minutes")
+      .toDate()
+  ) < new Date());
 
   useEffect(() => {
     if (startTime) {
@@ -112,6 +119,7 @@ const LotteryNewPage = ({ drawId }) => {
             setStartTime(
               moment.utc(currentMarket.start_time).format("YYYY-MM-DD HH:mm")
             );
+            setStartTimeForShowCountdown(currentMarket.start_time)
             setEndTime(
               moment.utc(currentMarket.end_time).format("YYYY-MM-DD HH:mm")
             );
@@ -145,7 +153,7 @@ const LotteryNewPage = ({ drawId }) => {
     };
 
     handleLotteryRange();
-  }, [drawId,isSuspend]);
+  }, [drawId, isSuspend]);
 
   useEffect(
     () => {
@@ -542,9 +550,15 @@ const LotteryNewPage = ({ drawId }) => {
               <p style={{ color: "#6c757d" }}>
                 Search by Sem, Group, Series, or Number
               </p>
-              {showCountdown && (
-                <CountDownTimerLottery endDateTime={endTimeForTimer} />
-              )}
+              {new Date(
+                moment(startTimeForShowCountdown)
+                  .local()
+                  .subtract(5, "hours")
+                  .subtract(30, "minutes")
+                  .toDate()
+              ) < new Date() && (
+                  <CountDownTimerLottery endDateTime={endTimeForTimer} />
+                )}
             </div>
 
             {/* Sem Input */}

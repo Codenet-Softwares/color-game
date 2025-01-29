@@ -411,6 +411,7 @@ const GetMarketDetailByMarketId = () => {
 
     return istDate.toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
   }
+
   const handleBidding = () => {
     const nData = biddingButton.map((list) => (
       <div className={`${list.col} p-0`}>
@@ -433,7 +434,7 @@ const GetMarketDetailByMarketId = () => {
       <Layout />
       <div
         className={`global-margin-top${store.user.isLogin ? "-logged" : ""}`}
-        style={{height:"106vh"}}
+        style={{ height: "106vh" }}
       >
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           {/* Background: Market Data and UI */}
@@ -477,12 +478,22 @@ const GetMarketDetailByMarketId = () => {
                 {/* Left side: Market Name and Countdown Timer */}
                 <div>
                   {user_marketWithRunnerData.marketName}{" "}
+                  {/* {console.log(
+                    "startTime",
+                    new Date(
+                      moment(user_marketWithRunnerData.startTime).local()
+                        .subtract(5, "hours")
+                        .subtract(30, "minutes")
+                        .toDate()
+                    ) < new Date()
+                  )} */}
                   {new Date(
-                    moment
-                      .utc(user_marketWithRunnerData.endTime)
+                    moment(user_marketWithRunnerData.startTime)
                       .local()
+                      .subtract(5, "hours")
+                      .subtract(30, "minutes")
                       .toDate()
-                  ) > new Date() && (
+                  ) < new Date() && (
                     <CountdownTimer
                       endDate={user_marketWithRunnerData.endTime}
                     />
@@ -551,7 +562,7 @@ const GetMarketDetailByMarketId = () => {
                       {toggle.mode === "lay" ? (
                         <>
                           {/* Lay */}
-                          <div className="row py-1 px-0 m-0 border fw-bold" >
+                          <div className="row py-1 px-0 m-0 border fw-bold">
                             <span
                               className={`col-4 text-dark text-decoration-none text-nowrap`}
                             >
