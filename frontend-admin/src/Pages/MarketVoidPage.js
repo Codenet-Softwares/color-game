@@ -42,11 +42,7 @@ const [searchTerm, setSearchTerm] = useState("");
       debouncedSearchTerm,
     )
       .then((res) => {
-        console.log(
-          "pagination",
-          res?.data.pagination.totalPages,
-          res.data.pagination.totalItems
-        );
+
         setVoidGame({
           ...voidGame,
           gamelist: res.data?.data,

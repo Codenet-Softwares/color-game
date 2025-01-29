@@ -31,13 +31,11 @@ const HomePageCarousel = () => {
     );
   }, [noOfCarousel]);
 
-  console.log(CarouselImg);
   const updateState = (e) => {
     setNoOfCarousel(e.target.value);
   };
 
   const updateCarouselData = (index, carouselData) => {
-    console.log(carouselData);
     setCarouselImg((prevCarouselImg) => {
       const updatedCarouselImg = [...prevCarouselImg];
       // Update the object at the given index
@@ -48,7 +46,6 @@ const HomePageCarousel = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(CarouselImg);
     if (
       CarouselImg.name === "" ||
       CarouselImg.docBase === "" ||
@@ -62,16 +59,13 @@ const HomePageCarousel = () => {
 
     AccountServices.uploadSliderImg({ data: CarouselImg }, auth.user)
       .then((res) => {
-        console.log(res);
         toast.success(res.data);
       })
       .catch((err) => {
-        console.log(err);
         toast.error(err.response.data.message);
       });
   };
 
-  console.log(noOfCarousel);
   return (
     <div>
       <div className="main_content_iner ">
@@ -106,7 +100,6 @@ const HomePageCarousel = () => {
           </div>
         </div>
         {CarouselImg.map((carousel, i) => {
-          console.log(carousel);
           return (
             <CarouselCard
               CarouselImgData={carousel}

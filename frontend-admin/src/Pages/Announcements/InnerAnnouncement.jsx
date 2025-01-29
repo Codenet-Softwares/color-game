@@ -44,7 +44,6 @@ const InnerAnnouncement = () => {
 
     try {
       const response = await GameService.CreateInnerAnnouncement(user, data);
-      console.log("Create Inner Announcement API Response:", response.data);
       toast.success("Inner Announcement created successfully!");
       setAnnouncementData({ announcement: "" });
     } catch (error) {

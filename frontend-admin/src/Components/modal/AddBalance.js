@@ -9,13 +9,10 @@ import UserService from "../../Services/UserService";
 const AddBalance = ({ data, show, setShow }) => {
   const [amount, setAmount] = useState(0);
   const auth = useAuth();
-
-  console.log('=========>>>>>>>', auth)
   const handleClose = () => {
     setShow(false);
     setAmount(0);
   };
-  console.log("===========data for add balance", data);
 
   const handleSubmit = (e) => {
     e.preventDefault();

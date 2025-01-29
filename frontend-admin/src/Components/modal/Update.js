@@ -13,7 +13,6 @@ import moment from "moment";
 
 const today = new Date();
 const Update = ({ show, setShow, data, Update }) => {
-  console.log("data = >>>>", data);
   const [newValue, setNewValue] = useState({
     gameName: "",
     Description: "",
@@ -29,7 +28,6 @@ const Update = ({ show, setShow, data, Update }) => {
   const [previousValues, setPreviousValues] = useState({ back: "", lay: "" }); // storing previous data for back and lay
   const [editedData, setEditedData] = useState({}); // Store edited data
 
-  console.log("data1 = >>>>", newValue);
 
   useEffect(() => {
     const adjustTime = (date) => {
@@ -161,11 +159,7 @@ const Update = ({ show, setShow, data, Update }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("=>>>>>", newValue);
     const updateKey = Update.toLowerCase();
-
-
-
     switch (updateKey) {
       case "game":
         const gameApiData = {
@@ -225,7 +219,6 @@ const Update = ({ show, setShow, data, Update }) => {
           .catch((err) => {
             toast.error(customErrorHandler(err));
           });
-        console.log(newValue);
 
         break;
       case "rate":
@@ -243,7 +236,6 @@ const Update = ({ show, setShow, data, Update }) => {
           .catch((err) => {
             toast.error(customErrorHandler(err));
           });
-        console.log(newValue);
 
       default:
     }

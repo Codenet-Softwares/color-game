@@ -16,7 +16,6 @@ const UpdateOuterAnnouncement = () => {
   const fetchAnnouncements = async () => {
     try {
       const response = await GameService.getOuterAnnouncement(auth.user);
-      console.log("Fetch API Response:", response.data);  
       setAnnouncements(response.data.data || []);  
     } catch (error) {
       toast.error("Failed to fetch announcements.");

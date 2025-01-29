@@ -14,7 +14,6 @@ import { toast } from "react-toastify";
 import { customErrorHandler } from "../../Utils/helper";
 
 const GameMarket = ({ marketId }) => {
-  console.log("==========> marketId line 11", marketId);
   const auth = useAuth();
   const [show, setShow] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -36,22 +35,16 @@ const GameMarket = ({ marketId }) => {
     useState(false);
   const [announcementId, setAnnouncementId] = useState("");
   const [announceData, setAnnounceData] = useState("");
-  console.log(announceData);
   const [announcementData, setAnnouncementData] = useState(null); // State to hold announcement data
-  console.log("========> announce data line 34", announcementData);
 
   const [showLatestAnnouncementModal, setShowLatestAnnouncementModal] =
     useState(false);
   const [latestAnnouncements, setLatestAnnouncements] = useState([]);
-  console.log("===========>>>> line ", latestAnnouncements);
-  console.log("==========> data for games", games);
-  console.log("========> data line 23", data);
 
   useEffect(() => {
     if (auth.user) {
       GameService.GameInfo(auth.user, currentPage, totalEntries, search)
         .then((res) => {
-          console.log("==========> line 26", res.data.data.pagination);
           setGames(res.data.data.games);
           setTotalPages(res.data.data.pagination.totalPages);
           setTotalData(res.data.data.pagination.totalItems);
@@ -93,19 +86,15 @@ const GameMarket = ({ marketId }) => {
   }, [games[0]?.gameId]);
   const handleShow = () => setShow(true);
   const handleShowUpdateModal = (id, data) => {
-    console.log("===========> gameId data", id);
     setData(data);
     setShowUpdateModal(true);
     setGameId(id);
   };
 
-  console.log("=>>>>", games);
-
   let startIndex = Math.min((currentPage - 1) * totalEntries + 1);
   let endIndex = Math.min(currentPage * totalEntries, totalData);
 
   const handlePageChange = (page) => {
-    console.log("Changing to page:", page);
 
     setCurrentPage(page);
     //    setIsLoading(false);
@@ -116,7 +105,6 @@ const GameMarket = ({ marketId }) => {
     const gameDeleteConfirmation = window.confirm(
       "Are You Sure You Want To Delete This Game"
     );
-    console.log("=============....>>>>> gameId onclick", gameId);
     const flag = true;
 
     const data = {
@@ -136,7 +124,6 @@ const GameMarket = ({ marketId }) => {
   };
 
   const handleCreateAnnounceClick = (e, id, gamename) => {
-    console.log("onclick game id ====> line 82", id, gamename);
     e.preventDefault();
     setShowCreateAnnouncementModal(true);
     setGameName(gamename);
@@ -165,13 +152,6 @@ const GameMarket = ({ marketId }) => {
     announceId,
     announce
   ) => {
-    console.log(
-      "onclick game id ====> line ",
-      gameId,
-      gameName,
-      announceId,
-      announce
-    );
     e.preventDefault();
     setGameNameForUpdate(gameName);
     setAnnouncementId(announceId);
@@ -180,7 +160,6 @@ const GameMarket = ({ marketId }) => {
   };
 
   const handleShowLatestAnnouncementModal = (e, announcement) => {
-    console.log("=====> announcement from props onclick", announcement);
     e.preventDefault();
     setShowLatestAnnouncementModal(true);
     setLatestAnnouncements(announcement);

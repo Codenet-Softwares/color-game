@@ -11,10 +11,8 @@ const UpdateAnnouncement = ({
   gamename,
   announce,
 }) => {
-  console.log("announce data=========> line 6", announceId, gamename, announce);
   const [typeOfAnnouncement, setTypeOfAnnouncement] = useState("");
   const [announcement, setAnnouncement] = useState("");
-  console.log("=========> announcement data line 9", announcement);
   const auth = useAuth();
 
   useEffect(() => {
@@ -33,7 +31,6 @@ const UpdateAnnouncement = ({
 
     AnnounceServices.UpdateAnnounce(data, auth.user, announceId)
       .then((res) => {
-        console.log("Response for update announcement:", res);
         // setAnnouncement(res.data);
         toast.success(res.data.message);
         handleClose();

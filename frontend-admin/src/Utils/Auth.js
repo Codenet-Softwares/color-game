@@ -23,7 +23,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = () => {
     try {
-      console.log("logging in...");
       const userString = sessionStorage.getItem("user");
       if (!userString) return;
 
@@ -34,7 +33,6 @@ export const AuthProvider = ({ children }) => {
       userObject.token = userString;
       setUser(userObject);
     } catch (error) {
-      console.log(error);
     }
   };
 

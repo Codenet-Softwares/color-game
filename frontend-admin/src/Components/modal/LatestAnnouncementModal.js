@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, ListGroup } from "react-bootstrap"; // Import necessary Bootstrap components
 
 const LatestAnnouncementModal = ({ show, handleClose, latestAnnouncements }) => {
-    console.log('========>>> props',latestAnnouncements)
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>

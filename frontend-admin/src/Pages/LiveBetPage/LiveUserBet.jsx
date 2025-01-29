@@ -22,7 +22,6 @@ const LiveUserBet = () => {
     totalData: 0,
   });
 
-  console.log("userBets", userBets);
   useEffect(() => {
     if (marketId) fetchLiveUserBet();
   }, [marketId, userBets.currentPage, userBets.totalEntries, userBets.search]);
@@ -67,7 +66,6 @@ const LiveUserBet = () => {
       return;
     }
     auth.showLoader();
-    console.log("delete", marketId);
 
     try {
       const response = await GameService.DeleteMarket(

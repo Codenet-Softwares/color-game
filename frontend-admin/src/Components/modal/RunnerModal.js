@@ -23,7 +23,6 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
   }, [numberOfParticipants]);
 
   // const {  marketId } = useParams();
-  console.log('===========> marekrt id from runner modal', runnername)
 
   const handleClose = () => {
     setShow(false);
