@@ -1092,7 +1092,6 @@ export const getRevokeMarket = async (req, res) => {
       ).values()
     );
 
-    console.log("usersFromProfitLoss", usersFromProfitLoss)
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
       if (!userProfitLossMap[userId]) {
@@ -1378,7 +1377,6 @@ export const getAllLotteryMarket = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log("error", error)
     if (error.response) {
       return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
     } else {

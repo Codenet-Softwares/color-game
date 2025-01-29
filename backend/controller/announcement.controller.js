@@ -1,7 +1,5 @@
 import { apiResponseSuccess, apiResponseErr } from '../middleware/serverError.js';
-import { database } from '../controller/database.controller.js';
 import { v4 as uuidv4 } from 'uuid';
-import gameSchema from '../models/game.model.js';
 import announcementSchema from '../models/announcement.model.js';
 import { statusCode } from '../helper/statusCodes.js';
 import innerAnnouncementSchema from '../models/innerAnnouncement.model.js';

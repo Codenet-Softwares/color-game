@@ -6,7 +6,6 @@ import {
 import Market from "../models/market.model.js";
 import MarketBalance from "../models/marketBalance.js";
 import userSchema from "../models/user.model.js";
-import axios from "axios";
 import CurrentOrder from "../models/currentOrder.model.js";
 import Game from "../models/game.model.js";
 import Runner from "../models/runner.model.js";
