@@ -3,7 +3,6 @@ const newUrl = originalUrl.replace("/api", "");
 const lotteryEventSource = new EventSource(`${newUrl}/lottery-events`);
 
 const updateLotteryMarketEventEmitter = () => {
-    console.log("updatemarketEventemitte......loytteryr");
     return lotteryEventSource;
     eventSource.onmessage = function (event) {
         return JSON.parse(event.data);

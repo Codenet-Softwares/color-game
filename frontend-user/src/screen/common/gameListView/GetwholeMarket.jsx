@@ -30,7 +30,6 @@ const GetwholeMarket = () => {
     useState([]);
 
   const { store, dispatch } = useAppContext();
-  console.log("store", store);
 
   useEffect(() => {
     user_getAllGamesWithMarketData();
@@ -76,7 +75,6 @@ const GetwholeMarket = () => {
                         }}
                       >
                         {gameWithMarketData.gameName}
-                        {console.log("gameWithMarketData", gameWithMarketData)}
                       </div>
 
                       {gameWithMarketData &&
@@ -92,10 +90,7 @@ const GetwholeMarket = () => {
                                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                               }}
                             >
-                              {console.log(
-                                "gameWithMarketData",
-                                gameWithMarketData
-                              )}
+                              
                               {/* Market Header */}
                               <div className="row align-items-center">
                                 <span

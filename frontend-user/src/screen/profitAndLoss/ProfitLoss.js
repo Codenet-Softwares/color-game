@@ -111,7 +111,6 @@ const ProfitLoss = ({
   // }, [profitLossLotteryEventData.currentPage]);
 
 
-  console.log("profitLossLotteryEventData.currentPage", profitLossLotteryEventData.currentPage, component)
 
   async function getProfitLossEventWise(gameId, componentName) {
     try {
@@ -128,7 +127,6 @@ const ProfitLoss = ({
         searchName: profitLossEventData.searchItem,
       });
 
-      console.log("event=>>>", response);
 
       // Update state with the response data
       SetProfitLossEventData((prevState) => ({
@@ -145,7 +143,6 @@ const ProfitLoss = ({
   }
 
   async function getUserBetHistoryWise() {
-    console.log("asdfgh", runnerId)
     try {
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
@@ -154,7 +151,6 @@ const ProfitLoss = ({
         runnerId: runnerId,
       });
 
-      console.log("event=>>>", runnerId);
 
       // Update state with the response data
       setUserBetHistory((prevState) => ({
@@ -186,7 +182,6 @@ const ProfitLoss = ({
         searchName: profitLossLotteryEventData.searchItem,
       });
 
-      console.log("event=>>>", response);
 
       // Update state with the response data
       SetProfitLossLotteryEventData((prevState) => ({
@@ -203,7 +198,6 @@ const ProfitLoss = ({
   }
 
   async function getUserLotteryBetHistoryWise() {
-    console.log("asdfgh", runnerId)
     try {
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
@@ -261,7 +255,6 @@ const ProfitLoss = ({
   };
 
 
-  console.log("component", component);
   let componentToRender;
   if (component === "ProfitAndLossEvent") {
     componentToRender = (
@@ -314,7 +307,6 @@ const ProfitLoss = ({
   }
 
   const handelItemPerPage = (event) => {
-    console.log("event.target.value", event.target.value);
     SetProfitLossData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),

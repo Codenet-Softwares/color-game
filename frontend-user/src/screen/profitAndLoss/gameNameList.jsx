@@ -51,7 +51,6 @@ const GameNameList = () => {
     // entries for no. of entries for pagination
     const handleEntriesChange = (event) => {
       const entries = Number(event.target.value);
-      console.log("entries", entries);
       setTotalEntries(entries);
       // After updating totalItems, we need to fetch data for the first page with the new number of items
       setPagination((prevState) => ({
@@ -86,7 +85,6 @@ const GameNameList = () => {
       pageNumber: pagination.currentPage ,
       dataLimit: totalEntries,
     }, true);
-   console.log("response line 89",response);
    setRunnerGameData(response.data);
    setPagination((prevState) => ({
     ...prevState,
@@ -99,9 +97,6 @@ const GameNameList = () => {
     payload: false,
   });
   };
-
-  console.log("++++++++>line number 50",runnerGameData);
-
 
     const GetGameNameTableList = ({
       handleMarketClick,

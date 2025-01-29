@@ -58,7 +58,6 @@ const ProfitAndLoss = () => {
         dataSource: profitLossData.dataSource,
       });
 
-      console.log("getProfitLossGameWise", response);
 
       // Update state with the response data
       SetProfitLossData((prevState) => ({
@@ -82,7 +81,6 @@ const ProfitAndLoss = () => {
   };
 
   const handlePageChange = (page) => {
-    console.log("Changing to page:", page);
     SetProfitLossData((prevState) => ({
       ...prevState,
       currentPage: page,

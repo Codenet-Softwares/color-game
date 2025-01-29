@@ -28,7 +28,6 @@ const loading = () => {
 const History = () => {
   const { dispatch, store } = useAppContext();
 
-  console.log("===========>ID line 13", store.user?.UserId);
   const [betHistoryData, setBetHistoryData] = useState([]);
   const [paginationData, setPaginationData] = useState({});
   const [startDate, setStartDate] = useState(new Date());
@@ -51,7 +50,6 @@ const History = () => {
 
   const parts = pathname.split("/");
   const userId = parts[2];
-  console.log("UserId", userId);
 
   async function getHistoryData() {
     dispatch({
@@ -88,7 +86,6 @@ const History = () => {
 
   const handleGetHistory = () => {
     // Your logic for getting history goes here
-    console.log("Fetching history...");
   };
 
   // Function to handle items per page change

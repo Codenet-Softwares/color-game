@@ -11,12 +11,10 @@ const ProfitAndLossRunner = ({
   SetRunnerId,
   handlePageChange
 }) => {
-  console.log("data", data);
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
   const endIndex = Math.min(data.currentPage * 10, data.totalData);
 
   const handelItemPerPage = (event) => {
-    console.log("event.target.value", event.target.value);
     SetProfitLossRunnerData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
@@ -32,7 +30,6 @@ const ProfitAndLossRunner = ({
   };
 
   const handelGotoBetHistory = (runnerId, componentName) => {
-    console.log("qwerty", runnerId)
     SetComponent(componentName);
     SetRunnerId(runnerId);
   };
@@ -186,7 +183,6 @@ const ProfitAndLossRunner = ({
                 currentPage={data.currentPage}
                 totalPages={data.totalPages}
                 handlePageChange={(page) => {
-                  console.log('Changing page to:', page);
                   handlePageChange(page);
                 }}
                 startIndex={startIndex}

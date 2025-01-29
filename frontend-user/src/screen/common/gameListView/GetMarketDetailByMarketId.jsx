@@ -35,7 +35,6 @@ const GetMarketDetailByMarketId = () => {
   };
 
   const { store, dispatch } = useAppContext();
-  console.log("store", store);
   const [gameId, setGameId] = useState("");
   const [bidding, setBidding] = useState({ rate: "", amount: 0 });
   const [loginModal, setLoginModal] = useState(false);
@@ -97,13 +96,11 @@ const GetMarketDetailByMarketId = () => {
 
   // color game cron ......
   useEffect(() => {
-    console.log("[SSE] Connecting to market updates...");
 
     const eventSource = updateMarketEventEmitter();
 
     eventSource.onmessage = function (event) {
       const updates = JSON.parse(event.data);
-      console.log("[SSE] Update received:", updates);
 
       if (updates?.length) {
         updates.forEach((market) => {
@@ -111,11 +108,9 @@ const GetMarketDetailByMarketId = () => {
             handleNaviagteHome();
           }
           if (market.isActive) {
-            console.log(`[SSE] Market Active: ${market.marketName}`);
             setIsActive(true);
             toast.success(`${market.marketName} is now Active`);
           } else {
-            console.log(`[SSE] Market Suspended: ${market.marketName}`);
             setIsActive(false);
             toast.info(`${market.marketName} has been Suspended`);
           }
@@ -129,7 +124,6 @@ const GetMarketDetailByMarketId = () => {
     };
 
     return () => {
-      console.log("[SSE] Cleaning up EventSource...");
       eventSource.close();
     };
   }, []);
@@ -184,7 +178,6 @@ const GetMarketDetailByMarketId = () => {
       payload: false,
     });
     if (response) {
-      console.log("problem res", response);
       const preMaxExposure = getMaxNegativeBalance(response.data.runners);
       setPreExposure(preMaxExposure);
       setUser_marketWithRunnerData(response.data);
@@ -193,7 +186,6 @@ const GetMarketDetailByMarketId = () => {
   }
 
   const handleToggle = (runnerid, rate, value, id) => {
-    console.log("runnerId", runnerid);
     if (toggle.toggleOpen || toggle.indexNo !== runnerid) {
       setToggle({
         toggleOpen: false,
@@ -244,7 +236,6 @@ const GetMarketDetailByMarketId = () => {
   };
 
   const handleUserBidding = async (index, amount, mode) => {
-    console.log("12345", index, amount, mode);
     let difference = 0;
     let bal = 0;
 
@@ -478,15 +469,7 @@ const GetMarketDetailByMarketId = () => {
                 {/* Left side: Market Name and Countdown Timer */}
                 <div>
                   {user_marketWithRunnerData.marketName}{" "}
-                  {/* {console.log(
-                    "startTime",
-                    new Date(
-                      moment(user_marketWithRunnerData.startTime).local()
-                        .subtract(5, "hours")
-                        .subtract(30, "minutes")
-                        .toDate()
-                    ) < new Date()
-                  )} */}
+                  
                   {new Date(
                     moment(user_marketWithRunnerData.startTime)
                       .local()
@@ -819,7 +802,6 @@ const GetMarketDetailByMarketId = () => {
                               }
                               key={index}
                             >
-                              {console.log("ASDF", runnerData)}
                               {runnerData.rate[0].back}
                             </div>
 

@@ -9,8 +9,6 @@ import "./loginModal.css";
 import { useNavigate } from "react-router-dom";
 
 function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
-  console.log("setShowResetModal:", setShowResetModal);
-  console.log("typeof setShowResetModal:", typeof setShowResetModal);
   const [loginCred, setLoginCred] = useState(setInitialValues());
   const navigate = useNavigate();
 
@@ -41,7 +39,6 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
     initialValues: loginCred,
     validationSchema: LoginSchema,
     onSubmit: (values, action) => {
-      console.log("values++===============>", values);
       loginHandler(values);
       resetForm();
     },
@@ -54,7 +51,6 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
       payload: true,
     });
     const response = await login(values, true);
-    console.log("res from login", response);
     if (response) {
       setShowLogin(!showLogin);
       if (response.data.isReset) {

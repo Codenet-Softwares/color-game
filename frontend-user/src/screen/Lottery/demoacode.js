@@ -18,7 +18,6 @@ const LotteryNewPage = () => {
   const [lotteryRange, setLotteryRange] = useState(getLotteryRange());
   const [filteredNumbers, setFilteredNumbers] = useState([]);
   const [debounceTimeout, setDebounceTimeout] = useState(null);
-  console.log('===>>> lottery range',lotteryRange)
 
   // Fetch lottery range data when component mounts
   useEffect(() => {

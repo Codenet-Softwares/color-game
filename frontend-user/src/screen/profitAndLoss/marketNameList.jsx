@@ -9,7 +9,6 @@ import { useAppContext } from "../../contextApi/context";
 
 const MarketNameList = () => {
   const { marketId } = useParams();
-  console.log("++++++++++*******>runnerData", marketId);
   const [marketData, setMarketData] = useState([]);
   const { dispatch } = useAppContext();
   const [totalEntries, setTotalEntries] = useState(5);
@@ -43,7 +42,6 @@ const MarketNameList = () => {
     // entries for no. of entries for pagination
     const handleEntriesChange = (event) => {
       const entries = Number(event.target.value);
-      console.log("entries", entries);
       setTotalEntries(entries);
       // After updating totalItems, we need to fetch data for the first page with the new number of items
       setPagination((prevState) => ({

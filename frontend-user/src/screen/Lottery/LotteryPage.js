@@ -34,7 +34,6 @@ const LotteryPage = () => {
         totalItems: pagination.totalItems,
       });
 
-      console.log("======>>> response for lotteries", response);
 
       if (response.success) {
         // Replace the lotteries instead of appending
@@ -74,10 +73,8 @@ const LotteryPage = () => {
 
   // Handle the Buy Now button click
   const handleBuyNow = async (lotteryId, lotteryName) => {
-    console.log("========>>>> lottery id", lotteryId);
 
     const response = await lottery_Amount_Alert({ lotteryId });
-    console.log("===>>> ALERT RESPONSE FROM API", response);
     // Extract the message from the API response
     const lotteryAmountMessage =
       response?.message || "Lottery amount information unavailable.";
@@ -89,16 +86,13 @@ const LotteryPage = () => {
     if (isConfirmed) {
       try {
         const response = await Purchase_lottery({ lotteryId });
-        console.log("===>> response for purchase", response);
         alert("Ticket purchase successful!");
         // Remove the purchased lottery from the lotteries state
         setLotteries((prevLotteries) =>
           prevLotteries.filter((lottery) => lottery.lotteryId !== lotteryId)
         );
         // const handleUserWallet = async () => {
-        console.log("userId", userId);
         const walletResponse = await userWallet(userId, true);
-        // console.log("response wallet=>>>>", response);
         if (walletResponse) {
           dispatch({
             type: strings.UserWallet,
@@ -106,15 +100,12 @@ const LotteryPage = () => {
               ...walletResponse.data,
             },
           });
-          console.log("===>> exposure update", walletResponse);
         }
         // };
       } catch (error) {
-        console.error("===>> error in purchase", error);
         alert("Ticket purchase failed. Please try again.");
       }
     } else {
-      console.log("Purchase canceled");
     }
   };
 

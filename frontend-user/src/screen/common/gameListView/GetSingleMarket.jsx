@@ -14,7 +14,6 @@ const GetSingleMarket = () => {
   );
 
   const { store, dispatch } = useAppContext();
-  console.log("store", store);
 
   const gameIdFromUrl = useLocation().pathname.split("/")[3];
 
@@ -62,7 +61,6 @@ const GetSingleMarket = () => {
             </div>
             {user_gameWithMarketData &&
               user_gameWithMarketData[0]?.markets.map((marketData) => {
-                console.log("first", marketData);
                 return (
                      <div
                         className="row py-1 px-0 m-0"
