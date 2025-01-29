@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import './loader.css'; // Import the loader CSS
+import './loader.css';
 
 const Loader = () => (
   <div className="loader">
@@ -11,11 +11,7 @@ const Loader = () => (
     <div></div>
   </div>
 </div>
-
-
-
 );
-
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {

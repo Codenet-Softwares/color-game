@@ -8,6 +8,8 @@ const GetBetTrash = ({
   marketName,
   deleteMarketTrash,
   restoreMarketTrash,
+  setSelectedMarketDetails, // Add this
+
 }) => {
   const auth = useAuth();
   const [pagination, setPagination] = useState({
@@ -31,33 +33,47 @@ const GetBetTrash = ({
   };
 
   const handleDelete = async (trashMarketId) => {
-    auth.showLoader();
     const isConfirmed = window.confirm(
-      "Are you sure you want to Delete this market?"
+        "Are you sure you want to Delete this market?"
     );
-    if (!isConfirmed) return;
+    if (!isConfirmed) return; // Exit if the user cancels
+
+    auth.showLoader(); // Show loader only when the user confirms
     try {
-      await deleteMarketTrash(trashMarketId);
+        await deleteMarketTrash(trashMarketId);
+        // Remove the deleted item from selectedMarketDetails
+        setSelectedMarketDetails((prevDetails) =>
+            prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
+        );
     } catch (error) {
-      console.error("Error deleting market:", error);
-    }finally {
-      auth.hideLoader();
+        console.error("Error deleting market:", error);
+    } finally {
+        auth.hideLoader(); // Hide loader after completion
     }
-  };
-  const handleRestore = async (trashMarketId) => {
-    auth.showLoader();
-    const isConfirmed = window.confirm(
-      "Are you sure you want to restore this market?"
-    );
-    if (!isConfirmed) return;
-    try {
+};
+
+  
+const handleRestore = async (trashMarketId) => {
+  const isConfirmed = window.confirm(
+      "Are you sure you want to Restore this market?"
+  );
+  if (!isConfirmed) return; // Exit if the user cancels
+
+  auth.showLoader(); // Show loader only when the user confirms
+  try {
       await restoreMarketTrash(trashMarketId);
-    } catch (error) {
+      // Remove the restored item from selectedMarketDetails
+      setSelectedMarketDetails((prevDetails) =>
+          prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
+      );
+  } catch (error) {
       console.error("Error restoring market:", error);
-    }finally {
-      auth.hideLoader();
-    }
-  };
+  } finally {
+      auth.hideLoader(); // Hide loader after completion
+  }
+};
+
+
 
   const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
   const endIndex = Math.min(

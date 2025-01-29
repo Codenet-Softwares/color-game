@@ -59,7 +59,6 @@ const LiveUserBet = () => {
   };
 
   const handleDelete = async (marketId, runnerId, userId, betId) => {
-    auth.showLoader();
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this market and bet?"
     );
@@ -67,7 +66,7 @@ const LiveUserBet = () => {
     if (!isConfirmed) {
       return;
     }
-
+    auth.showLoader();
     console.log("delete", marketId);
 
     try {

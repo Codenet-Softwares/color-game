@@ -218,6 +218,7 @@ const DeleteBetHistory = () => {
                         marketName={selectedMarketName}
                         deleteMarketTrash={deleteMarketTrash}
                         restoreMarketTrash={restoreMarketTrash}
+                        setSelectedMarketDetails={setSelectedMarketDetails} // Add this line
                       />
                     )}
                   </div>
