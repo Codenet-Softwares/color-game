@@ -199,6 +199,8 @@ export const resetPassword = async (req, res) => {
       oldPassword,
       userData.password
     );
+
+
     if (!oldPasswordIsCorrect) {
       return res
         .status(statusCode.badRequest)
@@ -208,6 +210,25 @@ export const resetPassword = async (req, res) => {
             false,
             statusCode.badRequest,
             "Invalid old password"
+          )
+        );
+    }
+
+    const newPasswordIsCorrect = await bcrypt.compare(
+      password,
+      userData.password
+    );
+
+    if(newPasswordIsCorrect)
+    {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "New password can't be same to existing password!"
           )
         );
     }
