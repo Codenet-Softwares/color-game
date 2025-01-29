@@ -491,7 +491,8 @@ const GetMarketDetailByMarketId = () => {
                     moment(user_marketWithRunnerData.startTime)
                       .local()
                       .subtract(5, "hours")
-                      .subtract(30, "minutes")
+                      .subtract(31, "minutes")
+                      .subtract(40, "seconds")
                       .toDate()
                   ) < new Date() && (
                     <CountdownTimer
