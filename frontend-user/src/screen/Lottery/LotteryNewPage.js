@@ -54,7 +54,11 @@ const LotteryNewPage = ({ drawId }) => {
       .subtract(5, "hours")
       .subtract(30, "minutes")
       .toDate()
-  ) < new Date());
+  ) < new Date(), new Date(), moment(startTimeForShowCountdown)
+    .local()
+    .subtract(5, "hours")
+    .subtract(30, "minutes")
+    .toDate());
 
   useEffect(() => {
     if (startTime) {
@@ -554,7 +558,7 @@ const LotteryNewPage = ({ drawId }) => {
                 moment(startTimeForShowCountdown)
                   .local()
                   .subtract(5, "hours")
-                  .subtract(31, "minutes").subtract(40, "seconds")
+                  .subtract(30, "minutes")
                   .toDate()
               ) < new Date() && (
                   <CountDownTimerLottery endDateTime={endTimeForTimer} />
