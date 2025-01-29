@@ -554,7 +554,7 @@ const LotteryNewPage = ({ drawId }) => {
                 moment(startTimeForShowCountdown)
                   .local()
                   .subtract(5, "hours")
-                  .subtract(30, "minutes")
+                  .subtract(31, "minutes").subtract(40, "seconds")
                   .toDate()
               ) < new Date() && (
                   <CountDownTimerLottery endDateTime={endTimeForTimer} />
