@@ -8,9 +8,7 @@ import {
 import { statusCode } from "../helper/statusCodes.js";
 import admins from "../models/admin.model.js";
 import { string } from "../constructor/string.js";
-import marketSchema from "../models/market.model.js";
 import userSchema from "../models/user.model.js";
-import Sequelize from "../db.js";
 import transactionRecord from "../models/transactionRecord.model.js";
 import Runner from "../models/runner.model.js";
 import Market from "../models/market.model.js";
@@ -19,14 +17,11 @@ import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import BetHistory from "../models/betHistory.model.js";
 import { Op } from "sequelize";
-import axios from "axios";
 import Game from "../models/game.model.js";
-import InactiveGame from "../models/inactiveGame.model.js";
-import CustomError from "../helper/extendError.js";
 import { PreviousState } from "../models/previousState.model.js";
 import sequelize from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
-import { getISTTime } from "../helper/commonMethods.js";
+
 
 dotenv.config();
 const globalName = [];
@@ -222,8 +217,6 @@ export const updateByAdmin = async (req, res) => {
       userName
     } = req.body;
 
-    console.log("req.body", req.body)
-
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       return res
@@ -394,21 +387,6 @@ export const afterWining = async (req, res) => {
   try {
     const { marketId, runnerId, isWin } = req.body;
     let gameId = null;
-
-    // const currentTime = getISTTime();
-
-    // const activeMarkets = await Market.findAll({
-    //   where: {
-    //     marketId,
-    //     startTime: { [Op.lte]: currentTime },
-    //     endTime: { [Op.gte]: currentTime },
-    //   },
-    // });
-
-    // if (activeMarkets) {
-    //   return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market time is not completed yet !"));
-    // }
-
     const market = await Market.findOne({
       where: { marketId },
       include: [{ model: Runner, required: false }],
@@ -728,7 +706,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
           (item) => Object.keys(item)[0] === marketId
         );
         const marketExposureValue = Number(marketExposureEntry[marketId]);
-        console.log("market exposure value", marketExposureValue)
         if (runnerBalance > 0) {
           await WinningAmount.destroy({ where: { marketId } }, transaction)
         }
@@ -838,14 +815,6 @@ export const checkMarketStatus = async (req, res) => {
 
     market.isActive = status;
     await market.save();
-
-    // if (status === true) {
-    //   if (market.endTime) {
-    //     startMarketCountdown(market);
-    //   } else {
-    //     throw new CustomError('Market end time is not set.', null, statusCode.badRequest)
-    //   }
-    // }
 
     const statusMessage = status ? "Market is active" : "Market is suspended";
     res

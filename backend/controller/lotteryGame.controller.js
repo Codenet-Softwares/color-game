@@ -95,7 +95,6 @@ export const purchaseLottery = async (req, res) => {
       totalExposure += exposure;
     });
 
-    console.log("totalExposure...999", totalExposure)
 
     const [rs1] = await Promise.all([
       axios.post(
@@ -324,7 +323,6 @@ export const updateBalance = async (req, res) => {
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update"));
   } catch (error) {
-    console.log("Error:", error);
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
@@ -377,7 +375,6 @@ export const removeExposer = async (req, res) => {
       .status(statusCode.success)
       .send(apiResponseSuccess(null, true, statusCode.success, 'Balance updated successfully.'));
   } catch (error) {
-    console.log("Error:", error);
     return res
       .status(statusCode.internalServerError)
       .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
@@ -404,7 +401,6 @@ export const getLotteryResults = async (req, res) => {
 
     return res.status(statusCode.success).send(apiResponseSuccess(data, true, statusCode.success, 'Lottery results fetched successfully.'));
   } catch (error) {
-    console.log("Error fetching results:", error);
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
@@ -633,7 +629,6 @@ export const getBetHistoryP_L = async (req, res) => {
 
     return res.status(statusCode.success).send(apiResponseSuccess(data, true, statusCode.success, 'Success'));
   } catch (error) {
-    console.log("error.........", error)
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 }
