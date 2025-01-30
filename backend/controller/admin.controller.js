@@ -702,10 +702,7 @@ export const revokeWinningAnnouncement = async (req, res) => {
         user.marketListExposure = JSON.parse(prevState.marketListExposure);
         const allRunnerBalances = JSON.parse(prevState.allRunnerBalances);
         const runnerBalance = allRunnerBalances[runnerId];
-        const marketExposureEntry = user.marketListExposure.find(
-          (item) => Object.keys(item)[0] === marketId
-        );
-        const marketExposureValue = Number(marketExposureEntry[marketId]);
+   
         if (runnerBalance > 0) {
           await WinningAmount.destroy({ where: { marketId } }, transaction)
         }
