@@ -12,7 +12,6 @@ const LotteryMarketDashBoard = () => {
   const [marketData, setMarketData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
-  console.log("store", store.user.isLogin);
 
   // Fetch market data
   const fetchMarketData = async () => {
@@ -36,7 +35,6 @@ const LotteryMarketDashBoard = () => {
   const getBody = () => {
     const handleMarketClick = (marketId) => {
       if (store.user.isLogin) {
-        console.log("Navigating to market:", marketId);
         window.location.href = `/lottery/${marketId}`;
       } else {
         setShowLogin(true);

@@ -34,7 +34,6 @@ const NavBar = () => {
   });
 
   const { store, dispatch } = useAppContext();
-  console.log("store from nav", store);
 
   const userId = store.user?.userId;
 
@@ -60,9 +59,7 @@ const NavBar = () => {
   }, [store.user.wallet?.marketListExposure]);
 
   const handleUserWallet = async () => {
-    console.log("userId", userId);
     const response = await userWallet(userId, true);
-    console.log("response wallet=>>>>", response);
     if (response) {
       dispatch({
         type: strings.UserWallet,
@@ -70,7 +67,6 @@ const NavBar = () => {
           ...response.data,
         },
       });
-      console.log(response);
     }
   };
 
@@ -96,14 +92,12 @@ const NavBar = () => {
   // handle lottery purchase history
   function handleLotteryPurchasesClick() {
     // Add your logic here for navigating or opening the lottery purchases page/modal
-    console.log("Navigating to My Lottery Purchases");
     navigate("/LotteryPurchaseHistory");
   }
 
 
   function handleResultsClick() {
     // Add your logic here for navigating or opening the lottery purchases page/modal
-    console.log("Navigating to Winning");
     navigate("/WinningResult");
   }
   const handleAccountStatementClick = () => {

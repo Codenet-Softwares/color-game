@@ -55,8 +55,6 @@ const BetHistory = () => {
     // Concatenate the parts with '-' separator
     return `${year}-${month}-${day}`;
   }
-  console.log("date===>", formatDate(dateValue.startDate));
-  console.log("date===> end date", formatDate(dateValue.endDate));
   const handleDateValue = (name, value) => {
     setDateValue((prevData) => ({
       ...prevData,
@@ -65,7 +63,6 @@ const BetHistory = () => {
   };
 
   const [gameSelectionBetHistory, setGameSelectionBetHistory] = useState([]); // from dummy data into bet history selection
-  console.log("=======>>> market selection", gameSelectionBetHistory);
   const [openBetGameNames, setOpenBetGameNames] = useState([]);
 
   const [selectedOptions, setSelectedOptions] = useState({
@@ -75,7 +72,6 @@ const BetHistory = () => {
   });
   const [fetchData, setFetchData] = useState(true);
   const { store } = useAppContext();
-  console.log("=============> line 15 ", store.user?.UserId);
 
   let startIndex = Math.min((currentPage - 1) * totalEntries + 1);
   let endIndex = Math.min(currentPage * totalEntries, totalItems);
@@ -93,7 +89,6 @@ const BetHistory = () => {
     });
 
     if (response) {
-      console.log("response for betHistoryData ", response);
       setBetHistoryData(response?.data);
       setTotalPages(response?.pagination?.totalPages);
       setTotalItems(response?.pagination?.totalItems);
@@ -116,7 +111,6 @@ const BetHistory = () => {
     });
 
     if (response) {
-      console.log("response for betHistoryData ", response);
       setBetHistoryData(response?.data);
       setTotalPages(response?.pagination?.totalPages);
       setTotalItems(response?.pagination?.totalItems);
@@ -133,7 +127,6 @@ const BetHistory = () => {
       handleGetHistory();
     }
   }, [currentPage, totalItems, totalEntries]);
-  console.log("==========> line65", betHistoryData);
 
   // pagination handlechange (to be solved later )
   const handlePageChange = (pageNumber) => {
@@ -143,7 +136,6 @@ const BetHistory = () => {
   // entries for no. of entries for pagination
   const handleEntriesChange = (event) => {
     const entries = Number(event.target.value);
-    console.log("entries", entries);
     setTotalEntries(entries);
     // After updating totalItems, we need to fetch data for the first page with the new number of items
     setCurrentPage(1);
@@ -162,27 +154,19 @@ const BetHistory = () => {
     setOpenBetGameNames(response.data);
   };
 
-  console.log("Data=>>>", openBetGameNames);
 
   // useeffect for bet history and open bets selection input boxes only
   useEffect(() => {
     handleGetSelectData();
     openBetsGame();
   }, []);
-  console.log(
-    "=========> gameSelectionBetHistory line 108",
-    gameSelectionBetHistory
-  );
-  console.log(
-    "=========> openBetSelectionbetHistor line 109",
-    openBetGameNames
-  );
+ 
+  
 
   // this is for open bets selection onchnage
   const handleSelectChange = (e) => {
     setSelectedGameName(e.target.value);
   };
-  console.log("=====. line 157", selectedGameName);
 
   const handleGetHistoryChange = (e) => {
     setSelectedOptions((prevState) => ({
@@ -191,16 +175,13 @@ const BetHistory = () => {
     }));
 
     // Additional logic based on the selected option, if required
-    // console.log(`Selected====> ${selectName}:`, value);
   };
 
   const handleGameChange = (e) => {
-    console.log("empty value line 150", e.target.value);
     setSelectedGameId(e.target.value);
     setDateVisible(true); // Show date picker when market is selected
   };
 
-  console.log("Market ID:", selectedGameId);
 
   // this is back lay open bets data but this api needs to be updated
   async function handleGetData() {
@@ -215,8 +196,6 @@ const BetHistory = () => {
       handleGetData();
     }
   }, [selectedGameName]);
-  console.log("============> openBet", openBet);
-  console.log("============> selectMarketId", selectedGameName);
 
   // Function to render "No data found" message when history data is empty
   const renderNoDataFound = () => {

@@ -13,7 +13,6 @@ import "./PurchasedTickets.css";
 
 const PurchasedTickets = () => {
   const { dispatch, showLoader, hideLoader,store } = useAppContext();
-  console.log('store',store)
   const { marketId: paramMarketId } = useParams();
   const navigate = useNavigate();
 

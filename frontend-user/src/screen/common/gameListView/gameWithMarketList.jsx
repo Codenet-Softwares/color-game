@@ -36,7 +36,6 @@ function GameWithMarketList({ isSingleMarket }) {
   });
 
   const { store, dispatch } = useAppContext();
-  console.log("store", store);
   const [gameId, setGameId] = useState("");
   const [bidding, setBidding] = useState({ rate: "", amount: 0 });
   const [loginModal, setLoginModal] = useState(false);
@@ -54,7 +53,6 @@ function GameWithMarketList({ isSingleMarket }) {
   const gameIdFromUrl = useLocation().pathname.split("/")[3];
   // const gameIdFromUrl = useLocation()?.pathname?.split('-')[1]?.split('/')[1];
 
-  console.log("data to send", gameIdFromUrl);
 
   useEffect(() => {
     if (user_marketWithRunnerData?.runners?.length) {
@@ -76,9 +74,7 @@ function GameWithMarketList({ isSingleMarket }) {
     });
   }, [store.user.wallet?.marketListExposure]);
 
-  console.log("Arr=>>>>", arr);
-  // console.log('Store=>>>', prevExposureForCurrentMarket);
-  console.log("exposureAndWallet=>>>", exposureAndWallet);
+ 
   useEffect(() => {
     handleRefreshOrGetInitialData();
   }, [gameIdFromUrl]);
@@ -242,7 +238,6 @@ function GameWithMarketList({ isSingleMarket }) {
       payload: false,
     });
     if (response) {
-      console.log("problem res", response);
       const preMaxExposure = getMaxNegativeBalance(response.data.runners);
       setPreExposure(preMaxExposure);
       setUser_marketWithRunnerData(response.data);
@@ -267,7 +262,6 @@ function GameWithMarketList({ isSingleMarket }) {
   }
 
   const handleUserBidding = async (index, amount, mode) => {
-    console.log("12345", index, amount, mode);
     let difference = 0;
     let bal = 0;
 
@@ -444,7 +438,6 @@ function GameWithMarketList({ isSingleMarket }) {
       return nData;
     };
 
-    console.log("first", arr);
 
     return (
       <>
@@ -486,10 +479,7 @@ function GameWithMarketList({ isSingleMarket }) {
             style={{ backgroundColor: "#a1aed4" }}
           >
             {user_marketWithRunnerData.marketName} |{" "}
-            {console.log(
-              "user_marketWithRunnerData",
-              user_marketWithRunnerData
-            )}
+           
             {new Date(convertUTCtoIST(user_marketWithRunnerData.endTime)) <
             new Date() ? null : (
               <>
@@ -772,7 +762,6 @@ function GameWithMarketList({ isSingleMarket }) {
                           }
                           key={index}
                         >
-                          {console.log("ASDF", runnerData)}
                           {runnerData.rate[0].back}
                         </div>
 

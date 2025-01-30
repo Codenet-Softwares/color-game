@@ -14,7 +14,6 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const state = location?.state || {}; 
-console.log("location-state", state);
   const formik = useFormik({
     initialValues: {
       userName:state?.userName,
@@ -29,11 +28,9 @@ console.log("location-state", state);
   });
 
   async function handelresetPassword(values) {
-    console.log("====>>> ONCLICK OF BUTTON", values);
 
     try {
       const response = await ResetUserPassword(values, true);
-      console.log("Response from reset password API:", response);
       if (response && response.success) {
         navigate("/home");
         toast.success("Password changed successfully!");

@@ -3,15 +3,20 @@ import { GetResultMarket, GetWiningResult } from "../../Utils/apiService";
 import { useNavigate, useParams } from "react-router-dom";
 import { format } from "date-fns";
 
-const Result = () => {
-  const { marketId } = useParams(); // Extract current marketId from URL
-  const navigate = useNavigate();
-  const [markets, setMarkets] = useState([]);
-  const [results, setResults] = useState([]);
-  const [error, setError] = useState(null);
-  const [scrollIndex, setScrollIndex] = useState(0);
-  const today = format(new Date(), "yyyy-MM-dd");
-  const [selectedDate, setSelectedDate] = useState(today); // For date filter
+const LotteryNewPage = () => {
+  const [sem, setSem] = useState("");
+  const [group, setGroup] = useState("");
+  const [series, setSeries] = useState("");
+  const [number, setNumber] = useState("");
+  const [isGroupPickerVisible, setIsGroupPickerVisible] = useState(false);
+  const [isSeriesPickerVisible, setIsSeriesPickerVisible] = useState(false);
+  const [isNumberPickerVisible, setIsNumberPickerVisible] = useState(false);
+  const [responseData, setResponseData] = useState(null);
+  const [showSearch, setShowSearch] = useState(true);
+  const [lotteryRange, setLotteryRange] = useState(getLotteryRange());
+  const [filteredNumbers, setFilteredNumbers] = useState([]);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
+
 
   const maxVisibleMarkets = 3;
   const visibleMarkets = markets.slice(scrollIndex, scrollIndex + maxVisibleMarkets);

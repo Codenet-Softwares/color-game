@@ -13,7 +13,6 @@ const ForgotPassword = () => {
   const { store, dispatch } = useAppContext();
   const [resetPassword, setResetPassword] = useState(setInitialValues());
 
-  console.log("===========>ID", store);
 
   function setInitialValues() {
     return {

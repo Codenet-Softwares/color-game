@@ -12,7 +12,6 @@ const  LotteryCards = ()  => {
  
 
   const { marketId } = useParams()
-  console.log("param", marketId)
 
     function newGame(){
         return (

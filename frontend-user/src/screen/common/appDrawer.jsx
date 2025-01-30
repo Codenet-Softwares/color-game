@@ -150,12 +150,10 @@ function AppDrawer({
                     onClick={() => handleToggle(index)}
                   >
                     <Link>{gameObj?.gameName}</Link>
-                    {console.log("====>>>123", gameObj)}
                   </li>
                   {/* Mapping over markets inside each gameName */}
                   {toggleStates[index] && gameObj.markets.length > 0
                     ? gameObj?.markets?.map((marketObj, marketIndex) => {
-                      console.log("====>>>123", marketObj);
                       return (
                         <li
                           className="subMenuItems"

@@ -17,10 +17,8 @@ import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventE
 import { toast } from "react-toastify";
 
 const LotteryNewPage = ({ drawId }) => {
-  console.log("====>>>> line number 10", drawId);
   const { marketId } = useParams();
 
-  console.log("marketId", marketId);
 
   const [sem, setSem] = useState("");
   const [group, setGroup] = useState("");
@@ -48,17 +46,6 @@ const LotteryNewPage = ({ drawId }) => {
   const [setIsTimeUp, setSetIsTimeUp] = useState(false);
   const [isSuspend, setIsSuspend] = useState();
   const [priceEach, setPriceEach] = useState("");
-  console.log("===>> startTime", new Date(
-    moment(startTimeForShowCountdown)
-      .local()
-      .subtract(5, "hours")
-      .subtract(30, "minutes")
-      .toDate()
-  ) < new Date(), new Date(), moment(startTimeForShowCountdown)
-    .local()
-    .subtract(5, "hours")
-    .subtract(30, "minutes")
-    .toDate());
 
   useEffect(() => {
     if (startTime) {
@@ -76,7 +63,6 @@ const LotteryNewPage = ({ drawId }) => {
     const handleLotteryRange = async () => {
       try {
         const data = await LotteryRange();
-        console.log("======>>>>>> response from data", data);
 
         if (data && data.data) {
           const filteredMarket = data.data.filter(
@@ -85,7 +71,6 @@ const LotteryNewPage = ({ drawId }) => {
 
           if (filteredMarket.length > 0) {
             const currentMarket = filteredMarket[0];
-            console.log("===>> currentMarket", currentMarket);
             setIsSuspend(currentMarket.isActive)
 
             setLotteryRange({
@@ -119,7 +104,6 @@ const LotteryNewPage = ({ drawId }) => {
 
             const start = moment.utc(currentMarket.start_time);
             const end = moment.utc(currentMarket.end_time);
-            console.log("object============>>>>>>>>", start);
             setStartTime(
               moment.utc(currentMarket.start_time).format("YYYY-MM-DD HH:mm")
             );
@@ -133,15 +117,12 @@ const LotteryNewPage = ({ drawId }) => {
             );
 
             // const currentTime = moment();
-            // console.log("Current time:", currentTime.format("YYYY-MM-DD HH:mm"));
-            // console.log("Start time:", start.format("YYYY-MM-DD HH:mm"));
+          
 
             // if (currentTime.isSameOrAfter(start)) {
             //   setShowCountdown(true);
-            //   console.log("Countdown will be shown.");
             // } else {
             //   setShowCountdown(false);
-            //   console.log("Countdown will not be shown.");
             // }
 
           } else {
@@ -161,21 +142,16 @@ const LotteryNewPage = ({ drawId }) => {
 
   useEffect(
     () => {
-      console.log("setIsSuspend....1", isSuspend)
       const eventSource = updateLotteryMarketEventEmitter();
-      console.log("eventSource", eventSource)
       eventSource.onmessage = function (event) {
         const updates = JSON.parse(event.data);
-        console.log("[SSE] lottery Update received:", updates);
 
         if (updates?.length) {
           updates.forEach((market) => {
             if (market.isActive) {
-              console.log(`[SSE] lottery Market Active: ${market.marketName}`);
               setIsSuspend(true);
               toast.success(`${market.marketName} is now Active`);
             } else {
-              console.log(`[SSE] lottery Market Suspended: ${market.marketName}`);
               setIsSuspend(false);
               toast.info(`${market.marketName} has been Suspended`);
             }
@@ -189,7 +165,6 @@ const LotteryNewPage = ({ drawId }) => {
       };
 
       return () => {
-        console.log("[SSE] Cleaning up EventSource...");
         eventSource.close();
       };
     }, []
