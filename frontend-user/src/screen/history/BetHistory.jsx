@@ -495,7 +495,9 @@ const BetHistory = () => {
                             <td>{item?.marketName}</td>
                             <td>{"WINNER"}</td>
                             <td>{item?.runnerName}</td>
-                            <td>{item?.type}</td>
+                            <td className="fw-bold" style={{ color: item?.type === "back" ? "blue" : "red" }}>
+                              {item?.type}
+                            </td>
                             <td>{item?.rate}</td>
                             <td className="fw-bold">{item?.value}</td>
                             <td>{formatDateForUi(item?.placeDate)}</td>

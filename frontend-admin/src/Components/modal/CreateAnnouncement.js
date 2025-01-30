@@ -11,7 +11,6 @@ const CreateAnnouncement = ({
   gamename,
   onAnnouncementCreate,
 }) => {
-  console.log("=========> line 7", onAnnouncementCreate);
   const [typeOfAnnouncement, setTypeOfAnnouncement] = useState("");
   const [announcement, setAnnouncement] = useState("");
   const auth = useAuth();
@@ -35,12 +34,7 @@ const CreateAnnouncement = ({
 
     AnnounceServices.announceCreate(data, auth.user)
       .then((res) => {
-        console.log(
-          "========>  response for creating announce ---- line 29",
-          res
-        );
         const announcementData = res.data;
-        console.log("==========>>>>> announcement data", announcementData);
         onAnnouncementCreate(announcementData);
         toast.success(res.data.message);
 

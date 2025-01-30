@@ -48,11 +48,9 @@ const AddGameGif = () => {
         const response = await GameService.gifSliderImage(auth.user, data);
       
         toast.success("GIF uploaded successfully!");
-        console.log(response.data);
         setFile(null);
         setGifPreview(null);
       } catch (error) {
-        // Check if the error response exists and contains the `errMessage` property
         if (error.response && error.response.data && error.response.data.errMessage) {
           toast.error(error.response.data.errMessage); // Display the backend error message
         } else {

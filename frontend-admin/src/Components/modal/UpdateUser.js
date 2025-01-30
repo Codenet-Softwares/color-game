@@ -6,7 +6,6 @@ import { useAuth } from "../../Utils/Auth";
 import { toast } from "react-toastify";
 
 const UpdateUser = ({ show, setShow, userData, userId }) => {
-  console.log("==========> user data through props", userData);
 const auth = useAuth()
   const [user, setUser] = useState(userData);
 
@@ -26,7 +25,6 @@ const auth = useAuth()
 
     UserService.userUpdate(data, auth.user, userId)
     .then((res) => {
-        console.log('=========> response',res)
         toast.success(res.data.message);
         // window.location.reload();
         setShow(false);
@@ -41,7 +39,6 @@ const auth = useAuth()
   const handleChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
-  console.log('=======> updated user', user)
   return (
     <Modal
     show={show}

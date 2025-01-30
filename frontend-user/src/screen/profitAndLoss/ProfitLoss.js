@@ -336,10 +336,10 @@ const ProfitLoss = ({
             <div className="form-group mb-3 mb-md-0 px-2">
               <div class="container">
                 <div class="row">
-                  <div class="col-sm">Data Source</div>
-                  <div class="col-sm">From</div>
-                  <div class="col-sm">To</div>
-                  <div class="col-sm"></div>
+                  <div class="col-sm fw-bold">Data Source</div>
+                  <div class="col-sm fw-bold">From</div>
+                  <div class="col-sm fw-bold">To</div>
+                  <div class="col-sm fw-bold"></div>
                 </div>
               </div>
               <div class="container">
@@ -398,7 +398,7 @@ const ProfitLoss = ({
       {toggle ? (
         <div class="card w-100 rounded">
           <div
-            class="card-heade text-white p-1"
+            class="card-heade text-white p-2 text-center text-uppercase h5"
             style={{ backgroundColor: "#2CB3D1" }}
           >
             <b>&nbsp;&nbsp;Profit & Loss</b>

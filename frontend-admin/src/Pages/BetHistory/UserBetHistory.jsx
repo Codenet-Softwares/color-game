@@ -43,14 +43,6 @@ const UserBetHistory = () => {
 
   const fetchWinBetHistory = async () => {
     try {
-      console.log("Fetching WinBetHistory:", {
-        user: auth.user,
-        marketId,
-        page: betAfterWin.currentPage,
-        pageSize: betAfterWin.totalEntries,
-        debouncedSearchTerm
-      });
-
       const response = await GameService.winBetHistory(
         auth.user,
         marketId,
@@ -59,7 +51,6 @@ const UserBetHistory = () => {
         debouncedSearchTerm
       );
 
-      console.log("API Response:", response.data);
 
       const { data, pagination } = response.data;
 
@@ -75,7 +66,6 @@ const UserBetHistory = () => {
         setMarketName("Unknown Market");
       }
     } catch (error) {
-      console.error("Error fetching bet history:", error);
       toast.error(customErrorHandler(error));
     }
     finally {
@@ -213,7 +203,6 @@ const UserBetHistory = () => {
                 <tbody>
                   {betAfterWin.winBetHistory.length > 0 ? (
                     betAfterWin.winBetHistory.map((winBet, index) => {
-                      console.log("Rendering Bet:", winBet);
                       return (
                         <tr key={winBet.userId}>
                           <td>{startIndex + index}</td>

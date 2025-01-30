@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import './loader.css'; // Import the loader CSS
+import './loader.css';
 
 const Loader = () => (
   <div className="loader">
@@ -11,11 +11,7 @@ const Loader = () => (
     <div></div>
   </div>
 </div>
-
-
-
 );
-
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -27,7 +23,6 @@ export const AuthProvider = ({ children }) => {
 
   const login = () => {
     try {
-      console.log("logging in...");
       const userString = sessionStorage.getItem("user");
       if (!userString) return;
 
@@ -38,7 +33,6 @@ export const AuthProvider = ({ children }) => {
       userObject.token = userString;
       setUser(userObject);
     } catch (error) {
-      console.log(error);
     }
   };
 

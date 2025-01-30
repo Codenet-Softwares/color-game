@@ -10,7 +10,6 @@ export const RequireAuth = ({ children }) => {
   const location = useLocation();
 
   const login = () => {
-    console.log('logging in...');
     const userString = sessionStorage.getItem('user');
     if (!userString) return;
 

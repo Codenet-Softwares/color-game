@@ -49,13 +49,10 @@ const RunnerView = () => {
   const [runnerDeleteRes, setRunnerDeleteRes] = useState("");
   const [mostRecentPath, setMostRecentPath] = useState(pathdata[1] || "");
 
-  console.log("=========>>>>> runner data", runners);
 
   const [runnerId, setRunnerId] = useState("");
-  console.log("=========>>>> RUnnerid", runnerId);
 
   const marketid = searchParams.get("marketId");
-  console.log("==========> line 44", marketid);
 
   const ClearPath = () => {
     GameService.getToPathname("clearAll", auth.user, pathdata[0]?.id)
@@ -99,7 +96,6 @@ const RunnerView = () => {
   }, []);
 
   const location = useLocation();
-  console.log("location===>", location.state);
 
   const fetchdataViewRunner = () => {
     if (auth.user && pathdata[1]?.id) {
@@ -111,9 +107,7 @@ const RunnerView = () => {
         debouncedSearchTerm
       )
         .then((res) => {
-          console.log("============>>> line 48", res.data.data);
           const { data } = res.data;
-          console.log("===========> marketId", data);
           setRunners(res.data.data); // Update the state with the received runners
           setTotalPages(res.data.pagination.totalPages); // Update the total pages
           setTotalData(res.data.pagination.totalItems); // Update the total data count
@@ -125,17 +119,11 @@ const RunnerView = () => {
             });
           });
           setRunnerRates(rates);
-
           // Log rates for back and lay here
-          console.log("Rates for back and lay:", rates);
         })
         .catch((error) => {
           if (error.response && error.response.status === 404) {
-            // Handle 404 Not Found error here
-            console.log("Runner not found.");
           } else {
-            // Handle other errors
-            console.error("Error fetching data:", error);
           }
         });
     }
@@ -146,7 +134,6 @@ const RunnerView = () => {
     // setGameId(id);
     // setRunnerId(id);
   };
-  console.log(gameid);
 
   useEffect(() => {
     fetchdataViewRunner();
@@ -174,15 +161,12 @@ const RunnerView = () => {
   };
 
   const handleShowUpdateModal = (data, toggle) => {
-    console.log("============> line 112", data);
     setToggleCase(toggle);
     setData(data);
     setShowUpdateModal(true);
   };
 
   const handleAnnounceWin = (runnerId) => {
-    console.log("onClicked RunnerId:", runnerId);
-
     const data = {
       marketId: pathdata[1]?.id,
       runnerId: runnerId,
@@ -191,7 +175,6 @@ const RunnerView = () => {
 
     AccountServices.announceWin(data, auth.user)
       .then((res) => {
-        console.log(res);
         toast.success(res.data.message);
         setIsWin(true);
         navigate(`/gameMarket`);
@@ -204,8 +187,7 @@ const RunnerView = () => {
   const handleSetGameInactive = (marketId) => {
     AccountServices.setGameInactive({ marketId }, auth.user)
       .then((res) => {
-        console.log("Game set to inactive:", res);
-        // Trigger re-render or state update if needed
+
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
@@ -214,8 +196,6 @@ const RunnerView = () => {
 
   // delete api fetch for runner
   const handleDelete = (runnerId) => {
-    console.log("=============....>>>>> runnerId onclick", runnerId);
-
     AccountServices.DeleteRunner(auth.user, runnerId)
       .then((response) => {
         toast.success(response.data.message);
@@ -370,12 +350,6 @@ const RunnerView = () => {
                                     runner.runnerName,
                                     runner.rates
                                   );
-                                  console.log(
-                                    "Rates for",
-                                    runner.runnerName,
-                                    ":",
-                                    runner.rates
-                                  );
                                 }}
                               >
                                 <i className="ti-arrow-circle-right"></i> View
@@ -442,7 +416,6 @@ const RunnerView = () => {
           />
         </div>
       </>
-      {/* {console.log(location.state.gameid)} */}
       <CreateRate
         show={rateShow.createRate}
         setShow={(value) => setRateShow({ ...rateShow, createRate: value })}

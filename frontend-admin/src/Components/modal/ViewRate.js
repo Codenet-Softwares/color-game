@@ -4,14 +4,7 @@ import { Modal, Row, Col } from "react-bootstrap";
 
 const ViewRate = ({ show, onHide, rates, runnerName}) => {
 
-  console.log('========> rates',rates)
   const ratesArray = Array.isArray(rates) ? rates : [];
-
-
-
- 
- 
-
   return (
     <Modal show={show} onHide={onHide} aria-labelledby="contained-modal-title-vcenter"
     centered>

@@ -131,7 +131,6 @@ class GameService {
     });
   }
   getToPathname(mode, user, action) {
-    console.log("action", action);
     return axios({
       method: "POST",
       url: API_HOST + `/api/root-path/${mode}?id=${action}`,

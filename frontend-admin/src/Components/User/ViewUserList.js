@@ -26,7 +26,6 @@ const ViewUserList = () => {
     if (auth.user) {
       UserService.GetViewUser(auth.user).then(
         (res) => (
-          console.log(res.data),
           setUser(res.data.data),
           setTotalPages(res.data.totalPages),
           setTotalData(res.data.totalItems)
@@ -39,24 +38,17 @@ const ViewUserList = () => {
   let endIndex = Math.min(currentPage * totalEntries, totalData);
 
   const handlePageChange = (page) => {
-    console.log("Changing to page:", page);
-
     setCurrentPage(page);
     //    setIsLoading(false);
   };
 
-  console.log("=>>>>", user);
-
   const handleShowAddBalanceModal = (data) => {
-    console.log("============> line 112", data);
-
     setData(data);
     setShowAddBalanceModal(true);
   };
 
   // Function to handle showing the Update User modal
   const handleShowUpdateUserModal = (user, id ) => {
-    console.log("==========> user data", user , id );
     setShowUpdateUserModal(true);
     setSelectedUser(user);
     setUserId(id)

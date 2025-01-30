@@ -19,11 +19,9 @@ const UpdateGifSlider = () => {
   const fetchGifImages = async () => {
     try {
       const response = await GameService.getGifSlider(auth.user);
-      console.log("GIF API Response:", response.data); // Debugging
       setGifImages(response.data.data || []); // Ensure proper data mapping
     } catch (error) {
       toast.error("Failed to fetch GIF slider images.");
-      console.error("Error fetching GIF images:", error);
     }
     finally {
       // Hide the loader after the request is complete (success or error)
@@ -34,7 +32,6 @@ const UpdateGifSlider = () => {
   // Function to delete a GIF image
   const handleDelete = async (imageId) => {
     auth.showLoader();
-    console.log("Deleting GIF ID:", imageId); // Debugging
     try {
       const response = await GameService.deleteCreateGif(auth.user, imageId);
       if (response.status === 200) {
@@ -45,7 +42,6 @@ const UpdateGifSlider = () => {
       }
     } catch (error) {
       toast.error("Failed to delete the GIF. Please try again.");
-      console.error("Error deleting GIF:", error);
     }finally {
       auth.hideLoader();
     }
@@ -54,11 +50,9 @@ const UpdateGifSlider = () => {
   const handleToggleActiveStatus = async (imageId, currentStatus) => {
     auth.showLoader();
     const newStatus = !currentStatus;
-    console.log("Toggling status for imageId:", imageId, "to:", newStatus);
   
     try {
       const response = await GameService.activeInactiveGameGif(auth.user, imageId, newStatus);
-      console.log("API Response:", response.data); 
   
       if (response.status === 200) {
         setGifImages((prev) =>

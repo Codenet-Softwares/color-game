@@ -43,7 +43,6 @@ RunnerCreate(data, marketName, user) {
 }
 
 ViewRunner(user, page, pageSize, marketName, search) {
-  console.log(page, pageSize, search, marketName);
   return axios({
     method: "GET",
     url: `${API_HOST}/api/All-Runners/${marketName}?page=${page}&pageSize=${pageSize}&search=${search}`,

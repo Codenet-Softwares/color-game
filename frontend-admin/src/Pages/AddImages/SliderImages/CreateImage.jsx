@@ -48,7 +48,6 @@ const CreateImage = () => {
         const response = await GameService.createSliderImage(auth.user, data);
       
         toast.success("Image uploaded successfully!");
-        console.log(response.data);
         setFile(null);
         setImagePreview(null);
       } catch (error) {
@@ -57,7 +56,6 @@ const CreateImage = () => {
         } else {
           toast.error("Failed to upload the image. Please try again."); 
         }
-        console.error(error);
       }finally {
         auth.hideLoader();
       }

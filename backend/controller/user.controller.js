@@ -4,7 +4,6 @@ import {
   apiResponsePagination,
   apiResponseSuccess,
 } from "../middleware/serverError.js";
-import moment from "moment";
 import { statusPanelCodes, string } from "../constructor/string.js";
 import userSchema from "../models/user.model.js";
 import { statusCode } from "../helper/statusCodes.js";
@@ -199,6 +198,8 @@ export const resetPassword = async (req, res) => {
       oldPassword,
       userData.password
     );
+
+
     if (!oldPasswordIsCorrect) {
       return res
         .status(statusCode.badRequest)
@@ -208,6 +209,25 @@ export const resetPassword = async (req, res) => {
             false,
             statusCode.badRequest,
             "Invalid old password"
+          )
+        );
+    }
+
+    const newPasswordIsCorrect = await bcrypt.compare(
+      password,
+      userData.password
+    );
+
+    if(newPasswordIsCorrect)
+    {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "New password can't be same to existing password!"
           )
         );
     }
@@ -521,7 +541,6 @@ export const getAllGameData = async (req, res) => {
     }]
    
     const combinedData = [...formattedGameData, ...foramtedData];
-   console.log("Testing........",combinedData)
     res
       .status(statusCode.success)
       .json(
@@ -533,7 +552,6 @@ export const getAllGameData = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log("error",error)
     if (error.response) {
       return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
     } else {
@@ -1301,9 +1319,6 @@ export const calculateProfitLoss = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const dataType = req.query.dataType;
-
-    console.log("Received dataType:", dataType);
-
     let startDate, endDate;
     if (dataType === "live") {
       const today = new Date();
@@ -1846,7 +1861,6 @@ export const userBetHistoryGames = async (req, res) => {
 
 export const accountStatement = async (req, res) => {
   try {
-    console.log("................................");
     const userName = req.user.userName;
     const { page = 1, pageSize = 10, startDate, endDate } = req.query;
     const dataType = req.query.dataType;
@@ -1860,12 +1874,10 @@ export const accountStatement = async (req, res) => {
       dataType,
     };
     const baseURL = process.env.WHITE_LABEL_URL;
-    console.log("baseURl...............", baseURL);
     const response = await axios.get(
       `${baseURL}/api/user-colorGame-account-statement/${userName}`,
       { params }
     );
-    console.log("response response", response);
     if (!response.data.success) {
       return res
         .status(statusCode.badRequest)

@@ -10,12 +10,8 @@ import { Op } from "sequelize";
 import Market from "../models/market.model.js";
 import Runner from "../models/runner.model.js";
 import rateSchema from "../models/rate.model.js";
-import announcementSchema from "../models/announcement.model.js";
 import BetHistory from "../models/betHistory.model.js";
-import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
-import { format } from 'date-fns';
-import moment from 'moment';
 import MarketDeleteApproval from "../models/marketApproval.model.js";
 import sequelize from "../db.js";
 
@@ -307,12 +303,6 @@ export const getAllMarkets = async (req, res) => {
       offset: (page - 1) * pageSize,
       limit: pageSize,
       order: [["createdAt", "DESC"]],
-      // include: [
-      //   {
-      //     model: Game,
-      //     attributes: ['gameId', 'gameName'],
-      //   },
-      // ],
     });
 
     const totalPages = Math.ceil(count / pageSize);
@@ -443,15 +433,6 @@ export const createRunner = async (req, res) => {
   try {
     const marketId = req.params.marketId;
     const { runners } = req.body;
-
-    // if (!Array.isArray(runners) || runners.length === 0) {
-    //   throw apiResponseErr(
-    //     null,
-    //     false,
-    //     statusCode.badRequest,
-    //     `Invalid runners data`
-    //   );
-    // }
 
     const market = await Market.findOne({
       where: {
@@ -910,7 +891,6 @@ export const deleteGame = async (req, res) => {
         )
       );
   } catch (error) {
-    console.log("error",error)
     res
       .status(statusCode.internalServerError)
       .send(

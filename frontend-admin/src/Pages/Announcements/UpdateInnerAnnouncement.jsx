@@ -16,7 +16,6 @@ const UpdateInnerAnnouncement = () => {
   const fetchAnnouncements = async () => {
     try {
       const response = await GameService.getInnerAnnouncement(auth.user);  
-      console.log("Fetch Inner Announcements API Response:", response.data);  
       setAnnouncements(response.data.data || []);  
     } catch (error) {
       toast.error("Failed to fetch inner announcements.");
