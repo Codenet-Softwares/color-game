@@ -42,8 +42,14 @@ const CreateMarket = ({ show, setShow, id }) => {
   };
 
   const adjustTime = (date) => {
-    return moment(date).add(5, "hours").add(30, "minutes").toISOString();
+    return moment(new Date(date))
+      .add(5, "hours")
+      .add(30, "minutes")
+      .seconds(0)  
+      .milliseconds(0) 
+      .toISOString(); 
   };
+
 
   const handleStartDatevalue = (e) => {
     SetStartDateValue(e);
