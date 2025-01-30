@@ -797,30 +797,6 @@ export const filterMarketData = async (req, res) => {
       ],
     });
 
-    const currentTime = getISTTime();
-
-    await Market.update(
-      { isActive: false },
-      {
-        where: {
-          [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } }, 
-            { endTime: { [Op.lt]: currentTime } }   
-          ]
-        },
-      }
-    );
-
-    await Market.update(
-      { isActive: true, hideMarketUser: false },
-      {
-        where: {
-          startTime: { [Op.lte]: currentTime },
-          endTime: { [Op.gte]: currentTime },
-        },
-      }
-    );
-
     const markets = await Market.findOne({
       where: { marketId },
     });
@@ -1065,21 +1041,21 @@ export const createBid = async (req, res) => {
     const currentTime = getISTTime();
 
     if (currentTime < market.startTime) {
-      throw apiResponseErr(null, false, statusCode.badRequest, "Market time has not started yet.");
+      throw apiResponseErr(null, false, statusCode.badRequest,  "Market has not opened yet.");
     }
 
     if (currentTime > market.endTime) {
-      throw apiResponseErr(null, false, statusCode.badRequest, "Market is suspended.");
+      throw apiResponseErr(null, false, statusCode.badRequest, "Market is closed.");
     }
 
-    if (!market.isActive) {
-      throw apiResponseErr(
-        null,
-        false,
-        statusCode.badRequest,
-        "Market is suspended. Bid cannot be placed."
-      );
-    }
+    // if (!market.isActive) {
+    //   throw apiResponseErr(
+    //     null,
+    //     false,
+    //     statusCode.badRequest,
+    //     "Market is suspended. Bid cannot be placed."
+    //   );
+    // }
 
     const runner = await Runner.findOne({ where: { marketId, runnerId } });
     if (!runner) {
