@@ -50,7 +50,6 @@ const LotteryNewPage = ({ drawId }) => {
   const [priceEach, setPriceEach] = useState("");
 
 
-  console.log("endTime", endTimeForShowCountdown)
 
   useEffect(() => {
     if (startTime) {

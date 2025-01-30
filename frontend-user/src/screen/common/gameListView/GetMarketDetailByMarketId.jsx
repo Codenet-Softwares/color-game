@@ -51,11 +51,6 @@ const GetMarketDetailByMarketId = () => {
   const [isSuspend, setIsSuspend] = useState();
   const marketIdFromUrl = useLocation().pathname.split("/")[4];
 
-  console.log(
-    "startTime",
-    new Date(moment("2025-01-30T15:55:13.000Z").local().toDate())
-  );
-
   useEffect(() => {
     if (user_marketWithRunnerData?.runners?.length) {
       for (let i = 0; i < user_marketWithRunnerData.runners.length; i++) {

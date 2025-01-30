@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 
 const CountdownTimer = ({ endDate, fontSize }) => {
-  console.log("endTime", endDate);
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(endDate));
 
   useEffect(() => {
