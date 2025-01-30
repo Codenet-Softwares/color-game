@@ -145,14 +145,14 @@ const DeleteBetHistory = () => {
             top: "50%",
             left: "20px",
             transform: "translateY(-50%)",
-            color: "#6c757d",
+            color: "#3E5879",
             fontSize: "18px",
           }}
         />
         <input
           type="text"
-          className="form-control"
-          placeholder="Search by market name..."
+          className="form-control fw-bold"
+          placeholder="Search By market Name..."
           value={marketHistory.search}
           onChange={(e) =>
             setMarketHistory((prev) => ({ ...prev, search: e.target.value }))
@@ -160,7 +160,7 @@ const DeleteBetHistory = () => {
           style={{
             paddingLeft: "40px",
             borderRadius: "30px",
-            border: "2px solid #6c757d",
+            border: "2px solid  #3E5879",
           }}
         />
         {marketHistory.search && (
@@ -171,7 +171,7 @@ const DeleteBetHistory = () => {
               top: "50%",
               right: "20px",
               transform: "translateY(-50%)",
-              color: "#6c757d",
+              color: " #3E5879",
               cursor: "pointer",
             }}
           />
@@ -228,7 +228,7 @@ const DeleteBetHistory = () => {
           ) : (
             <div className="accordion-item">
               <h2 className="accordion-header">
-                <button className="accordion-button" type="button" disabled>
+                <button className="accordion-button text-danger text-center fw-bold" type="button" disabled>
                   No deleted markets found.
                 </button>
               </h2>

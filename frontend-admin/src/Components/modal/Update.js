@@ -158,6 +158,7 @@ const Update = ({ show, setShow, data, Update }) => {
   };
 
   const handleSubmit = (e) => {
+    auth.showLoader()
     e.preventDefault();
     const updateKey = Update.toLowerCase();
     switch (updateKey) {
@@ -235,6 +236,8 @@ const Update = ({ show, setShow, data, Update }) => {
           })
           .catch((err) => {
             toast.error(customErrorHandler(err));
+          }).finally(() => {
+            auth.hideLoader();
           });
 
       default:

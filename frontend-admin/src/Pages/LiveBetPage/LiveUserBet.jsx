@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaSearch, FaTimes, FaTrashAlt, FaArrowLeft } from "react-icons/fa";
+import SingleCard from "../../Components/common/singleCard";
 import GameService from "../../Services/GameService";
 import { useAuth } from "../../Utils/Auth";
 import { toast } from "react-toastify";
@@ -145,7 +146,7 @@ const LiveUserBet = () => {
             className="mb-0 fw-bold text-uppercase"
             style={{ flexGrow: 1, textAlign: "center" }}
           >
-            Live Bets -  {marketName}
+            Live Bets For -  {marketName}
           </h3>
         </div>
 
@@ -159,14 +160,14 @@ const LiveUserBet = () => {
                   top: "50%",
                   left: "20px",
                   transform: "translateY(-50%)",
-                  color: "#6c757d",
+                  color: "#3E5879",
                   fontSize: "18px",
                 }}
               />
               <input
                 type="text"
-                className="form-control"
-                placeholder="Search by user or market name..."
+                className="form-control fw-bold"
+                placeholder="Search By User Or Market Name..."
                 value={userBets.search}
                 onChange={(e) =>
                   setUserBets((prev) => ({ ...prev, search: e.target.value }))
@@ -174,7 +175,7 @@ const LiveUserBet = () => {
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                 }}
               />
               {userBets.search && (
@@ -189,6 +190,10 @@ const LiveUserBet = () => {
               <select
                 className="form-select d-inline-block w-auto"
                 value={userBets.totalEntries}
+                style={{
+                  borderRadius: "50px",
+                  border: "2px solid #3E5879",
+                }}
                 onChange={(e) =>
                   setUserBets((prev) => ({
                     ...prev,
@@ -206,9 +211,15 @@ const LiveUserBet = () => {
           </div>
 
           {/* Table */}
-          <div className="table-responsive">
-            <table className="table table-striped table-hover text-center">
-              <thead>
+          <SingleCard
+            className=" mb-5 text-center"
+            style={{
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
+            }}
+          >
+          <div className="table-responsive" >
+            <table className="table table-striped table-hover text-center " style={{border:"2px solid #3E5879"}}>
+              <thead className="text-uppercase table-primary">
                 <tr>
                   <th>Serial Number</th>
                   <th>User Name</th>
@@ -256,12 +267,14 @@ const LiveUserBet = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7">No bets found for this market.</td>
+                    <td colSpan="7" className="text-danger text-center">No Bets Found For This Market.</td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
+          </SingleCard>
+
           {userBets.bets.length > 0 && (
             <Pagination
               currentPage={userBets.currentPage}

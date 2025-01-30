@@ -102,15 +102,15 @@ const [searchTerm, setSearchTerm] = useState("");
               />
               <input
                 type="text"
-                className="form-control"
-                placeholder="Search by game name or market name..."
+                className="form-control fw-bold"
+                placeholder="Search By Game Name Or Market Name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
 
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                 }}
               />
               {searchTerm && (
@@ -138,7 +138,7 @@ const [searchTerm, setSearchTerm] = useState("");
                 }
                 style={{
                   borderRadius: "50px",
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                 }}
               >
                 <option value={10}>10</option>
@@ -161,12 +161,12 @@ const [searchTerm, setSearchTerm] = useState("");
               <table
                 className="table table-striped table-hover rounded-table"
                 style={{
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                   borderRadius: "10px",
                 }}
               >
                 <thead
-                  className="table-primary"
+                  className="table-primary text-center text-uppercase"
                   style={{
                     position: "sticky",
                     top: 0,
@@ -174,10 +174,10 @@ const [searchTerm, setSearchTerm] = useState("");
                   }}
                 >
                   <tr>
-                    <th style={{ width: "25%" }}>Serial Number</th>
-                    <th style={{ width: "20%" }}>Game Name</th>
-                    <th style={{ width: "20%" }}>Market Name</th>
-                    <th style={{ width: "35%" }}></th>
+                    <th>Serial Number</th>
+                    <th>Game Name</th>
+                    <th>Market Name</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -289,8 +289,8 @@ const [searchTerm, setSearchTerm] = useState("");
                     </>
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center">
-                        No inactive games found.
+                      <td colSpan="4" className="text-center fw-bold text-danger">
+                        No Inactive Games Found.
                       </td>
                     </tr>
                   )}

@@ -114,14 +114,14 @@ const Inactive = () => {
               />
               <input
                 type="text"
-                className="form-control"
-                placeholder="Search by game name or market name..."
+                className="form-control fw-bold"
+                placeholder="Search By Game Name Or Market Name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                 }}
               />
               {searchTerm && (
@@ -147,7 +147,7 @@ const Inactive = () => {
                 onChange={(e) => setItemsPerPage(Number(e.target.value))}
                 style={{
                   borderRadius: "50px",
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                 }}
               >
                 <option value={10}>10</option>
@@ -170,12 +170,12 @@ const Inactive = () => {
               <table
                 className="table table-striped table-hover rounded-table text-center"
                 style={{
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                   borderRadius: "10px",
                 }}
               >
                 <thead
-                  className="table-primary"
+                  className="table-primary text-uppercase"
                   style={{
                     position: "sticky",
                     top: 0,
@@ -261,8 +261,8 @@ const Inactive = () => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center">
-                        No inactive games found.
+                      <td colSpan="4" className="text-center text-danger fw-bold">
+                        No Inactive Games Found.
                       </td>
                     </tr>
                   )}

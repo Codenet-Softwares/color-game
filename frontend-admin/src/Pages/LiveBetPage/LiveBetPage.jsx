@@ -86,7 +86,7 @@ const LiveBetPage = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center text-uppercase">Live Bet</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase">Live Bets</h3>
         </div>
         <div className="card-body"  style={{background:"#E1D1C7"}}>
           {/* Search and Entries Selection */}
@@ -98,21 +98,21 @@ const LiveBetPage = () => {
                   top: "50%",
                   left: "20px",
                   transform: "translateY(-50%)",
-                  color: "#6c757d",
+                  color: "#3E5879",
                   fontSize: "18px",
                 }}
               />
               <input
                 type="text"
-                className="form-control"
-                placeholder="Search by game name or market name..."
+                className="form-control fw-bold"
+                placeholder="Search By Game Name Or Market Name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
 
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                 }}
               />
               {searchTerm && (
@@ -137,7 +137,7 @@ const LiveBetPage = () => {
                 value={liveBets.totalEntries}
                 style={{
                   borderRadius: "50px",
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                 }}
                 onChange={(e) =>
                   setLiveBets((prev) => ({
@@ -166,12 +166,12 @@ const LiveBetPage = () => {
               <table
                 className="table table-striped table-hover rounded-table"
                 style={{
-                  border: "2px solid #6c757d",
+                  border: "2px solid #3E5879",
                   borderRadius: "10px",
                 }}
               >
                 <thead
-                  className="table-primary"
+                  className="table-primary text-uppercase"
                   style={{
                     position: "sticky",
                     top: 0,
@@ -196,7 +196,7 @@ const LiveBetPage = () => {
                             <td>{bet.marketName}</td>
                             <td>
                               <button
-                                className="btn btn-primary"
+                                className="btn btn-primary "
                                 onClick={() => handleNavigate(bet.marketId)}
                               >
                                 Live Game
@@ -207,8 +207,8 @@ const LiveBetPage = () => {
                       </>
                     ) : (
                       <tr>
-                        <td colSpan="4" className="text-center">
-                          No data found
+                        <td colSpan="4" className="text-center text-danger">
+                          No Data Found
                         </td>
                       </tr>
                     )}

@@ -80,7 +80,6 @@ const SliderImageDelete = () => {
       toast.error("Failed to update image status. Please try again.");
       console.error("API Error:", error);
     } finally {
-      // Hide the loader after the request is complete (success or error)
       auth.hideLoader();
     }
   };
@@ -105,8 +104,8 @@ const SliderImageDelete = () => {
             style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}
           >
             {sliderImages.data.length === 0 ? (
-              <div className="text-center" style={{ width: "100%" }}>
-                No images available.
+              <div className="text-center text-danger " style={{ width: "100%" }}>
+                No Images Available.
               </div>
             ) : (
               sliderImages.data.map((slider, index) => (
@@ -115,9 +114,8 @@ const SliderImageDelete = () => {
                   className="card"
                   style={{
                     width: "385px",
-                    border: "2px solid #6c757d",
+                    border: "2px solid #3E5879",
                     borderRadius: "10px",
-                    padding: "16px",
                     backgroundColor: "#f8f9fa",
                   }}
                 >
@@ -133,11 +131,23 @@ const SliderImageDelete = () => {
                       }}
                     />
                   </div>
-                  <div className="card-footer">
+                  <div className="card-body text-center">
                     <div
                       className="form-check form-switch d-flex justify-content-center align-items-center"
                       style={{ marginBottom: "16px" }}
                     >
+                       <p className="card-text">
+                        Status:{" "}
+                        <span
+                          style={{
+                            color: slider.isActive ? "green" : "red",
+                          }}
+                        >
+                          {slider.isActive ? "Active" : "Inactive"}
+                        </span>
+                      </p>
+                      <div className="d-flex justify-content-center my-3">
+                      <div className="form-check form-switch">
                       <input
                         className="form-check-input"
                         type="checkbox"
@@ -150,18 +160,20 @@ const SliderImageDelete = () => {
                           )
                         }
                       />
-                      <label className="form-check-label ms-2">
-                        {slider.isActive ? "Active" : "Inactive"}
-                      </label>
-                    </div>
-                    <div className="text-center">
+                       <label
+                            className="form-check-label"
+                            htmlFor={`flexSwitch-${slider.imageId}`}
+                          ></label>
+                      </div>
+                      </div>
+                    </div>                  
                       <button
-                        className="btn btn-danger"
+                        className="btn btn-danger "
                         onClick={() => handleDelete(slider.imageId)}
                       >
-                        <FaTrashAlt /> Delete
+                        <FaTrashAlt />
                       </button>
-                    </div>
+                
                   </div>
                 </div>
               ))

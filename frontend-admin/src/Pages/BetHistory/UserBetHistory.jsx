@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaSearch, FaArrowLeft, FaTrashAlt } from "react-icons/fa";
+import SingleCard from "../../Components/common/singleCard";
 import GameService from "../../Services/GameService";
 import { useAuth } from "../../Utils/Auth";
 import { toast } from "react-toastify";
@@ -138,7 +139,7 @@ const UserBetHistory = () => {
               className="mb-0 fw-bold text-uppercase"
               style={{ flexGrow: 1, textAlign: "center" }}
             >
-              Bet History - {marketName}
+              Bet History For - {marketName}
             </h3>
           </div>
 
@@ -152,20 +153,20 @@ const UserBetHistory = () => {
                     top: "50%",
                     left: "20px",
                     transform: "translateY(-50%)",
-                    color: "#6c757d",
+                    color: "#3E5879",
                     fontSize: "18px",
                   }}
                 />
                 <input
                   type="text"
-                  className="form-control"
-                  placeholder="Search by user or market name..."
+                  className="form-control fw-bold"
+                  placeholder="Search By User Or Market Name..."
                   value={searchTerm} // Bind to searchTerm
                   onChange={handleSearchChange}
                   style={{
                     paddingLeft: "40px",
                     borderRadius: "30px",
-                    border: "2px solid #6c757d",
+                    border: "2px solid #3E5879",
                   }}
                 />
               </div>
@@ -173,6 +174,10 @@ const UserBetHistory = () => {
                 <label className="me-2 fw-bold">Show</label>
                 <select
                   className="form-select d-inline-block w-auto"
+                  style={{
+                    borderRadius: "50px",
+                    border: "2px solid #3E5879",
+                  }}
                   value={betAfterWin.totalEntries}
                   onChange={handleEntriesChange}
                 >
@@ -186,9 +191,18 @@ const UserBetHistory = () => {
             </div>
 
             {/* Table */}
+            <SingleCard
+              className="mb-5 text-center"
+              style={{
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
+              }}
+            >
             <div className="table-responsive ">
-              <table className="table table-striped table-hover text-center">
-                <thead>
+              <table className="table table-striped table-hover text-center" style={{
+                  borderRadius: "50px",
+                  border: "2px solid #3E5879",
+                }}>
+                <thead className="table-primary text-uppercase">
                   <tr>
                     <th>Serial Number</th>
                     <th>User Name</th>
@@ -230,13 +244,13 @@ const UserBetHistory = () => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="6">No bets found for this market.</td>
+                      <td colSpan="6" className="text-danger text-center">No Bets Found For This Market.</td>
                     </tr>
                   )}
                 </tbody>
               </table>
             </div>
-
+            </SingleCard>
             {/* Pagination */}
             <Pagination
               currentPage={betAfterWin.currentPage}

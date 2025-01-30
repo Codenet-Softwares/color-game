@@ -70,7 +70,6 @@ const RunnerView = () => {
 
   const fetchDataPathName = () => {
     auth.showLoader();
-
     GameService.getToPathname("store", auth.user, runner)
       .then((response) => {
         setPathData(response.data.data);
@@ -167,6 +166,7 @@ const RunnerView = () => {
   };
 
   const handleAnnounceWin = (runnerId) => {
+    auth.showLoader()
     const data = {
       marketId: pathdata[1]?.id,
       runnerId: runnerId,
@@ -174,6 +174,7 @@ const RunnerView = () => {
     };
 
     AccountServices.announceWin(data, auth.user)
+    
       .then((res) => {
         toast.success(res.data.message);
         setIsWin(true);
@@ -181,6 +182,8 @@ const RunnerView = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
 
