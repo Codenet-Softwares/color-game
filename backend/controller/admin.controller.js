@@ -760,7 +760,36 @@ export const revokeWinningAnnouncement = async (req, res) => {
       { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true, clientMessage: false },
       { where: { runnerId }, transaction }
     );
+    const bets = await BetHistory.findAll({
+      where: { marketId },
+      transaction,
+    });
 
+    for (const bet of bets) {
+      await CurrentOrder.create(
+        {
+          userId: bet.userId,
+          gameId: bet.gameId,
+          gameName: bet.gameName,
+          marketId: bet.marketId,
+          marketName: bet.marketName,
+          runnerId: bet.runnerId,
+          runnerName: bet.runnerName,
+          rate: bet.rate,
+          value: bet.value,
+          type: bet.type,
+          date: bet.date,
+          bidAmount: bet.bidAmount,
+          isWin: bet.isWin,
+          profitLoss: bet.profitLoss,
+          exposure: bet.exposure,
+          userName: bet.userName,
+          betId: bet.betId,
+        },
+        { transaction }
+      );
+    }
+    await BetHistory.destroy({ where: { marketId } });
     await transaction.commit();
 
     return res

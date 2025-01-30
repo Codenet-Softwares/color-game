@@ -943,23 +943,23 @@ export const filterMarketData = async (req, res) => {
       }
 
       // Check if previous state should be shown
-      const previousState = await PreviousState.findOne({
-        where: { marketId, userId, isReverted: true },
-      });
+      // const previousState = await PreviousState.findOne({
+      //   where: { marketId, userId, isReverted: true },
+      // });
 
-      if (previousState) {
-        // Fetch previously stored balances from PreviousState
-        const previousBalances = JSON.parse(previousState.allRunnerBalances);
+    //   if (previousState) {
+    //     // Fetch previously stored balances from PreviousState
+    //     const previousBalances = JSON.parse(previousState.allRunnerBalances);
 
-        // Update the marketDataObj with previous balances
-        marketDataObj.runners.forEach((runner) => {
-          if (previousBalances[runner.runnerName.runnerId]) {
-            runner.runnerName.bal =
-              previousBalances[runner.runnerName.runnerId];
-          }
-        });
-      }
-    }
+    //     // Update the marketDataObj with previous balances
+    //     marketDataObj.runners.forEach((runner) => {
+    //       if (previousBalances[runner.runnerName.runnerId]) {
+    //         runner.runnerName.bal =
+    //           previousBalances[runner.runnerName.runnerId];
+    //       }
+    //     });
+    //   }
+     }
 
     return res
       .status(statusCode.success)
