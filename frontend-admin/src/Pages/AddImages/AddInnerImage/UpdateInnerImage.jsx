@@ -2,14 +2,12 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaTrashAlt } from "react-icons/fa";
-import GameService from "../../../Services/GameService"; // Update the path to your GameService
-import { useAuth } from "../../../Utils/Auth"; // Ensure this is correct
+import GameService from "../../../Services/GameService"; 
+import { useAuth } from "../../../Utils/Auth";
 
 const UpdateInnerImage = () => {
   const auth = useAuth();
   const [innerImages, setInnerImages] = useState([]);
-
-  // Fetch images on component mount
   useEffect(() => {
     auth.showLoader();
     fetchInnerImages();
@@ -22,12 +20,10 @@ const UpdateInnerImage = () => {
       toast.error("Failed to fetch inner images.");
     }
     finally {
-      // Hide the loader after the request is complete (success or error)
       auth.hideLoader();
     }
   };
   
-
   const handleDelete = async (imageId) => {
     auth.showLoader();
     try {
@@ -45,7 +41,6 @@ const UpdateInnerImage = () => {
     auth.showLoader();
 
     const newStatus = !currentStatus;
-
     try {
       const response = await GameService.InnerActiveInactiveGameImage(
         auth.user,
@@ -70,7 +65,6 @@ const UpdateInnerImage = () => {
     } catch (error) {
       toast.error("Failed to update image status. Please try again.");
     } finally {
-      // Hide the loader after the request is complete (success or error)
       auth.hideLoader();
     }
   };
@@ -89,7 +83,7 @@ const UpdateInnerImage = () => {
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
           {innerImages.length === 0 ? (
-            <div className="text-center">No images available.</div>
+            <div className="text-center text-danger fw-bold">No Images Available.</div>
           ) : (
             <div className="row">
               {innerImages.map((image, index) => (

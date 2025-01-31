@@ -136,7 +136,7 @@ const DeleteBetHistory = () => {
     <div>
     <div className="container mt-5" style={{width:"94%"}}>
       <div className=" text1 rounded" style={{background:"#3E5879"}}>
-        <h2 className="text-uppercase fw-bold text-center text-white p-2 ">Deleted Bets</h2>
+        <h2 className="text-uppercase fw-bold text-center text-white p-2">Deleted Bets</h2>
       </div>
       <div className="col-md-6 position-relative">
         <FaSearch
@@ -228,8 +228,8 @@ const DeleteBetHistory = () => {
           ) : (
             <div className="accordion-item">
               <h2 className="accordion-header">
-                <button className="accordion-button text-danger text-center fw-bold" type="button" disabled>
-                  No deleted markets found.
+                <button className="accordion-button text-danger fw-bold" type="button" disabled>
+                  No Deleted Markets Found.
                 </button>
               </h2>
             </div>

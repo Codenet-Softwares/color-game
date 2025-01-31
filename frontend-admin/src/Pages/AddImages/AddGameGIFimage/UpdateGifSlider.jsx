@@ -9,34 +9,30 @@ const UpdateGifSlider = () => {
   const auth = useAuth();
   const [gifImages, setGifImages] = useState([]);
 
-  // Fetch GIF slider images on component mount
   useEffect(() => {
     auth.showLoader();
     fetchGifImages();
   }, []);
 
-  // Function to fetch GIF slider images
   const fetchGifImages = async () => {
     try {
       const response = await GameService.getGifSlider(auth.user);
-      setGifImages(response.data.data || []); // Ensure proper data mapping
+      setGifImages(response.data.data || []);
     } catch (error) {
       toast.error("Failed to fetch GIF slider images.");
     }
     finally {
-      // Hide the loader after the request is complete (success or error)
       auth.hideLoader();
     }
   };
 
-  // Function to delete a GIF image
   const handleDelete = async (imageId) => {
     auth.showLoader();
     try {
       const response = await GameService.deleteCreateGif(auth.user, imageId);
       if (response.status === 200) {
         toast.success("GIF deleted successfully!");
-        fetchGifImages(); // Refresh the list after deletion
+        fetchGifImages(); 
       } else {
         toast.error("Failed to delete the GIF. Please try again.");
       }
@@ -50,7 +46,6 @@ const UpdateGifSlider = () => {
   const handleToggleActiveStatus = async (imageId, currentStatus) => {
     auth.showLoader();
     const newStatus = !currentStatus;
-  
     try {
       const response = await GameService.activeInactiveGameGif(auth.user, imageId, newStatus);
   
@@ -87,7 +82,7 @@ const UpdateGifSlider = () => {
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
           {gifImages.length === 0 ? (
-            <div className="text-center">No GIF images available.</div>
+            <div className="text-center text-danger fw-bold">No GIF Images Available.</div>
           ) : (
             <div className="row">
               {gifImages.map((gif, index) => (

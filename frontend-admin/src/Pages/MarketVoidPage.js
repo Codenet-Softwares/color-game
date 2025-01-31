@@ -155,6 +155,7 @@ const [searchTerm, setSearchTerm] = useState("");
             className=" mb-5 "
             style={{
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
+              
             }}
           >
             <div className="table-responsive">
@@ -163,10 +164,11 @@ const [searchTerm, setSearchTerm] = useState("");
                 style={{
                   border: "2px solid #3E5879",
                   borderRadius: "10px",
+                 
                 }}
               >
                 <thead
-                  className="table-primary text-center text-uppercase"
+                  className="table-primary text-uppercase"
                   style={{
                     position: "sticky",
                     top: 0,
@@ -174,9 +176,9 @@ const [searchTerm, setSearchTerm] = useState("");
                   }}
                 >
                   <tr>
-                    <th>Serial Number</th>
-                    <th>Game Name</th>
-                    <th>Market Name</th>
+                    <th style={{ width: "23%" }}>Serial Number</th>
+                    <th style={{ width: "23%" }}>Game Name</th>
+                    <th style={{ width: "23%" }}>Market Name</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -185,15 +187,17 @@ const [searchTerm, setSearchTerm] = useState("");
                     <>
                       {voidGame.gamelist.map((data, index) => (
                         <tr key={index}>
-                          <td colSpan="4">
+                          <td colSpan="4" style={{ background:"#E1D1C7"}}>
                             <div
-                              className="accordion"
+                              className="accordion p-2"
                               id={`accordionExample-${index}`}
+                             
                             >
-                              <div className="accordion-item">
+                              <div className="accordion-item ">
                                 <h2
                                   className="accordion-header"
                                   id={`flush-headingOne-${index}`}
+                                  
                                 >
                                   <button
                                     className="accordion-button collapsed"
@@ -209,16 +213,16 @@ const [searchTerm, setSearchTerm] = useState("");
                                       padding: "0.75rem 1.25rem",
                                     }}
                                   >
-                                    <span style={{ width: "25%" }}>
+                                    <span style={{ width: "50%" }}>
                                       {index + 1}
                                     </span>
-                                    <span style={{ width: "25%" }}>
+                                    <span style={{ width: "50%" }}>
                                       {data.gameName}
                                     </span>
-                                    <span style={{ width: "25%" }}>
+                                    <span style={{ width: "50%" }}>
                                       {data.marketName}
                                     </span>
-                                    <span style={{ width: "25%" }}>
+                                    <span style={{ width: "50%" }}>
                                       {data.action}
                                     </span>
                                   </button>
@@ -235,12 +239,12 @@ const [searchTerm, setSearchTerm] = useState("");
                                       <table
                                         className="table table-striped table-hover rounded-table"
                                         style={{
-                                          border: "2px solid #6c757d",
+                                          border: "2px solid #3E5879",
                                           borderRadius: "10px",
                                         }}
                                       >
                                         <thead
-                                          className="table-primary"
+                                          className="table-primary text-uppercase "
                                           style={{
                                             position: "sticky",
                                             top: 0,
@@ -260,8 +264,8 @@ const [searchTerm, setSearchTerm] = useState("");
                                                 <React.Fragment key={index}>
                                                   <tr>
                                                     <td>{data.runnerName}</td>
-                                                    <td>{data.back}</td>
-                                                    <td>{data.lay}</td>
+                                                    <td className="text-success fw-bold">{data.back}</td>
+                                                    <td className="text-danger fw-bold">{data.lay}</td>
                                                   </tr>
                                                 </React.Fragment>
                                               );
@@ -270,7 +274,7 @@ const [searchTerm, setSearchTerm] = useState("");
                                             <tr>
                                               <td
                                                 colSpan="4"
-                                                className="text-center"
+                                                className="text-center text-danger fw-bold"
                                               >
                                                 No inactive games found.
                                               </td>
@@ -290,7 +294,7 @@ const [searchTerm, setSearchTerm] = useState("");
                   ) : (
                     <tr>
                       <td colSpan="4" className="text-center fw-bold text-danger">
-                        No Inactive Games Found.
+                       Void Games Not Available.
                       </td>
                     </tr>
                   )}

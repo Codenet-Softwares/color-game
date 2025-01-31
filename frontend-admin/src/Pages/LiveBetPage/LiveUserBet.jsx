@@ -218,7 +218,7 @@ const LiveUserBet = () => {
             }}
           >
           <div className="table-responsive" >
-            <table className="table table-striped table-hover text-center " style={{border:"2px solid #3E5879"}}>
+            <table className="table table-striped table-hover text-center" style={{border:"2px solid #3E5879"}}>
               <thead className="text-uppercase table-primary">
                 <tr>
                   <th>Serial Number</th>

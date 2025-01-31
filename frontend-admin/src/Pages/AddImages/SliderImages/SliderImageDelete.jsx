@@ -104,7 +104,7 @@ const SliderImageDelete = () => {
             style={{ display: "flex", flexWrap: "wrap", gap: "16px" }}
           >
             {sliderImages.data.length === 0 ? (
-              <div className="text-center text-danger " style={{ width: "100%" }}>
+              <div className="text-center text-danger fw-bold" style={{ width: "100%" }}>
                 No Images Available.
               </div>
             ) : (
@@ -132,49 +132,34 @@ const SliderImageDelete = () => {
                     />
                   </div>
                   <div className="card-body text-center">
-                    <div
-                      className="form-check form-switch d-flex justify-content-center align-items-center"
-                      style={{ marginBottom: "16px" }}
-                    >
-                       <p className="card-text">
-                        Status:{" "}
-                        <span
-                          style={{
-                            color: slider.isActive ? "green" : "red",
-                          }}
-                        >
-                          {slider.isActive ? "Active" : "Inactive"}
-                        </span>
-                      </p>
-                      <div className="d-flex justify-content-center my-3">
+                    {/* Status Text */}
+                    <p className="card-text mb-2">
+                      Status:{" "}
+                      <span style={{ color: slider.isActive ? "green" : "red" }}>
+                        {slider.isActive ? "Active" : "Inactive"}
+                      </span>
+                    </p>
+
+                    {/* Toggle Switch Below Status */}
+                    <div className="d-flex justify-content-center mb-3">
                       <div className="form-check form-switch">
-                      <input
-                        className="form-check-input"
-                        type="checkbox"
-                        id={`flexSwitch-${slider.imageId}`}
-                        checked={slider.isActive}
-                        onChange={() =>
-                          handleToggleActiveStatus(
-                            slider.imageId,
-                            slider.isActive
-                          )
-                        }
-                      />
-                       <label
-                            className="form-check-label"
-                            htmlFor={`flexSwitch-${slider.imageId}`}
-                          ></label>
+                        <input
+                          className="form-check-input"
+                          type="checkbox"
+                          id={`flexSwitch-${slider.imageId}`}
+                          checked={slider.isActive}
+                          onChange={() => handleToggleActiveStatus(slider.imageId, slider.isActive)}
+                        />
+                        <label className="form-check-label" htmlFor={`flexSwitch-${slider.imageId}`}></label>
                       </div>
-                      </div>
-                    </div>                  
-                      <button
-                        className="btn btn-danger "
-                        onClick={() => handleDelete(slider.imageId)}
-                      >
-                        <FaTrashAlt />
-                      </button>
-                
+                    </div>
+
+                    {/* Delete Button */}
+                    <button className="btn btn-danger" onClick={() => handleDelete(slider.imageId)}>
+                      <FaTrashAlt />
+                    </button>
                   </div>
+
                 </div>
               ))
             )}

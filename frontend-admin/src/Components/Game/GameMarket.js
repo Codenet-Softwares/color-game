@@ -391,7 +391,7 @@ const GameMarket = ({ marketId }) => {
                           <div className="card border-0">
                             <div className="card-body">
                               <div className="card_head d-flex justify-content-center align-items-center ">
-                                <h2 className="f_s_16 f_w_500 mb-0">
+                                <h2 className="f_s_16 f_w_500 mb-0 fw-bold text-danger">
                                   No Game Available
                                 </h2>
                               </div>

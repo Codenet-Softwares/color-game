@@ -207,7 +207,7 @@ const LiveBetPage = () => {
                       </>
                     ) : (
                       <tr>
-                        <td colSpan="4" className="text-center text-danger">
+                        <td colSpan="4" className="text-center text-danger fw-bold">
                           No Data Found
                         </td>
                       </tr>

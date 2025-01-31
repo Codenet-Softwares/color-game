@@ -244,7 +244,7 @@ const UserBetHistory = () => {
                     })
                   ) : (
                     <tr>
-                      <td colSpan="6" className="text-danger text-center">No Bets Found For This Market.</td>
+                      <td colSpan="6" className="text-danger text-center fw-bold">No Bets Found For This Market.</td>
                     </tr>
                   )}
                 </tbody>

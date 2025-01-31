@@ -187,8 +187,8 @@ const GetwholeMarket = () => {
                         gameWithMarketData.markets.length > 0 && (
                           <div className="row px-0 m-0 text-center">
                             <span className="col-6 text-dark text-decoration-none text-nowrap fw-bold h6"></span>
-                            <div className="col-3 rounded fw-bold">1</div>
-                            <div className="col-3 rounded fw-bold">2</div>
+                            <div className="col-3 rounded fw-bold">BACK</div>
+                            <div className="col-3 rounded fw-bold">LAY</div>
                           </div>
                         )}
                       {gameWithMarketData &&

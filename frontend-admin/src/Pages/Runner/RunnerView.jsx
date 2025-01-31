@@ -336,7 +336,7 @@ const RunnerView = () => {
                           ) : (
                             <>
                               <a
-                                className="dropdown-item"
+                                className="dropdown-item fw-bold"
                                 href="#"
                                 onClick={() => {
                                   handleShowUpdateModal(runner, "rate");
@@ -346,7 +346,7 @@ const RunnerView = () => {
                                 Rate for {runner.runnerName}
                               </a>
                               <a
-                                className="dropdown-item"
+                                className="dropdown-item fw-bold"
                                 href="#"
                                 onClick={() => {
                                   handleViewRateModal(
@@ -362,7 +362,7 @@ const RunnerView = () => {
                           ))}
 
                         <a
-                          className="dropdown-item"
+                          className="dropdown-item fw-bold"
                           href="#"
                           onClick={() => {
                             handleShowUpdateModal(runners[index], "runner");
@@ -375,7 +375,7 @@ const RunnerView = () => {
                         {runner.isBidding && (
                           <a
                             // key={runner.runnerId}
-                            className="dropdown-item"
+                            className="dropdown-item fw-bold"
                             href="#"
                             onClick={() => handleAnnounceWin(runner.runnerId)}
                           >
@@ -387,7 +387,7 @@ const RunnerView = () => {
 
                         <a
                           key={runner.runnerId}
-                          className="dropdown-item"
+                          className="dropdown-item fw-bold"
                           href="#"
                           onClick={() => handleDelete(runner.runnerId)}
                         >
@@ -403,7 +403,7 @@ const RunnerView = () => {
             ))
           ) : (
             <div className="col">
-              <p className="text-muted">No runners found.</p>
+              <h4 className="text-danger fw-bold text-center">No Runners Found.</h4>
             </div>
           )}
         </div>
