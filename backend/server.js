@@ -190,8 +190,6 @@ sequelize
           }
         });
 
-        console.log("winRunner",winRunner)
-
         const updateMarket = [];
 
         // Update active markets

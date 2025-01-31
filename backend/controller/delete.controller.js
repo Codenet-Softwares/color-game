@@ -9,8 +9,6 @@ import { Op, Sequelize } from 'sequelize';
 import Market from "../models/market.model.js";
 import Runner from "../models/runner.model.js";
 
-
-
 export const deleteLiveBetMarkets = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
@@ -124,9 +122,16 @@ export const deleteLiveBetMarkets = async (req, res) => {
           return current.bal < max.bal ? current : max;
         }, { bal: 0 });
 
+        let marketExposure = user.marketListExposure || [];
 
-        const updatedExposure = { [marketId]: Math.abs(maxNegativeRunnerBalance.bal) };
-        user.marketListExposure = [updatedExposure];
+        let exposureMap = marketExposure.reduce((acc, obj) => {
+          return { ...acc, ...obj };
+        }, {});
+        
+        exposureMap[marketId] = Math.abs(maxNegativeRunnerBalance.bal);
+        
+        user.marketListExposure = Object.keys(exposureMap).map(key => ({ [key]: exposureMap[key] }));
+        
       });
 
 
