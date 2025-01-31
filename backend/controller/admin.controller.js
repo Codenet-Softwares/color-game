@@ -356,13 +356,11 @@ export const storePreviousState = async (
   gameId,
   runnerBalanceValue
 ) => {
-  // Fetch all runner balances for the given market and user
   const allRunnerBalances = await MarketBalance.findAll({
     where: { marketId, userId: user.userId },
-    attributes: ['runnerId', 'bal']
+    attributes: ["runnerId", "bal"],
   });
 
-  // Convert the runner balances to an object
   const allRunnerBalancesObj = {};
   allRunnerBalances.forEach((item) => {
     allRunnerBalancesObj[item.runnerId] = Number(item.bal);
@@ -379,8 +377,15 @@ export const storePreviousState = async (
     isReverted: false,
   };
 
-  // Save the previous state
-  await PreviousState.create(previousState);
+  const existingRecord = await PreviousState.findOne({
+    where: { userId: user.userId, marketId: marketId },
+  });
+
+  if (existingRecord) {
+    await existingRecord.update(previousState);
+  } else {
+    await PreviousState.create(previousState);
+  }
 };
 
 export const afterWining = async (req, res) => {
@@ -419,201 +424,99 @@ export const afterWining = async (req, res) => {
     }
     await market.save();
 
-    // Fetch users and previous state data
     const users = await MarketBalance.findAll({ where: { marketId } });
-    const previousStateUsers = await PreviousState.findAll({ where: { marketId } });
 
-    let message = "";
+    for (const user of users) {
+      try {
+        const runnerBalance = await MarketBalance.findOne({
+          where: { marketId, runnerId, userId: user.userId },
+        });
 
-    if (market.isRevoke) {
-      for (const user of previousStateUsers) {
-        try {
-          let allRunnerBalances = JSON.parse(user.allRunnerBalances);
-
-          const runnerBalance = allRunnerBalances[runnerId];
-
-          if (runnerBalance) {
-            const userDetails = await userSchema.findOne({
-              where: { userId: user.userId },
-            });
-
-            if (userDetails) {
-              await storePreviousState(
-                userDetails,
-                marketId,
-                runnerId,
-                gameId,
-                Number(runnerBalance)
-              );
-
-              const marketExposureEntry = userDetails.marketListExposure.find(
-                (item) => Object.keys(item)[0] === marketId
-              );
-
-              if (marketExposureEntry) {
-                const marketExposureValue = Number(marketExposureEntry[marketId]);
-                const runnerBalanceValue = Number(runnerBalance);
-
-                if (isWin) {
-                  await WinningAmount.create({
-                    userId: userDetails.userId,
-                    userName: userDetails.userName,
-                    amount: runnerBalanceValue,
-                    type: "win",
-                    marketId: marketId,
-                    runnerId: runnerId,
-                  })
-                } else {
-                  await WinningAmount.create({
-                    userId: userDetails.userId,
-                    userName: userDetails.userName,
-                    amount: Math.abs(marketExposureValue),
-                    type: "loss",
-                    marketId: marketId,
-                    runnerId: runnerId,
-                  })
-
-                }
-
-                await ProfitLoss.create({
-                  userId: user.userId,
-                  userName: userDetails.userName,
-                  gameId,
-                  marketId,
-                  runnerId,
-                  date: new Date(),
-                  profitLoss: runnerBalanceValue,
-                });
-
-                userDetails.marketListExposure =
-                  userDetails.marketListExposure.filter(
-                    (item) => Object.keys(item)[0] !== marketId
-                  );
-
-                await userSchema.update(
-                  { marketListExposure: userDetails.marketListExposure },
-                  { where: { userId: user.userId } }
-                );
-
-                await userDetails.save();
-
-                const marketExposure = userDetails.marketListExposure;
-
-                let totalExposure = 0;
-                marketExposure.forEach(market => {
-                  const exposure = Object.values(market)[0];
-                  totalExposure += exposure;
-                });           
-
-                await MarketBalance.destroy({
-                  where: { marketId, runnerId, userId: user.userId },
-                });
-              } else {
-                console.error(`Market exposure not found for marketId ${marketId}`);
-              }
-            } else {
-              console.error(`User details not found for userId ${user.userId}`);
-            }
-          } else {
-            console.error(`Runner balance not found for marketId ${marketId} and runnerId ${runnerId}`);
-          }
-        } catch (error) {
-          console.error("Error processing user:", error);
-        }
-      }
-    } else {
-      for (const user of users) {
-        try {
-          const runnerBalance = await MarketBalance.findOne({
-            where: { marketId, runnerId, userId: user.userId },
+        if (runnerBalance) {
+          const userDetails = await userSchema.findOne({
+            where: { userId: user.userId },
           });
 
-          if (runnerBalance) {
-            const userDetails = await userSchema.findOne({
-              where: { userId: user.userId },
-            });
+          if (userDetails) {
+            await storePreviousState(
+              userDetails,
+              marketId,
+              runnerId,
+              gameId,
+              Number(runnerBalance.bal)
+            );
 
-            if (userDetails) {
-              await storePreviousState(
-                userDetails,
+            const marketExposureEntry = userDetails.marketListExposure.find(
+              (item) => Object.keys(item)[0] === marketId
+            );
+            if (marketExposureEntry) {
+              const marketExposureValue = Number(marketExposureEntry[marketId]);
+              const runnerBalanceValue = Number(runnerBalance.bal);
+
+              if (isWin) {
+                await WinningAmount.create({
+                  userId: userDetails.userId,
+                  userName: userDetails.userName,
+                  amount: runnerBalanceValue,
+                  type: "win",
+                  marketId: marketId,
+                  runnerId: runnerId,
+                })
+
+              } else {
+                await WinningAmount.create({
+                  userId: userDetails.userId,
+                  userName: userDetails.userName,
+                  amount: Math.abs(marketExposureValue),
+                  type: "loss",
+                  marketId: marketId,
+                  runnerId: runnerId,
+                })
+              }
+
+              await ProfitLoss.create({
+                userId: user.userId,
+                userName: userDetails.userName,
+                gameId,
                 marketId,
                 runnerId,
-                gameId,
-                Number(runnerBalance.bal)
-              );
+                date: new Date(),
+                profitLoss: runnerBalanceValue,
+              });
 
-              const marketExposureEntry = userDetails.marketListExposure.find(
-                (item) => Object.keys(item)[0] === marketId
-              );
-              if (marketExposureEntry) {
-                const marketExposureValue = Number(marketExposureEntry[marketId]);
-                const runnerBalanceValue = Number(runnerBalance.bal);
-
-                if (isWin) {
-                  await WinningAmount.create({
-                    userId: userDetails.userId,
-                    userName: userDetails.userName,
-                    amount: runnerBalanceValue,
-                    type: "win",
-                    marketId: marketId,
-                    runnerId: runnerId,
-                  })
-
-                } else {
-                  await WinningAmount.create({
-                    userId: userDetails.userId,
-                    userName: userDetails.userName,
-                    amount: Math.abs(marketExposureValue),
-                    type: "loss",
-                    marketId: marketId,
-                    runnerId: runnerId,
-                  })
-                }
-
-                await ProfitLoss.create({
-                  userId: user.userId,
-                  userName: userDetails.userName,
-                  gameId,
-                  marketId,
-                  runnerId,
-                  date: new Date(),
-                  profitLoss: runnerBalanceValue,
-                });
-
-                userDetails.marketListExposure =
-                  userDetails.marketListExposure.filter(
-                    (item) => Object.keys(item)[0] !== marketId
-                  );
-
-                await userSchema.update(
-                  { marketListExposure: userDetails.marketListExposure },
-                  { where: { userId: user.userId } }
+              userDetails.marketListExposure =
+                userDetails.marketListExposure.filter(
+                  (item) => Object.keys(item)[0] !== marketId
                 );
 
-                await userDetails.save();
+              await userSchema.update(
+                { marketListExposure: userDetails.marketListExposure },
+                { where: { userId: user.userId } }
+              );
 
-                const marketExposure = userDetails.marketListExposure;
-                let totalExposure = 0;
-                marketExposure.forEach(market => {
-                  const exposure = Object.values(market)[0];
-                  totalExposure += exposure;
-                });
+              await userDetails.save();
 
-                await MarketBalance.destroy({
-                  where: { marketId, runnerId, userId: user.userId },
-                });
-              } else {
-                console.error(`Market exposure not found for marketId ${marketId}`);
-              }
+              const marketExposure = userDetails.marketListExposure;
+              let totalExposure = 0;
+              marketExposure.forEach(market => {
+                const exposure = Object.values(market)[0];
+                totalExposure += exposure;
+              });
+
+              await MarketBalance.destroy({
+                where: { marketId, runnerId, userId: user.userId },
+              });
             } else {
-              console.error(`User details not found for userId ${user.userId}`);
+              console.error(`Market exposure not found for marketId ${marketId}`);
             }
           } else {
-            console.error(`Runner balance not found for marketId ${marketId} and runnerId ${runnerId}`);
+            console.error(`User details not found for userId ${user.userId}`);
           }
-        } catch (error) {
-          console.error("Error processing user:", error);
+        } else {
+          console.error(`Runner balance not found for marketId ${marketId} and runnerId ${runnerId}`);
         }
+      } catch (error) {
+        console.error("Error processing user:", error);
       }
     }
 
@@ -664,7 +567,7 @@ export const afterWining = async (req, res) => {
           null,
           true,
           statusCode.success,
-          "Success" 
+          "Result declaration successfully"
         )
       );
   } catch (error) {
@@ -701,11 +604,8 @@ export const revokeWinningAnnouncement = async (req, res) => {
       if (user) {
         user.marketListExposure = JSON.parse(prevState.marketListExposure);
         const allRunnerBalances = JSON.parse(prevState.allRunnerBalances);
-        const runnerBalance = allRunnerBalances[runnerId];
-   
-        if (runnerBalance > 0) {
-          await WinningAmount.destroy({ where: { marketId } }, transaction)
-        }
+
+        await WinningAmount.destroy({ where: { marketId } }, transaction)
 
         for (const [runnerId, balance] of Object.entries(allRunnerBalances)) {
           try {
