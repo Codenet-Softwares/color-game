@@ -1,6 +1,5 @@
 import { user_Balance } from "../controller/admin.controller.js";
 import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte, getAllLotteryMarket, getExposure } from "../controller/externalApis.controller.js";
-import { currentOrderHistory } from "../controller/user.controller.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
 import { authenticateAdmin } from "../middleware/lottery.auth.js";
 import { authenticateSuperAdmin } from "../middleware/whiteLabelAuth.js";
