@@ -49,7 +49,7 @@ const LotteryNewPage = ({ drawId }) => {
   const [isSuspend, setIsSuspend] = useState();
   const [priceEach, setPriceEach] = useState("");
 
-
+  const { id } = useParams();
 
   useEffect(() => {
     if (startTime) {
@@ -154,8 +154,10 @@ const LotteryNewPage = ({ drawId }) => {
         if (updates?.length) {
           updates.forEach((market) => {
             if (market.isActive) {
-              setIsSuspend(true);
-              toast.success(`${market.marketName} is now Active`);
+              if (market.marketId === id) {
+                setIsSuspend(true);
+                toast.success(`${market.marketName} is now Active`);
+              }
             } else {
               setIsSuspend(false);
               toast.info(`${market.marketName} has been Suspended`);

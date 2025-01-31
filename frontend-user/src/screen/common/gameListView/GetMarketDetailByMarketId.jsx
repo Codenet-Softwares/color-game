@@ -20,6 +20,8 @@ import ShimmerEffect from "../../../globlaCommon/ShimmerEffect";
 
 const GetMarketDetailByMarketId = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+
   const [user_marketWithRunnerData, setUser_marketWithRunnerData] = useState(
     getMarketWithRunnerDataInitialState()
   );
@@ -108,9 +110,11 @@ const GetMarketDetailByMarketId = () => {
             handleNaviagteHome();
           }
           if (market.isActive) {
-            setIsActive(true);
-            setIsSuspend(true);
-            toast.success(`${market.marketName} is now Active`);
+            if (market.marketId === id) {
+              setIsActive(true);
+              setIsSuspend(true);
+              toast.success(`${market.marketName} is now Active`);
+            }
           } else {
             setIsActive(false);
             toast.info(`${market.marketName} has been Suspended`);
