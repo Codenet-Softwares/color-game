@@ -48,6 +48,7 @@ const GetMarketDetailByMarketId = () => {
   const arr = [];
   const arr1 = [];
   const [isActive, setIsActive] = useState(true);
+  const [isSuspend, setIsSuspend] = useState();
   const marketIdFromUrl = useLocation().pathname.split("/")[4];
 
   useEffect(() => {
@@ -96,7 +97,6 @@ const GetMarketDetailByMarketId = () => {
 
   // color game cron ......
   useEffect(() => {
-
     const eventSource = updateMarketEventEmitter();
 
     eventSource.onmessage = function (event) {
@@ -109,6 +109,7 @@ const GetMarketDetailByMarketId = () => {
           }
           if (market.isActive) {
             setIsActive(true);
+            setIsSuspend(true);
             toast.success(`${market.marketName} is now Active`);
           } else {
             setIsActive(false);
@@ -469,8 +470,7 @@ const GetMarketDetailByMarketId = () => {
                 {/* Left side: Market Name and Countdown Timer */}
                 <div>
                   {user_marketWithRunnerData.marketName}{" "}
-                  
-                  {new Date(
+                  {/* {new Date(
                     moment(user_marketWithRunnerData.startTime)
                       .local()
                       .subtract(5, "hours")
@@ -480,6 +480,13 @@ const GetMarketDetailByMarketId = () => {
                   ) < new Date() && (
                     <CountdownTimer
                       endDate={user_marketWithRunnerData.endTime}
+                      fontSize={"12px"}
+                    />
+                  )} */}
+                  {isSuspend && (
+                    <CountdownTimer
+                      endDate={user_marketWithRunnerData.endTime}
+                      fontSize={"12px"}
                     />
                   )}
                 </div>

@@ -15,6 +15,7 @@ import { useParams } from "react-router-dom";
 import { FixedSizeGrid as Grid } from "react-window";
 import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
 import { toast } from "react-toastify";
+import CountdownTimer from "../../globlaCommon/CountdownTimer";
 
 const LotteryNewPage = ({ drawId }) => {
   const { marketId } = useParams();
@@ -37,6 +38,7 @@ const LotteryNewPage = ({ drawId }) => {
   const [seriesList, setSeriesList] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [startTimeForShowCountdown, setStartTimeForShowCountdown] = useState(null);
+  const [endTimeForShowCountdown, setEndTimeForShowCountdown] = useState(null);
   const [start, setStart] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [endTimeForTimer, setEndTimeForTimer] = useState(null);
@@ -46,6 +48,8 @@ const LotteryNewPage = ({ drawId }) => {
   const [setIsTimeUp, setSetIsTimeUp] = useState(false);
   const [isSuspend, setIsSuspend] = useState();
   const [priceEach, setPriceEach] = useState("");
+
+
 
   useEffect(() => {
     if (startTime) {
@@ -111,13 +115,14 @@ const LotteryNewPage = ({ drawId }) => {
             setEndTime(
               moment.utc(currentMarket.end_time).format("YYYY-MM-DD HH:mm")
             );
+            setEndTimeForShowCountdown(currentMarket.end_time)
 
             setEndTimeForTimer(
               moment.utc(currentMarket.end_time).format("YYYY-MM-DDTHH:mm:ss")
             );
 
             // const currentTime = moment();
-          
+
 
             // if (currentTime.isSameOrAfter(start)) {
             //   setShowCountdown(true);
@@ -529,15 +534,23 @@ const LotteryNewPage = ({ drawId }) => {
               <p style={{ color: "#6c757d" }}>
                 Search by Sem, Group, Series, or Number
               </p>
-              {new Date(
-                moment(startTimeForShowCountdown)
-                  .local()
-                  .subtract(5, "hours")
-                  .subtract(30, "minutes").subtract(45, "seconds")
-                  .toDate()
-              ) < new Date() && (
-                  <CountDownTimerLottery endDateTime={endTimeForTimer} />
+              <div className="d-flex justify-content-center">
+                {/* {new Date(
+                  moment(startTimeForShowCountdown)
+                    .local()
+                    .subtract(5, "hours")
+                    .subtract(30, "minutes").subtract(45, "seconds")
+                    .toDate()
+                ) < new Date() && (
+                    // <CountDownTimerLottery endDateTime={endTimeForTimer} />
+                    <CountdownTimer endDate={endTimeForShowCountdown} fontSize={"16px"} />
+                  )}
+                   */}
+                {isSuspend && (
+                  // <CountDownTimerLottery endDateTime={endTimeForTimer} />
+                  <CountdownTimer endDate={endTimeForShowCountdown} fontSize={"16px"} />
                 )}
+              </div>
             </div>
 
             {/* Sem Input */}

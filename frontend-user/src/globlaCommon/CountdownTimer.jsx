@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-const CountdownTimer = ({ endDate }) => {
+const CountdownTimer = ({ endDate, fontSize }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(endDate));
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const CountdownTimer = ({ endDate }) => {
   const { days, hours, minutes, seconds } = timeLeft;
 
   return (
-    <div className="countdown-timer text-danger" style={{ fontSize: "12px" }}>
+    <div className="countdown-timer text-danger" style={{ fontSize: fontSize }}>
       <div className="d-flex fw-bold">
         <div>
           <div className="countdown-timer__item">
