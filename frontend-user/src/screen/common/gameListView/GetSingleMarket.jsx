@@ -71,8 +71,8 @@ const GetSingleMarket = () => {
               className="row px-0 m-0"
             >
               <div className="col-8"></div>
-              <div className="col-2 text-uppercase fw-bold rounded-top-3" style={{background:"#80C2F1"}}> Back</div>
-              <div className="col-2 text-uppercase fw-bold rounded-top-3" style={{background:"#FAA9BA"}}> Lay</div>
+              <div className="col-2 fw-bold rounded-top-3" style={{background:"#80C2F1"}}> Back</div>
+              <div className="col-2 fw-bold rounded-top-3" style={{background:"#FAA9BA"}}> Lay</div>
             </div>
             {user_gameWithMarketData &&
               user_gameWithMarketData[0]?.markets.map((marketData) => {

@@ -50,8 +50,8 @@ const ForgotPassword = () => {
   function changePasswords() {
     return (
       <div className="global-margin-top-logged">
-        <form className="form-card" style={{marginTop:"200px"}}>
-          <h4 className="text-uppercase text-center fw-bold text-decoration-underline">Change Password</h4>
+        <form className="form-card" style={{marginTop:"150px"}}>
+          <h4 className="text-uppercase text-center fw-bold">Change Password</h4>
           <div className="form-group mt-4">
             <label htmlFor="exampleInputPassword1">Old Password</label>
             <input

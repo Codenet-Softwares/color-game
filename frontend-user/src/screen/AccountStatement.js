@@ -98,17 +98,17 @@ const AccountStatement = () => {
                         <div className="card w-100 rounded">
                             {/* Card Header */}
                             <div className="card-header text-white p-2 text-uppercase text-center" style={{ backgroundColor: "#2CB3D1" }}>
-                                <b className='h5'>&nbsp;&nbsp;Account Statement</b>
+                                <b className='h5 fw-bold'>&nbsp;&nbsp;Account Statement</b>
                             </div>
 
                             <div className="form-group mb-3 mb-md-0 px-2 mt-2 fw-bold">
                                 <div className="container">
                                     <div className="row">
-                                        <div className="col-sm fw-bold text-uppercase">Total Entries</div>
-                                        <div className="col-sm fw-bold text-uppercase">Data Source</div>
-                                        <div className="col-sm fw-bold text-uppercase">From:</div>
-                                        <div className="col-sm fw-bold text-uppercase">To:</div>
-                                        <div className="col-sm fw-bold text-uppercase"></div>
+                                        <div className="col-sm fw-bold ">Total Entries</div>
+                                        <div className="col-sm fw-bold ">Data Source</div>
+                                        <div className="col-sm fw-bold ">From:</div>
+                                        <div className="col-sm fw-bold ">To:</div>
+                                        <div className="col-sm fw-bold "></div>
                                     </div>
                                 </div>
                                 <div className="container">
@@ -168,7 +168,7 @@ const AccountStatement = () => {
                                         {/* End Date Picker */}
                                         <div className="col-sm">
                                             <DatePicker
-                                                selected={backupDate.endDate}
+                                                selected={backupDate.endDate}  
                                                 onChange={setEndDate}
                                                 disabled={getAccountstatement.dataSource === "live"} // Disable if live data
                                                 placeholderText="Select End Date"
@@ -198,7 +198,7 @@ const AccountStatement = () => {
                                         <div className="QA_section">
                                             <div className="QA_table mb_30">
                                                 <table className="table lms_table_active3 table-bordered">
-                                                    <thead className='text-uppercase'>
+                                                    <thead className=''>
                                                         <tr style={{ backgroundColor: "#e6e9ed"}} align="center">
                                                             <th scope="col"><h6 className='fw-bold'>Date/Time</h6></th>
                                                             <th scope="col"><h6 className='fw-bold'>Deposit</h6></th>

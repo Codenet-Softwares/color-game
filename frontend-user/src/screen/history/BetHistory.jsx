@@ -223,11 +223,11 @@ const BetHistory = () => {
                     value={selectedOptions.dataSource}
                     onChange={(e) => handleGetHistoryChange(e)}
                   >
-                    <option value="live" selected>
-                      LIVE DATA
+                    <option className="fw-bold" value="live" selected>
+                      Live Data
                     </option>
-                    <option value="backup" className="fw-bold">BACKUP DATA</option>
-                    <option value="olddata" className="fw-bold">OLD DATA</option>
+                    <option value="backup" className="fw-bold">Back Data</option>
+                    <option value="olddata" className="fw-bold">Old Data</option>
                   </select>
                 </div>
               </div>
@@ -237,18 +237,18 @@ const BetHistory = () => {
               <div className="col">
                 <div className="form-group ">
                   <select
-                    className="form-select form-select-sm fw-bold text-uppercase"
+                    className="form-select form-select-sm fw-bold"
                     aria-label=".form-select-sm example"
                     value={selectedGameId || ""}
                     onChange={handleGameChange}
                   >
-                    <option value="" className="fw-bold"> Select Game </option>
+                    <option value="" className=""> Select Game </option>
                     {gameSelectionBetHistory.map((game, index) => (
-                      <option className="fw-bold" key={index} value={game.gameId}>
+                      <option className="" key={index} value={game.gameId}>
                         {game.gameName}
                       </option>
                     ))}
-                    <option value="lottery" className="fw-bold">Lottery</option>
+                    <option value="lottery" className="">Lottery</option>
                   </select>
                 </div>
               </div>
@@ -258,14 +258,14 @@ const BetHistory = () => {
               <div className="col">
                 <div className="form-group">
                   <select
-                    className="form-select form-select-sm fw-bold text-uppercase"
+                    className="form-select form-select-sm fw-bold"
                     aria-label=".form-select-sm example"
                     value={selectedOptions.select3}
                     onChange={(e) => handleGetHistoryChange(e, "select3")}
                   >
                     <option selected className="fw-bold">Open this select menu</option>
-                    <option value="1" className="fw-bold">SETTLE</option>
-                    <option value="1" className="fw-bold">UNSETTLE</option>
+                    <option value="1" className="fw-bold">Settle</option>
+                    <option value="1" className="fw-bold">Unsettel</option>
                   </select>
                 </div>
               </div>
@@ -275,7 +275,7 @@ const BetHistory = () => {
             <div className="row align-items-center">
               <div className="col">
                 <div className="form-group">
-                  <label className="text-uppercase">From:</label>
+                  <label className="">From:</label>
                   <div className="input-group" style={{ maxWidth: "100%" }}>
                     <Datetime                   
                       value={dateValue.startDate}
@@ -293,7 +293,7 @@ const BetHistory = () => {
 
               <div className="col">
                 <div className="form-group">
-                  <label className="text-uppercase">To:</label>
+                  <label className="">To:</label>
                   <div className="input-group" style={{ maxWidth: "100%" }}>
                     <Datetime
                       value={dateValue.endDate}
@@ -346,7 +346,7 @@ const BetHistory = () => {
             <div className="card-body">
               {/* Show entries dropdown */}
               <div className="mb-3">
-                <label htmlFor="showEntriesDropdown" className="form-label text-uppercase">
+                <label htmlFor="showEntriesDropdown" className="form-label">
                   Show entries
                 </label>
                 <select
@@ -476,7 +476,7 @@ const BetHistory = () => {
                   ) : (
                     <>
                       <thead>
-                        <tr align="center" className="text-uppercase">
+                        <tr>
                           <th scope="col">Sport Name</th>
                           <th scope="col">Event</th>
                           <th scope="col">Market</th>
@@ -543,7 +543,7 @@ const BetHistory = () => {
         <div className="card-body">
           <div className="form-group">
             <select
-              className="form-select form-select-lg fw-bold"
+              className="form-select form-select-lg"
               id="selectMarket"
               style={{ width: "100%" }}
               onChange={handleSelectChange}
@@ -580,7 +580,7 @@ const BetHistory = () => {
             <table className="table table-striped table-sm">
               {/* Table header */}
               <thead>
-                <tr align="center fs-6" className="text-uppercase">
+                <tr align="center fs-6">
                   <th className="d-none d-sm-table-cell">Back</th>
                   <th className="d-none d-sm-table-cell">Odds</th>
                   <th className="d-none d-sm-table-cell">Stake</th>
@@ -652,7 +652,7 @@ const BetHistory = () => {
           <div className="table-responsive">
             <table className="table table-striped table-sm">
               {/* Table header */}
-              <thead className="text-uppercase">
+              <thead>
                 <tr align="center">
                   <th className="d-none d-sm-table-cell">Lay</th>
                   <th className="d-none d-sm-table-cell">Odds</th>

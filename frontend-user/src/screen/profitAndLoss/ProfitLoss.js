@@ -334,11 +334,11 @@ const ProfitLoss = ({
             style={{ backgroundColor: "#2CB3D1" }}
           >
             <div className="form-group mb-3 mb-md-0 px-2">
-              <div class="container text-uppercase">
+              <div class="container">
                 <div class="row">
                   <div class="col-sm fw-bold">Data Source</div>
-                  <div class="col-sm fw-bold">From</div>
-                  <div class="col-sm fw-bold">To</div>
+                  <div class="col-sm fw-bold">From:</div>
+                  <div class="col-sm fw-bold">To:</div>
                   <div class="col-sm fw-bold"></div>
                 </div>
               </div>
@@ -347,7 +347,7 @@ const ProfitLoss = ({
                   <div class="col-sm">
                     {" "}
                     <select
-                      class="form-select fw-bold"
+                      class="form-select"
                       aria-label="Default select example"
                       onChange={(e) => {
                         SetProfitLossData((prevState) => ({
@@ -356,7 +356,7 @@ const ProfitLoss = ({
                         }));
                       }}
                     >
-                      <option className="fw-bold" value="live" selected >
+                      <option className="" value="live" selected >
                         LIVE DATA
                       </option>
                       <option className="fw-bold" value="backup">BACKUP DATA</option>
@@ -437,7 +437,7 @@ const ProfitLoss = ({
                             color: "#5562a3",
                           }}
                           align="center"   
-                          className="text-uppercase"                    
+                          className=""                    
                         >
                           <th scope="col">
                             <h6 className="fw-bold">Sport Name</h6>
