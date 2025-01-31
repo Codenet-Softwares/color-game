@@ -149,7 +149,7 @@ const RunnerView = () => {
               ))
             ) : (
               <div className="col">
-                <p className="text-muted">No runners found.</p>
+                <p className="text-danger fw-bold">No runners found.</p>
               </div>
             )}
           </div>

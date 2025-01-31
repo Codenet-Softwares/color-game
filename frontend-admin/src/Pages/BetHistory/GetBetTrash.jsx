@@ -93,6 +93,10 @@ const handleRestore = async (trashMarketId) => {
           className="form-select d-inline-block w-auto"
           value={pagination.totalEntries}
           onChange={handleEntriesChange}
+          style={{
+            borderRadius: "50px",
+            border: "2px solid #3E5879",
+          }}
         >
           <option value={10}>10</option>
           <option value={25}>25</option>
@@ -103,7 +107,7 @@ const handleRestore = async (trashMarketId) => {
       </div>
       <div className="table-responsive p-3">
         <table className="table table-striped table-hover text-center">
-          <thead>
+          <thead className="table-primary text-uppercase">
             <tr>
               <th>Runner Name</th>
               <th>User Name</th>
@@ -148,7 +152,7 @@ const handleRestore = async (trashMarketId) => {
               ))
             ) : (
               <tr>
-                <td colSpan="6">No data found for the selected market</td>
+                <td colSpan="6" className="text-danger text-center fw-bold">No Data Found For The Selected Market</td>
               </tr>
             )}
           </tbody>

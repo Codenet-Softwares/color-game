@@ -82,9 +82,9 @@ const CreateImage = () => {
                 display: "inline-block",
                 cursor: "pointer",
                 fontSize: "40px",
-                color: "#007BFF",
+                color: "#3E5879",
                 padding: "30px",
-                border: "2px solid #007BFF",
+                border: "2px solid #3E5879",
                 borderRadius: "8px",
                 backgroundColor: "lightgray",
                 boxSizing: "border-box",
@@ -133,7 +133,7 @@ const CreateImage = () => {
           </div>
 
           <div className="text-center">
-            <button className="btn btn-primary" onClick={handleAddImage}>
+            <button className="btn btn-primary text-uppercase" onClick={handleAddImage}>
               Upload Image
             </button>
           </div>

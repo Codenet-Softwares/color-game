@@ -73,12 +73,12 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   }
 
   function header() {
-    return <h4 className="d-flex justify-content-center">Login</h4>;
+    return <h4 className="d-flex justify-content-center text-uppercase fw-bold" style={{color:"#1A839B"}}>Login 👇🏾</h4>;
   }
 
   function ModalBody() {
     return (
-      <div className="py-3">
+      <div className="py-3 rounded" style={{background:"linear-gradient(to bottom, #18ADC5, #17687A)"}}>
         <div className="d-flex justify-content-center position-relative">
           <input
             type="text"
@@ -125,13 +125,12 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
 
   function footer() {
     return (
-      <div className="d-flex flex-column w-100">
+      <div className="d-flex flex-column w-100 ">
         <Button
+        className="text-uppercase fw-bold"
           variant="secondary"
           onClick={handleSubmit}
-          style={{
-            backgroundImage: "linear-gradient(to top, #044469 4%, #1AA0D1 92%)",
-          }}
+          style={{background:"linear-gradient(to bottom, #18ADC5, #17687A)"}}
         >
           Sign in
         </Button>

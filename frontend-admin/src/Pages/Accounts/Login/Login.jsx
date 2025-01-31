@@ -16,7 +16,6 @@ const Login = () => {
   const handleSubmit = (event) => {
     auth.showLoader(); 
     event.preventDefault();
-
     const error = [];
     if (!userName) error.push("userName");
     if (!password) error.push("password");
@@ -60,7 +59,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="login-input"
           />
-          <button onClick={handleSubmit} className="login-button fw-bold">
+          <button onClick={handleSubmit} className="login-button fw-bold text-uppercase">
             Log in
           </button>
         </form>

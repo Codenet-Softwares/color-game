@@ -91,7 +91,7 @@ const UpdateGameSlider = () => {
         </div>
         <div className="card-body"  style={{ background: "#E1D1C7" }}>
           {sliderImages.length === 0 ? (
-            <div className="text-center">No slider images available.</div>
+            <div className="text-center text-danger fw-bold">No Slider Images Available.</div>
           ) : (
             <div className="row">
               {sliderImages.map((image, index) => (

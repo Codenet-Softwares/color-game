@@ -172,9 +172,6 @@ const Update = ({ show, setShow, data, Update }) => {
             toast.success(res.data.message);
             handleClose();
           })
-          .catch((err) => {
-            toast.error(customErrorHandler(err));
-          });
 
         break;
       case "market":
@@ -235,6 +232,8 @@ const Update = ({ show, setShow, data, Update }) => {
           })
           .catch((err) => {
             toast.error(customErrorHandler(err));
+          }).finally(() => {
+            auth.hideLoader();
           });
 
       default:

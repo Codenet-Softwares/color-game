@@ -97,11 +97,11 @@ const AccountStatement = () => {
                     <div className="d-flex justify-content-center m-5">
                         <div className="card w-100 rounded">
                             {/* Card Header */}
-                            <div className="card-header text-white p-1" style={{ backgroundColor: "#2CB3D1" }}>
+                            <div className="card-header text-white p-2 text-uppercase text-center" style={{ backgroundColor: "#2CB3D1" }}>
                                 <b>&nbsp;&nbsp;Account Statement</b>
                             </div>
 
-                            <div className="form-group mb-3 mb-md-0 px-2">
+                            <div className="form-group mb-3 mb-md-0 px-2 ">
                                 <div className="container">
                                     <div className="row">
                                         <div className="col-sm">Total Entries</div>
@@ -198,7 +198,7 @@ const AccountStatement = () => {
                                         <div className="QA_section">
                                             <div className="QA_table mb_30">
                                                 <table className="table lms_table_active3 table-bordered">
-                                                    <thead>
+                                                    <thead className='text-uppercase'>
                                                         <tr style={{ backgroundColor: "#e6e9ed", color: "#5562a3" }} align="center">
                                                             <th scope="col"><b>Date/Time</b></th>
                                                             <th scope="col"><b>Deposit</b></th>

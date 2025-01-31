@@ -99,21 +99,20 @@ const BetHistoryPage = () => {
                     top: "50%",
                     left: "20px",
                     transform: "translateY(-50%)",
-                    color: "#6c757d",
+                    color: "#3E5879",
                     fontSize: "18px",
                   }}
                 />
                 <input
                   type="text"
-                  className="form-control"
-                  placeholder="Search by game name or market name..."
+                  className="form-control fw-bold"
+                  placeholder="Search By Game Name Or Market Name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-
                   style={{
                     paddingLeft: "40px",
                     borderRadius: "30px",
-                    border: "2px solid #6c757d",
+                    border: "2px solid #3E5879",
                   }}
                 />
                 {searchTerm && (
@@ -138,7 +137,7 @@ const BetHistoryPage = () => {
                   value={betHistory.totalEntries}
                   style={{
                     borderRadius: "50px",
-                    border: "2px solid #6c757d",
+                    border: "2px solid #3E5879",
                   }}
                   onChange={(e) =>
                     setBetHistory((prev) => ({
@@ -167,12 +166,12 @@ const BetHistoryPage = () => {
                 <table
                   className="table table-striped table-hover rounded-table"
                   style={{
-                    border: "2px solid #6c757d",
+                    border: "2px solid #3E5879",
                     borderRadius: "10px",
                   }}
                 >
                   <thead
-                    className="table-primary"
+                    className="table-primary text-uppercase"
                     style={{
                       position: "sticky",
                       top: 0,
@@ -196,7 +195,7 @@ const BetHistoryPage = () => {
                             <td>{bet.marketName}</td>
                             <td>
                               <button
-                                className="btn btn-primary"
+                                className="btn btn-primary text-center"
                                 onClick={() => handleNavigate(bet.marketId)}
                               >
                                 Bet History
@@ -207,8 +206,8 @@ const BetHistoryPage = () => {
                       </>
                     ) : (
                       <tr>
-                        <td colSpan="4" className="text-center">
-                          No data found
+                        <td colSpan="4" className="text-center text-danger fw-bold">
+                          No Data Found
                         </td>
                       </tr>
                     )}

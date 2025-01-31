@@ -79,13 +79,17 @@ const MarketPlace = () => {
 
   const handleSuspensedMarket = (e, data, marketPlace) => {
     // e.preventDefault();
+    auth.showLoader(); 
     GameService.suspensedMarket({ status: data }, marketPlace, auth.user)
+    
       .then((res) => {
         toast.success(res.data.message);
         setRefresh((prev) => !prev);
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
 
@@ -134,6 +138,7 @@ const MarketPlace = () => {
   };
 
   const handleDelete = (e, marketId) => {
+    auth.showLoader(); 
     e.preventDefault();
     const flag = true;
 
@@ -147,10 +152,13 @@ const MarketPlace = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
 
   const handleVoidMarket = (e, marketId) => {
+    auth.showLoader(); 
     e.preventDefault();
     const flag = true;
 
@@ -165,6 +173,8 @@ const MarketPlace = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
+      }).finally(() => {
+        auth.hideLoader();
       });
   };
 
@@ -248,17 +258,13 @@ const MarketPlace = () => {
                 <div className="board_wrapper">
                   <div className="single_board">
                     <div className="main_board_card">
-                      <div className="white_card_header ps-0 pe-0 pt-0">
-                        <div className="box_header m-0">
-                          <div className="main-title">
-                            <h3 className="m-0">
-                              Available {pathdata[0]?.name} Market
-                            </h3>
-                          </div>
-                        </div>
+                      <div className="main-title">
+                        <h4 className="m-0 text-center fw-bolder">
+                          Available {pathdata[0]?.name} Market
+                        </h4>
                       </div>
                       {gameMarketData.length > 0 ? (
-                        <div className="board_card_list">
+                        <div className="board_card_list mt-3">
                           {gameMarketData.map((market, index) => {
                             return (
                               <div className="card border-0" key={index}>
@@ -427,7 +433,7 @@ const MarketPlace = () => {
                           <div className="card border-0">
                             <div className="card-body">
                               <div className="card_head d-flex justify-content-center align-items-center ">
-                                <h2 className="f_s_16 f_w_500 mb-0">
+                                <h2 className="f_s_16 f_w_500 mb-0 text-danger fw-bold">
                                   No Market Available
                                 </h2>
                               </div>

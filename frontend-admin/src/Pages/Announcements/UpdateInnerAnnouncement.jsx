@@ -53,7 +53,7 @@ const UpdateInnerAnnouncement = () => {
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
           {announcements.length === 0 ? (
-            <div className="text-center">No inner announcements available.</div>
+            <div className="text-center text-danger fw-bold">No Inner Announcements Available.</div>
           ) : (
             <div className="row">
               {announcements.map((announcement) => (
