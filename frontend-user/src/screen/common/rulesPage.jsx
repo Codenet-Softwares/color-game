@@ -8,9 +8,9 @@ const RulesPage = () => {
   function getRules() {
     return (
       <>
-        <div className="rulesPage">
-          <div className="Rules">
-            <b>RULES</b>
+        <div className="rulesPage" style={{marginTop:"150px"}}>
+          <div className="Rules p-1 rounded">
+            <h5>RULES</h5>
           </div>
           <br />
           <h5 className="toppara">

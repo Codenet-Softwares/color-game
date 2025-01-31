@@ -210,15 +210,15 @@ const BetHistory = () => {
     return (
       <div>
         <div
-          className="card shadow p-3 mb-5 bg-white rounded"
-          style={{ marginTop: "120px" }}
+          className="card shadow p-3 mb-5  rounded"
+          style={{ marginTop: "150px",background:"#2CB3D1" }}
         >
           <div className="card-body">
             <div className="row">
               <div className="col">
                 <div className="form-group">
                   <select
-                    className="form-select form-select-sm"
+                    className="form-select form-select-sm fw-bold"
                     aria-label=".form-select-sm example"
                     value={selectedOptions.dataSource}
                     onChange={(e) => handleGetHistoryChange(e)}
@@ -226,8 +226,8 @@ const BetHistory = () => {
                     <option value="live" selected>
                       LIVE DATA
                     </option>
-                    <option value="backup">BACKUP DATA</option>
-                    <option value="olddata">OLD DATA</option>
+                    <option value="backup" className="fw-bold">BACKUP DATA</option>
+                    <option value="olddata" className="fw-bold">OLD DATA</option>
                   </select>
                 </div>
               </div>
@@ -235,20 +235,20 @@ const BetHistory = () => {
               <div className="col-auto">&nbsp;</div>
 
               <div className="col">
-                <div className="form-group">
+                <div className="form-group ">
                   <select
-                    className="form-select form-select-sm"
+                    className="form-select form-select-sm fw-bold text-uppercase"
                     aria-label=".form-select-sm example"
                     value={selectedGameId || ""}
                     onChange={handleGameChange}
                   >
-                    <option value=""> Select Game </option>
+                    <option value="" className="fw-bold"> Select Game </option>
                     {gameSelectionBetHistory.map((game, index) => (
-                      <option key={index} value={game.gameId}>
+                      <option className="fw-bold" key={index} value={game.gameId}>
                         {game.gameName}
                       </option>
                     ))}
-                    <option value="lottery">Lottery</option>
+                    <option value="lottery" className="fw-bold">Lottery</option>
                   </select>
                 </div>
               </div>
@@ -258,14 +258,14 @@ const BetHistory = () => {
               <div className="col">
                 <div className="form-group">
                   <select
-                    className="form-select form-select-sm"
+                    className="form-select form-select-sm fw-bold text-uppercase"
                     aria-label=".form-select-sm example"
                     value={selectedOptions.select3}
                     onChange={(e) => handleGetHistoryChange(e, "select3")}
                   >
-                    <option selected>Open this select menu</option>
-                    <option value="1">SETTLE</option>
-                    <option value="1">UNSETTLE</option>
+                    <option selected className="fw-bold">Open this select menu</option>
+                    <option value="1" className="fw-bold">SETTLE</option>
+                    <option value="1" className="fw-bold">UNSETTLE</option>
                   </select>
                 </div>
               </div>
@@ -275,9 +275,9 @@ const BetHistory = () => {
             <div className="row align-items-center">
               <div className="col">
                 <div className="form-group">
-                  <label>From:</label>
+                  <label className="text-uppercase">From:</label>
                   <div className="input-group" style={{ maxWidth: "100%" }}>
-                    <Datetime
+                    <Datetime                   
                       value={dateValue.startDate}
                       name="startDate"
                       dateFormat="DD-MM-YYYY"
@@ -293,7 +293,7 @@ const BetHistory = () => {
 
               <div className="col">
                 <div className="form-group">
-                  <label>To:</label>
+                  <label className="text-uppercase">To:</label>
                   <div className="input-group" style={{ maxWidth: "100%" }}>
                     <Datetime
                       value={dateValue.endDate}
@@ -311,7 +311,7 @@ const BetHistory = () => {
 
               <div className="col">
                 <button
-                  className="btn btn-primary"
+                  className="btn btn-primary "
                   onClick={() =>
                     selectedGameId === "lottery"
                       ? getHistoryForLotteryBetHistory()
@@ -336,17 +336,17 @@ const BetHistory = () => {
               textAlign: "center",
             }}
           >
-            <h5 className="card-title">Bet History</h5>
+            <h5 className="card-title text-uppercase fw-bold">Bet History</h5>
           </div>
           {selectedGameId === null ? (
-            <div className="alert alert-info text-center mt-2" role="alert">
+            <div className="alert alert-info text-center mt-2 fw-bold" role="alert">
               Please Select a Game Name & Click Get History
             </div>
           ) : betHistoryData?.length > 0 ? (
             <div className="card-body">
               {/* Show entries dropdown */}
               <div className="mb-3">
-                <label htmlFor="showEntriesDropdown" className="form-label">
+                <label htmlFor="showEntriesDropdown" className="form-label text-uppercase">
                   Show entries
                 </label>
                 <select
@@ -476,7 +476,7 @@ const BetHistory = () => {
                   ) : (
                     <>
                       <thead>
-                        <tr align="center">
+                        <tr align="center" className="text-uppercase">
                           <th scope="col">Sport Name</th>
                           <th scope="col">Event</th>
                           <th scope="col">Market</th>
@@ -529,7 +529,7 @@ const BetHistory = () => {
   // this is the open bets section with selection with conditinally rendering back and lay table data with market selection
   function openBets() {
     return (
-      <div className="card" style={{ marginTop: "120px", height: "800px" }}>
+      <div className="card" style={{ marginTop: "150px", height: "800px" }}>
         <div
           className="card-header"
           style={{
@@ -538,17 +538,17 @@ const BetHistory = () => {
             textAlign: "center",
           }}
         >
-          <h5 className="card-title">Open Bets</h5>
+          <h5 className="card-title text-uppercase fw-bold">Open Bets</h5>
         </div>
         <div className="card-body">
           <div className="form-group">
             <select
-              className="form-select form-select-lg"
+              className="form-select form-select-lg fw-bold"
               id="selectMarket"
               style={{ width: "100%" }}
               onChange={handleSelectChange}
             >
-              <option value={""}>Select Sport Name</option>
+              <option value={""} >Select Sport Name</option>
               {openBetGameNames.map((item, index) => (
                 <option key={index} value={item.gameId}>
                   {item.gameName}
@@ -580,7 +580,7 @@ const BetHistory = () => {
             <table className="table table-striped table-sm">
               {/* Table header */}
               <thead>
-                <tr align="center fs-6">
+                <tr align="center fs-6" className="text-uppercase">
                   <th className="d-none d-sm-table-cell">Back</th>
                   <th className="d-none d-sm-table-cell">Odds</th>
                   <th className="d-none d-sm-table-cell">Stake</th>
@@ -652,7 +652,7 @@ const BetHistory = () => {
           <div className="table-responsive">
             <table className="table table-striped table-sm">
               {/* Table header */}
-              <thead>
+              <thead className="text-uppercase">
                 <tr align="center">
                   <th className="d-none d-sm-table-cell">Lay</th>
                   <th className="d-none d-sm-table-cell">Odds</th>

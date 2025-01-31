@@ -111,9 +111,8 @@
 
 .Rules {
   text-align: center;
-  background-color: aqua;
+  background-color: #27A6C3;
   color: white;
-  background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
   /* position: fixed;
   width: 100%; */
 }

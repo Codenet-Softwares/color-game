@@ -5,14 +5,12 @@ import { user_getAllGames_api } from "../../utils/apiService";
 import "./layout.css";
 import strings from "../../utils/constant/stringConstant";
 import SubFooter from "../common/SubFooter";
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from "react-router-dom";
 
 function Layout() {
   const [user_allGames, setUser_allGames] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(0);
-
   const { dispatch, store } = useAppContext();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     user_getAllGames();
@@ -50,43 +48,37 @@ function Layout() {
           className="p-2 text-white"
           style={{
             fontWeight: 600,
-            backgroundColor: activeIndex === 0 ? "#5ECBDD" : "transparent",
+            backgroundColor: location.pathname === "/home" ? "#5ECBDD" : "transparent",
             cursor: "pointer",
           }}
-          onClick={() => setActiveIndex(0)}
         >
-          <Link 
-            className=" text-decoration-none text-white"
-            to={`/home`}
-            style={{}}
-            >
+          <Link className=" text-decoration-none text-white" to={`/home`}>
             {"Home"}
           </Link>
         </li>
-        {user_allGames.map((gameObj, index) => (
-          <li
-            key={index + 1}
-            className="p-2 text-white"
-            style={{
-              fontWeight: 600,
-              backgroundColor:
-                activeIndex === index + 1 ? "#5ECBDD" : "transparent",
-              cursor: "pointer",
-            }}
-            onClick={() => setActiveIndex(index + 1)}
-          >
-            <Link
-              className={`text-white text-decoration-none text-nowrap ${
-                gameObj.isBlink ? "blink_me" : ""
-              }`}
-              to={`/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
-                gameObj.gameId
-              }`}
+        {user_allGames.map((gameObj) => {
+          const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${gameObj.gameId}`;
+          return (
+            <li
+              key={gameObj.gameId}
+              className="p-2 text-white"
+              style={{
+                fontWeight: 600,
+                backgroundColor: location.pathname === gamePath ? "#5ECBDD" : "transparent",
+                cursor: "pointer",
+              }}
             >
-              {gameObj.gameName}
-            </Link>
-          </li>
-        ))}
+              <Link
+                className={`text-white text-decoration-none text-nowrap ${
+                  gameObj.isBlink ? "blink_me" : ""
+                }`}
+                to={gamePath}
+              >
+                {gameObj.gameName}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     );
   }

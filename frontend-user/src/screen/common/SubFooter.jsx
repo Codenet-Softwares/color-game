@@ -55,10 +55,11 @@ const SubFooter = () => {
               color: "white",
               textAlign: "center",
               margin: 0,
-              fontSize: "10px",
+              fontSize: "14px",
+              fontWeight:"bold"
             }}
           >
-            No announcements available.
+            No Announcements Available.
           </p>
         )}
       </div>
