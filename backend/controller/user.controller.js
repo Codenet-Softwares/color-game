@@ -575,6 +575,7 @@ export const filteredGameData = async (req, res) => {
             "participants",
             "startTime",
             "endTime",
+            "createdAt",
             "announcementResult",
             "isActive",
             "isVoid"
@@ -597,6 +598,14 @@ export const filteredGameData = async (req, res) => {
           ],
         },
       ],
+      
+
+    });
+
+    gameData.forEach(game => {
+      if (game.Markets && Array.isArray(game.Markets)) {
+        game.Markets.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      }
     });
 
     if (!gameData) {
@@ -619,6 +628,7 @@ export const filteredGameData = async (req, res) => {
         participants: market.participants,
         startTime: market.startTime,
         endTime: market.endTime,
+        createdAt: market.createdAt,
         announcementResult: market.announcementResult,
         isActive: market.isActive,
         runners: market.Runners.map((runner) => ({
