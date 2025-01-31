@@ -11,13 +11,16 @@ const NewResult = () => {
   const [error, setError] = useState(null);
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today); // For date filter
+  const [openIndex, setOpenIndex] = useState(null); // Track open accordion
   const maxVisibleMarkets = 5;
   const visibleMarkets = markets.slice(
     scrollIndex,
     scrollIndex + maxVisibleMarkets
   );
   console.log("line 19 =======>>", results);
-
+  const toggleAccordion = (index) => {
+    setOpenIndex(openIndex === index ? null : index); // Toggle open/close
+  };
   // let this be commented do not delete for future reference 
   // const fetchMarkets = () => {
   //   GetResultMarket({ date: selectedDate }).then((response) => {
@@ -267,54 +270,33 @@ const NewResult = () => {
               {results.length === 0 && !error ? (
                 <p className="text-center text-muted">No prize declared yet.</p>
               ) : (
-                <div className="accordion mt-4" id="prizeAccordion">
-                  {results.map((result, index) => (
-                    <div className="accordion-item" key={result.resultId}>
-                      <h2 className="accordion-header" id={`heading${index}`}>
-                        <button
-                          className="accordion-button collapsed"
-                          type="button"
-                          data-bs-toggle="collapse"
-                          data-bs-target={`#collapse${index}`}
-                          aria-expanded="false"
-                          aria-controls={`collapse${index}`}
-                        >
-                          {result.prizeCategory} - Amount: ₹{result.prizeAmount}
-                          {result.complementaryPrize > 0 && (
-                            <span className="badge bg-success ms-2">
-                              Complementary Prize: ₹{result.complementaryPrize}
-                            </span>
-                          )}
-                        </button>
-                      </h2>
-                      <div
-                        id={`collapse${index}`}
-                        className="accordion-collapse collapse"
-                        aria-labelledby={`heading${index}`}
-                        data-bs-parent="#prizeAccordion"
+                <div className="accordion mt-4">
+                {results.map((result, index) => (
+                  <div className="accordion-item" key={result.resultId}>
+                    <h2 className="accordion-header">
+                      <button
+                        className={`accordion-button ${openIndex === index ? "" : "collapsed"}`}
+                        onClick={() => toggleAccordion(index)}
                       >
-                        <div
-                          className="accordion-body"
-                          style={{
-                            padding: "20px",
-                            fontFamily: "'Poppins', sans-serif",
-                          }}
-                        >
-                          <strong
-                            style={{
-                              fontSize: "1.2rem",
-                              color: "#3b6e91",
-                              display: "block",
-                              marginBottom: "15px",
-                            }}
-                          >
+                        {result.prizeCategory} - Amount: ₹{result.prizeAmount}
+                        {result.complementaryPrize > 0 && (
+                          <span className="badge bg-success ms-2">
+                            Complementary Prize: ₹{result.complementaryPrize}
+                          </span>
+                        )}
+                      </button>
+                    </h2>
+          
+                    {openIndex === index && ( // Show content only if openIndex matches
+                      <div className="accordion-collapse show">
+                        <div className="accordion-body" style={{ padding: "20px", fontFamily: "'Poppins', sans-serif" }}>
+                          <strong style={{ fontSize: "1.2rem", color: "#3b6e91", display: "block", marginBottom: "15px" }}>
                             Winning Ticket Numbers:
                           </strong>
                           <div
                             style={{
                               display: "grid",
-                              gridTemplateColumns:
-                                "repeat(auto-fit, minmax(120px, 1fr))",
+                              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
                               gap: "15px",
                               backgroundColor: "#f8faff",
                               padding: "20px",
@@ -337,19 +319,15 @@ const NewResult = () => {
                                   color: "#555",
                                   textAlign: "center",
                                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                                  transition:
-                                    "transform 0.3s ease, box-shadow 0.3s ease",
+                                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
                                 }}
                                 onMouseEnter={(e) => {
-                                  e.currentTarget.style.transform =
-                                    "scale(1.1)";
-                                  e.currentTarget.style.boxShadow =
-                                    "0 4px 12px rgba(0, 0, 0, 0.2)";
+                                  e.currentTarget.style.transform = "scale(1.1)";
+                                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
                                 }}
                                 onMouseLeave={(e) => {
                                   e.currentTarget.style.transform = "scale(1)";
-                                  e.currentTarget.style.boxShadow =
-                                    "0 2px 5px rgba(0, 0, 0, 0.1)";
+                                  e.currentTarget.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.1)";
                                 }}
                               >
                                 {ticket}
@@ -358,9 +336,11 @@ const NewResult = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+              
               )}
             </>
           ) : (
