@@ -5,14 +5,14 @@ import AppDrawer from "../common/appDrawer";
 import { activityLog } from "../../utils/apiService";
 
 const ActivityLog = () => {
-    const [data, SetData] = useState({});
-    
+  const isLocalhost = window.location.hostname === "localhost";
+  const [data, SetData] = useState({});
 
   const fetchActivityLog = async () => {
     const response = await activityLog();
     SetData(response.data);
-    };
-    
+  };
+
   useEffect(() => {
     fetchActivityLog();
   }, []);
@@ -70,28 +70,32 @@ const ActivityLog = () => {
                           </tr>
                         </thead>
                         <tbody>
-                         
-                            <tr>
-                              <td
-                                scope="row"
-                                className="text-center text-truncate"
-                              >
-                                {formatDate(data.loginDateTime)}
-                              </td>
-                              <td className="text-center text-truncate">
-                                {data?.loginStatus}
-                              </td>
-                              <td className="text-center text-truncate">
-                                {data?.ip?.iP}
-                              </td>
-                              <td className="text-center text-truncate">
-                                {"NDS"}
-                              </td>
-                              <td className="text-center text-truncate">
-                                {"NDS"}
-                              </td>
-                            </tr>
-                         
+                          <tr>
+                            <td
+                              scope="row"
+                              className="text-center text-truncate"
+                            >
+                              {formatDate(data.loginDateTime)}
+                            </td>
+                            <td className="text-center text-truncate">
+                              {data?.loginStatus}
+                            </td>
+                            <td className="text-center text-truncate">
+                              {data?.ip?.iP}
+                            </td>
+                            <td className="text-center text-truncate">
+                              {isLocalhost
+                                ? "NDA"
+                                : data?.ip?.isp}
+                            </td>
+                            <td className="text-center text-truncate">
+                            {isLocalhost
+                                ? "NDA"
+                                : data?.ip?.region}/ {isLocalhost
+                                  ? "NDA"
+                                  : data?.ip?.country}
+                            </td>
+                          </tr>
                         </tbody>
                       </table>
                     </div>
