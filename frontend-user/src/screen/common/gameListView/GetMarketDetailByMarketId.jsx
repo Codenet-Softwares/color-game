@@ -245,13 +245,14 @@ const GetMarketDetailByMarketId = () => {
         if (index === i) {
           arr[i] = arr[i] + winBalance;
         } else {
-          arr[i] = arr[i] - amount;
+          arr[i] = arr[i] - Number(amount);
         }
-      } else {
+      }
+      if (mode === "lay") {
         if (index === i) {
           arr[i] = arr[i] - winBalance;
         } else {
-          arr[i] = arr[i] + amount;
+          arr[i] = arr[i] + Number(amount);
         }
       }
     }

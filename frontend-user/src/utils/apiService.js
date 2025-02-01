@@ -112,7 +112,6 @@ export async function user_getBetHistory_api(body = {}, isToast = false) {
 }
 
 // export async function user_getOpenBetmarket_api(body = {}, isToast = false) {
-//   console.log(body);
 //   try {
 //     const callParams = await getCallParams(strings.GET, body, isToast);
 
@@ -125,7 +124,6 @@ export async function user_getBetHistory_api(body = {}, isToast = false) {
 // }
 
 export async function user_getBackLayData_api(body = {}, isToast = false) {
-  console.log(body);
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
@@ -221,7 +219,6 @@ export async function profitAndLoss_Api(body = {}, isToast = false) {
 }
 
 export async function profitAndLossMarket_Api(body = {}, isToast = false) {
-  console.log("body", body);
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
@@ -660,7 +657,6 @@ export const getGifImg = async () => {
       },
     };
     const response = await fetch(urls.getGifImg, callParams);
-    console.log("gifresponse", response);
     
     const data = await response.json();
     return data;
@@ -679,7 +675,6 @@ export const getInnerImg = async () => {
       },
     };
     const response = await fetch(urls.getInnerImg, callParams);
-    console.log("gifresponse", response);
     
     const data = await response.json();
     return data;
@@ -698,7 +693,6 @@ export const getAnnouncement = async () => {
       },
     };
     const response = await fetch(urls.getAannouncement, callParams);
-    console.log("gifresponse", response);
     
     const data = await response.json();
     return data;
@@ -717,7 +711,6 @@ export const getInnerAnnouncement = async () => {
       },
     };
     const response = await fetch(urls.getInnerAannouncement, callParams);
-    console.log("gifresponse", response);
     
     const data = await response.json();
     return data;
