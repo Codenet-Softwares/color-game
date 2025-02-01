@@ -93,22 +93,22 @@ const AccountStatement = () => {
         <>
             <AppDrawer showCarousel={false}>
                 <Layout />
-                <div style={{ marginTop: "120px" }}>
+                <div style={{ marginTop: "150px" }}>
                     <div className="d-flex justify-content-center m-5">
                         <div className="card w-100 rounded">
                             {/* Card Header */}
                             <div className="card-header text-white p-2 text-uppercase text-center" style={{ backgroundColor: "#2CB3D1" }}>
-                                <b>&nbsp;&nbsp;Account Statement</b>
+                                <b className='h5 fw-bold'>&nbsp;&nbsp;Account Statement</b>
                             </div>
 
-                            <div className="form-group mb-3 mb-md-0 px-2 ">
+                            <div className="form-group mb-3 mb-md-0 px-2 mt-2 fw-bold">
                                 <div className="container">
                                     <div className="row">
-                                        <div className="col-sm">Total Entries</div>
-                                        <div className="col-sm">Data Source</div>
-                                        <div className="col-sm">From:</div>
-                                        <div className="col-sm">To:</div>
-                                        <div className="col-sm"></div>
+                                        <div className="col-sm fw-bold ">Total Entries</div>
+                                        <div className="col-sm fw-bold ">Data Source</div>
+                                        <div className="col-sm fw-bold ">From:</div>
+                                        <div className="col-sm fw-bold ">To:</div>
+                                        <div className="col-sm fw-bold "></div>
                                     </div>
                                 </div>
                                 <div className="container">
@@ -116,7 +116,7 @@ const AccountStatement = () => {
                                         {/* Total Entries Dropdown */}
                                         <div className="col-sm">
                                             <select
-                                                className="form-select form-select-sm w-50 m-1"
+                                                className="form-select form-select-sm w-50 m-1 fw-bold"
                                                 onChange={(e) =>
                                                     setGetAccountstatement((prevState) => ({
                                                         ...prevState,
@@ -136,7 +136,7 @@ const AccountStatement = () => {
                                         {/* Data Source Dropdown */}
                                         <div className="col-sm">
                                             <select
-                                                className="form-select form-select-sm w-50 m-1"
+                                                className="form-select form-select-sm w-50 m-1 fw-bold"
                                                 onChange={(e) => {
                                                     setGetAccountstatement((prevState) => ({
                                                         ...prevState,
@@ -168,7 +168,7 @@ const AccountStatement = () => {
                                         {/* End Date Picker */}
                                         <div className="col-sm">
                                             <DatePicker
-                                                selected={backupDate.endDate}
+                                                selected={backupDate.endDate}  
                                                 onChange={setEndDate}
                                                 disabled={getAccountstatement.dataSource === "live"} // Disable if live data
                                                 placeholderText="Select End Date"
@@ -198,14 +198,14 @@ const AccountStatement = () => {
                                         <div className="QA_section">
                                             <div className="QA_table mb_30">
                                                 <table className="table lms_table_active3 table-bordered">
-                                                    <thead className='text-uppercase'>
-                                                        <tr style={{ backgroundColor: "#e6e9ed", color: "#5562a3" }} align="center">
-                                                            <th scope="col"><b>Date/Time</b></th>
-                                                            <th scope="col"><b>Deposit</b></th>
-                                                            <th scope="col"><b>Withdraw</b></th>
-                                                            <th scope="col"><b>Balance</b></th>
-                                                            <th scope="col"><b>Remark</b></th>
-                                                            <th scope="col"><b>From &rarr; To</b></th>
+                                                    <thead className=''>
+                                                        <tr style={{ backgroundColor: "#e6e9ed"}} align="center">
+                                                            <th scope="col"><h6 className='fw-bold'>Date/Time</h6></th>
+                                                            <th scope="col"><h6 className='fw-bold'>Deposit</h6></th>
+                                                            <th scope="col"><h6 className='fw-bold'>Withdraw</h6></th>
+                                                            <th scope="col"><h6 className='fw-bold'>Balance</h6></th>
+                                                            <th scope="col"><h6 className='fw-bold'>Remark</h6></th>
+                                                            <th scope="col"><h6 className='fw-bold'>From &rarr; To</h6></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -232,7 +232,7 @@ const AccountStatement = () => {
                                         {/* No Data Found Message */}
                                         {getAccountstatement?.statement?.length === 0 && (
                                             <div className="alert text-dark bg-light mt-3" role="alert">
-                                                <div className="alert-text d-flex justify-content-center">
+                                                <div className="alert-text d-flex justify-content-center text-danger">
                                                     <b> &#128680; No Data Found !! </b>
                                                 </div>
                                             </div>

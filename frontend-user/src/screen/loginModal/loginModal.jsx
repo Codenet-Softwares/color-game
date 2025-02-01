@@ -78,7 +78,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
 
   function ModalBody() {
     return (
-      <div className="py-3 rounded" style={{background:"linear-gradient(to bottom, #18ADC5, #17687A)"}}>
+      <div className="py-3 rounded">
         <div className="d-flex justify-content-center position-relative">
           <input
             type="text"

@@ -517,13 +517,13 @@ const GetMarketDetailByMarketId = () => {
               <div className="row py-1 px-0 m-0 border-bottom">
                 <div className="col-4"></div>
                 <div
-                  className="col-4 rounded-top-3 p-1 fw-bold text-uppercase"
+                  className="col-4 rounded-top-3 p-1 fw-bold"
                   style={{ backgroundColor: "#80C2F1" }}
                 >
                   Back
                 </div>
                 <div
-                  className="col-4 rounded-top-3 p-1 fw-bold text-uppercase"
+                  className="col-4 rounded-top-3 p-1 fw-bold"
                   style={{ backgroundColor: "#FAA9BA" }}
                 >
                   Lay

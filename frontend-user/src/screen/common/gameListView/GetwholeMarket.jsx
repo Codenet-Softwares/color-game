@@ -185,10 +185,10 @@ const GetwholeMarket = () => {
                       {/* Render only if markets are available */}
                       {gameWithMarketData &&
                         gameWithMarketData.markets.length > 0 && (
-                          <div className="row px-0 m-0 text-center">
+                          <div className="row px-0 m-0">
                             <span className="col-6 text-dark text-decoration-none text-nowrap fw-bold h6"></span>
-                            <div className="col-3 rounded fw-bold">BACK</div>
-                            <div className="col-3 rounded fw-bold">LAY</div>
+                            <div className="col-3 rounded-top-2 fw-bold p-1" style={{background:"#80C2F1"}}>BACK</div>
+                            <div className="col-3 rounded-top-2 fw-bold"  style={{background:"#FAA9BA"}}>LAY</div>
                           </div>
                         )}
                       {gameWithMarketData &&

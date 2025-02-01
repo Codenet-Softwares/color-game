@@ -328,7 +328,7 @@ const ProfitLoss = ({
   return (
     <div className="col-sm-12 mt-3">
       {toggle && (
-        <div className="card mb-3 w-100 rounded">
+        <div className="card mb-3 w-100 rounded" style={{marginTop:"150px"}}>
           <div
             className="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between"
             style={{ backgroundColor: "#2CB3D1" }}
@@ -337,12 +337,12 @@ const ProfitLoss = ({
               <div class="container">
                 <div class="row">
                   <div class="col-sm fw-bold">Data Source</div>
-                  <div class="col-sm fw-bold">From</div>
-                  <div class="col-sm fw-bold">To</div>
+                  <div class="col-sm fw-bold">From:</div>
+                  <div class="col-sm fw-bold">To:</div>
                   <div class="col-sm fw-bold"></div>
                 </div>
               </div>
-              <div class="container">
+              <div class="container mt-1">
                 <div class="row">
                   <div class="col-sm">
                     {" "}
@@ -356,11 +356,11 @@ const ProfitLoss = ({
                         }));
                       }}
                     >
-                      <option value="live" selected>
+                      <option className="" value="live" selected >
                         LIVE DATA
                       </option>
-                      <option value="backup">BACKUP DATA</option>
-                      <option value="olddata">OLD DATA</option>
+                      <option className="fw-bold" value="backup">BACKUP DATA</option>
+                      <option className="fw-bold" value="olddata">OLD DATA</option>
                     </select>
                   </div>
                   <div class="col-sm">
@@ -380,7 +380,7 @@ const ProfitLoss = ({
                   </div>
                   <div class="col-sm">
                     <button
-                      className="btn btn-danger mb-2"
+                      className="btn btn-danger mb-2 fw-bold"
                       disabled={startDate === null || endDate === null}
                       onClick={handleDateForProfitLoss}
                     >
@@ -406,7 +406,7 @@ const ProfitLoss = ({
 
           <div className="m-1 d-flex justify-content-between align-items-center">
             <select
-              className="form-select w-auto m-1"
+              className="form-select w-auto m-1 fw-bold"
               onChange={handelItemPerPage}
             >
               <option value="10" selected>
@@ -436,19 +436,20 @@ const ProfitLoss = ({
                             backgroundColor: "#e6e9ed",
                             color: "#5562a3",
                           }}
-                          align="center"
+                          align="center"   
+                          className=""                    
                         >
                           <th scope="col">
-                            <b>Sport Name</b>
+                            <h6 className="fw-bold">Sport Name</h6>
                           </th>
                           <th scope="col">
-                            <b>Profit & Loss</b>
+                            <h6 className="fw-bold">Profit & Loss</h6>
                           </th>
                           <th scope="col">
-                            <b>Commission</b>
+                            <h6 className="fw-bold">Commission</h6>
                           </th>
                           <th scope="col">
-                            <b>Total P&L</b>
+                            <h6 className="fw-bold">Total P&L</h6>
                           </th>
                         </tr>
                         {dataGameWise?.length > 0 ? (
@@ -493,7 +494,7 @@ const ProfitLoss = ({
                           <tr align="center">
                             <td colspan="4">
                               <div
-                                class="alert alert-info fw-bold"
+                                class="alert alert-info fw-bold text-danger"
                                 role="alert"
                               >
                                 No Data Found !!
