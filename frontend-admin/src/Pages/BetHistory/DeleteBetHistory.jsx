@@ -12,28 +12,44 @@ const DeleteBetHistory = () => {
   const auth = useAuth();
   const [selectedMarketName, setSelectedMarketName] = useState("");
   const [selectedMarketDetails, setSelectedMarketDetails] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalEntries: 10,
   });
   const [marketHistory, setMarketHistory] = useState({
     markets: [],
-    search: "",
     currentPage: 1,
+    totalPages: 1,
     totalEntries: 10,
+    search: "",
+    totalData: 0,
   });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchMarketHistory();
+  }, [marketHistory.currentPage, marketHistory.totalEntries, debouncedSearchTerm]);
 
   const fetchMarketHistory = () => {
     GameService.trashLiveBetHistory(
       auth.user,
       marketHistory.currentPage,
       marketHistory.totalEntries,
-      marketHistory.search
+      debouncedSearchTerm
     )
       .then((res) => {
         setMarketHistory((prev) => ({
           ...prev,
           markets: res.data?.data || [],
+          totalPages: res?.data.pagination?.totalPages,
+          totalData: res?.data.pagination?.totalItems,
         }));
       })
       .catch((err) => {
@@ -73,7 +89,7 @@ const DeleteBetHistory = () => {
 
   useEffect(() => {
     fetchMarketHistory();
-  }, [marketHistory.search]);
+  }, [ debouncedSearchTerm]);
 
   const fetchMarketDetails = async (marketId) => {
     try {
@@ -105,15 +121,17 @@ const DeleteBetHistory = () => {
   };
 
   const handlePageChange = (pageNumber) => {
-    setPagination((prev) => ({ ...prev, currentPage: pageNumber }));
+    setMarketHistory((prev) => ({ ...prev, currentPage: pageNumber }));
   };
+  
+  
 
-  const handleEntriesChange = (e) => {
-    setPagination({
-      currentPage: 1,
-      totalEntries: parseInt(e.target.value, 10),
-    });
-  };
+  // const handleEntriesChange = (e) => {
+  //   setPagination({
+  //     currentPage: 1,
+  //     totalEntries: parseInt(e.target.value, 10),
+  //   });
+  // };
 
   const handleClearSearch = () => {
     setMarketHistory((prev) => ({ ...prev, search: "" }));
@@ -150,17 +168,17 @@ const DeleteBetHistory = () => {
           type="text"
           className="form-control fw-bold"
           placeholder="Search By market Name..."
-          value={marketHistory.search}
-          onChange={(e) =>
-            setMarketHistory((prev) => ({ ...prev, search: e.target.value }))
-          }
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+
+          
           style={{
             paddingLeft: "40px",
             borderRadius: "30px",
             border: "2px solid  #3E5879",
           }}
         />
-        {marketHistory.search && (
+        {searchTerm && (
           <FaTimes
             onClick={handleClearSearch}
             style={{
@@ -233,14 +251,14 @@ const DeleteBetHistory = () => {
           )}
         </div>
 
-        {paginatedMarkets.length > 0 && (
+        {marketHistory.markets.length > 0 && (
           <Pagination
-            currentPage={pagination.currentPage}
-            totalPages={totalPages}
+            currentPage={marketHistory.currentPage}
+            totalPages={marketHistory.totalPages}
             handlePageChange={handlePageChange}
-            startIndex={startIndex + 1}
-            endIndex={endIndex}
-            totalData={totalData}
+            startIndex={(marketHistory.currentPage - 1) * marketHistory.totalEntries + 1}
+            endIndex={Math.min(marketHistory.currentPage * marketHistory.totalEntries, marketHistory.totalData)}
+            totalData={marketHistory.totalData}
           />
         )}
       </div>
