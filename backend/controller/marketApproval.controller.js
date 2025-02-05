@@ -22,6 +22,7 @@ export const getDeleteMarket = async (req, res) => {
             where,
             limit: parseInt(limit),
             offset: parseInt(offset),
+            order : [["createdAt", "DESC"]],
         });
 
         const response = deleteMarket.map((approval) => {

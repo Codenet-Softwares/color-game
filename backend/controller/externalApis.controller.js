@@ -678,7 +678,7 @@ export const getLiveBetGames = async (req, res) => {
         "userName",
         "userId",
       ],
-      order: [["id", "DESC"]],
+      order: [["createdAt", "DESC"]],
     });
 
     if (!currentOrders || currentOrders.length === 0) {

@@ -192,11 +192,11 @@ export const getMarket = async (req, res) => {
 
     if (filteredMarkets.length === 0) {
       return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr(
-          null,
-          false,
-          statusCode.badRequest,
+        .status(statusCode.success)
+        .send(apiResponseSuccess(
+          [],
+          true,
+          statusCode.success,
           "No markets match the search criteria",
         ));
     }
