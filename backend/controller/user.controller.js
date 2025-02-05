@@ -483,7 +483,7 @@ export const getAllGameData = async (req, res) => {
       gameName: game.gameName,
       description: game.description,
       isBlink: game.isBlink,
-      markets: game.Markets.filter(
+      markets: game.Markets.reverse().filter(
         (market) => !market.hideMarketUser && !market.isVoid
       ).map((market) => ({
         marketId: market.marketId,
@@ -510,6 +510,8 @@ export const getAllGameData = async (req, res) => {
         ),
       })),
     }));
+
+    console.log("formattedGameData....................", formattedGameData)
     const baseURL = process.env.LOTTERY_URL;
 
     const response = await axios.get(
@@ -518,7 +520,7 @@ export const getAllGameData = async (req, res) => {
     const data = response.data.data
     const foramtedData = [{
         gameName    : data[0]?.gameName === "Lottery" ?data[0]?.gameName : "Lottery",
-        markets     : data.map((game)=>({
+        markets     : data.reverse().map((game)=>({
         marketId    : game.marketId,
         marketName  : game.marketName,
         group_start : game.group_start,
@@ -540,7 +542,8 @@ export const getAllGameData = async (req, res) => {
         }))
     }]
    
-    const combinedData = [...formattedGameData, ...foramtedData];
+    const combinedData = [...formattedGameData.reverse(), ...foramtedData];
+  
     res
       .status(statusCode.success)
       .json(

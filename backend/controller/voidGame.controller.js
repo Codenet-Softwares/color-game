@@ -125,8 +125,6 @@ export const getAllVoidMarkets = async (req, res) => {
         }
       ],
       attributes: ['marketId', 'marketName', 'gameId'],
-      limit: pageSize,
-      offset: offset
     });
 
     const formattedMarkets = markets.map(market => ({
@@ -144,10 +142,14 @@ export const getAllVoidMarkets = async (req, res) => {
 
     const totalPages = Math.ceil(totalItems / pageSize);
 
+    const reversedData = formattedMarkets.reverse();
+
+    const paginatedData = reversedData.slice(offset, offset + pageSize);
+
     return res
       .status(statusCode.success)
       .send(apiResponseSuccess(
-        formattedMarkets,
+        paginatedData,
         true,
         statusCode.success,
         'Voided markets retrieved successfully',
