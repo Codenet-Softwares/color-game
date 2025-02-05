@@ -93,31 +93,29 @@ export const voidMarket = async (req, res) => {
 
 export const getAllVoidMarkets = async (req, res) => {
   try {
-    let { page = 1, pageSize = 10, gameName } = req.query;
+    let { page = 1, pageSize = 10, search = '' } = req.query;
     page = parseInt(page);
     pageSize = parseInt(pageSize);
 
     const offset = (page - 1) * pageSize;
 
-    const gameFilter = gameName ? { gameName: { [Op.like]: `%${gameName}%` } } : {};
+    const marketFilter = search.trim() !== '' ? { marketName: { [Op.like]: `%${search}%` } } : {};
 
     const totalItems = await Market.count({
-      where: { isVoid: true },
+      where: { isVoid: true,...marketFilter },
       include: [
         {
-          model: Game,
-          where: gameFilter
+          model: Game
         }
       ]
     });
 
     const markets = await Market.findAll({
-      where: { isVoid: true },
+      where: { isVoid: true ,...marketFilter},
       include: [
         {
           model: Game,
           attributes: ['gameId', 'gameName'],
-          where: gameFilter
         },
         {
           model: Runner,
