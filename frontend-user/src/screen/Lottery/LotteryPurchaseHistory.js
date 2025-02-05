@@ -163,20 +163,20 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   );
 
   // Conditional rendering based on the availability of markets for the selected date
-  if (loading) {
-    return (
-      <div className="d-flex justify-content-center align-items-center ">
-        <h1
-          className="fw-bold text-white p-5 rounded-5"
-          style={{ marginTop: "300px", background: "#1a89a2" }}
-        >
-          Purchase Lottery is
-          <br />
-          Not Available
-        </h1>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="d-flex justify-content-center align-items-center ">
+  //       <h1
+  //         className="fw-bold text-white p-5 rounded-5"
+  //         style={{ marginTop: "300px", background: "#1a89a2" }}
+  //       >
+  //         Purchase Lottery is
+  //         <br />
+  //         Not Available
+  //       </h1>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div
@@ -372,14 +372,16 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         </div>
       )}
 
-      <Pagination
-        currentPage={pagination.page}
-        totalPages={pagination.totalPages}
-        handlePageChange={handlePageChange}
-        startIndex={startIndex}
-        endIndex={endIndex}
-        totalData={pagination.totalItems}
-      />
+      {purchaseHistory.length > 0 && (
+          <Pagination
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            handlePageChange={handlePageChange}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalData={pagination.totalItems}
+          />
+        )}
     </div>
   );
 };
