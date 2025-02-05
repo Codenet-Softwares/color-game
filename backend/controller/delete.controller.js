@@ -158,7 +158,8 @@ export const getMarket = async (req, res) => {
     pageSize = parseInt(pageSize);
 
     const existingMarket = await MarketTrash.findAll({
-      attributes: ["trashMarkets"],
+      attributes: ["trashMarkets", "createdAt"],
+      order: [["createdAt", "DESC"]]
     });
 
     const allMarkets = [];

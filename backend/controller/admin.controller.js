@@ -857,8 +857,9 @@ export const getUsersLiveBetGames = async (req, res) => {
       : {};
 
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName", "userName"],
+      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "createdAt"],
       where: where_clause,
+      order: [["createdAt", "DESC"]],
       raw: true,
     });
 
@@ -989,7 +990,8 @@ export const getBetMarketsAfterWin = async (req, res) => {
     const offset = (parseInt(page, 10) - 1) * limit;
 
     const { rows: betHistoryOrders } = await BetHistory.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName", "userName"],
+      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "id"],
+      order: [["id", "DESC"]],
       raw: true,
     });
 
