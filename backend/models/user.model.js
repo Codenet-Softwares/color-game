@@ -40,7 +40,7 @@ userSchema.init(
       allowNull: true,
     },
     token: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(512),
     },
     isReset: {
       type: DataTypes.BOOLEAN,
