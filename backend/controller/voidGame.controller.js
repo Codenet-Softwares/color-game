@@ -103,8 +103,6 @@ export const getAllVoidMarkets = async (req, res) => {
       whereClause.marketName = { [Op.like]: `%${search}%` };
     }
 
-    const marketFilter = search.trim() !== '' ? { marketName: { [Op.like]: `%${search}%` } } : {};
-
     const totalItems = await Market.count({
       where: whereClause,
       include: [
