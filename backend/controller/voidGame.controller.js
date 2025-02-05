@@ -98,11 +98,15 @@ export const getAllVoidMarkets = async (req, res) => {
     pageSize = parseInt(pageSize);
 
     const offset = (page - 1) * pageSize;
+    const whereClause = { isVoid: true };
+    if (search.trim() !== '') {
+      whereClause.marketName = { [Op.like]: `%${search}%` };
+    }
 
     const marketFilter = search.trim() !== '' ? { marketName: { [Op.like]: `%${search}%` } } : {};
 
     const totalItems = await Market.count({
-      where: { isVoid: true,...marketFilter },
+      where: whereClause,
       include: [
         {
           model: Game
@@ -111,7 +115,7 @@ export const getAllVoidMarkets = async (req, res) => {
     });
 
     const markets = await Market.findAll({
-      where: { isVoid: true ,...marketFilter},
+      where: whereClause,
       include: [
         {
           model: Game,
