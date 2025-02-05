@@ -212,6 +212,8 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   maxWidth: "300px",
                   background: "linear-gradient(135deg, #e6f7ff, #ffffff)",
                 }}
+                readonly // Prevent manual typing
+                onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
               />
             </div>
           </div>
