@@ -14,6 +14,8 @@ const CreateMarket = ({ show, setShow, id }) => {
   const [participant, setParticipant] = useState("");
   const [startDatevalue, SetStartDateValue] = useState(new Date());
   const [endDatevalue, setEndDateValue] = useState(new Date());
+  const [errors, setErrors] = useState({}); // State for validation errors
+
   const today = new Date();
   const auth = useAuth();
 
@@ -21,12 +23,25 @@ const CreateMarket = ({ show, setShow, id }) => {
     resetForm(); // Reset form when closing modal
     setShow(false);
   };
-
   const resetForm = () => {
     setMarketName("");
-    setParticipant("");
+    setParticipant(""); // Reset participant correctly
     SetStartDateValue(new Date());
     setEndDateValue(new Date());
+    setErrors({});
+  };
+
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!marketName.trim()) newErrors.marketName = "Market Name is required.";
+    if (participant === "" || participant === null || participant <= 0) {
+      newErrors.participant =
+        "Number of Participants is required and must be greater than 0.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const disablePastDates = (current) => {
@@ -45,11 +60,10 @@ const CreateMarket = ({ show, setShow, id }) => {
     return moment(new Date(date))
       .add(5, "hours")
       .add(30, "minutes")
-      .seconds(0)  
-      .milliseconds(0) 
-      .toISOString(); 
+      .seconds(0)
+      .milliseconds(0)
+      .toISOString();
   };
-
 
   const handleStartDatevalue = (e) => {
     SetStartDateValue(e);
@@ -62,41 +76,27 @@ const CreateMarket = ({ show, setShow, id }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!marketName || !participant) {
-      toast.error("Market Name and Participants are required.", { autoClose: 2000 });
-      return;
-    }
+    if (!validateForm()) return; // If validation fails, don't submit
 
-    if (!startDatevalue || !endDatevalue) {
-      toast.error("Start and end times are required.", { autoClose: 2000 });
-      return;
-    }
-
-    // Adjust start and end times by adding 5 hours 30 minutes
-    const adjustedStartTime = adjustTime(startDatevalue);
-    const adjustedEndTime = adjustTime(endDatevalue);
-
-    // Compare the adjusted times to ensure end time is not smaller than start time
-    if (moment(adjustedEndTime).isBefore(adjustedStartTime)) {
-      toast.error("End time must be after the start time.", { autoClose: 2000 });
-      return;
-    }
+    auth.showLoader();
 
     const data = {
       marketName,
       participants: participant,
-      startTime: adjustedStartTime,
-      endTime: adjustedEndTime,
+      startTime: adjustTime(startDatevalue),
+      endTime: adjustTime(endDatevalue),
     };
 
     GameService.marketNameCreate(data, id, auth.user)
       .then((res) => {
         toast.success(res.data.message, { autoClose: 2000 });
-        resetForm();
-        setShow(false);
+        handleClose(); // Reset form & close modal on success
       })
       .catch((err) => {
         toast.error(customErrorHandler(err), { autoClose: 2000 });
+      })
+      .finally(() => {
+        auth.hideLoader();
       });
   };
 
@@ -118,6 +118,9 @@ const CreateMarket = ({ show, setShow, id }) => {
             onChange={(e) => setMarketName(e.target.value)}
           />
         </div>
+        {errors.marketName && (
+          <small className="text-danger">{errors.marketName}</small>
+        )}
         <div className="input-group mb-3">
           <div className="input-group-prepend">
             <span className="input-group-text w-100">No. Of Participants:</span>
@@ -127,9 +130,14 @@ const CreateMarket = ({ show, setShow, id }) => {
             className="form-control"
             placeholder="Type Here..."
             value={participant}
-            onChange={(e) => setParticipant(e.target.value)}
+            onChange={(e) =>
+              setParticipant(e.target.value ? parseInt(e.target.value, 10) : "")
+            }
           />
         </div>
+        {errors.participant && (
+          <small className="text-danger">{errors.participant}</small>
+        )}
         <div className="input-group mb-3">
           <div className="input-group-prepend">
             <span className="input-group-text w-100">Start Date & Time:</span>

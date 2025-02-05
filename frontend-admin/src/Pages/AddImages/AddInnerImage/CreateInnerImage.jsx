@@ -6,11 +6,15 @@ import GameService from "../../../Services/GameService"; // Update this to where
 const CreateInnerImage = () => {
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [validationMessage, setValidationMessage] = useState(""); // State for validation message
   const auth = useAuth();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+
+    // Reset validation message when file changes
+    setValidationMessage("");
 
     // Create an image preview
     const reader = new FileReader();
@@ -23,14 +27,28 @@ const CreateInnerImage = () => {
   const handleRemoveImage = () => {
     setFile(null);
     setImagePreview(null);
+    setValidationMessage(""); // Reset validation message when the image is removed
   };
 
   const handleUploadImage = async () => {
-    auth.showLoader();
+    // Validation before upload
     if (!file) {
-      toast.error("Please select an image to upload.");
+      setValidationMessage("Please select an image to upload.");
       return;
     }
+
+    if (!file.type.startsWith("image/")) {
+      setValidationMessage("Please select a valid image file (e.g., PNG, JPG, JPEG).");
+      return;
+    }
+
+    const maxFileSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxFileSize) {
+      setValidationMessage("File size exceeds the 5MB limit.");
+      return;
+    }
+
+    auth.showLoader();
 
     const reader = new FileReader();
     reader.onloadend = async () => {
@@ -50,9 +68,10 @@ const CreateInnerImage = () => {
         toast.success("Image uploaded successfully!");
         setFile(null);
         setImagePreview(null);
+        setValidationMessage(""); // Reset validation message after successful upload
       } catch (error) {
         toast.error("Failed to upload the image. Please try again.");
-      }finally {
+      } finally {
         auth.hideLoader();
       }
     };
@@ -104,6 +123,19 @@ const CreateInnerImage = () => {
                 />
               )}
             </div>
+            {/* Display validation error message */}
+            {validationMessage && (
+              <div
+                style={{
+                  color: "#FF0000",
+                  marginTop: "10px",
+                  fontSize: "14px",
+                  textAlign: "center",
+                }}
+              >
+                {validationMessage}
+              </div>
+            )}
             {imagePreview && (
               <div
                 onClick={handleRemoveImage}

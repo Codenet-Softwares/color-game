@@ -6,11 +6,16 @@ import { toast } from "react-toastify";
 const CreateImage = () => {
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [validationMessage, setValidationMessage] = useState(""); // State for validation message
   const auth = useAuth();
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+
+    // Reset validation message when file changes
+    setValidationMessage("");
+
     const fileReader = new FileReader();
     fileReader.onloadend = () => {
       setImagePreview(fileReader.result);
@@ -21,14 +26,28 @@ const CreateImage = () => {
   const handleRemoveImage = () => {
     setFile(null);
     setImagePreview(null);
+    setValidationMessage(""); // Reset validation message when the image is removed
   };
 
   const handleAddImage = async () => {
-    auth.showLoader();
+    // Validation before upload
     if (!file) {
-      toast.error("Please select an image to upload.");
+      setValidationMessage("Please select an image to upload.");
       return;
     }
+
+    if (!file.type.startsWith("image/")) {
+      setValidationMessage("Please select a valid image file.");
+      return;
+    }
+
+    // const maxFileSize = 5 * 1024 * 1024; 
+    // if (file.size > maxFileSize) {
+    //   setValidationMessage("File size exceeds the 5MB limit.");
+    //   return;
+    // }
+
+    auth.showLoader();
 
     const reader = new FileReader();
     reader.onloadend = async () => {
@@ -46,20 +65,20 @@ const CreateImage = () => {
 
       try {
         const response = await GameService.createSliderImage(auth.user, data);
-      
+
         toast.success("Image uploaded successfully!");
         setFile(null);
         setImagePreview(null);
+        setValidationMessage(""); // Reset validation message after successful upload
       } catch (error) {
         if (error.response && error.response.data && error.response.data.errMessage) {
-          toast.error(error.response.data.errMessage); 
+          toast.error(error.response.data.errMessage);
         } else {
-          toast.error("Failed to upload the image. Please try again."); 
+          toast.error("Failed to upload the image. Please try again.");
         }
-      }finally {
+      } finally {
         auth.hideLoader();
       }
-      
     };
 
     reader.readAsDataURL(file);
@@ -111,6 +130,20 @@ const CreateImage = () => {
               )}
             </div>
 
+            {/* Display validation error message */}
+            {validationMessage && (
+              <div
+                style={{
+                  color: "#FF0000",
+                  marginTop: "10px",
+                  fontSize: "14px",
+                  textAlign: "center",
+                }}
+              >
+                {validationMessage}
+              </div>
+            )}
+
             {/* Cross button outside the box */}
             {imagePreview && (
               <div
@@ -144,4 +177,3 @@ const CreateImage = () => {
 };
 
 export default CreateImage;
-  

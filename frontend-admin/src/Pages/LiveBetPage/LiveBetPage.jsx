@@ -22,19 +22,18 @@ const LiveBetPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   useEffect(() => {
-    // Debouncing logic: Update `debouncedSearchTerm` after 500ms
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 500);
 
-    return () => clearTimeout(timer); // Clear the timer on cleanup
+    return () => clearTimeout(timer);
   }, [searchTerm]);
   useEffect(() => {
-    auth.showLoader();
     fetchLiveBets();
   }, [liveBets.currentPage, liveBets.totalEntries,debouncedSearchTerm]);
 
   const fetchLiveBets = () => {
+    auth.showLoader();
     GameService.liveBetGame(
       auth.user,
       liveBets.currentPage,
@@ -105,7 +104,7 @@ const LiveBetPage = () => {
               <input
                 type="text"
                 className="form-control fw-bold"
-                placeholder="Search By Game Name Or Market Name..."
+                placeholder="Search By Market Name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
 
