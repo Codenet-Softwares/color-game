@@ -70,10 +70,6 @@ CurrentOrder.init(
       allowNull: false,
       defaultValue: false,
     },
-    exposure: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true,
-    },
     betId: {
       type: DataTypes.CHAR(150),
       allowNull: false,

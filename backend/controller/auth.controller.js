@@ -283,7 +283,6 @@ export const restoreTrashUser = async (req, res) => {
       eligibilityCheck: serializedUserData.eligibilityCheck,
       walletId: serializedUserData.walletId,
       balance: serializedUserData.balance,
-      exposure: serializedUserData.exposure,
       marketListExposure: serializedUserData.marketListExposure
     });
 
