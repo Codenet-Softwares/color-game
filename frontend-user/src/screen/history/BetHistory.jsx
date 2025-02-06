@@ -67,7 +67,7 @@ const BetHistory = () => {
 
   const [selectedOptions, setSelectedOptions] = useState({
     dataSource: "live",
-    select2: "",
+    select1: "",
     select3: "",
   });
   const [fetchData, setFetchData] = useState(true);
@@ -140,7 +140,6 @@ const BetHistory = () => {
     // After updating totalItems, we need to fetch data for the first page with the new number of items
     setCurrentPage(1);
 
-    // handleGetHistory()
   };
 
   //this is the select market response whic for both open bets and bet history
@@ -168,14 +167,15 @@ const BetHistory = () => {
     setSelectedGameName(e.target.value);
   };
 
-  const handleGetHistoryChange = (e) => {
-    setSelectedOptions((prevState) => ({
-      ...prevState,
-      dataSource: e.target.value,
-    }));
+ const handleGetHistoryChange = (e) => {
+   const { name, value } = e.target;
 
-    // Additional logic based on the selected option, if required
-  };
+   setSelectedOptions((prevState) => ({
+     ...prevState,
+     [name]: value, 
+   }));
+ };
+
 
   const handleGameChange = (e) => {
     setSelectedGameId(e.target.value);
@@ -211,7 +211,7 @@ const BetHistory = () => {
       <div>
         <div
           className="card shadow p-3 mb-5  rounded"
-          style={{ marginTop: "150px",background:"#2CB3D1" }}
+          style={{ marginTop: "150px", background: "#2CB3D1" }}
         >
           <div className="card-body">
             <div className="row">
@@ -220,14 +220,19 @@ const BetHistory = () => {
                   <select
                     className="form-select form-select-sm fw-bold"
                     aria-label=".form-select-sm example"
+                    name="dataSource"
                     value={selectedOptions.dataSource}
                     onChange={(e) => handleGetHistoryChange(e)}
                   >
                     <option className="fw-bold" value="live" selected>
                       Live Data
                     </option>
-                    <option value="backup" className="fw-bold">Back Data</option>
-                    <option value="olddata" className="fw-bold">Old Data</option>
+                    <option value="backup" className="fw-bold">
+                      Back Data
+                    </option>
+                    <option value="olddata" className="fw-bold">
+                      Old Data
+                    </option>
                   </select>
                 </div>
               </div>
@@ -242,13 +247,18 @@ const BetHistory = () => {
                     value={selectedGameId || ""}
                     onChange={handleGameChange}
                   >
-                    <option value="" className=""> Select Game </option>
+                    <option value="" className="">
+                      {" "}
+                      Select Game{" "}
+                    </option>
                     {gameSelectionBetHistory.map((game, index) => (
                       <option className="" key={index} value={game.gameId}>
                         {game.gameName}
                       </option>
                     ))}
-                    <option value="lottery" className="">Lottery</option>
+                    <option value="lottery" className="">
+                      Lottery
+                    </option>
                   </select>
                 </div>
               </div>
@@ -260,12 +270,19 @@ const BetHistory = () => {
                   <select
                     className="form-select form-select-sm fw-bold"
                     aria-label=".form-select-sm example"
-                    value={selectedOptions.select3}
-                    onChange={(e) => handleGetHistoryChange(e, "select3")}
+                    name="select1"
+                    value={selectedOptions.select1}
+                    onChange={(e) => handleGetHistoryChange(e)}
                   >
-                    <option selected className="fw-bold">Open this select menu</option>
-                    <option value="1" className="fw-bold">Settle</option>
-                    <option value="1" className="fw-bold">Unsettel</option>
+                    <option selected className="fw-bold">
+                      Open this select menu
+                    </option>
+                    <option value=" Settle" className="fw-bold">
+                      Settle
+                    </option>
+                    <option value="Unsettle" className="fw-bold">
+                      Unsettle
+                    </option>
                   </select>
                 </div>
               </div>
@@ -277,7 +294,7 @@ const BetHistory = () => {
                 <div className="form-group">
                   <label className="">From:</label>
                   <div className="input-group" style={{ maxWidth: "100%" }}>
-                    <Datetime                   
+                    <Datetime
                       value={dateValue.startDate}
                       name="startDate"
                       dateFormat="DD-MM-YYYY"
@@ -343,7 +360,10 @@ const BetHistory = () => {
             <h5 className="card-title text-uppercase fw-bold">Bet History</h5>
           </div>
           {selectedGameId === null ? (
-            <div className="alert alert-info text-center mt-2 fw-bold" role="alert">
+            <div
+              className="alert alert-info text-center mt-2 fw-bold"
+              role="alert"
+            >
               Please Select a Game Name & Click Get History
             </div>
           ) : betHistoryData?.length > 0 ? (
@@ -499,7 +519,12 @@ const BetHistory = () => {
                             <td>{item?.marketName}</td>
                             <td>{"WINNER"}</td>
                             <td>{item?.runnerName}</td>
-                            <td className="fw-bold" style={{ color: item?.type === "back" ? "blue" : "red" }}>
+                            <td
+                              className="fw-bold"
+                              style={{
+                                color: item?.type === "back" ? "blue" : "red",
+                              }}
+                            >
                               {item?.type}
                             </td>
                             <td>{item?.rate}</td>

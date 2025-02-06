@@ -22,25 +22,25 @@ const BetHistoryPage = () => {
  const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   useEffect(() => {
-    // Debouncing logic: Update `debouncedSearchTerm` after 500ms
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 500);
 
-    return () => clearTimeout(timer); // Clear the timer on cleanup
+    return () => clearTimeout(timer);
   }, [searchTerm]);
 
   useEffect(() => {
-    auth.showLoader();
     fetchBetHistory();
   }, [betHistory.currentPage, betHistory.totalEntries, debouncedSearchTerm]);
 
   const fetchBetHistory = () => {
+    auth.showLoader();
+    const trimmedSearchTerm = debouncedSearchTerm.trim(); 
     GameService.betHistory(
       auth.user,
       betHistory.currentPage,
       betHistory.totalEntries,
-      debouncedSearchTerm
+      trimmedSearchTerm
     )
       .then((res) => {
         setBetHistory((prev) => ({
@@ -57,15 +57,17 @@ const BetHistoryPage = () => {
         auth.hideLoader();
       });
   };
+  
   const handleClearSearch = () => {
-    setSearchTerm(""); // Reset the search term
+    setSearchTerm(""); 
     setBetHistory((prev) => ({ ...prev, name: "" }));
   };
   const handlePageChange = (pageNumber) => {
     setBetHistory((prev) => ({ ...prev, currentPage: pageNumber }));
   };
   let startIndex = Math.min(
-    (Number(betHistory.currentPage) - 1) * Number(betHistory.totalEntries) + 1
+    (Number(betHistory.currentPage) - 1) * Number(betHistory.totalEntries) + 1,
+    Number(betHistory.totalData)
   );
   let endIndex = Math.min(
     Number(betHistory.currentPage) * Number(betHistory.totalEntries),
@@ -189,8 +191,8 @@ const BetHistoryPage = () => {
                     {betHistory.betHistory.length > 0 ? (
                       <>
                         {betHistory.betHistory.map((bet, index) => (
-                          <tr key={bet.gameId}>
-                            <td>{index + 1}</td>
+                          <tr key={index}>
+                            <td>{startIndex+index }</td>
                             <td>{bet.gameName}</td>
                             <td>{bet.marketName}</td>
                             <td>

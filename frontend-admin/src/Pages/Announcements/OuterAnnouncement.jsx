@@ -9,7 +9,9 @@ const OuterAnnouncement = () => {
     announcement: "",
   });
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(""); // State to manage validation error message
+
   const emojis = [
     "😊", "😂", "😍", "😎", "🤔", "🥺", "💯", "🎉", "👍", "🙏",
     "❤️", "💙", "💚", "💛", "💜", "🧡", "🤍", "🤎",
@@ -29,19 +31,22 @@ const OuterAnnouncement = () => {
       announcement: prev.announcement + emoji,
     }));
     setShowEmojiPicker(false);
+    setError(""); // Clear error when user adds content
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAnnouncementData((prev) => ({ ...prev, [name]: value }));
+    setError(""); // Clear error when user starts typing
   };
 
   const handleCreateAnnouncement = async () => {
     setIsLoading(true);
     const { announcement } = announcementData;
 
-    if (!announcement) {
-      toast.error("Please provide an announcement.");
+    // Validation: Check for empty or whitespace-only announcements
+    if (!announcement.trim()) {
+      setError("Please enter a valid announcement.");
       setIsLoading(false);
       return;
     }
@@ -49,32 +54,33 @@ const OuterAnnouncement = () => {
     const data = { announcement };
 
     try {
-      const response = await GameService.CreateOuterAnnouncement(user, data);
+      await GameService.CreateOuterAnnouncement(user, data);
       toast.success("Announcement created successfully!");
       setAnnouncementData({ announcement: "" });
     } catch (error) {
-      // Check if the error response exists and contains the `errMessage` property
       if (error.response && error.response.data && error.response.data.errMessage) {
-        toast.error(error.response.data.errMessage); // Display the backend error message
+        toast.error(error.response.data.errMessage);
       } else {
-        toast.error("Failed to create announcement. Please try again."); // Fallback error message
+        toast.error("Failed to create announcement. Please try again.");
       }
       console.error("Error creating announcement:", error);
-    }finally {
+    } finally {
       setIsLoading(false);
     }
   };
 
   return (
     <div className="container my-5 p-5">
-      <h3 className="fw-bold text-center text-uppercase text-white p-3 rounded" style={{background:"#3E5879"}}>Create Outer Announcement</h3>
+      <h3 className="fw-bold text-center text-uppercase text-white p-3 rounded" style={{ background: "#3E5879" }}>
+        Create Outer Announcement
+      </h3>
       {isLoading && (
-    <div className="text-center my-3">
-      <div className="spinner-border text-primary" role="status">
-        <span className="visually-hidden">Loading...</span>
-      </div>
-    </div>
-  )}
+        <div className="text-center my-3">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      )}
       <div className="mt-4">
         <div className="mb-3">
           <div className="d-flex">
@@ -85,7 +91,7 @@ const OuterAnnouncement = () => {
               className="form-control fw-bold"
               style={{
                 background: "#E1D1C7",
-                border:"2px solid #3E5879",
+                border: error ? "2px solid red" : "2px solid #3E5879",
               }}
               value={announcementData.announcement}
               onChange={handleChange}
@@ -99,6 +105,9 @@ const OuterAnnouncement = () => {
               <h5 className="fw-bold">Choose Emojis 😊</h5>
             </button>
           </div>
+
+          {/* Show Validation Message Below Input Field */}
+          {error && <small className="text-danger">{error}</small>}
 
           {/* Emoji Picker */}
           {showEmojiPicker && (
@@ -120,10 +129,8 @@ const OuterAnnouncement = () => {
         </div>
 
         <div className="text-center">
-          <button className="btn btn-primary" onClick={handleCreateAnnouncement}        
-           disabled={isLoading} // Disable button while loading
-          >
-           {isLoading ? "Creating..." : "Create Inner Announcement"}
+          <button className="btn btn-primary" onClick={handleCreateAnnouncement} disabled={isLoading}>
+            {isLoading ? "Creating..." : "Create Outer Announcement"}
           </button>
         </div>
       </div>
