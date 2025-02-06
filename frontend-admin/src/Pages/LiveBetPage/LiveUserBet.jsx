@@ -233,7 +233,7 @@ const LiveUserBet = () => {
               <tbody>
                 {userBets.bets.length > 0 ? (
                   userBets.bets.map((bet, index) => (
-                    <tr key={bet.id}>
+                    <tr key={index}>
                       <td>{startIndex + index}</td>
                       <td>{bet.userName}</td>
                       <td>{bet.runnerName}</td>

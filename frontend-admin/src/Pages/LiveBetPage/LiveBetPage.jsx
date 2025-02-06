@@ -64,7 +64,8 @@ const LiveBetPage = () => {
     setLiveBets({ ...liveBets, currentPage: pageNumber });
   };
   let startIndex = Math.min(
-    (Number(liveBets.currentPage) - 1) * Number(liveBets.totalEntries) + 1
+    (Number(liveBets.currentPage) - 1) * Number(liveBets.totalEntries) + 1 , 
+    Number(liveBets.totalData)
   );
   let endIndex = Math.min(
     Number(liveBets.currentPage) * Number(liveBets.totalEntries),
@@ -190,8 +191,8 @@ const LiveBetPage = () => {
                     {liveBets.liveBets.length > 0 ? (
                       <>
                         {liveBets.liveBets.map((bet, index) => (
-                          <tr key={bet.gameId}>
-                            <td>{index + 1}</td>
+                          <tr key={index}>
+                            <td>{startIndex+index}</td>
                             <td>{bet.gameName}</td>
                             <td>{bet.marketName}</td>
                             <td>

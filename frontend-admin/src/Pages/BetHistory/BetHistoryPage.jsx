@@ -65,7 +65,8 @@ const BetHistoryPage = () => {
     setBetHistory((prev) => ({ ...prev, currentPage: pageNumber }));
   };
   let startIndex = Math.min(
-    (Number(betHistory.currentPage) - 1) * Number(betHistory.totalEntries) + 1
+    (Number(betHistory.currentPage) - 1) * Number(betHistory.totalEntries) + 1,
+    Number(betHistory.totalData)
   );
   let endIndex = Math.min(
     Number(betHistory.currentPage) * Number(betHistory.totalEntries),
@@ -189,8 +190,8 @@ const BetHistoryPage = () => {
                     {betHistory.betHistory.length > 0 ? (
                       <>
                         {betHistory.betHistory.map((bet, index) => (
-                          <tr key={bet.gameId}>
-                            <td>{index + 1}</td>
+                          <tr key={index}>
+                            <td>{startIndex+index }</td>
                             <td>{bet.gameName}</td>
                             <td>{bet.marketName}</td>
                             <td>
