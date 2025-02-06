@@ -511,7 +511,6 @@ export const getAllGameData = async (req, res) => {
       })),
     }));
 
-    console.log("formattedGameData....................", formattedGameData)
     const baseURL = process.env.LOTTERY_URL;
 
     const response = await axios.get(
