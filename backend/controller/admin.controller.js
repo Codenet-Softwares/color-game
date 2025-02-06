@@ -962,10 +962,10 @@ export const getBetsAfterWin = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(rows, true, statusCode.success, "Success", {
+          page :  parseInt(page),
+          pageSize : parseInt(pageSize),
           totalPages,
-          pageSize,
           totalItems,
-          page,
         })
       );
   } catch (error) {
