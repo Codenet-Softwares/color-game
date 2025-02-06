@@ -149,6 +149,8 @@ const ProfitLoss = ({
       // Make the API call
       const response = await getUserBetHistory_api({
         runnerId: runnerId,
+        page: userBetHistory.currentPage,
+        limit:userBetHistory.itemPerPage
       });
 
 

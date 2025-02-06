@@ -333,7 +333,7 @@ export const getUserBetHistory_api = async (body = {}, isToast = false) => {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getUserBetList}/${body.runnerId}`,
+      `${urls.getUserBetList}/${body.runnerId}?page=${body.page}&pageSize=${body.limit}`,
       callParams,
       isToast
     );
@@ -461,7 +461,7 @@ export async function lotteryPurchaseHIstoryUserNew(body = {}, isToast = false) 
   try {
     const callParams = await getCallParams(strings.POST, body, isToast); // Using POST method with `body`
     const response = await makeCall(
-      `${urls.userPurchaseHIstory}/${body.marketId}?page=${body.page}&limitPerPage=${body.limit}&sem=${body. searchBySem}`, // Constructing URL with pagination and search term
+      `${urls.userPurchaseHIstory}/${body.marketId}?page=${body.page}&limitPerPage=${body.limit}&sem=${body.searchBySem}`, // Constructing URL with pagination and search term
       callParams,
       isToast
     );
@@ -475,13 +475,13 @@ export async function lotteryPurchaseHIstoryUserNew(body = {}, isToast = false) 
 // export async function getLotteryMarketsApi(body = {}, isToast = false) {
 //   try {
 //     const callParams = await getCallParams(strings.GET, body, isToast);
-      
+
 //     const userLoggedIn = body.user.isLogin;
 //     if (!userLoggedIn) {
 //       console.warn("User is not logged in. Skipping API call for lottery markets.");
 //       return { success: false, data: [] };
 //     }
-    
+
 //     const response = await makeCall(urls.getLotteryMarketsApi, callParams, isToast);
 //     return response;
 //   } catch (error) {
@@ -605,9 +605,9 @@ export const getUserLotteryBetHistory_api = async (body = {}, isToast = false) =
 
 export async function getUpdateMarketStatus(body, marketId, isToast = false) {
   try {
-    const callParams =  getNoAuthCallParams(strings.POST, body, isToast);
-     const response = await makeCall(`${urls.getUpdateMarketStatus}/${marketId}`, callParams, isToast);
-     debugger;
+    const callParams = getNoAuthCallParams(strings.POST, body, isToast);
+    const response = await makeCall(`${urls.getUpdateMarketStatus}/${marketId}`, callParams, isToast);
+    debugger;
     return response;
   } catch (error) {
     throw error;
@@ -657,7 +657,7 @@ export const getGifImg = async () => {
       },
     };
     const response = await fetch(urls.getGifImg, callParams);
-    
+
     const data = await response.json();
     return data;
   } catch (err) {
@@ -675,7 +675,7 @@ export const getInnerImg = async () => {
       },
     };
     const response = await fetch(urls.getInnerImg, callParams);
-    
+
     const data = await response.json();
     return data;
   } catch (err) {
@@ -693,7 +693,7 @@ export const getAnnouncement = async () => {
       },
     };
     const response = await fetch(urls.getAannouncement, callParams);
-    
+
     const data = await response.json();
     return data;
   } catch (err) {
@@ -711,7 +711,7 @@ export const getInnerAnnouncement = async () => {
       },
     };
     const response = await fetch(urls.getInnerAannouncement, callParams);
-    
+
     const data = await response.json();
     return data;
   } catch (err) {
