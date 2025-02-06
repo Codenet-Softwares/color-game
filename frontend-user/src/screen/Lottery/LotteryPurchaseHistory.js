@@ -75,7 +75,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   const fetchMarketData = async () => {
     try {
       const response = await GetPurchaseHistoryMarketTimings({
-        date: selectedDate,
+        date:selectedDate,
       });
       if (response?.success) {
         setMarkets(response.data || []);
@@ -93,7 +93,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   // Fetch purchase history
   useEffect(() => {
     fetchMarketData();
-  }, [MarketId, selectedDate]);
+  }, [ selectedDate]);
   const fetchPurchaseHistory = async () => {
     if (!selectedMarketId) return;
 
@@ -374,7 +374,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         </div>
       )}
 
-      {purchaseHistory.length > 0 && (
+      {purchaseHistory.length > 0 && markets.length > 0 && (
           <Pagination
             currentPage={pagination.page}
             totalPages={pagination.totalPages}

@@ -303,8 +303,12 @@ const BetHistory = () => {
                       }
                       timeFormat="HH:mm"
                       isValidDate={(current) => current.isBefore(new Date())}
-                      readonly // Prevent manual typing
-                      onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
+                      closeOnSelect={true}
+                      inputProps={{
+                        readOnly: true, // Prevents manual typing
+                        onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
+                        style: { cursor: "pointer", backgroundColor: "#f3f3f3" } // Optional: Styling
+                      }}
                     />
                   </div>
                 </div>
@@ -323,8 +327,12 @@ const BetHistory = () => {
                       }
                       timeFormat="HH:mm"
                       isValidDate={(current) => current.isBefore(new Date())}
-                      readonly // Prevent manual typing
-                      onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
+                      closeOnSelect={true}
+                      inputProps={{
+                        readOnly: true, // Prevents manual typing
+                        onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
+                        style: { cursor: "pointer", backgroundColor: "#f3f3f3" } // Optional: Styling
+                      }}
                     />
                   </div>
                 </div>
