@@ -17,7 +17,7 @@ const ForgotPassword = () => {
   function setInitialValues() {
     return {
       oldPassword: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
       userId: store.user?.UserId,
     };
