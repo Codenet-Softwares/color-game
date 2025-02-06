@@ -1940,15 +1940,27 @@ export const accountStatement = async (req, res) => {
 
 export const getUserBetList = async (req, res) => {
   try {
+
+    const { page = 1, pageSize = 10, search = "" } = req.query;
+
     const user = req.user;
     const userId = user.userId;
     const runnerId = req.params.runnerId;
 
+    const whereClause = {
+      userId: userId,
+      runnerId: runnerId,
+    };
+
+    if (search) {
+      whereClause[Op.or] = [
+        { marketName: { [Op.like]: `%${search}%` } },
+      ];
+    }
+
+
     const rows = await BetHistory.findAll({
-      where: {
-        userId: userId,
-        runnerId: runnerId,
-      },
+      where: whereClause,
       attributes: [
         "userId",
         "userName",
@@ -1964,9 +1976,21 @@ export const getUserBetList = async (req, res) => {
       ],
     });
 
+    const offset = (page - 1) * pageSize;
+    const totalItems = rows.length;
+    const getallData = rows.slice(offset, offset + pageSize);
+    const totalPages = Math.ceil(totalItems / pageSize);
+
+    const paginationData = {
+      page : parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
+
     res
       .status(statusCode.success)
-      .send(apiResponseSuccess(rows, true, statusCode.success, "Success"));
+      .send(apiResponseSuccess(getallData, true, statusCode.success, "Success", paginationData));
   } catch (error) {
     res
       .status(statusCode.internalServerError)
