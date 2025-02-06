@@ -221,10 +221,11 @@ const DeleteBetHistory = () => {
                     >
                       <div className="d-flex justify-content-between w-100">
                         <h6 className="fw-bolder">
-                          Market Name:<h6 className="fw-bold text-danger">{market.marketName}</h6>
+                        Game Name: <h6 className="fw-bold text-danger">{market.gameName}</h6>
                         </h6>
                         <h6 className="fw-bolder px-3">
-                          Game Name: <h6 className="fw-bold text-danger">{market.gameName}</h6>
+                          Market Name:<h6 className="fw-bold text-danger">{market.marketName}</h6>
+
                         </h6>
                       </div>
                     </button>
@@ -242,7 +243,7 @@ const DeleteBetHistory = () => {
                           marketName={selectedMarketName}
                           deleteMarketTrash={deleteMarketTrash}
                           restoreMarketTrash={restoreMarketTrash}
-                          setSelectedMarketDetails={setSelectedMarketDetails} // Add this line
+                          setSelectedMarketDetails={setSelectedMarketDetails}
                         />
                       )}
                     </div>
