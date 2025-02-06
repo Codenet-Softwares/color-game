@@ -1,6 +1,8 @@
 import React from 'react';
+import Pagination from '../common/Pagination';
 
-const UserBetHistory = ({ data, SetComponent }) => {
+const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
+    console.log("first", data.currentPage)
 
     const formatDate = (isoString) => {
         const date = new Date(isoString);
@@ -17,22 +19,25 @@ const UserBetHistory = ({ data, SetComponent }) => {
         return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     };
 
+    const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
+    const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
+
     return (
         <div className="card w-100 rounded">
             {/* Header section with title and back button */}
             <div
-                className="card-header text-white p-1 d-flex justify-content-between" 
+                className="card-header text-white p-1 d-flex justify-content-between"
                 style={{ backgroundColor: "#2CB3D1" }}
             >
                 <b>&nbsp;&nbsp;Bet History</b>
                 <span
-                    style={{ cursor: "pointer" }} 
+                    style={{ cursor: "pointer" }}
                     title="Back"
                     onClick={() => {
-                        SetComponent("ProfitAndLossRunner"); 
+                        SetComponent("ProfitAndLossRunner");
                     }}
                 >
-                    <i className="fas fa-arrow-left"></i> 
+                    <i className="fas fa-arrow-left"></i>
                 </span>
             </div>
 
@@ -73,21 +78,21 @@ const UserBetHistory = ({ data, SetComponent }) => {
                                     {data?.data?.length > 0 ? (
                                         data?.data?.map((data, index) => (
                                             <tr key={index} align="center">
-                                                <td>{data?.gameName}</td> 
+                                                <td>{data?.gameName}</td>
                                                 <td className="text-primary fw-bold" style={{ cursor: "pointer" }}>
                                                     {data?.marketName}
                                                 </td>
-                                                <td>{"Winner"}</td> 
-                                                <td>{data?.runnerName}</td> 
-                                                <td>{data?.type}</td> 
-                                                <td>{data?.rate}</td> 
-                                                <td>{data?.value}</td> 
+                                                <td>{"Winner"}</td>
+                                                <td>{data?.runnerName}</td>
+                                                <td>{data?.type}</td>
+                                                <td>{data?.rate}</td>
+                                                <td>{data?.value}</td>
                                                 <td>
                                                     <span className='text-success mx-1'>{data?.bidAmount}</span>
                                                     <span className='text-danger'>(-{data?.value})</span>
                                                 </td>
-                                                <td>{formatDate(data?.placeDate)}</td> 
-                                                <td>{formatDate(data?.matchDate)}</td> 
+                                                <td>{formatDate(data?.placeDate)}</td>
+                                                <td>{formatDate(data?.matchDate)}</td>
                                             </tr>
                                         ))
                                     ) : (
@@ -103,6 +108,15 @@ const UserBetHistory = ({ data, SetComponent }) => {
                                 </thead>
                             </table>
                         </div>
+                        {data?.data?.length > 0 && <Pagination
+                            currentPage={data.currentPage}
+                            totalPages={data.totalPages}
+                            handlePageChange={handlePageChange}
+                            startIndex={startIndex}
+                            endIndex={endIndex}
+                            totalData={data.totalData}
+                        />}
+
                     </div>
                 </li>
             </ul>
