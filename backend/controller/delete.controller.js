@@ -158,7 +158,8 @@ export const getMarket = async (req, res) => {
     pageSize = parseInt(pageSize);
 
     const existingMarket = await MarketTrash.findAll({
-      attributes: ["trashMarkets"],
+      attributes: ["trashMarkets", "createdAt"],
+      order: [["createdAt", "DESC"]]
     });
 
     const allMarkets = [];
@@ -191,11 +192,11 @@ export const getMarket = async (req, res) => {
 
     if (filteredMarkets.length === 0) {
       return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr(
-          null,
-          false,
-          statusCode.badRequest,
+        .status(statusCode.success)
+        .send(apiResponseSuccess(
+          [],
+          true,
+          statusCode.success,
           "No markets match the search criteria",
         ));
     }
@@ -204,7 +205,7 @@ export const getMarket = async (req, res) => {
       ...new Map(
         filteredMarkets.map((m) => [
           m.marketId,
-          { marketId: m.marketId, marketName: m.marketName, userName: m.userName },
+          { marketId: m.marketId, marketName: m.marketName, gameId : m.gameId,  gameName : m.gameName, userName: m.userName },
         ])
       ).values(),
     ];
@@ -400,7 +401,6 @@ export const restoreMarketData = async (req, res) => {
       bidAmount: parseFloat(data.bidAmount),
       isWin: data.isWin,
       profitLoss: data.profitLoss,
-      exposure: parseFloat(data.exposure),
       betId: data.betId,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt
@@ -531,6 +531,7 @@ export const restoreMarketData = async (req, res) => {
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Restore data successfully"));
 
   } catch (error) {
+    console.log("error",error)
     await transaction.rollback();
     return res
       .status(statusCode.internalServerError)

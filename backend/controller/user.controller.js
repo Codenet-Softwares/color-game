@@ -483,7 +483,7 @@ export const getAllGameData = async (req, res) => {
       gameName: game.gameName,
       description: game.description,
       isBlink: game.isBlink,
-      markets: game.Markets.filter(
+      markets: game.Markets.reverse().filter(
         (market) => !market.hideMarketUser && !market.isVoid
       ).map((market) => ({
         marketId: market.marketId,
@@ -510,6 +510,8 @@ export const getAllGameData = async (req, res) => {
         ),
       })),
     }));
+
+    console.log("formattedGameData....................", formattedGameData)
     const baseURL = process.env.LOTTERY_URL;
 
     const response = await axios.get(
@@ -518,7 +520,7 @@ export const getAllGameData = async (req, res) => {
     const data = response.data.data
     const foramtedData = [{
         gameName    : data[0]?.gameName === "Lottery" ?data[0]?.gameName : "Lottery",
-        markets     : data.map((game)=>({
+        markets     : data.reverse().map((game)=>({
         marketId    : game.marketId,
         marketName  : game.marketName,
         group_start : game.group_start,
@@ -540,7 +542,8 @@ export const getAllGameData = async (req, res) => {
         }))
     }]
    
-    const combinedData = [...formattedGameData, ...foramtedData];
+    const combinedData = [...formattedGameData.reverse(), ...foramtedData];
+  
     res
       .status(statusCode.success)
       .json(
@@ -716,7 +719,6 @@ export const getUserWallet = async (req, res) => {
     const getBalance = {
       walletId: userData.walletId,
       balance: userBalance,
-      exposure: userData.exposure,
       marketListExposure: userData.marketListExposure,
     };
 
@@ -999,8 +1001,6 @@ export const createBid = async (req, res) => {
     runnerId,
     value,
     bidType,
-    exposure,
-    wallet,
     marketListExposure,
   } = req.body;
   try {
@@ -1124,7 +1124,6 @@ export const createBid = async (req, res) => {
         rate: runner[bidType.toLowerCase()],
         date: new Date(),
         bidAmount: mainValue,
-        exposure: exposure,
       });
       await user.save();
     }

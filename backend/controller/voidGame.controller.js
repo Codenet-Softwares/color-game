@@ -93,31 +93,31 @@ export const voidMarket = async (req, res) => {
 
 export const getAllVoidMarkets = async (req, res) => {
   try {
-    let { page = 1, pageSize = 10, gameName } = req.query;
+    let { page = 1, pageSize = 10, search = '' } = req.query;
     page = parseInt(page);
     pageSize = parseInt(pageSize);
 
     const offset = (page - 1) * pageSize;
-
-    const gameFilter = gameName ? { gameName: { [Op.like]: `%${gameName}%` } } : {};
+    const whereClause = { isVoid: true };
+    if (search.trim() !== '') {
+      whereClause.marketName = { [Op.like]: `%${search}%` };
+    }
 
     const totalItems = await Market.count({
-      where: { isVoid: true },
+      where: whereClause,
       include: [
         {
-          model: Game,
-          where: gameFilter
+          model: Game
         }
       ]
     });
 
     const markets = await Market.findAll({
-      where: { isVoid: true },
+      where: whereClause,
       include: [
         {
           model: Game,
           attributes: ['gameId', 'gameName'],
-          where: gameFilter
         },
         {
           model: Runner,
@@ -125,8 +125,6 @@ export const getAllVoidMarkets = async (req, res) => {
         }
       ],
       attributes: ['marketId', 'marketName', 'gameId'],
-      limit: pageSize,
-      offset: offset
     });
 
     const formattedMarkets = markets.map(market => ({
@@ -144,10 +142,14 @@ export const getAllVoidMarkets = async (req, res) => {
 
     const totalPages = Math.ceil(totalItems / pageSize);
 
+    const reversedData = formattedMarkets.reverse();
+
+    const paginatedData = reversedData.slice(offset, offset + pageSize);
+
     return res
       .status(statusCode.success)
       .send(apiResponseSuccess(
-        formattedMarkets,
+        paginatedData,
         true,
         statusCode.success,
         'Voided markets retrieved successfully',

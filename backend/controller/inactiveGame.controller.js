@@ -132,7 +132,9 @@ export const getInactiveGames = async (req, res) => {
       }))
     );
 
-    const paginatedData = formattedGameData.slice(offset, offset + limit);
+    const reversedData = formattedGameData.reverse();
+
+    const paginatedData = reversedData.slice(offset, offset + limit);
 
     res
       .status(statusCode.success)

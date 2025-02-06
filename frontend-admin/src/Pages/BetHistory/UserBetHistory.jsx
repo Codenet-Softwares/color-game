@@ -218,7 +218,7 @@ const UserBetHistory = () => {
                   {betAfterWin.winBetHistory.length > 0 ? (
                     betAfterWin.winBetHistory.map((winBet, index) => {
                       return (
-                        <tr key={winBet.userId}>
+                        <tr key={index}>
                           <td>{startIndex + index}</td>
                           <td>{winBet.userName}</td>
                           {/* <td>{winBet.marketName}</td> */}

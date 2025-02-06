@@ -249,6 +249,8 @@ const NewResult = () => {
               value={selectedDate}
               onChange={handleDateChange}
               max={today} // Prevent selecting future dates
+              readonly // Prevent manual typing
+              onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
             />
           </div>
         </div>

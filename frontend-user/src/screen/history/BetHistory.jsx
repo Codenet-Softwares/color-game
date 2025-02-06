@@ -286,6 +286,8 @@ const BetHistory = () => {
                       }
                       timeFormat="HH:mm"
                       isValidDate={(current) => current.isBefore(new Date())}
+                      readonly // Prevent manual typing
+                      onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                     />
                   </div>
                 </div>
@@ -304,6 +306,8 @@ const BetHistory = () => {
                       }
                       timeFormat="HH:mm"
                       isValidDate={(current) => current.isBefore(new Date())}
+                      readonly // Prevent manual typing
+                      onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                     />
                   </div>
                 </div>

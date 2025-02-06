@@ -76,10 +76,6 @@ BetHistory.init(
       allowNull: false,
       defaultValue: false,
     },
-    exposure: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: true,
-    },
     placeDate: {
       type: DataTypes.DATE,
       allowNull: false,

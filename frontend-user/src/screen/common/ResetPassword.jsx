@@ -7,16 +7,16 @@ import { useAppContext } from "../../contextApi/context";
 import strings from "../../utils/constant/stringConstant";
 import { ResetUserPassword } from "../../utils/apiService";
 import { ResetPasswordSchema } from "../../utils/schema";
-
+import { customErrorHandler } from "../../utils/helper";
 
 const ResetPassword = () => {
   const { dispatch } = useAppContext();
   const navigate = useNavigate();
   const location = useLocation();
-  const state = location?.state || {}; 
+  const state = location?.state || {};
   const formik = useFormik({
     initialValues: {
-      userName:state?.userName,
+      userName: state?.userName,
       confirmPassword: "",
       oldPassword: state?.password,
       newPassword: "",
@@ -28,20 +28,12 @@ const ResetPassword = () => {
   });
 
   async function handelresetPassword(values) {
-
     try {
       const response = await ResetUserPassword(values, true);
       if (response && response.success) {
-        navigate("/home");
-        toast.success("Password changed successfully!");
-      } else {
-        toast.error(
-          response.message || "Failed to change password. Please try again."
-        );
-      }
+        navigate("/home");      }
     } catch (error) {
-      console.error("Error changing password:", error);
-      toast.error("An error occurred. Please try again.");
+      toast.error(customErrorHandler(error));
     }
   }
   return (
@@ -60,7 +52,6 @@ const ResetPassword = () => {
             <div className="card-body">
               <h5 className="card-title text-center">Change Password</h5>
               <form onSubmit={formik.handleSubmit}>
-                
                 <div className="form-group">
                   <label htmlFor="newPassword">New Password</label>
                   <input
@@ -107,10 +98,7 @@ const ResetPassword = () => {
                       </div>
                     )}
                 </div>
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-block"
-                >
+                <button type="submit" className="btn btn-primary btn-block">
                   RESET PASSWORD
                 </button>
               </form>

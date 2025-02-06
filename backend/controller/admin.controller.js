@@ -679,7 +679,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
           bidAmount: bet.bidAmount,
           isWin: bet.isWin,
           profitLoss: bet.profitLoss,
-          exposure: bet.exposure,
           userName: bet.userName,
           betId: bet.betId,
         },
@@ -857,8 +856,9 @@ export const getUsersLiveBetGames = async (req, res) => {
       : {};
 
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName", "userName"],
+      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "createdAt"],
       where: where_clause,
+      order: [["createdAt", "DESC"]],
       raw: true,
     });
 
@@ -962,10 +962,10 @@ export const getBetsAfterWin = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(rows, true, statusCode.success, "Success", {
+          page :  parseInt(page),
+          pageSize : parseInt(pageSize),
           totalPages,
-          pageSize,
           totalItems,
-          page,
         })
       );
   } catch (error) {
@@ -989,7 +989,8 @@ export const getBetMarketsAfterWin = async (req, res) => {
     const offset = (parseInt(page, 10) - 1) * limit;
 
     const { rows: betHistoryOrders } = await BetHistory.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName", "userName"],
+      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "id"],
+      order: [["id", "DESC"]],
       raw: true,
     });
 
