@@ -259,8 +259,8 @@ const MarketPlace = () => {
                   <div className="single_board">
                     <div className="main_board_card">
                       <div className="main-title">
-                        <h4 className="m-0 text-center fw-bolder">
-                          Available {pathdata[0]?.name} Market
+                        <h4 className="m-0 text-center text-decoration-underline fw-bold mb-3">
+                           {pathdata[0]?.name} 
                         </h4>
                       </div>
                       {gameMarketData.length > 0 ? (

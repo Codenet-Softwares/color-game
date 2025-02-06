@@ -6,11 +6,15 @@ import GameService from "../../../Services/GameService";
 const AddGameGif = () => {
   const [file, setFile] = useState(null);
   const [gifPreview, setGifPreview] = useState(null);
+  const [validationMessage, setValidationMessage] = useState(""); // State for validation message
   const auth = useAuth(); 
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
+
+    // Reset validation message when file changes
+    setValidationMessage("");
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -22,14 +26,28 @@ const AddGameGif = () => {
   const handleRemoveGif = () => {
     setFile(null);
     setGifPreview(null);
+    setValidationMessage(""); // Reset validation message when the GIF is removed
   };
 
   const handleUploadGif = async () => {
-    auth.showLoader();
+    // Validation before upload
     if (!file) {
-      toast.error("Please select a GIF to upload.");
+      setValidationMessage("Please select a GIF to upload.");
       return;
     }
+
+    if (!file.type.startsWith("image/gif")) {
+      setValidationMessage("Please select a valid GIF file.");
+      return;
+    }
+
+    // const maxFileSize = 5 * 1024 * 1024; // 5MB
+    // if (file.size > maxFileSize) {
+    //   setValidationMessage("File size exceeds the 5MB limit.");
+    //   return;
+    // }
+
+    auth.showLoader();
 
     const reader = new FileReader();
     reader.onloadend = async () => {
@@ -50,6 +68,7 @@ const AddGameGif = () => {
         toast.success("GIF uploaded successfully!");
         setFile(null);
         setGifPreview(null);
+        setValidationMessage(""); // Reset validation message after successful upload
       } catch (error) {
         if (error.response && error.response.data && error.response.data.errMessage) {
           toast.error(error.response.data.errMessage); // Display the backend error message
@@ -57,10 +76,9 @@ const AddGameGif = () => {
           toast.error("Failed to upload the GIF. Please try again."); // Fallback error message
         }
         console.error(error);
-      }finally {
+      } finally {
         auth.hideLoader();
       }
-      
     };
 
     reader.readAsDataURL(file);
@@ -110,6 +128,19 @@ const AddGameGif = () => {
                 />
               )}
             </div>
+            {/* Display validation error message */}
+            {validationMessage && (
+              <div
+                style={{
+                  color: "#FF0000",
+                  marginTop: "10px",
+                  fontSize: "14px",
+                  textAlign: "center",
+                }}
+              >
+                {validationMessage}
+              </div>
+            )}
             {gifPreview && (
               <div
                 onClick={handleRemoveGif}
@@ -125,7 +156,7 @@ const AddGameGif = () => {
             <input
               id="file-input"
               type="file"
-              accept="image/gif" 
+              accept="image/gif"
               onChange={handleFileChange}
               style={{ display: "none" }}
             />

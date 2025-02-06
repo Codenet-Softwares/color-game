@@ -12,33 +12,53 @@ const DeleteBetHistory = () => {
   const auth = useAuth();
   const [selectedMarketName, setSelectedMarketName] = useState("");
   const [selectedMarketDetails, setSelectedMarketDetails] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalEntries: 10,
   });
   const [marketHistory, setMarketHistory] = useState({
     markets: [],
-    search: "",
     currentPage: 1,
+    totalPages: 1,
     totalEntries: 10,
+    search: "",
+    totalData: 0,
   });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    fetchMarketHistory();
+  }, [
+    marketHistory.currentPage,
+    marketHistory.totalEntries,
+    debouncedSearchTerm,
+  ]);
 
   const fetchMarketHistory = () => {
     GameService.trashLiveBetHistory(
       auth.user,
       marketHistory.currentPage,
       marketHistory.totalEntries,
-      marketHistory.search
+      debouncedSearchTerm
     )
       .then((res) => {
         setMarketHistory((prev) => ({
           ...prev,
           markets: res.data?.data || [],
+          totalPages: res?.data.pagination?.totalPages,
+          totalData: res?.data.pagination?.totalItems,
         }));
       })
       .catch((err) => {
-       toast.error(customErrorHandler(err));
-      })
+        toast.error(customErrorHandler(err));
+      });
   };
 
   const deleteMarketTrash = (trashMarketId) => {
@@ -73,7 +93,7 @@ const DeleteBetHistory = () => {
 
   useEffect(() => {
     fetchMarketHistory();
-  }, [marketHistory.search]);
+  }, [debouncedSearchTerm]);
 
   const fetchMarketDetails = async (marketId) => {
     try {
@@ -105,15 +125,15 @@ const DeleteBetHistory = () => {
   };
 
   const handlePageChange = (pageNumber) => {
-    setPagination((prev) => ({ ...prev, currentPage: pageNumber }));
+    setMarketHistory((prev) => ({ ...prev, currentPage: pageNumber }));
   };
 
-  const handleEntriesChange = (e) => {
-    setPagination({
-      currentPage: 1,
-      totalEntries: parseInt(e.target.value, 10),
-    });
-  };
+  // const handleEntriesChange = (e) => {
+  //   setPagination({
+  //     currentPage: 1,
+  //     totalEntries: parseInt(e.target.value, 10),
+  //   });
+  // };
 
   const handleClearSearch = () => {
     setMarketHistory((prev) => ({ ...prev, search: "" }));
@@ -131,120 +151,136 @@ const DeleteBetHistory = () => {
 
   return (
     <div>
-    <div className="container mt-5" style={{width:"94%"}}>
-      <div className=" text1 rounded" style={{background:"#3E5879"}}>
-        <h2 className="text-uppercase fw-bold text-center text-white p-2">Deleted Bets</h2>
-      </div>
-      <div className="col-md-6 position-relative">
-        <FaSearch
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "20px",
-            transform: "translateY(-50%)",
-            color: "#3E5879",
-            fontSize: "18px",
-          }}
-        />
-        <input
-          type="text"
-          className="form-control fw-bold"
-          placeholder="Search By market Name..."
-          value={marketHistory.search}
-          onChange={(e) =>
-            setMarketHistory((prev) => ({ ...prev, search: e.target.value }))
-          }
-          style={{
-            paddingLeft: "40px",
-            borderRadius: "30px",
-            border: "2px solid  #3E5879",
-          }}
-        />
-        {marketHistory.search && (
-          <FaTimes
-            onClick={handleClearSearch}
+      <div className="container mt-5" style={{ width: "94%" }}>
+        <div className=" text1 rounded" style={{ background: "#3E5879" }}>
+          <h2 className="text-uppercase fw-bold text-center text-white p-2">
+            Deleted Bets
+          </h2>
+        </div>
+        <div className="col-md-6 position-relative">
+          <FaSearch
             style={{
               position: "absolute",
               top: "50%",
-              right: "20px",
+              left: "20px",
               transform: "translateY(-50%)",
-              color: " #3E5879",
-              cursor: "pointer",
+              color: "#3E5879",
+              fontSize: "18px",
             }}
           />
-        )}
-      </div>
-
-      <div
-        className="card shadow-lg rounded mt-4 p-4"
-        style={{ background: "#E1D1C7" }}
-      >
-        <div className="accordion" id="marketAccordion">
-          {paginatedMarkets.length > 0 ? (
-            paginatedMarkets.map((market) => (
-              <div
-                className="accordion-item m-2 bg-light shadow-lg"
-                key={market.marketId}
-              >
-                <h2
-                  className="accordion-header"
-                  id={`heading${market.marketId}`}
-                >
-                  <button
-                    className="accordion-button"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target={`#collapse${market.marketId}`}
-                    aria-expanded="true"
-                    aria-controls={`collapse${market.marketId}`}
-                    onClick={() => handleAccordionChange(market.marketId)}
-                  >
-                    <h6 className="fw-bolder">{market.marketName}</h6>
-                  </button>
-                </h2>
-                <div
-                  id={`collapse${market.marketId}`}
-                  className="accordion-collapse collapse"
-                  aria-labelledby={`heading${market.marketId}`}
-                  data-bs-parent="#marketAccordion"
-                >
-                  <div className="accordion-body">
-                    {selectedMarketName === market.marketName && (
-                      <GetBetTrash
-                        selectedMarketDetails={selectedMarketDetails}
-                        marketName={selectedMarketName}
-                        deleteMarketTrash={deleteMarketTrash}
-                        restoreMarketTrash={restoreMarketTrash}
-                        setSelectedMarketDetails={setSelectedMarketDetails} // Add this line
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="accordion-item">
-              <h2 className="accordion-header">
-                <button className="accordion-button text-danger fw-bold" type="button" disabled>
-                  No Deleted Markets Found.
-                </button>
-              </h2>
-            </div>
+          <input
+            type="text"
+            className="form-control fw-bold"
+            placeholder="Search By market Name..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              paddingLeft: "40px",
+              borderRadius: "30px",
+              border: "2px solid  #3E5879",
+            }}
+          />
+          {searchTerm && (
+            <FaTimes
+              onClick={handleClearSearch}
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "20px",
+                transform: "translateY(-50%)",
+                color: " #3E5879",
+                cursor: "pointer",
+              }}
+            />
           )}
         </div>
 
-        {paginatedMarkets.length > 0 && (
-          <Pagination
-            currentPage={pagination.currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex + 1}
-            endIndex={endIndex}
-            totalData={totalData}
-          />
-        )}
+        <div
+          className="card shadow-lg rounded mt-4 p-4"
+          style={{ background: "#E1D1C7" }}
+        >
+          <div className="accordion" id="marketAccordion">
+            {paginatedMarkets.length > 0 ? (
+              paginatedMarkets.map((market) => (
+                <div
+                  className="accordion-item m-2 bg-light shadow-lg"
+                  key={market.marketId}
+                >
+                  <h2
+                    className="accordion-header"
+                    id={`heading${market.marketId}`}
+                  >
+                    <button
+                      className="accordion-button"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target={`#collapse${market.marketId}`}
+                      aria-expanded="true"
+                      aria-controls={`collapse${market.marketId}`}
+                      onClick={() => handleAccordionChange(market.marketId)}
+                    >
+                      <div className="d-flex justify-content-between w-100">
+                        <h6 className="fw-bolder">
+                          Market Name:<h6 className="fw-bold text-danger">{market.marketName}</h6>
+                        </h6>
+                        <h6 className="fw-bolder px-3">
+                          Game Name: <h6 className="fw-bold text-danger">{market.gameName}</h6>
+                        </h6>
+                      </div>
+                    </button>
+                  </h2>
+                  <div
+                    id={`collapse${market.marketId}`}
+                    className="accordion-collapse collapse"
+                    aria-labelledby={`heading${market.marketId}`}
+                    data-bs-parent="#marketAccordion"
+                  >
+                    <div className="accordion-body">
+                      {selectedMarketName === market.marketName && (
+                        <GetBetTrash
+                          selectedMarketDetails={selectedMarketDetails}
+                          marketName={selectedMarketName}
+                          deleteMarketTrash={deleteMarketTrash}
+                          restoreMarketTrash={restoreMarketTrash}
+                          setSelectedMarketDetails={setSelectedMarketDetails} // Add this line
+                        />
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="accordion-item">
+                <h2 className="accordion-header">
+                  <button
+                    className="accordion-button text-danger fw-bold"
+                    type="button"
+                    disabled
+                  >
+                    No Deleted Markets Found.
+                  </button>
+                </h2>
+              </div>
+            )}
+          </div>
+
+          {marketHistory.markets.length > 0 && (
+            <Pagination
+              currentPage={marketHistory.currentPage}
+              totalPages={marketHistory.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={
+                (marketHistory.currentPage - 1) * marketHistory.totalEntries + 1
+              }
+              endIndex={Math.min(
+                marketHistory.currentPage * marketHistory.totalEntries,
+                marketHistory.totalData
+              )}
+              totalData={marketHistory.totalData}
+            />
+          )}
+        </div>
       </div>
-    </div>
     </div>
   );
 };

@@ -22,25 +22,25 @@ const BetHistoryPage = () => {
  const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   useEffect(() => {
-    // Debouncing logic: Update `debouncedSearchTerm` after 500ms
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 500);
 
-    return () => clearTimeout(timer); // Clear the timer on cleanup
+    return () => clearTimeout(timer);
   }, [searchTerm]);
 
   useEffect(() => {
-    auth.showLoader();
     fetchBetHistory();
   }, [betHistory.currentPage, betHistory.totalEntries, debouncedSearchTerm]);
 
   const fetchBetHistory = () => {
+    auth.showLoader();
+    const trimmedSearchTerm = debouncedSearchTerm.trim(); 
     GameService.betHistory(
       auth.user,
       betHistory.currentPage,
       betHistory.totalEntries,
-      debouncedSearchTerm
+      trimmedSearchTerm
     )
       .then((res) => {
         setBetHistory((prev) => ({
@@ -57,8 +57,9 @@ const BetHistoryPage = () => {
         auth.hideLoader();
       });
   };
+  
   const handleClearSearch = () => {
-    setSearchTerm(""); // Reset the search term
+    setSearchTerm(""); 
     setBetHistory((prev) => ({ ...prev, name: "" }));
   };
   const handlePageChange = (pageNumber) => {
