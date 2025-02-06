@@ -73,7 +73,14 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   }
 
   function header() {
-    return <h4 className="d-flex justify-content-center text-uppercase fw-bold" style={{color:"#1A839B"}}>Login 👇🏾</h4>;
+    return (
+      <h4
+        className="d-flex justify-content-center text-uppercase fw-bold"
+        style={{ color: "#1A839B" }}
+      >
+        Login 👇🏾
+      </h4>
+    );
   }
 
   function ModalBody() {
@@ -94,7 +101,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
             style={{ left: "60px", top: "36px" }}
           >
             {errors.userName && touched.userName ? (
-              <p>{errors.userName}</p>
+              <p className="text-danger">{errors.userName}</p>
             ) : null}
           </span>
         </div>
@@ -115,7 +122,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
             style={{ left: "60px", top: "36px" }}
           >
             {errors.password && touched.password ? (
-              <p>{errors.password}</p>
+              <p className="text-danger">{errors.password}</p>
             ) : null}
           </span>
         </div>
@@ -127,10 +134,10 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
     return (
       <div className="d-flex flex-column w-100 ">
         <Button
-        className="text-uppercase fw-bold"
+          className="text-uppercase fw-bold"
           variant="secondary"
           onClick={handleSubmit}
-          style={{background:"linear-gradient(to bottom, #18ADC5, #17687A)"}}
+          style={{ background: "linear-gradient(to bottom, #18ADC5, #17687A)" }}
         >
           Sign in
         </Button>
