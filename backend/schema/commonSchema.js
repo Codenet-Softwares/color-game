@@ -111,8 +111,17 @@ export const createdMarketSchema = [
     .isInt({ min: 1 }).withMessage("Participants must be a positive integer"),
   body("startTime")
     .notEmpty().withMessage("Start time is required"),
-  body("endTime")
+    body("endTime")
     .notEmpty().withMessage("End time is required")
+    .custom((endTime, { req }) => {
+      const startTime = new Date(req.body.startTime);
+      const endTimeDate = new Date(endTime);
+
+      if (endTimeDate <= startTime) {
+        throw new Error("End time cannot be less than or equal to start time");
+      }
+      return true;
+    }),
 ];
 
 export const createdRunnerSchema = [
