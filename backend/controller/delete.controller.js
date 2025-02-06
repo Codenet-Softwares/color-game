@@ -205,7 +205,7 @@ export const getMarket = async (req, res) => {
       ...new Map(
         filteredMarkets.map((m) => [
           m.marketId,
-          { marketId: m.marketId, marketName: m.marketName, userName: m.userName },
+          { marketId: m.marketId, marketName: m.marketName, gameId : m.gameId,  gameName : m.gameName, userName: m.userName },
         ])
       ).values(),
     ];

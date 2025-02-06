@@ -67,58 +67,79 @@ const GetSingleMarket = () => {
             >
               {user_gameWithMarketData[0]?.gameName}
             </div>
-            <div
-              className="row px-0 m-0"
-            >
-              <div className="col-8"></div>
-              <div className="col-2 fw-bold rounded-top-3" style={{background:"#80C2F1"}}> Back</div>
-              <div className="col-2 fw-bold rounded-top-3" style={{background:"#FAA9BA"}}> Lay</div>
-            </div>
-            {user_gameWithMarketData &&
-              user_gameWithMarketData[0]?.markets.map((marketData) => {
-                return (
+            {user_gameWithMarketData[0]?.markets.length > 0 ? (
+              <>
+                <div className="row px-0 m-0">
+                  <div className="col-8"></div>
                   <div
-                    className="row py-1 px-0 m-0"
-                    style={{
-                      backgroundColor: "white",
-                      borderTop: "1px solid #ccc",
-                    }}
-                    key={marketData.marketId}
+                    className="col-2 fw-bold rounded-top-3"
+                    style={{ background: "#80C2F1" }}
                   >
-                    <Link
-                      className={`col-8 text-dark text-decoration-none text-nowrap`}
-                      to={`/gameView/${user_gameWithMarketData[0]?.gameName?.replace(
-                        /\s/g,
-                        ""
-                      )}/${marketData?.marketName?.replace(/\s/g, "")}/${
-                        marketData?.marketId
-                      }`}
-                      onClick={() => handleMarketId(marketData?.marketId)}
-                    >
-                      <span className="fw-bold">
-                        {formatDate(marketData.startTime)}
-                      </span>{" "}
-                      |{" "}
-                      <span className="fw-bold text-primary">
-                        {" "}
-                        {marketData.marketName}
-                      </span>
-                    </Link>
-                    <div
-                      className="col-2 rounded fw-bold "
-                      style={{ backgroundColor: "#80C2F1" }}
-                    >
-                      {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
-                    </div>
-                    <div
-                      className="col-2 rounded fw-bold"
-                      style={{ backgroundColor: "#FAA9BA" }}
-                    >
-                      {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
-                    </div>
+                    {" "}
+                    Back
                   </div>
-                );
-              })}
+                  <div
+                    className="col-2 fw-bold rounded-top-3"
+                    style={{ background: "#FAA9BA" }}
+                  >
+                    {" "}
+                    Lay
+                  </div>
+                </div>
+                {user_gameWithMarketData &&
+                  user_gameWithMarketData[0]?.markets.map((marketData) => {
+                    return (
+                      <div
+                        className="row py-1 px-0 m-0"
+                        style={{
+                          backgroundColor: "white",
+                          borderTop: "1px solid #ccc",
+                        }}
+                        key={marketData.marketId}
+                      >
+                        <Link
+                          className={`col-8 text-dark text-decoration-none text-nowrap`}
+                          to={`/gameView/${user_gameWithMarketData[0]?.gameName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketData?.marketName?.replace(/\s/g, "")}/${
+                            marketData?.marketId
+                          }`}
+                          onClick={() => handleMarketId(marketData?.marketId)}
+                        >
+                          <span className="fw-bold">
+                            {formatDate(marketData.startTime)}
+                          </span>{" "}
+                          |{" "}
+                          <span className="fw-bold text-primary">
+                            {" "}
+                            {marketData.marketName}
+                          </span>
+                        </Link>
+                        <div
+                          className="col-2 rounded fw-bold "
+                          style={{ backgroundColor: "#80C2F1" }}
+                        >
+                          {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
+                        </div>
+                        <div
+                          className="col-2 rounded fw-bold"
+                          style={{ backgroundColor: "#FAA9BA" }}
+                        >
+                          {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </>
+            ) : (
+              <p
+                className="text-center fw-bold"
+                style={{ backgroundColor: "orange" }}
+              >
+                No market Available
+              </p>
+            )}
           </div>
         </AppDrawer>
       </div>
