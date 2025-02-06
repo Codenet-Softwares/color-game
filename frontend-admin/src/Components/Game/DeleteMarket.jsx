@@ -105,9 +105,9 @@ const DeleteMarket = () => {
     fetchMarkets(pagination.page, pagination.totalItems, debouncedSearchTerm);
   }, [debouncedSearchTerm, pagination.page, pagination.totalItems]);
 
-  const startIndex = (pagination.page - 1) * pagination.pageSize + 1;
+  const startIndex = (pagination.page - 1) * pagination.totalItems + 1;
   const endIndex = Math.min(
-    pagination.page * pagination.pageSize,
+    pagination.page * pagination.totalItems,
     pagination.totalItems
   );
 
