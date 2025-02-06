@@ -13,8 +13,11 @@ const CreateMarket = ({ show, setShow, id }) => {
   const [marketName, setMarketName] = useState("");
   const [participant, setParticipant] = useState("");
   const [startDatevalue, SetStartDateValue] = useState(new Date());
-  const [endDatevalue, setEndDateValue] = useState(new Date());
+  const [endDatevalue, setEndDateValue] = useState(
+    moment().add(1, "minute").toDate()
+  );
   const [errors, setErrors] = useState({}); // State for validation errors
+
 
   const today = new Date();
   const auth = useAuth();
@@ -27,7 +30,7 @@ const CreateMarket = ({ show, setShow, id }) => {
     setMarketName("");
     setParticipant(""); // Reset participant correctly
     SetStartDateValue(new Date());
-    setEndDateValue(new Date());
+    setEndDateValue(moment().add(1, "minute").toDate());
     setErrors({});
   };
 

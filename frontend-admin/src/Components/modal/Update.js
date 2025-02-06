@@ -28,7 +28,6 @@ const Update = ({ show, setShow, data, Update }) => {
   const [previousValues, setPreviousValues] = useState({ back: "", lay: "" }); // storing previous data for back and lay
   const [editedData, setEditedData] = useState({}); // Store edited data
 
-
   useEffect(() => {
     const adjustTime = (date) => {
       const adjustedDate = new Date(date);
@@ -44,7 +43,6 @@ const Update = ({ show, setShow, data, Update }) => {
       endTime: adjustTime(data.endTime),
     }));
   }, [data]);
-
 
   const auth = useAuth();
 
@@ -98,7 +96,6 @@ const Update = ({ show, setShow, data, Update }) => {
     }));
   };
 
-
   const disablePastDates = (current) => {
     return current.isAfter(today);
   };
@@ -114,7 +111,6 @@ const Update = ({ show, setShow, data, Update }) => {
   const handleNewValue = (event) => {
     const { name, value } = event.target;
     const updateKey = Update.toLowerCase();
-
 
     switch (updateKey) {
       case "game":
@@ -156,42 +152,169 @@ const Update = ({ show, setShow, data, Update }) => {
       default:
     }
   };
+// do not delete this commented part until and unless checked with handlesubmit refactored down 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (!Update) {
+  //     toast.error("Update type is required.");
+  //     return;
+  //   }
+  //   const updateKey = Update.toLowerCase();
+  //   switch (updateKey) {
+  //     case "game":
+  //       if (!data.gameId || !newValue.gameName) {
+  //         toast.error("Game ID and Name are required.");
+  //         return;
+  //       }
+  //       const gameApiData = {
+  //         gameId: data.gameId,
+  //         gameName: newValue.gameName,
+  //         description: newValue.Description || "",
+  //       };
+  //       GameService.gameUpdate(gameApiData, auth.user).then((res) => {
+  //         toast.success(res.data.message);
+  //         handleClose();
+  //       });
 
+  //       break;
+  //     case "market":
+  //       const addTimeOffset = (date) => {
+  //         if (!date) return date; // Ensure the date is not undefined or null
+  //         const adjustedDate = new Date(date);
+  //         adjustedDate.setMinutes(adjustedDate.getMinutes() + 330); // Add 330 minutes (5 hours 30 minutes)
+  //         return adjustedDate.toISOString(); // Convert to ISO string if needed for the API
+  //       };
+  //       if (!editedData?.startTime || !editedData?.endTime) {
+  //         toast.error("Start time and End time are required.");
+  //         return;
+  //       }
+  //       if (moment(editedData.endTime).isBefore(editedData.startTime)) {
+  //         toast.error("End time must be after the start time.", {
+  //           autoClose: 2000,
+  //         });
+  //         return;
+  //       }
+  //       const marketApiData = {
+  //         marketId: data.marketId,
+  //         ...editedData,
+  //         startTime: addTimeOffset(editedData.startTime), // Add offset to startTime
+  //         endTime: addTimeOffset(editedData.endTime), // Add offset to endTime
+  //       };
+
+  //       GameService.marketUpdate(marketApiData, auth.user)
+  //         .then((res) => {
+  //           toast.success(res.data.message);
+  //           setEditedData({});
+  //           handleClose();
+  //         })
+  //         .catch((err) => {
+  //           toast.error(customErrorHandler(err));
+  //         });
+  //       break;
+
+  //     case "runner":
+  //       if (!data.runnerId || !newValue.runnerName) {
+  //         toast.error("Runner ID and Name are required.");
+  //         return;
+  //       }
+  //       const runnerApiData = {
+  //         runnerId: data.runnerId,
+  //         runnerName: newValue.runnerName,
+  //       };
+  //       GameService.runnerUpdate(runnerApiData, auth.user)
+  //         .then((res) => {
+  //           toast.success(res.data.message);
+  //           handleClose();
+  //         })
+  //         .catch((err) => {
+  //           toast.error(customErrorHandler(err));
+  //         });
+
+  //       break;
+  //     case "rate":
+  //       if (!data.runnerId || !editedData) {
+  //         toast.error("Runner ID and Rate Data are required.");
+  //         return;
+  //       }
+  //       const rateApiData = {
+  //         runnerId: data.runnerId,
+  //         ...editedData,
+  //       };
+
+  //       GameService.rateUpdate(rateApiData, auth.user)
+  //         .then((res) => {
+  //           toast.success(res.data.message);
+  //           setEditedData({});
+  //           handleClose();
+  //         })
+  //         .catch((err) => {
+  //           toast.error(customErrorHandler(err));
+  //         })
+  //         .finally(() => {
+  //           auth.hideLoader();
+  //         });
+
+  //     default:
+  //       toast.error("Invalid update type.");
+  //   }
+  // };
   const handleSubmit = (e) => {
     e.preventDefault();
+  
+    if (!Update) {
+      toast.error("Update type is required.");
+      return;
+    }
+  
     const updateKey = Update.toLowerCase();
+  
     switch (updateKey) {
       case "game":
+        if (!data.gameId || !newValue.gameName) {
+          toast.error("Game ID and Name are required.");
+          return;
+        }
         const gameApiData = {
           gameId: data.gameId,
           gameName: newValue.gameName,
-          description: newValue.Description,
+          description: newValue.Description || "", // Ensure description is not undefined
         };
+  
         GameService.gameUpdate(gameApiData, auth.user)
           .then((res) => {
             toast.success(res.data.message);
             handleClose();
           })
-
+          .catch((err) => {
+            toast.error(customErrorHandler(err));
+          });
         break;
+  
       case "market":
         const addTimeOffset = (date) => {
-          if (!date) return date; // Ensure the date is not undefined or null
+          if (!date) return date;
           const adjustedDate = new Date(date);
-          adjustedDate.setMinutes(adjustedDate.getMinutes() + 330); // Add 330 minutes (5 hours 30 minutes)
-          return adjustedDate.toISOString(); // Convert to ISO string if needed for the API
+          adjustedDate.setMinutes(adjustedDate.getMinutes() + 330);
+          return adjustedDate.toISOString();
         };
+  
+        if (!editedData?.startTime || !editedData?.endTime) {
+          toast.error("Start time and End time are required.");
+          return;
+        }
+  
         if (moment(editedData.endTime).isBefore(editedData.startTime)) {
           toast.error("End time must be after the start time.", { autoClose: 2000 });
           return;
         }
+  
         const marketApiData = {
           marketId: data.marketId,
           ...editedData,
-          startTime: addTimeOffset(editedData.startTime), // Add offset to startTime
-          endTime: addTimeOffset(editedData.endTime), // Add offset to endTime
+          startTime: addTimeOffset(editedData.startTime),
+          endTime: addTimeOffset(editedData.endTime),
         };
-
+  
         GameService.marketUpdate(marketApiData, auth.user)
           .then((res) => {
             toast.success(res.data.message);
@@ -202,12 +325,18 @@ const Update = ({ show, setShow, data, Update }) => {
             toast.error(customErrorHandler(err));
           });
         break;
-
+  
       case "runner":
+        if (!data.runnerId || !newValue.runnerName) {
+          toast.error("Runner ID and Name are required.");
+          return;
+        }
+  
         const runnerApiData = {
           runnerId: data.runnerId,
           runnerName: newValue.runnerName,
         };
+  
         GameService.runnerUpdate(runnerApiData, auth.user)
           .then((res) => {
             toast.success(res.data.message);
@@ -216,14 +345,19 @@ const Update = ({ show, setShow, data, Update }) => {
           .catch((err) => {
             toast.error(customErrorHandler(err));
           });
-
         break;
+  
       case "rate":
+        if (!data.runnerId || !editedData) {
+          toast.error("Runner ID and Rate Data are required.");
+          return;
+        }
+  
         const rateApiData = {
           runnerId: data.runnerId,
           ...editedData,
         };
-
+  
         GameService.rateUpdate(rateApiData, auth.user)
           .then((res) => {
             toast.success(res.data.message);
@@ -232,14 +366,18 @@ const Update = ({ show, setShow, data, Update }) => {
           })
           .catch((err) => {
             toast.error(customErrorHandler(err));
-          }).finally(() => {
+          })
+          .finally(() => {
             auth.hideLoader();
           });
-
+  
+        break;
+  
       default:
+        toast.error("Invalid update type.");
     }
   };
-
+  
   useEffect(() => {
     if (data && data.rates) {
       setPreviousValues({
@@ -286,19 +424,19 @@ const Update = ({ show, setShow, data, Update }) => {
                 Update === "Game"
                   ? "gameName"
                   : Update === "Market"
-                    ? "marketName"
-                    : Update === "Runner"
-                      ? "runnerName"
-                      : ""
+                  ? "marketName"
+                  : Update === "Runner"
+                  ? "runnerName"
+                  : ""
               }
               value={
                 Update === "Game"
                   ? newValue.gameName
                   : Update === "Market"
-                    ? newValue.marketName
-                    : Update === "Runner"
-                      ? newValue.runnerName
-                      : ""
+                  ? newValue.marketName
+                  : Update === "Runner"
+                  ? newValue.runnerName
+                  : ""
               }
               onChange={handleNewValue}
             />
