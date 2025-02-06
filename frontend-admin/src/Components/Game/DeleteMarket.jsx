@@ -37,7 +37,7 @@ const DeleteMarket = () => {
       setMarkets(response.data.data || []);
       setPagination({
         page: response.data.pagination.page || 1,
-        pageSize: response.data.pagination.pageSize || 10,
+        // pageSize: response.data.pagination.pageSize || 10,
         totalPages: response.data.pagination.totalPages || 1,
         totalItems: response.data.pagination.totalItems || 0,
       });
@@ -90,7 +90,7 @@ const DeleteMarket = () => {
         prevMarkets.filter((market) => market.approvalMarketId !== approvalMarketId)
       );
 
-      fetchMarkets(pagination.page, pagination.pageSize, searchTerm);
+      fetchMarkets(pagination.page, pagination.totalPages, searchTerm);
 
       alert("Market deleted successfully!");
     } catch (error) {
@@ -102,8 +102,8 @@ const DeleteMarket = () => {
   };
 
   useEffect(() => {
-    fetchMarkets(pagination.page, pagination.pageSize, debouncedSearchTerm);
-  }, [debouncedSearchTerm, pagination.page, pagination.pageSize]);
+    fetchMarkets(pagination.page, pagination.totalItems, debouncedSearchTerm);
+  }, [debouncedSearchTerm, pagination.page, pagination.totalItems]);
 
   const startIndex = (pagination.page - 1) * pagination.pageSize + 1;
   const endIndex = Math.min(
