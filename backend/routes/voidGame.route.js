@@ -15,10 +15,8 @@ export const voidGameRoute = (app) => {
 
   app.get(
     "/api/get-Void-markets",
-   // authorize([string.Admin]),
+    authorize([string.Admin]),
     getAllVoidMarkets
   );
-
-  
 
 };

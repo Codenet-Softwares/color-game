@@ -679,7 +679,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
           bidAmount: bet.bidAmount,
           isWin: bet.isWin,
           profitLoss: bet.profitLoss,
-          exposure: bet.exposure,
           userName: bet.userName,
           betId: bet.betId,
         },

@@ -719,7 +719,6 @@ export const getUserWallet = async (req, res) => {
     const getBalance = {
       walletId: userData.walletId,
       balance: userBalance,
-      exposure: userData.exposure,
       marketListExposure: userData.marketListExposure,
     };
 
@@ -1002,8 +1001,6 @@ export const createBid = async (req, res) => {
     runnerId,
     value,
     bidType,
-    exposure,
-    wallet,
     marketListExposure,
   } = req.body;
   try {
@@ -1127,7 +1124,6 @@ export const createBid = async (req, res) => {
         rate: runner[bidType.toLowerCase()],
         date: new Date(),
         bidAmount: mainValue,
-        exposure: exposure,
       });
       await user.save();
     }

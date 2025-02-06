@@ -401,7 +401,6 @@ export const restoreMarketData = async (req, res) => {
       bidAmount: parseFloat(data.bidAmount),
       isWin: data.isWin,
       profitLoss: data.profitLoss,
-      exposure: parseFloat(data.exposure),
       betId: data.betId,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt
@@ -532,6 +531,7 @@ export const restoreMarketData = async (req, res) => {
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Restore data successfully"));
 
   } catch (error) {
+    console.log("error",error)
     await transaction.rollback();
     return res
       .status(statusCode.internalServerError)
