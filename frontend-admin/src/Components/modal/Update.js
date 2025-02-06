@@ -27,7 +27,6 @@ const Update = ({ show, setShow, data, Update }) => {
   });
   const [previousValues, setPreviousValues] = useState({ back: "", lay: "" }); // storing previous data for back and lay
   const [editedData, setEditedData] = useState({}); // Store edited data
-  const [errors, setErrors] = useState({});
 
 
   useEffect(() => {
@@ -65,35 +64,7 @@ const Update = ({ show, setShow, data, Update }) => {
     }));
     setShow(false);
   };
-  const validateForm = () => {
-    let validationErrors = {};
-  
-    if (Update === "Game") {
-      if (!newValue.gameName.trim()) {
-        validationErrors.gameName = "Game Name is required.";
-      }
-      if (!newValue.Description.trim()) {
-        validationErrors.Description = "Game Description is required.";
-      }
-    }
-  
-    if (Update === "Market") {
-      if (!newValue.marketName.trim()) {
-        validationErrors.marketName = "Market Name is required.";
-      }
-      if (!newValue.participants) {
-        validationErrors.participants = "Participants are required.";
-      }
-    }
-  
-    if (Update === "Runner" && !newValue.runnerName.trim()) {
-      validationErrors.runnerName = "Runner Name is required.";
-    }
-    setErrors(validationErrors);
-    return Object.keys(validationErrors).length === 0;
-  };
-  
-  
+
   const handleStartDateTimeChange = (date) => {
     setNewValue((prevState) => ({
       ...prevState,
@@ -188,32 +159,7 @@ const Update = ({ show, setShow, data, Update }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
-
     const updateKey = Update.toLowerCase();
-  
-    // Validate required fields before submitting
-    if (updateKey === "game" && (!newValue.gameName || !newValue.Description)) {
-      toast.error("Game Name and Description are required.");
-      return;
-    }
-  
-    if (updateKey === "market" && (!newValue.marketName || !newValue.participants)) {
-      toast.error("Market Name and Participants are required.");
-      return;
-    }
-  
-    if (updateKey === "runner" && !newValue.runnerName) {
-      toast.error("Runner Name is required.");
-      return;
-    }
-  
-    if (updateKey === "rate" && (!newValue.back || !newValue.lay)) {
-      toast.error("Both Back and Lay rates are required.");
-      return;
-    }
-  
-    // Proceed with API request if validation passes
     switch (updateKey) {
       case "game":
         const gameApiData = {
@@ -226,28 +172,37 @@ const Update = ({ show, setShow, data, Update }) => {
             toast.success(res.data.message);
             handleClose();
           })
-          .catch((err) => {
-            toast.error(customErrorHandler(err));
-          });
+
         break;
-  
       case "market":
+        const addTimeOffset = (date) => {
+          if (!date) return date; // Ensure the date is not undefined or null
+          const adjustedDate = new Date(date);
+          adjustedDate.setMinutes(adjustedDate.getMinutes() + 330); // Add 330 minutes (5 hours 30 minutes)
+          return adjustedDate.toISOString(); // Convert to ISO string if needed for the API
+        };
+        if (moment(editedData.endTime).isBefore(editedData.startTime)) {
+          toast.error("End time must be after the start time.", { autoClose: 2000 });
+          return;
+        }
         const marketApiData = {
           marketId: data.marketId,
           ...editedData,
-          startTime: moment(editedData.startTime).toISOString(),
-          endTime: moment(editedData.endTime).toISOString(),
+          startTime: addTimeOffset(editedData.startTime), // Add offset to startTime
+          endTime: addTimeOffset(editedData.endTime), // Add offset to endTime
         };
+
         GameService.marketUpdate(marketApiData, auth.user)
           .then((res) => {
             toast.success(res.data.message);
+            setEditedData({});
             handleClose();
           })
           .catch((err) => {
             toast.error(customErrorHandler(err));
           });
         break;
-  
+
       case "runner":
         const runnerApiData = {
           runnerId: data.runnerId,
@@ -261,28 +216,29 @@ const Update = ({ show, setShow, data, Update }) => {
           .catch((err) => {
             toast.error(customErrorHandler(err));
           });
+
         break;
-  
       case "rate":
         const rateApiData = {
           runnerId: data.runnerId,
           ...editedData,
         };
+
         GameService.rateUpdate(rateApiData, auth.user)
           .then((res) => {
             toast.success(res.data.message);
+            setEditedData({});
             handleClose();
           })
           .catch((err) => {
             toast.error(customErrorHandler(err));
+          }).finally(() => {
+            auth.hideLoader();
           });
-        break;
-  
+
       default:
-        toast.error("Invalid Update Type");
     }
   };
-  
 
   useEffect(() => {
     if (data && data.rates) {
@@ -323,15 +279,29 @@ const Update = ({ show, setShow, data, Update }) => {
               </span>
             </div>
             <input
-  type="text"
-  className={`form-control ${errors.gameName ? "is-invalid" : ""}`}
-  placeholder="Type here"
-  name="gameName"
-  value={newValue.gameName}
-  onChange={handleNewValue}
-/>
-{errors.gameName && <div className="invalid-feedback">{errors.gameName}</div>}
-
+              type="text"
+              className="form-control"
+              placeholder="Type here"
+              name={
+                Update === "Game"
+                  ? "gameName"
+                  : Update === "Market"
+                    ? "marketName"
+                    : Update === "Runner"
+                      ? "runnerName"
+                      : ""
+              }
+              value={
+                Update === "Game"
+                  ? newValue.gameName
+                  : Update === "Market"
+                    ? newValue.marketName
+                    : Update === "Runner"
+                      ? newValue.runnerName
+                      : ""
+              }
+              onChange={handleNewValue}
+            />
           </div>
         )}
 
@@ -341,15 +311,13 @@ const Update = ({ show, setShow, data, Update }) => {
               New Description:
             </label>
             <textarea
-  className={`form-control ${errors.Description ? "is-invalid" : ""}`}
-  id="exampleFormControlTextarea1"
-  name="description"
-  rows="3"
-  value={newValue.Description}
-  onChange={handleNewValue}
-/>
-{errors.Description && <div className="invalid-feedback">{errors.Description}</div>}
-
+              className="form-control"
+              id="exampleFormControlTextarea1"
+              name="description"
+              rows="3"
+              value={newValue.Description}
+              onChange={handleNewValue}
+            />
           </div>
         )}
 
