@@ -566,7 +566,7 @@ export async function GetPurchaseHistoryMarketTimings(body = {}, isToast = false
 export async function user_getLotteryBetHistory_api(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.POST, body, isToast);
-    const response = await makeCall(`${urls.userLotteryBetHistoryById}?page=${body.pageNumber}&limit=${body.dataLimit}&startDate=${body.startDate}&endDate=${body.endDate}&dataType=${body.dataSource}`, callParams, isToast);
+    const response = await makeCall(`${urls.userLotteryBetHistoryById}?page=${body.pageNumber}&limit=${body.dataLimit}&startDate=${body.startDate}&endDate=${body.endDate}&dataType=${body.dataSource}&type=${body.type}`, callParams, isToast);
 
     return response;
   } catch (error) {
