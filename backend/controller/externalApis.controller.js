@@ -75,6 +75,7 @@ export const getExternalUserBetHistory = async (req, res) => {
     const whereCondition = {
       userName: userName,
       gameId: gameId,
+      isVoid: false,
       date: {
         [Op.between]: [startDate, endDate],
       },

@@ -1213,6 +1213,7 @@ export const getUserBetHistory = async (req, res) => {
     const whereCondition = {
       userId: userId,
       gameId: gameId,
+      isVoid: false,
       date: {
         [Op.between]: [startDate, endDate],
       },
