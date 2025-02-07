@@ -686,6 +686,8 @@ export const revokeWinningAnnouncement = async (req, res) => {
       );
     }
     await BetHistory.destroy({ where: { marketId } });
+    await ProfitLoss.destroy({ where: { marketId } });
+
     await transaction.commit();
 
     return res
