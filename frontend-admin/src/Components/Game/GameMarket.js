@@ -285,10 +285,6 @@ const GameMarket = ({ marketId }) => {
                                             overflow: "visible", // Allow overflow to ensure visibility
                                           }}
                                         >
-                                          <a className="dropdown-item" href="#">
-                                            {" "}
-                                            <i className="ti-eye"></i> Action
-                                          </a>
                                           <a
                                             className="dropdown-item"
                                             onClick={(e) =>

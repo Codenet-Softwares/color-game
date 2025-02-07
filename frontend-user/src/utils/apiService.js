@@ -100,7 +100,7 @@ export async function user_getBetHistory_api(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.userBetHistoryById}/${body.gameId}?page=${body.pageNumber}&limit=${body.dataLimit}&startDate=${body.startDate}&endDate=${body.endDate}&dataType=${body.dataSource}`,
+      `${urls.userBetHistoryById}/${body.gameId}?page=${body.pageNumber}&limit=${body.dataLimit}&startDate=${body.startDate}&endDate=${body.endDate}&dataType=${body.dataSource}&type=${body.type}`,
       callParams,
       isToast
     );
