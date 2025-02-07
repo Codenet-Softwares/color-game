@@ -158,16 +158,22 @@ export const suspendedMarketSchema = [
 ];
 
 export const updateGameSchema = [
-  body("gameId").notEmpty().withMessage("Game ID is required"),
+  body("gameId")
+    .notEmpty()
+    .withMessage("Game ID is required"),
+
   body("gameName")
-    .optional()
-    .notEmpty()
-    .withMessage("Game name cannot be empty"),
+    .optional({ checkFalsy: true }) 
+    .isString()
+    .withMessage("Game name must be a valid string"),
+
   body("description")
-    .optional()
-    .notEmpty()
-    .withMessage("Description cannot be empty"),
+    .optional({ checkFalsy: true })
+    .isString()
+    .withMessage("Description must be a valid string"),
 ];
+
+
 
 export const updateMarketSchema = [
   body("marketId").notEmpty().withMessage("Market ID is required"),
