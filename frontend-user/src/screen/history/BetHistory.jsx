@@ -86,6 +86,7 @@ const BetHistory = () => {
       startDate: formatDate(dateValue.startDate),
       endDate: formatDate(dateValue.endDate),
       dataSource: selectedOptions.dataSource,
+      type: selectedOptions.select1,
     });
 
     if (response) {
@@ -277,7 +278,10 @@ const BetHistory = () => {
                     <option selected className="fw-bold">
                       Open this select menu
                     </option>
-                    <option value=" Settle" className="fw-bold">
+                    <option value="void" className="fw-bold">
+                      Void
+                    </option>
+                    <option value="Settle" className="fw-bold">
                       Settle
                     </option>
                     <option value="Unsettle" className="fw-bold">
@@ -307,7 +311,10 @@ const BetHistory = () => {
                       inputProps={{
                         readOnly: true, // Prevents manual typing
                         onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
-                        style: { cursor: "pointer", backgroundColor: "#f3f3f3" } // Optional: Styling
+                        style: {
+                          cursor: "pointer",
+                          backgroundColor: "#f3f3f3",
+                        }, // Optional: Styling
                       }}
                     />
                   </div>
@@ -331,7 +338,10 @@ const BetHistory = () => {
                       inputProps={{
                         readOnly: true, // Prevents manual typing
                         onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
-                        style: { cursor: "pointer", backgroundColor: "#f3f3f3" } // Optional: Styling
+                        style: {
+                          cursor: "pointer",
+                          backgroundColor: "#f3f3f3",
+                        }, // Optional: Styling
                       }}
                     />
                   </div>
