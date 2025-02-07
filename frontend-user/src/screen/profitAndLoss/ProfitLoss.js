@@ -349,7 +349,7 @@ const ProfitLoss = ({
                   <div class="col-sm">
                     {" "}
                     <select
-                      class="form-select"
+                      class="form-select fw-bold"
                       aria-label="Default select example"
                       onChange={(e) => {
                         SetProfitLossData((prevState) => ({
@@ -358,11 +358,11 @@ const ProfitLoss = ({
                         }));
                       }}
                     >
-                      <option className="" value="live" selected >
-                        LIVE DATA
+                      <option className="fw-bold" value="live" selected >
+                        Live Data
                       </option>
-                      <option className="fw-bold" value="backup">BACKUP DATA</option>
-                      <option className="fw-bold" value="olddata">OLD DATA</option>
+                      <option className="fw-bold" value="backup">Backup Data</option>
+                      <option className="fw-bold" value="olddata">Old Data</option>
                     </select>
                   </div>
                   <div class="col-sm">
