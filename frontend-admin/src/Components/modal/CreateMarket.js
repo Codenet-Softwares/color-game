@@ -48,16 +48,17 @@ const CreateMarket = ({ show, setShow, id }) => {
   };
 
   const disablePastDates = (current) => {
-    return current.isAfter(today);
+    return current.isSameOrAfter(moment(), "day");
   };
 
   const disablePastTimes = (current) => {
     const now = moment();
     if (current.isSame(now, "day")) {
-      return current.isAfter(now);
+      return current.isSameOrAfter(now, "minute"); // Allow current time and future
     }
     return true;
   };
+  
 
   const adjustTime = (date) => {
     return moment(new Date(date))
