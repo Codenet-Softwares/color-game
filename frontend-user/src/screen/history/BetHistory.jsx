@@ -109,6 +109,7 @@ const BetHistory = () => {
       startDate: formatDate(dateValue.startDate),
       endDate: formatDate(dateValue.endDate),
       dataSource: selectedOptions.dataSource,
+      type: selectedOptions.select1,
     });
 
     if (response) {
@@ -140,7 +141,6 @@ const BetHistory = () => {
     setTotalEntries(entries);
     // After updating totalItems, we need to fetch data for the first page with the new number of items
     setCurrentPage(1);
-
   };
 
   //this is the select market response whic for both open bets and bet history
@@ -154,35 +154,30 @@ const BetHistory = () => {
     setOpenBetGameNames(response.data);
   };
 
-
   // useeffect for bet history and open bets selection input boxes only
   useEffect(() => {
     handleGetSelectData();
     openBetsGame();
   }, []);
- 
-  
 
   // this is for open bets selection onchnage
   const handleSelectChange = (e) => {
     setSelectedGameName(e.target.value);
   };
 
- const handleGetHistoryChange = (e) => {
-   const { name, value } = e.target;
+  const handleGetHistoryChange = (e) => {
+    const { name, value } = e.target;
 
-   setSelectedOptions((prevState) => ({
-     ...prevState,
-     [name]: value, 
-   }));
- };
-
+    setSelectedOptions((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
 
   const handleGameChange = (e) => {
     setSelectedGameId(e.target.value);
     setDateVisible(true); // Show date picker when market is selected
   };
-
 
   // this is back lay open bets data but this api needs to be updated
   async function handleGetData() {
@@ -595,7 +590,7 @@ const BetHistory = () => {
               style={{ width: "100%" }}
               onChange={handleSelectChange}
             >
-              <option value={""} >Select Sport Name</option>
+              <option value={""}>Select Sport Name</option>
               {openBetGameNames.map((item, index) => (
                 <option key={index} value={item.gameId}>
                   {item.gameName}
