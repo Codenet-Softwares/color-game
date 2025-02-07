@@ -316,18 +316,21 @@ const LotteryNewPage = ({ drawId }) => {
 
   const handleNumberInputChange = (e) => {
     const inputValue = e.target.value;
+    if (inputValue.length > 5 ) return;
     setNumber(inputValue);
     debouncedFilter(inputValue, "number"); // Pass type as "number"
   };
 
   const handleGroupInputChange = (e) => {
     const inputValue = e.target.value;
+    if (inputValue.length > 2) return;
     setGroup(inputValue);
     debouncedFilter(inputValue, "group"); // Pass type as "group"
   };
 
   const handleSeriesInputChange = (e) => {
     const inputValue = e.target.value;
+    if (inputValue.length > 1) return;
     setSeries(inputValue);
     debouncedFilter(inputValue, "series"); // Pass type as "series"
   };
@@ -555,7 +558,6 @@ const LotteryNewPage = ({ drawId }) => {
 
             {/* Sem Input */}
             <div className="mb-3">
-              <label className="form-label">SEM</label>
               <select
                 className="form-select"
                 value={sem}
