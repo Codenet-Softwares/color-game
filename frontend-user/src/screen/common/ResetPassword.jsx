@@ -50,7 +50,7 @@ const ResetPassword = () => {
         <div className="col-md-6">
           <div className="card shadow p-3 mb-5 bg-white rounded">
             <div className="card-body">
-              <h5 className="card-title text-center">Change Password</h5>
+              <h5 className="card-title text-center text-uppercase fw-bold">Change Password</h5>
               <form onSubmit={formik.handleSubmit}>
                 <div className="form-group">
                   <label htmlFor="newPassword">New Password</label>
