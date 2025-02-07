@@ -489,7 +489,7 @@ export const getLotteryBetHistory = async (req, res) => {
   try {
     const userId = req.user.userId
     const baseURL = process.env.LOTTERY_URL;
-    const { startDate, endDate, page = 1, limit = 10, dataType } = req.query;
+    const { startDate, endDate, page = 1, limit = 10, dataType, type } = req.query;
 
     const params = {
       dataType,
@@ -497,6 +497,7 @@ export const getLotteryBetHistory = async (req, res) => {
       endDate,
       page,
       limit,
+      type
     };
     const response = await axios.post(`${baseURL}/api/lottery-external-bet-history`,
       { userId },
