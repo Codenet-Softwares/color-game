@@ -175,7 +175,7 @@ const LiveUserBet = () => {
               <input
                 type="text"
                 className="form-control fw-bold"
-                placeholder="Search By User Or Market Name..."
+                placeholder="Search By User Name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={{

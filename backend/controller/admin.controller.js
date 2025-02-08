@@ -772,12 +772,16 @@ export const checkMarketStatus = async (req, res) => {
 export const liveUsersBet = async (req, res) => {
   try {
     const { marketId } = req.params;
-    const { page = 1, pageSize = 10 } = req.query;
+    const { page = 1, pageSize = 10, search = '' } = req.query;
     const limit = parseInt(pageSize, 10);
     const offset = (parseInt(page, 10) - 1) * limit;
 
+    const searchQuery = search
+    ? { userName: { [Op.like]: `%${search}%` } }
+    : {};
+
     const { rows: currentOrders, count: totalItems } = await CurrentOrder.findAndCountAll({
-      where: { marketId },
+      where: { marketId , ...searchQuery},
       attributes: [
         'userId',
         'userName',
