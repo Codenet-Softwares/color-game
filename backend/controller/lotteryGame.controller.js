@@ -329,7 +329,7 @@ export const updateBalance = async (req, res) => {
 
 export const removeExposer = async (req, res) => {
   try {
-    const { userId, marketId, marketName } = req.body;
+    const { userId, marketId, marketName , lotteryPrice} = req.body;
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
@@ -346,7 +346,6 @@ export const removeExposer = async (req, res) => {
       const marketExposure = exposures.find(exposure => exposure[marketId] !== undefined);
 
       if (marketExposure) {
-        let marketListExposureValue = marketExposure[marketId];
         user.marketListExposure = exposures.filter(exposure => !exposure[marketId]);
 
         await LotteryProfit_Loss.create({
@@ -354,14 +353,14 @@ export const removeExposer = async (req, res) => {
           userName: user.userName,
           marketId,
           marketName,
-          price: marketListExposureValue,
-          profitLoss: -marketListExposureValue,
+          price: lotteryPrice,
+          profitLoss: -lotteryPrice,
         });
 
         await WinningAmount.create({
           userId: user.userId,
           userName: user.userName,
-          amount: marketListExposureValue,
+          amount: lotteryPrice,
           type: "loss",
           marketId: marketId,
         })
