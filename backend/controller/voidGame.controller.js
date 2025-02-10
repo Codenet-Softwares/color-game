@@ -32,10 +32,14 @@ export const voidMarket = async (req, res) => {
       const userDetails = await userSchema.findOne({ where: { userId: user.userId } });
 
       if (userDetails) {
-        const marketExposureEntry = userDetails.marketListExposure.find(
-          (item) => Object.keys(item)[0] === marketId
-        );
+        let marketExposureEntry
 
+        if (Array.isArray(userDetails.marketListExposure)) {
+           marketExposureEntry = userDetails.marketListExposure.find(
+            (item) => Object.keys(item)[0] === marketId
+          );
+        } 
+        
         if (marketExposureEntry) {
 
           userDetails.marketListExposure = userDetails.marketListExposure.filter(
