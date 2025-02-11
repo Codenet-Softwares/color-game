@@ -4,12 +4,14 @@ import AccountServices from "../../../Services/AccountServices";
 import { useAuth } from "../../../Utils/Auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { customErrorHandler } from '../../../Utils/helper.js';
+import { customErrorHandler } from "../../../Utils/helper.js";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [errors, setErrors] = useState({}); 
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const auth = useAuth();
   const navigate = useNavigate();
@@ -26,7 +28,7 @@ const Login = () => {
       return;
     }
 
-    setErrors({}); 
+    setErrors({});
     auth.showLoader();
     const data = { userName, password };
     AccountServices.Login(data)
@@ -40,7 +42,8 @@ const Login = () => {
         toast.error(customErrorHandler(err));
         setUserName("");
         setPassword("");
-      }).finally(() => {
+      })
+      .finally(() => {
         auth.hideLoader();
       });
   };
@@ -53,24 +56,35 @@ const Login = () => {
           Hi! Admin, Please Enter Your Login Credentials!
         </h6>
         <form onSubmit={handleSubmit}>
+          {/* Username Input */}
           <input
             type="text"
             placeholder="Enter your Username"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
-            className="login-input mt-4"
+            className="login-input mt-3"
           />
-          {errors.userName && <p className="text-danger">{errors.userName}</p>}
+          <p className="text-danger">{errors.userName || "\u00A0"}</p> 
 
-          <input
-            type="password"
-            placeholder="Enter Your Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="login-input"
-          />
-          {errors.password && <p className="text-danger">{errors.password}</p>}
+          {/* Password Input with Eye Icon */}
+          <div className="password-wrapper">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter Your Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="login-input"
+            />
+            <span
+              className="eye-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
+          <p className="text-danger">{errors.password || "\u00A0"}</p>
 
+          {/* Submit Button */}
           <button type="submit" className="login-button fw-bold text-uppercase">
             Log in
           </button>
