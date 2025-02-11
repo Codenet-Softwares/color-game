@@ -486,14 +486,14 @@ export const getAllGameData = async (req, res) => {
       markets: game.Markets.reverse().filter(
         (market) => !market.hideMarketUser && !market.isVoid
       ).map((market) => ({
-        marketId: market.marketId,
-        marketName: market.marketName,
-        participants: market.participants,
-        startTime: market.startTime,
-        endTime: market.endTime,
-        announcementResult: market.announcementResult,
-        isActive: market.isActive,
-        isVoid: market.isVoid,
+          marketId: market.marketId,
+          marketName: market.marketName,
+          participants: market.participants,
+          startTime: market.startTime,
+          endTime: market.endTime,
+          announcementResult: market.announcementResult,
+          isActive: market.isActive,
+          isVoid: market.isVoid,
         runners: market.Runners.filter((runner) => !runner.hideRunnerUser).map(
           (runner) => ({
             runnerId: runner.runnerId,
@@ -508,7 +508,7 @@ export const getAllGameData = async (req, res) => {
             ],
           })
         ),
-      })),
+        })),
     }));
 
     const baseURL = process.env.LOTTERY_URL;
@@ -524,9 +524,9 @@ export const getAllGameData = async (req, res) => {
         marketName  : game.marketName,
         group_start : game.group_start,
         group_end   : game.group_end,
-        series_start: game.series_start,
+          series_start: game.series_start,
         series_end  : game.series_end,
-        number_start: game.number_start,
+          number_start: game.number_start,
         number_end  : game.number_end,
         start_time  : game.start_time,
         end_time    : game.end_time,
@@ -540,9 +540,9 @@ export const getAllGameData = async (req, res) => {
 
         }))
     }]
-   
+
     const combinedData = [...formattedGameData.reverse(), ...foramtedData];
-  
+
     res
       .status(statusCode.success)
       .json(
@@ -815,7 +815,7 @@ export const filterMarketData = async (req, res) => {
       {
         where: {
           [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } }, 
+            { startTime: { [Op.gt]: currentTime } },
             { endTime: { [Op.lt]: currentTime } }   
           ]
         },
@@ -958,19 +958,19 @@ export const filterMarketData = async (req, res) => {
       //   where: { marketId, userId, isReverted: true },
       // });
 
-    //   if (previousState) {
-    //     // Fetch previously stored balances from PreviousState
-    //     const previousBalances = JSON.parse(previousState.allRunnerBalances);
+      //   if (previousState) {
+      //     // Fetch previously stored balances from PreviousState
+      //     const previousBalances = JSON.parse(previousState.allRunnerBalances);
 
-    //     // Update the marketDataObj with previous balances
-    //     marketDataObj.runners.forEach((runner) => {
-    //       if (previousBalances[runner.runnerName.runnerId]) {
-    //         runner.runnerName.bal =
-    //           previousBalances[runner.runnerName.runnerId];
-    //       }
-    //     });
-    //   }
-     }
+      //     // Update the marketDataObj with previous balances
+      //     marketDataObj.runners.forEach((runner) => {
+      //       if (previousBalances[runner.runnerName.runnerId]) {
+      //         runner.runnerName.bal =
+      //           previousBalances[runner.runnerName.runnerId];
+      //       }
+      //     });
+      //   }
+    }
 
     return res
       .status(statusCode.success)
@@ -1249,13 +1249,13 @@ export const getUserBetHistory = async (req, res) => {
     res
       .status(statusCode.success)
       .send(
-        apiResponseSuccess(rows, true, statusCode.success, "Success", {
-          totalPages,
-          pageSize,
-          totalItems,
-          page,
-        })
-      );
+      apiResponseSuccess(rows, true, statusCode.success, "Success", {
+        totalPages,
+        pageSize,
+        totalItems,
+        page,
+      })
+    );
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -1438,6 +1438,19 @@ export const calculateProfitLoss = async (req, res) => {
           totalProfitLoss: item.dataValues.totalProfitLoss,
         })),
     ];
+
+    if (combinedProfitLossData.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "No profit/loss data found!"
+          )
+        );
+    }
 
     const totalItems = combinedProfitLossData.length;
     const totalPages = Math.ceil(totalItems / limit);

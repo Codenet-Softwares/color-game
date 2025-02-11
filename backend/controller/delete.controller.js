@@ -8,6 +8,8 @@ import userSchema from "../models/user.model.js";
 import { Op, Sequelize } from 'sequelize';
 import Market from "../models/market.model.js";
 import Runner from "../models/runner.model.js";
+import MarketBalance from "../models/marketBalance.js";
+import { PreviousState } from "../models/previousState.model.js";
 
 export const deleteLiveBetMarkets = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -30,6 +32,20 @@ export const deleteLiveBetMarkets = async (req, res) => {
     }
 
     await getMarket.destroy({ transaction });
+
+    const marketBalanceData = await MarketBalance.findOne({
+      where: { marketId, runnerId, userId },
+    });
+
+    const previousStateData = await PreviousState.findOne({
+      where: { marketId, runnerId, userId },
+    });
+
+    await marketBalanceData.destroy({ transaction });
+
+    if (previousStateData > 0) {
+      await previousStateData.destroy({ transaction });
+    }
 
     const marketDataRows = await Market.findAll({
       where: { marketId },
