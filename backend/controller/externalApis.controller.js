@@ -702,13 +702,13 @@ export const getLiveBetGames = async (req, res) => {
           gameName: order.gameName,
           marketId: order.marketId,
           marketName: order.marketName,
-          userNames: [order.userName],
+          userName: [order.userName],
         });
       } else {
         // If the market is already present, add the user name to the array if it's not already included
         const market = uniqueMarkets.get(key);
-        if (!market.userNames.includes(order.userName)) {
-          market.userNames.push(order.userName);
+        if (!market.userName.includes(order.userName)) {
+          market.userName.push(order.userName);
         }
       }
     });
