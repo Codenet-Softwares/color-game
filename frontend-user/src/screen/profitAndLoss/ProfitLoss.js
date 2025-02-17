@@ -44,6 +44,7 @@ const ProfitLoss = ({
 
   const [toggle, SetToggle] = useState(true);
   const [component, SetComponent] = useState(null);
+  const [gameId, SetGameId] = useState(null);
   const [marketId, SetMarketId] = useState(null);
   const [runnerId, SetRunnerId] = useState(null);
 
@@ -81,6 +82,7 @@ const ProfitLoss = ({
     marketId,
     profitLossRunnerData.itemPerPage,
     profitLossRunnerData.searchItem,
+
   ]);
 
   useEffect(() => {
@@ -94,8 +96,10 @@ const ProfitLoss = ({
   }, [component]);
 
   // useEffect(() => {
-  //   getProfitLossEventWise()
-  //   SetComponent("ProfitAndLossEvent")
+  //   // if (profitLossEventData.currentPage > 1) {
+  //     getProfitLossEventWise(gameId)
+  //     SetComponent("ProfitAndLossEvent")
+  //   // }
   // }, [profitLossEventData.currentPage]);
 
   useEffect(() => {
@@ -117,6 +121,7 @@ const ProfitLoss = ({
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
       SetComponent(componentName);
+      SetGameId(gameId)
 
       // Make the API call
       const response = await getProfitLossEvent({
@@ -150,7 +155,7 @@ const ProfitLoss = ({
       const response = await getUserBetHistory_api({
         runnerId: runnerId,
         page: userBetHistory.currentPage,
-        limit:userBetHistory.itemPerPage
+        limit: userBetHistory.itemPerPage
       });
 
 
@@ -174,6 +179,7 @@ const ProfitLoss = ({
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
       SetComponent(componentName);
+      SetGameId(gameId)
 
       // Make the API call
       const response = await getProfitLossLotteryEvent({
@@ -269,6 +275,9 @@ const ProfitLoss = ({
         SetToggle={SetToggle}
         totalItems={profitLossEventData.totalData}
         handlePageChange={(page) => handelProfitLossEventDataPage(page)}
+        gameId={gameId}
+        profitLossEventData={profitLossEventData}
+        getProfitLossEventWise={getProfitLossEventWise}
       />
     );
   } else if (component === "UserBetHistory") {
@@ -291,6 +300,8 @@ const ProfitLoss = ({
         SetToggle={SetToggle}
         totalItems={profitLossLotteryEventData.totalData}
         handlePageChange={(page) => handelProfitLossLotteryEventDataPage(page)}
+        getProfitLossLotteryEventWise={getProfitLossLotteryEventWise}
+        profitLossLotteryEventData={profitLossLotteryEventData}
       />
     )
   }
@@ -330,7 +341,7 @@ const ProfitLoss = ({
   return (
     <div className="col-sm-12 mt-3">
       {toggle && (
-        <div className="card mb-3 w-100 rounded" style={{marginTop:"150px"}}>
+        <div className="card mb-3 w-100 rounded" style={{ marginTop: "150px" }}>
           <div
             className="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between"
             style={{ backgroundColor: "#2CB3D1" }}
@@ -438,8 +449,8 @@ const ProfitLoss = ({
                             backgroundColor: "#e6e9ed",
                             color: "#5562a3",
                           }}
-                          align="center"   
-                          className=""                    
+                          align="center"
+                          className=""
                         >
                           <th scope="col">
                             <h6 className="fw-bold">Sport Name</h6>

@@ -10,7 +10,9 @@ const ProfitAndLossLotteryEvent = ({
   currentPage,
   SetToggle,
   totalItems,
-  handlePageChange
+  handlePageChange,
+  profitLossLotteryEventData,
+  getProfitLossLotteryEventWise
 }) => {
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
   const endIndex = Math.min(data.currentPage * 10, data.totalData);
@@ -34,6 +36,20 @@ const ProfitAndLossLotteryEvent = ({
       searchItem: e.target.value,
     }));
   };
+
+  const handlePageChangeProfitAndLossLotteryEvent = async (page) => {
+    handlePageChange(page);
+    let flag = Math.random()
+    setRenderApi(flag);
+  }
+
+
+  useEffect(() => {
+    if (renderApi !== null) {
+      getProfitLossLotteryEventWise(null, "ProfitAndLossLotteryEvent");
+    }
+  }, [renderApi]);
+
 
   return (
     <>
@@ -176,7 +192,7 @@ const ProfitAndLossLotteryEvent = ({
                 currentPage={data.currentPage}
                 totalPages={data.totalPages}
                 handlePageChange={(page) => {
-                  handlePageChange(page); 
+                  handlePageChangeProfitAndLossLotteryEvent(page);
                 }}
                 startIndex={startIndex}
                 endIndex={endIndex}

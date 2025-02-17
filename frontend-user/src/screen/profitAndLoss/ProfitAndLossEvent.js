@@ -10,10 +10,13 @@ const ProfitAndLossEvent = ({
   currentPage,
   SetToggle,
   totalItems,
-  handlePageChange
+  handlePageChange,
+  getProfitLossEventWise,
+  gameId
 }) => {
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
   const endIndex = Math.min(data.currentPage * 10, data.totalData);
+  const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoRunnerWiseProfitLoss = (marketId, componentName) => {
     SetComponent(componentName);
@@ -34,6 +37,20 @@ const ProfitAndLossEvent = ({
       searchItem: e.target.value,
     }));
   };
+
+
+  const handlePageChangeProfitAndLossEvent = async (page) => {
+    handlePageChange(page);
+    let flag = Math.random()
+    setRenderApi(flag);
+  }
+
+
+  useEffect(() => {
+    if (renderApi !== null) {
+      getProfitLossEventWise(gameId, "ProfitAndLossEvent");
+    }
+  }, [renderApi]);
 
   return (
     <>
@@ -143,8 +160,8 @@ const ProfitAndLossEvent = ({
                               <td>{data?.commission || 0}</td>
                               <td
                                 className={`fw-bold ${data?.totalProfitLoss > 0
-                                    ? "text-success"
-                                    : "text-danger"
+                                  ? "text-success"
+                                  : "text-danger"
                                   }`}
                               >
                                 {data?.totalProfitLoss}
@@ -177,7 +194,7 @@ const ProfitAndLossEvent = ({
                 currentPage={data.currentPage}
                 totalPages={data.totalPages}
                 handlePageChange={(page) => {
-                  handlePageChange(page);
+                  handlePageChangeProfitAndLossEvent(page);
                 }}
                 startIndex={startIndex}
                 endIndex={endIndex}
