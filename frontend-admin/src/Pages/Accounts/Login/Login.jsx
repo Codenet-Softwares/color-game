@@ -61,10 +61,17 @@ const Login = () => {
             type="text"
             placeholder="Enter your Username"
             value={userName}
-            onChange={(e) => setUserName(e.target.value)}
-            className="login-input mt-3"
+            onChange={(e) => {
+              setUserName(e.target.value);
+              setErrors((prevErrors) => ({ ...prevErrors, userName: "" }));
+            }}
+            className={`login-input mt-3 ${
+              errors.userName ? "border-danger" : ""
+            }`}
           />
-          <p className="text-danger">{errors.userName || "\u00A0"}</p> 
+          <p className="text-danger mb-0 text-center">
+            {errors.userName || "\u00A0"}
+          </p>
 
           {/* Password Input with Eye Icon */}
           <div className="password-wrapper">
@@ -72,8 +79,13 @@ const Login = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Enter Your Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="login-input"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
+              }}
+              className={`login-input ${
+                errors.password ? "border-danger" : ""
+              }`}
             />
             <span
               className="eye-icon"
@@ -82,7 +94,9 @@ const Login = () => {
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
-          <p className="text-danger">{errors.password || "\u00A0"}</p>
+          <p className="text-danger mb-0 text-center">
+            {errors.password || "\u00A0"}
+          </p>
 
           {/* Submit Button */}
           <button type="submit" className="login-button fw-bold text-uppercase">

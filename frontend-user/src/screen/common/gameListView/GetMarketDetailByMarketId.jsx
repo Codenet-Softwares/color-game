@@ -656,7 +656,7 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#80C2F1" }}
+                              style={{ backgroundColor: "#80C2F1",cursor:"pointer"}}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,
@@ -672,7 +672,7 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#FAA9BA" }}
+                              style={{ backgroundColor: "#FAA9BA",cursor:"pointer" }}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,
@@ -799,6 +799,7 @@ const GetMarketDetailByMarketId = () => {
                               style={{
                                 backgroundColor: "#80C2F1",
                                 borderRadius: "7px",
+                                cursor:"pointer"
                               }}
                               onClick={() =>
                                 handleToggle(
@@ -818,6 +819,7 @@ const GetMarketDetailByMarketId = () => {
                               style={{
                                 backgroundColor: "#FAA9BA",
                                 borderRadius: "7px",
+                                 cursor:"pointer"
                               }}
                               onClick={() =>
                                 handleToggle(
