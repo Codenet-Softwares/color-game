@@ -95,12 +95,6 @@ const ProfitLoss = ({
     if (component === "UserLotteryBetHistory") getUserLotteryBetHistoryWise();
   }, [component]);
 
-  // useEffect(() => {
-  //   // if (profitLossEventData.currentPage > 1) {
-  //     getProfitLossEventWise(gameId)
-  //     SetComponent("ProfitAndLossEvent")
-  //   // }
-  // }, [profitLossEventData.currentPage]);
 
   useEffect(() => {
     if (profitLossLotteryEventData.currentPage > 1) {

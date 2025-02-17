@@ -38,6 +38,13 @@ const ProfitAndLossLotteryEvent = ({
     }));
   };
 
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      getLotteryProfitLossEventWise(null, "ProfitAndLossLotteryEvent", profitLossLotteryEventData.searchItem);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [profitLossLotteryEventData.searchItem]);
+
   const handlePageChangeProfitAndLossLotteryEvent = async (page) => {
     handlePageChange(page);
     let flag = Math.random()

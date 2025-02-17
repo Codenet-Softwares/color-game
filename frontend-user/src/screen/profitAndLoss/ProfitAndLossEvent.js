@@ -12,7 +12,8 @@ const ProfitAndLossEvent = ({
   totalItems,
   handlePageChange,
   getProfitLossEventWise,
-  gameId
+  gameId,
+  profitLossEventData
 }) => {
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
   const endIndex = Math.min(data.currentPage * 10, data.totalData);
@@ -38,6 +39,12 @@ const ProfitAndLossEvent = ({
     }));
   };
 
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      getProfitLossEventWise(gameId, "ProfitAndLossEvent", profitLossEventData.searchItem);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [profitLossEventData.searchItem]);
 
   const handlePageChangeProfitAndLossEvent = async (page) => {
     handlePageChange(page);
