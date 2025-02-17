@@ -22,21 +22,28 @@ const LiveUserBet = () => {
     search: "",
     totalData: 0,
   });
+ const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+   useEffect(() => {
+      const timer = setTimeout(() => {
+        setDebouncedSearchTerm(searchTerm);
+      }, 500);
+      return () => clearTimeout(timer);
+    }, [searchTerm]);
 
   useEffect(() => {
     if (marketId) fetchLiveUserBet();
-  }, [marketId, userBets.currentPage, userBets.totalEntries, userBets.search]);
+  }, [marketId, userBets.currentPage, userBets.totalEntries, debouncedSearchTerm]);
 
   const fetchLiveUserBet = async () => {
     auth.showLoader();
-
     try {
       const response = await GameService.userLiveBetGame(
         auth.user,
         marketId,
         userBets.currentPage,
         userBets.totalEntries,
-        userBets.search
+        debouncedSearchTerm
       );
       const bets = response.data?.data || [];
 
@@ -89,7 +96,8 @@ const LiveUserBet = () => {
   };
 
   const handleClearSearch = () => {
-    setUserBets((prev) => ({ ...prev, search: "" }));
+    setSearchTerm(""); 
+    setUserBets({ ...userBets, name: "" });
   };
 
   const handlePageChange = (pageNumber) => {
@@ -153,7 +161,7 @@ const LiveUserBet = () => {
         <div className="card-body">
           {/* Search and Entries Selection */}
           <div className="row mb-4">
-            {/* <div className="col-md-6 position-relative">
+            <div className="col-md-6 position-relative">
               <FaSearch
                 style={{
                   position: "absolute",
@@ -167,24 +175,30 @@ const LiveUserBet = () => {
               <input
                 type="text"
                 className="form-control fw-bold"
-                placeholder="Search By User Or Market Name..."
-                value={userBets.search}
-                onChange={(e) =>
-                  setUserBets((prev) => ({ ...prev, search: e.target.value }))
-                }
+                placeholder="Search By User Name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
                   border: "2px solid #3E5879",
                 }}
               />
-              {userBets.search && (
+              {searchTerm && (
                 <FaTimes
                   className="position-absolute top-50 end-3 translate-middle-y text-muted cursor-pointer"
                   onClick={handleClearSearch}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "20px",
+                    transform: "translateY(-50%)",
+                    color: "#6c757d",
+                    cursor: "pointer",
+                  }}
                 />
               )}
-            </div> */}
+            </div>
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
               <select
@@ -267,7 +281,7 @@ const LiveUserBet = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="text-danger text-center">No Bets Found For This Market.</td>
+                    <td colSpan="7" className="text-danger text-center fw-bold">No Bets Found For This Market.</td>
                   </tr>
                 )}
               </tbody>
