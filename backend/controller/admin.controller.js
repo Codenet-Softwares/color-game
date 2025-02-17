@@ -89,7 +89,7 @@ export const getAllUsers = async (req, res) => {
     if (page < 1 || pageSize < 1) {
       return res.status(statusCode.badRequest).send(
         apiResponseErr(null, false, statusCode.badRequest, "Invalid pagination parameters")
-      );
+        );
     }
 
     const searchQuery = search.toLowerCase();
@@ -102,8 +102,8 @@ export const getAllUsers = async (req, res) => {
 
     if (totalItems === 0) {
       return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, "data not found")
-      );
+          apiResponseErr(null, false, statusCode.badRequest, "data not found")
+        );
     }
 
     const totalPages = Math.ceil(totalItems / pageSize);
@@ -290,12 +290,12 @@ export const buildRootPath = async (req, res) => {
     if (!data) {
       return res.status(statusCode.badRequest).send(
         apiResponseErr(null, false, statusCode.badRequest, "Data not found for the specified criteria")
-      );
+        );
     }
 
     const entityName = data instanceof Game ? data.gameName
       : data instanceof Market ? data.marketName
-        : data.runnerName;
+          : data.runnerName;
 
     // Map name to identifier in an array format
     const nameIdMap = globalName.map(item => ({ name: item.name, id: item.id }));
@@ -315,7 +315,7 @@ export const buildRootPath = async (req, res) => {
 
       return res.status(statusCode.success).send(
         apiResponseSuccess(globalName, true, statusCode.success, "Path stored successfully")
-      );
+        );
     } else if (action === "clear") {
       const lastItem = globalName.pop();
 
@@ -331,7 +331,7 @@ export const buildRootPath = async (req, res) => {
     } else {
       return res.status(statusCode.badRequest).send(
         apiResponseErr(null, false, statusCode.badRequest, "Invalid action provided")
-      );
+        );
     }
 
     // Update user's path after clear or clearAll actions
@@ -339,13 +339,13 @@ export const buildRootPath = async (req, res) => {
 
     const successMessage = action === "store" ? "Path stored successfully" : "Path cleared successfully";
     return res.status(statusCode.success).send(
-      apiResponseSuccess(globalName, true, statusCode.success, successMessage)
-    );
+        apiResponseSuccess(globalName, true, statusCode.success, successMessage)
+      );
   } catch (error) {
     console.error('Error occurred:', error); // Log error for debugging
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
-    );
+      );
   }
 };
 
@@ -506,14 +506,8 @@ export const afterWining = async (req, res) => {
               await MarketBalance.destroy({
                 where: { marketId, runnerId, userId: user.userId },
               });
-            } else {
-              console.error(`Market exposure not found for marketId ${marketId}`);
             }
-          } else {
-            console.error(`User details not found for userId ${user.userId}`);
           }
-        } else {
-          console.error(`Runner balance not found for marketId ${marketId} and runnerId ${runnerId}`);
         }
       } catch (error) {
         console.error("Error processing user:", error);
@@ -602,10 +596,26 @@ export const revokeWinningAnnouncement = async (req, res) => {
       });
 
       if (user) {
-        user.marketListExposure = JSON.parse(prevState.marketListExposure);
+        
         const allRunnerBalances = JSON.parse(prevState.allRunnerBalances);
 
-        await WinningAmount.destroy({ where: { marketId } }, transaction)
+        const balances = Object.values(allRunnerBalances);
+
+        const maxNegativeRunnerBalance = balances.reduce((max, current) => {
+          return current < max ? current : max;
+        }, 0);
+
+        let marketExposure = user.marketListExposure || [];
+
+        let exposureMap = marketExposure.reduce((acc, obj) => {
+          return { ...acc, ...obj };
+        }, {});
+        
+        exposureMap[marketId] =  Math.abs(maxNegativeRunnerBalance);
+        
+        user.marketListExposure = Object.keys(exposureMap).map(key => ({ [key]: exposureMap[key] }));
+
+        await WinningAmount.destroy({ where: { marketId } }, transaction);
 
         for (const [runnerId, balance] of Object.entries(allRunnerBalances)) {
           try {
@@ -794,16 +804,16 @@ export const liveUsersBet = async (req, res) => {
         'type',
         'bidAmount',
         'betId',
-      ],
-      limit,
-      offset,
-      raw: true,
-    });
+        ],
+        limit,
+        offset,
+        raw: true,
+      });
 
     if (currentOrders.length === 0) {
       return res.status(statusCode.success).send(
         apiResponseSuccess([], true, statusCode.success, "No orders found for this MarketId")
-      );
+        );
     }
 
     const formattedOrders = currentOrders.map((order) => ({
@@ -830,19 +840,19 @@ export const liveUsersBet = async (req, res) => {
     }
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(
-        formattedOrders,
-        true,
-        statusCode.success,
-        "Success",
-        pagination
-      )
-    );
+        apiResponseSuccess(
+          formattedOrders,
+          true,
+          statusCode.success,
+          "Success",
+          pagination
+        )
+      );
   } catch (error) {
     console.error("Error fetching market data:", error);
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
-    );
+      );
   }
 };
 
@@ -854,15 +864,22 @@ export const getUsersLiveBetGames = async (req, res) => {
 
     const where_clause = search
       ? {
-        [Op.or]: [
-          { userName: { [Op.like]: `%${search}%` } },
-          { marketName: { [Op.like]: `%${search}%` } },
-        ],
-      }
+          [Op.or]: [
+            { userName: { [Op.like]: `%${search}%` } },
+            { marketName: { [Op.like]: `%${search}%` } },
+          ],
+        }
       : {};
 
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "createdAt"],
+      attributes: [
+        "gameId",
+        "gameName",
+        "marketId",
+        "marketName",
+        "userName",
+        "createdAt",
+      ],
       where: where_clause,
       order: [["createdAt", "DESC"]],
       raw: true,
@@ -967,13 +984,13 @@ export const getBetsAfterWin = async (req, res) => {
     res
       .status(statusCode.success)
       .send(
-        apiResponseSuccess(rows, true, statusCode.success, "Success", {
-          page :  parseInt(page),
-          pageSize : parseInt(pageSize),
-          totalPages,
-          totalItems,
-        })
-      );
+      apiResponseSuccess(rows, true, statusCode.success, "Success", {
+        page :  parseInt(page),
+        pageSize : parseInt(pageSize),
+        totalPages,
+        totalItems,
+      })
+    );
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -1010,10 +1027,10 @@ export const getBetMarketsAfterWin = async (req, res) => {
 
     const filteredOrders = search
       ? betHistoryOrders.filter(
-        (order) =>
-          order.gameName?.toLowerCase().includes(search.toLowerCase()) ||
-          order.marketName?.toLowerCase().includes(search.toLowerCase())
-      )
+          (order) =>
+            order.gameName?.toLowerCase().includes(search.toLowerCase()) ||
+            order.marketName?.toLowerCase().includes(search.toLowerCase())
+        )
       : betHistoryOrders;
 
     if (filteredOrders.length === 0) {

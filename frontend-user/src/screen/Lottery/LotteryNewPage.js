@@ -538,7 +538,7 @@ const LotteryNewPage = ({ drawId }) => {
                 Search by Sem, Group, Series, or Number
               </p>
               <div className="d-flex justify-content-center">
-                {/* {new Date(
+                {new Date(
                   moment(startTimeForShowCountdown)
                     .local()
                     .subtract(5, "hours")
@@ -548,11 +548,11 @@ const LotteryNewPage = ({ drawId }) => {
                     // <CountDownTimerLottery endDateTime={endTimeForTimer} />
                     <CountdownTimer endDate={endTimeForShowCountdown} fontSize={"16px"} />
                   )}
-                   */}
-                {isSuspend && (
+                  
+                {/* {isSuspend && (
                   // <CountDownTimerLottery endDateTime={endTimeForTimer} />
                   <CountdownTimer endDate={endTimeForShowCountdown} fontSize={"16px"} />
-                )}
+                )} */}
               </div>
             </div>
 
