@@ -222,7 +222,7 @@ export async function profitAndLossMarket_Api(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.profitAndLossMarket}/${body.gameId}?startDate=${body.startDate}&endDate=${body.endDate}&page=${body.pageNumber}&limit=${body.dataLimit}`,
+      `${urls.profitAndLossMarket}/${body.gameId}?page=${body.pageNumber}&limit=${body.dataLimit}`,
       callParams
       // isToast,
     );
@@ -305,7 +305,7 @@ export async function getProfitLossEvent(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getProfitLossEvent}/${body.gameId}`, ///&limit=${body.limit}&search=${body.searchName} ((by search sending blank server is not giving data))
+      `${urls.getProfitLossEvent}/${body.gameId}?page=${body.pageNumber}&limit=${body.dataLimit}&searchMarketName=${body.searchName}`, ///((by search sending blank server is not giving data))
       callParams,
       isToast
     );
@@ -578,7 +578,7 @@ export async function getProfitLossLotteryEvent(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getProfitLossLotteryEvent}?page=${body.pageNumber}&limit=${body.dataLimit}`,
+      `${urls.getProfitLossLotteryEvent}?page=${body.pageNumber}&limit=${body.dataLimit}&searchMarketName=${body.searchName}`,
       callParams,
       isToast
     );
