@@ -16,6 +16,7 @@ const ProfitAndLossLotteryEvent = ({
 }) => {
   const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
   const endIndex = Math.min(data.currentPage * 10, data.totalData);
+  const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoLotteryBetHistory = (componentName, id) => {
     SetComponent(componentName);
