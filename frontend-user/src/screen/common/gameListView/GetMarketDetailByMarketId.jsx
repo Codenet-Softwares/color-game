@@ -259,11 +259,11 @@ const GetMarketDetailByMarketId = () => {
 
     const highestNegetive = lowestNegativeNumber(arr);
 
-    if (Math.abs(preExposure) >= Math.abs(highestNegetive)) {
-      difference = Math.abs(preExposure) - Math.abs(highestNegetive);
+    if (Math.abs(preExposure) >= Math.abs(highestNegetive.toFixed(2))) {
+      difference = Math.abs(preExposure) - Math.abs(highestNegetive.toFixed(2));
       bal = store.user.wallet.balance + difference;
     } else {
-      difference = Math.abs(highestNegetive) - Math.abs(preExposure);
+      difference = Math.abs(highestNegetive.toFixed(2)) - Math.abs(preExposure);
       bal = store.user.wallet.balance - difference;
     }
 
@@ -314,7 +314,7 @@ const GetMarketDetailByMarketId = () => {
     }
 
     let currentMarketExposure = {
-      [store.placeBidding.marketId]: Math.abs(highestNegetive),
+      [store.placeBidding.marketId]: Math.abs(highestNegetive.toFixed(2)),
     };
 
     if (marketListExposureUpdated?.length === 0) {
@@ -323,7 +323,7 @@ const GetMarketDetailByMarketId = () => {
       let flag = true;
       marketListExposureUpdated.forEach((entry) => {
         if (entry[store.placeBidding.marketId]) {
-          entry[store.placeBidding.marketId] = Math.abs(highestNegetive);
+          entry[store.placeBidding.marketId] = Math.abs(highestNegetive.toFixed(2));
           flag = false;
         }
       });
@@ -340,7 +340,7 @@ const GetMarketDetailByMarketId = () => {
       runnerId: store.placeBidding.runnerId,
       value: bidding.amount,
       bidType: toggle.mode,
-      exposure: Math.abs(highestNegetive),
+      exposure: Math.abs(highestNegetive.toFixed(2)),
       wallet: bal,
       marketListExposure: marketListExposureUpdated ?? [],
     };
