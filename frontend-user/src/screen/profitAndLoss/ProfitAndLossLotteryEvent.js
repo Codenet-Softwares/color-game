@@ -14,21 +14,21 @@ const ProfitAndLossLotteryEvent = ({
   profitLossLotteryEventData,
   getProfitLossLotteryEventWise
 }) => {
-  const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
-  const endIndex = Math.min(data.currentPage * 10, data.totalData);
+  const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
+  const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
   const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoLotteryBetHistory = (componentName, id) => {
     SetComponent(componentName);
     SetMarketId(id)
   };
-  const handelItemPerPage = (event) => {
+  const handleItemPerPage = (event) => {
+    console.log("")
     SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
-      currentPage: Number(currentPage),
+      currentPage: Number(prevState.currentPage),
     }));
-    toast.error("Work Pending From ServerSide");
   };
 
   const handleSearch = (e) => {
@@ -58,6 +58,9 @@ const ProfitAndLossLotteryEvent = ({
     }
   }, [renderApi]);
 
+  useEffect(() => {
+    getProfitLossLotteryEventWise(null, "ProfitAndLossLotteryEvent");
+  }, [profitLossLotteryEventData.itemPerPage]);
 
   return (
     <>
@@ -82,11 +85,10 @@ const ProfitAndLossLotteryEvent = ({
         <div className="m-1 d-flex justify-content-between align-items-center">
           <select
             className="form-select w-auto m-1"
-            onChange={handelItemPerPage}
+            onChange={(e) => handleItemPerPage(e)}
+            defaultValue="10"
           >
-            <option value="10" selected>
-              10 Entries
-            </option>
+            <option value="10">10 Entries</option>
             <option value="25">25 Entries</option>
             <option value="50">50 Entries</option>
             <option value="100">100 Entries</option>

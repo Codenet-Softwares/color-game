@@ -256,7 +256,7 @@ const GetMarketDetailByMarketId = () => {
         }
       }
     }
-
+    console.log("highestNegetive", arr);
     const highestNegetive = lowestNegativeNumber(arr);
 
     if (Math.abs(preExposure) >= Math.abs(highestNegetive.toFixed(2))) {
@@ -323,7 +323,9 @@ const GetMarketDetailByMarketId = () => {
       let flag = true;
       marketListExposureUpdated.forEach((entry) => {
         if (entry[store.placeBidding.marketId]) {
-          entry[store.placeBidding.marketId] = Math.abs(highestNegetive.toFixed(2));
+          entry[store.placeBidding.marketId] = Math.abs(
+            highestNegetive.toFixed(2)
+          );
           flag = false;
         }
       });
@@ -565,11 +567,13 @@ const GetMarketDetailByMarketId = () => {
                                   <>
                                     {Number(runnerData.runnerName.bal) === 0 &&
                                     !bidding.amount ? (
-                                      ""
+                                      <span className=" text-success fw-bold mx-1">
+                                        0
+                                      </span>
                                     ) : Number(runnerData.runnerName.bal) >
                                       0 ? (
                                       <span
-                                        className="text-success fw-bold a"
+                                        className="text-success fw-bold A"
                                         mx-2
                                       >
                                         +{Number(runnerData.runnerName.bal)}
@@ -578,7 +582,7 @@ const GetMarketDetailByMarketId = () => {
                                       <>
                                         {runnerData.runnerName.bal != 0 && (
                                           <span
-                                            className="text-danger fw-bold a"
+                                            className="text-danger fw-bold B"
                                             mx-2
                                           >
                                             {Number(runnerData.runnerName.bal)}
@@ -590,7 +594,7 @@ const GetMarketDetailByMarketId = () => {
                                     {Number(runnerData.runnerName.bal) -
                                       Math.round(Math.abs(winBalance)) >
                                     0 ? (
-                                      <span className=" text-success fw-bold b">
+                                      <span className=" text-success fw-bold C">
                                         {bidding.amount != 0 && (
                                           <span>
                                             (
@@ -601,16 +605,22 @@ const GetMarketDetailByMarketId = () => {
                                         )}
                                       </span>
                                     ) : (
-                                      <span className=" text-danger fw-bold b">
-                                        {bidding.amount != 0 && (
-                                          <span>
-                                            (
-                                            {Number(runnerData.runnerName.bal) -
-                                              Math.round(Math.abs(winBalance))}
-                                            )
-                                          </span>
-                                        )}
-                                      </span>
+                                      <>
+                                        <span className=" text-danger fw-bold D">
+                                          {bidding.amount != 0 && (
+                                            <span>
+                                              (
+                                              {Number(
+                                                runnerData.runnerName.bal
+                                              ) -
+                                                Math.round(
+                                                  Math.abs(winBalance)
+                                                )}
+                                              )
+                                            </span>
+                                          )}
+                                        </span>
+                                      </>
                                     )}
                                   </>
                                 )}
@@ -618,31 +628,56 @@ const GetMarketDetailByMarketId = () => {
                               {/* Display hiii only if shouldDisplayTempLay flag is false */}
                               {!shouldDisplayTempLay && (
                                 <>
-                                  {Number(runnerData.runnerName.bal) === 0 &&
-                                  !bidding.amount ? (
-                                    ""
+                                  {Number(runnerData.runnerName.bal) === 0 ? (
+                                    <span className=" text-success fw-bold mx-1">
+                                      0
+                                    </span>
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
-                                      className="text-success fw-bold c"
+                                      className="text-success fw-bold E"
                                       mx-2
                                     >
                                       {bidding.amount != 0 &&
                                         runnerData.runnerName.bal}
-                                      (
-                                      {Number(runnerData.runnerName.bal) +
-                                        Math.round(bidding.amount)}
-                                      ){" "}
+                                      <span
+                                        className={`text-${
+                                          Number(runnerData.runnerName.bal) +
+                                            Math.round(bidding.amount) >
+                                          0
+                                            ? "success"
+                                            : "danger"
+                                        } fw-bold`}
+                                      >
+                                        (
+                                        {Number(runnerData.runnerName.bal) +
+                                          Math.round(bidding.amount)}
+                                        )
+                                      </span>
                                     </span>
                                   ) : (
                                     <span
-                                      className="text-danger fw-bold c"
+                                      className={`text-${
+                                        Number(runnerData.runnerName.bal) +
+                                          Math.round(bidding.amount) >
+                                        0
+                                          ? "success"
+                                          : "danger"
+                                      } fw-bold F`}
                                       mx-2
                                     >
                                       {runnerData.runnerName.bal != 0 &&
                                         bidding.amount != 0 &&
                                         runnerData.runnerName.bal}
 
-                                      <span className="text-success d fw-bold">
+                                      <span
+                                        className={`text-${
+                                          Number(runnerData.runnerName.bal) +
+                                            Math.round(bidding.amount) >
+                                          0
+                                            ? "success"
+                                            : "danger"
+                                        } fw-bold`}
+                                      >
                                         (
                                         {Number(runnerData.runnerName.bal) +
                                           Math.round(bidding.amount)}
@@ -699,13 +734,15 @@ const GetMarketDetailByMarketId = () => {
                                 {/* Display bidding amount if conditions met */}
                                 {shouldDisplayTempBack && (
                                   <>
-                                    {Number(runnerData.runnerName.bal) &&
+                                    {Number(runnerData.runnerName.bal) === 0 &&
                                     !bidding.amount ? (
-                                      ""
+                                      <span className=" text-success fw-bold mx-1">
+                                        0
+                                      </span>
                                     ) : Number(runnerData.runnerName.bal) >
                                       0 ? (
                                       <span
-                                        className="text-success fw-bold d"
+                                        className="text-success fw-bold H"
                                         mx-2
                                       >
                                         +{Number(runnerData.runnerName.bal)}
@@ -714,7 +751,7 @@ const GetMarketDetailByMarketId = () => {
                                       <>
                                         {runnerData.runnerName.bal != 0 && (
                                           <span
-                                            className="text-danger fw-bold d"
+                                            className="text-danger fw-bold I"
                                             mx-2
                                           >
                                             {Number(runnerData.runnerName.bal)}
@@ -726,18 +763,24 @@ const GetMarketDetailByMarketId = () => {
                                     {Number(runnerData.runnerName.bal) +
                                       Math.round(Math.abs(winBalance)) >
                                     0 ? (
-                                      <span className=" text-success  fw-bold">
-                                        {bidding.amount != 0 && (
-                                          <span>
-                                            (
-                                            {Number(runnerData.runnerName.bal) +
-                                              Math.round(Math.abs(winBalance))}
-                                            )
-                                          </span>
-                                        )}
-                                      </span>
+                                      <>
+                                        <span className=" text-success  fw-bold J">
+                                          {bidding.amount != 0 && (
+                                            <span>
+                                              (
+                                              {Number(
+                                                runnerData.runnerName.bal
+                                              ) +
+                                                Math.round(
+                                                  Math.abs(winBalance)
+                                                )}
+                                              )
+                                            </span>
+                                          )}
+                                        </span>
+                                      </>
                                     ) : (
-                                      <span className=" text-danger fw-bold e">
+                                      <span className=" text-danger fw-bold K">
                                         {bidding.amount != 0 && (
                                           <span>
                                             (
@@ -756,10 +799,12 @@ const GetMarketDetailByMarketId = () => {
                                 <>
                                   {Number(runnerData.runnerName.bal) === 0 &&
                                   !bidding.amount ? (
-                                    ""
+                                    <span className=" text-success fw-bold mx-1">
+                                      0
+                                    </span>
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
-                                      className="text-success  fw-bold"
+                                      className="text-success  fw-bold L"
                                       mx-2
                                     >
                                       {bidding.amount != 0 &&
@@ -780,7 +825,16 @@ const GetMarketDetailByMarketId = () => {
                                       </span>
                                     </span>
                                   ) : (
-                                    <span className="text-danger fw-bold " mx-2>
+                                    <span
+                                      className={`text-${
+                                        Number(runnerData.runnerName.bal) -
+                                          Math.round(bidding.amount) >
+                                        0
+                                          ? "success"
+                                          : "danger"
+                                      } fw-bold M`}
+                                      mx-2
+                                    >
                                       {runnerData.runnerName.bal != 0 &&
                                         bidding.amount != 0 &&
                                         runnerData.runnerName.bal}
