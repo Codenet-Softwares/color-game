@@ -287,12 +287,7 @@ export const getMarkets = async (req, res) => {
 
 export const updateBalance = async (req, res) => {
   try {
-    const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
-    //  console.log("userId...............................",userId)
-    //  console.log("prizeAmount...............................",prizeAmount)
-    //  console.log("marketId...............................",marketId)
-    //  console.log("lotteryPrice...............................",lotteryPrice)
-
+    const { userId, prizeAmount, marketId } = req.body;
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
@@ -306,17 +301,14 @@ export const updateBalance = async (req, res) => {
       marketId,
     });
 
-     // Fetch all users who have marketListExposure
      const users = await userSchema.findAll({
       where: { marketListExposure: { [Op.ne]: null } },
     });
 
     for (const user of users) {
       if (user.marketListExposure) {
-        // Filter out objects containing the specified marketId
         let updatedExposure = user.marketListExposure.filter((entry) => !entry[marketId]);
 
-        // Update the user's marketListExposure field
         await userSchema.update(
           { marketListExposure: updatedExposure },
           { where: { userId: user.userId } }
@@ -334,10 +326,7 @@ export const updateBalance = async (req, res) => {
 export const removeExposer = async (req, res) => {
   try {
     const { userId,  marketId, lotteryPrice } = req.body;
-     console.log("userId...............................",userId)
-     console.log("marketId...............................",marketId)
-     console.log("lotteryPrice...............................",lotteryPrice)
-
+    
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
@@ -350,25 +339,7 @@ export const removeExposer = async (req, res) => {
       type: "loss",
       marketId,
     });
-    // if (user.marketListExposure) {
-    //   const exposures = Array.isArray(user.marketListExposure)
-    //     ? user.marketListExposure
-    //     : JSON.parse(user.marketListExposure);
-
-    //   const marketExposure = exposures.find(exposure => exposure[marketId] !== undefined);
-
-    //   if (marketExposure) {
-    //     user.marketListExposure = exposures.filter(exposure => !exposure[marketId]);
-
-    //     await LotteryProfit_Loss.create({
-    //       userId,
-    //       userName: user.userName,
-    //       marketId,
-    //       marketName,
-    //       price: lotteryPrice,
-    //       profitLoss: -lotteryPrice,
-    //     });
-
+    
     await user.save();
 
     return res
@@ -407,25 +378,33 @@ export const getLotteryResults = async (req, res) => {
 
 export const createLotteryP_L = async (req, res) => {
   try {
-    const {
-      userId,
-      userName,
-      marketId,
-      marketName,
-      ticketNumber,
-      price,
-      sem,
-      profitLoss,
-    } = req.body;
+    const { userId, marketId, marketName } = req.body;
+
+    const winningData = await WinningAmount.findAll({
+      where: { userId, marketId },
+      attributes: ['userId', 'userName', 'amount', 'type'],
+    });
+
+    let totalWin = 0;
+    let totalLoss = 0;
+    let userName = '';
+
+    winningData.forEach((entry) => {
+      if (entry.type === 'win') {
+        totalWin += entry.amount;
+      } else if (entry.type === 'loss') {
+        totalLoss += entry.amount;
+      }
+      userName = entry.userName;
+    });
+
+    const profitLoss = totalWin - totalLoss;
 
     const newEntry = await LotteryProfit_Loss.create({
       userId,
       userName,
       marketId,
       marketName,
-      ticketNumber,
-      price,
-      sem,
       profitLoss,
     });
 
@@ -433,7 +412,8 @@ export const createLotteryP_L = async (req, res) => {
   } catch (error) {
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
-}
+};
+
 
 export const getLotteryP_L = async (req, res) => {
   try {

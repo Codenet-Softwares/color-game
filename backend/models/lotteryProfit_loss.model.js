@@ -21,18 +21,6 @@ LotteryProfit_Loss.init(
             type: DataTypes.STRING(255),
             allowNull: false,
         },
-        ticketNumber: {
-            type: DataTypes.JSON,
-            allowNull: true,
-        },
-        price: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
-        sem: {
-            type: DataTypes.INTEGER,
-            allowNull: true,
-        },
         profitLoss: {
             type: DataTypes.DECIMAL(10, 2),
             allowNull: false,
