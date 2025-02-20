@@ -10,6 +10,7 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import sequelize from "../db.js";
 import { user_Balance } from "./admin.controller.js";
 import WinningAmount from "../models/winningAmount.model.js";
+import { Op } from "sequelize";
 
 export const searchTicket = async (req, res) => {
   try {
@@ -287,39 +288,44 @@ export const getMarkets = async (req, res) => {
 export const updateBalance = async (req, res) => {
   try {
     const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
+     console.log("userId...............................",userId)
+     console.log("prizeAmount...............................",prizeAmount)
+     console.log("marketId...............................",marketId)
+     console.log("lotteryPrice...............................",lotteryPrice)
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
     }
 
-    let totalBalanceUpdate = prizeAmount;
-    let updatedMarketListExposure = user.marketListExposure; // Start with the current value
-
-    totalBalanceUpdate += lotteryPrice;
-
-    // Modify the market exposure for the given marketId
-    const marketExposures = user.marketListExposure;
-
-    updatedMarketListExposure = marketExposures.map(exposure => {
-      if (exposure.hasOwnProperty(marketId)) {
-        exposure[marketId] -= lotteryPrice; // Decrease exposure for the given marketId
-      }
-      return exposure;
-    });
-
-    await userSchema.update(
-      { marketListExposure: updatedMarketListExposure },
-      { where: { userId } }
-    );
+     let totalBalanceUpdate = prizeAmount + lotteryPrice;
 
     await WinningAmount.create({
       userId: user.userId,
       userName: user.userName,
-      amount: prizeAmount,
+      amount: totalBalanceUpdate,
       type: "win",
       marketId,
     });
+
+     // Fetch all users who have marketListExposure
+     const users = await userSchema.findAll({
+      where: { marketListExposure: { [Op.ne]: null } },
+    });
+
+    for (const user of users) {
+      if (user.marketListExposure) {
+        // Filter out objects containing the specified marketId
+        let updatedExposure = user.marketListExposure.filter((entry) => !entry[marketId]);
+
+        // Update the user's marketListExposure field
+        await userSchema.update(
+          { marketListExposure: updatedExposure },
+          { where: { userId: user.userId } }
+        );
+      }
+    }
+
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update"));
   } catch (error) {
