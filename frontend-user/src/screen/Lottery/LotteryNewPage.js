@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./LotteryNewPage.css";
 import {
@@ -20,7 +20,6 @@ import CountdownTimer from "../../globlaCommon/CountdownTimer";
 const LotteryNewPage = ({ drawId }) => {
   const { marketId } = useParams();
 
-
   const [sem, setSem] = useState("");
   const [group, setGroup] = useState("");
   const [series, setSeries] = useState("");
@@ -37,7 +36,8 @@ const LotteryNewPage = ({ drawId }) => {
   const [debounceTimeout, setDebounceTimeout] = useState(null);
   const [seriesList, setSeriesList] = useState([]);
   const [startTime, setStartTime] = useState(null);
-  const [startTimeForShowCountdown, setStartTimeForShowCountdown] = useState(null);
+  const [startTimeForShowCountdown, setStartTimeForShowCountdown] =
+    useState(null);
   const [endTimeForShowCountdown, setEndTimeForShowCountdown] = useState(null);
   const [start, setStart] = useState(null);
   const [endTime, setEndTime] = useState(null);
@@ -48,8 +48,22 @@ const LotteryNewPage = ({ drawId }) => {
   const [setIsTimeUp, setSetIsTimeUp] = useState(false);
   const [isSuspend, setIsSuspend] = useState();
   const [priceEach, setPriceEach] = useState("");
+  const dropdownRef = useRef(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsGroupPickerVisible(false);
+        setIsSeriesPickerVisible(false);
+        setIsNumberPickerVisible(false);
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     if (startTime) {
@@ -75,7 +89,7 @@ const LotteryNewPage = ({ drawId }) => {
 
           if (filteredMarket.length > 0) {
             const currentMarket = filteredMarket[0];
-            setIsSuspend(currentMarket.isActive)
+            setIsSuspend(currentMarket.isActive);
 
             setLotteryRange({
               group_start: currentMarket.group_start || "",
@@ -111,11 +125,11 @@ const LotteryNewPage = ({ drawId }) => {
             setStartTime(
               moment.utc(currentMarket.start_time).format("YYYY-MM-DD HH:mm")
             );
-            setStartTimeForShowCountdown(currentMarket.start_time)
+            setStartTimeForShowCountdown(currentMarket.start_time);
             setEndTime(
               moment.utc(currentMarket.end_time).format("YYYY-MM-DD HH:mm")
             );
-            setEndTimeForShowCountdown(currentMarket.end_time)
+            setEndTimeForShowCountdown(currentMarket.end_time);
 
             setEndTimeForTimer(
               moment.utc(currentMarket.end_time).format("YYYY-MM-DDTHH:mm:ss")
@@ -123,13 +137,11 @@ const LotteryNewPage = ({ drawId }) => {
 
             // const currentTime = moment();
 
-
             // if (currentTime.isSameOrAfter(start)) {
             //   setShowCountdown(true);
             // } else {
             //   setShowCountdown(false);
             // }
-
           } else {
             console.warn("No market found matching the given drawId");
             setMarketName("Unknown Market");
@@ -145,35 +157,33 @@ const LotteryNewPage = ({ drawId }) => {
     handleLotteryRange();
   }, [drawId, isSuspend]);
 
-  useEffect(
-    () => {
-      const eventSource = updateLotteryMarketEventEmitter();
-      eventSource.onmessage = function (event) {
-        const updates = JSON.parse(event.data);
+  useEffect(() => {
+    const eventSource = updateLotteryMarketEventEmitter();
+    eventSource.onmessage = function (event) {
+      const updates = JSON.parse(event.data);
 
-        if (updates?.length) {
-          updates.forEach((market) => {
-            if (market.isActive) {
-              setIsSuspend(true);
-              toast.success(`${market.marketName} is now Active`);
-            } else {
-              setIsSuspend(false);
-              toast.info(`${market.marketName} has been Suspended`);
-            }
-          });
-        }
-      };
+      if (updates?.length) {
+        updates.forEach((market) => {
+          if (market.isActive) {
+            setIsSuspend(true);
+            toast.success(`${market.marketName} is now Active`);
+          } else {
+            setIsSuspend(false);
+            toast.info(`${market.marketName} has been Suspended`);
+          }
+        });
+      }
+    };
 
-      eventSource.onerror = (err) => {
-        console.error("[SSE] Connection error:", err);
-        eventSource.close();
-      };
+    eventSource.onerror = (err) => {
+      console.error("[SSE] Connection error:", err);
+      eventSource.close();
+    };
 
-      return () => {
-        eventSource.close();
-      };
-    }, []
-  )
+    return () => {
+      eventSource.close();
+    };
+  }, []);
 
   const handleSemChange = (e) => {
     setSem(e.target.value);
@@ -378,7 +388,7 @@ const LotteryNewPage = ({ drawId }) => {
           style={{
             ...style,
           }}
-        // className="m-1"
+          // className="m-1"
         >
           <button
             style={{
@@ -487,7 +497,7 @@ const LotteryNewPage = ({ drawId }) => {
         )}
 
         {showSearch ? (
-          <>
+          <div ref={dropdownRef}>
             <div className="text-center mb-4">
               <div
                 className="d-flex justify-content-between align-items-center"
@@ -543,12 +553,16 @@ const LotteryNewPage = ({ drawId }) => {
                   moment(startTimeForShowCountdown)
                     .local()
                     .subtract(5, "hours")
-                    .subtract(30, "minutes").subtract(45, "seconds")
+                    .subtract(30, "minutes")
+                    .subtract(45, "seconds")
                     .toDate()
                 ) < new Date() && (
-                    // <CountDownTimerLottery endDateTime={endTimeForTimer} />
-                    <CountdownTimer endDate={endTimeForShowCountdown} fontSize={"16px"} />
-                  )}
+                  // <CountDownTimerLottery endDateTime={endTimeForTimer} />
+                  <CountdownTimer
+                    endDate={endTimeForShowCountdown}
+                    fontSize={"16px"}
+                  />
+                )}
 
                 {/* {isSuspend && (
                   // <CountDownTimerLottery endDateTime={endTimeForTimer} />
@@ -590,24 +604,21 @@ const LotteryNewPage = ({ drawId }) => {
                 )}
               </div>
             </div> */}
-<div className="mb-3">
-  <div className="input-wrapper">
-    <input
-      type="text"
-      placeholder="Group"
-      className="form-control"
-      value={group}
-      onFocus={() => setIsGroupPickerVisible(true)}
-      onChange={handleGroupInputChange} 
-      onBlur={() => setTimeout(() => setIsGroupPickerVisible(false), 200)}
-    />
-    {isGroupPickerVisible && (
-      <div className="picker-dropdown">
-        {renderGroupGrid()}
-      </div>
-    )}
-  </div>
-</div>
+            <div className="mb-3">
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Group"
+                  className="form-control"
+                  value={group}
+                  onFocus={() => handleFocus("group")}
+                  onChange={handleGroupInputChange}
+                />
+                {isGroupPickerVisible && (
+                  <div className="picker-dropdown">{renderGroupGrid()}</div>
+                )}
+              </div>
+            </div>
 
             {/* Series Input */}
             <div className="mb-3">
@@ -617,9 +628,8 @@ const LotteryNewPage = ({ drawId }) => {
                   placeholder="Series"
                   className="form-control"
                   value={series}
-                  onFocus={() => setIsSeriesPickerVisible(true)}
-                  onChange={handleSeriesInputChange} 
-                  onBlur={() => setTimeout(() => setIsSeriesPickerVisible(false), 200)}
+                  onFocus={() => handleFocus("series")}
+                  onChange={handleSeriesInputChange}
                 />
                 {isSeriesPickerVisible && (
                   <div className="picker-dropdown">{renderSeriesGrid()}</div>
@@ -635,8 +645,7 @@ const LotteryNewPage = ({ drawId }) => {
                   placeholder="Number"
                   className="form-control"
                   value={number}
-                  onFocus={() => setIsNumberPickerVisible(true)}
-                  onBlur={() => setTimeout(() => setIsNumberPickerVisible(false), 200)}
+                  onFocus={() => handleFocus("number")}
                   onChange={handleNumberInputChange}
                 />
                 {isNumberPickerVisible && <div>{renderNumberGrid()}</div>}
@@ -656,7 +665,7 @@ const LotteryNewPage = ({ drawId }) => {
                 Search
               </button>
             </div>
-          </>
+          </div>
         ) : (
           <SearchLotteryResult
             responseData={responseData}
