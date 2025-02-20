@@ -574,7 +574,7 @@ const LotteryNewPage = ({ drawId }) => {
             </div>
 
             {/* Group Input */}
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <div className="input-wrapper">
                 <input
                   type="text"
@@ -582,14 +582,32 @@ const LotteryNewPage = ({ drawId }) => {
                   className="form-control"
                   value={group}
                   onFocus={() => handleFocus("group")}
-                  onChange={handleGroupInputChange} // Allow manual input
+                  onChange={handleGroupInputChange} 
                   onBlur={() => setIsGroupPickerVisible(false)}
                 />
                 {isGroupPickerVisible && (
                   <div className="picker-dropdown">{renderGroupGrid()}</div>
                 )}
               </div>
-            </div>
+            </div> */}
+<div className="mb-3">
+  <div className="input-wrapper">
+    <input
+      type="text"
+      placeholder="Group"
+      className="form-control"
+      value={group}
+      onFocus={() => setIsGroupPickerVisible(true)}
+      onChange={handleGroupInputChange} 
+      onBlur={() => setTimeout(() => setIsGroupPickerVisible(false), 200)}
+    />
+    {isGroupPickerVisible && (
+      <div className="picker-dropdown">
+        {renderGroupGrid()}
+      </div>
+    )}
+  </div>
+</div>
 
             {/* Series Input */}
             <div className="mb-3">
@@ -599,9 +617,9 @@ const LotteryNewPage = ({ drawId }) => {
                   placeholder="Series"
                   className="form-control"
                   value={series}
-                  onFocus={() => handleFocus("series")}
-                  onChange={handleSeriesInputChange} // Allow manual input
-                  onBlur={() => setIsSeriesPickerVisible(false)}
+                  onFocus={() => setIsSeriesPickerVisible(true)}
+                  onChange={handleSeriesInputChange} 
+                  onBlur={() => setTimeout(() => setIsSeriesPickerVisible(false), 200)}
                 />
                 {isSeriesPickerVisible && (
                   <div className="picker-dropdown">{renderSeriesGrid()}</div>
@@ -617,8 +635,8 @@ const LotteryNewPage = ({ drawId }) => {
                   placeholder="Number"
                   className="form-control"
                   value={number}
-                  onFocus={() => handleFocus("number")}
-                  onBlur={() => setIsNumberPickerVisible(false)}
+                  onFocus={() => setIsNumberPickerVisible(true)}
+                  onBlur={() => setTimeout(() => setIsNumberPickerVisible(false), 200)}
                   onChange={handleNumberInputChange}
                 />
                 {isNumberPickerVisible && <div>{renderNumberGrid()}</div>}
