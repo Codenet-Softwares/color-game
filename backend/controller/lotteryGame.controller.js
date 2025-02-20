@@ -288,22 +288,20 @@ export const getMarkets = async (req, res) => {
 export const updateBalance = async (req, res) => {
   try {
     const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
-     console.log("userId...............................",userId)
-     console.log("prizeAmount...............................",prizeAmount)
-     console.log("marketId...............................",marketId)
-     console.log("lotteryPrice...............................",lotteryPrice)
+    //  console.log("userId...............................",userId)
+    //  console.log("prizeAmount...............................",prizeAmount)
+    //  console.log("marketId...............................",marketId)
+    //  console.log("lotteryPrice...............................",lotteryPrice)
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
     }
 
-     let totalBalanceUpdate = prizeAmount + lotteryPrice;
-
     await WinningAmount.create({
       userId: user.userId,
       userName: user.userName,
-      amount: totalBalanceUpdate,
+      amount:  prizeAmount,
       type: "win",
       marketId,
     });
@@ -335,44 +333,41 @@ export const updateBalance = async (req, res) => {
 
 export const removeExposer = async (req, res) => {
   try {
-    const { userId, marketId, marketName , lotteryPrice} = req.body;
+    const { userId,  marketId, lotteryPrice } = req.body;
+     console.log("userId...............................",userId)
+     console.log("marketId...............................",marketId)
+     console.log("lotteryPrice...............................",lotteryPrice)
 
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
-      return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
+      return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
     }
 
-    if (user.marketListExposure) {
-      const exposures = Array.isArray(user.marketListExposure)
-        ? user.marketListExposure
-        : JSON.parse(user.marketListExposure);
+    await WinningAmount.create({
+      userId: user.userId,
+      userName: user.userName,
+      amount: lotteryPrice,
+      type: "loss",
+      marketId,
+    });
+    // if (user.marketListExposure) {
+    //   const exposures = Array.isArray(user.marketListExposure)
+    //     ? user.marketListExposure
+    //     : JSON.parse(user.marketListExposure);
 
-      const marketExposure = exposures.find(exposure => exposure[marketId] !== undefined);
+    //   const marketExposure = exposures.find(exposure => exposure[marketId] !== undefined);
 
-      if (marketExposure) {
-        user.marketListExposure = exposures.filter(exposure => !exposure[marketId]);
+    //   if (marketExposure) {
+    //     user.marketListExposure = exposures.filter(exposure => !exposure[marketId]);
 
-        await LotteryProfit_Loss.create({
-          userId,
-          userName: user.userName,
-          marketId,
-          marketName,
-          price: lotteryPrice,
-          profitLoss: -lotteryPrice,
-        });
-
-        await WinningAmount.create({
-          userId: user.userId,
-          userName: user.userName,
-          amount: lotteryPrice,
-          type: "loss",
-          marketId: marketId,
-        })
-      }
-
-    }
+    //     await LotteryProfit_Loss.create({
+    //       userId,
+    //       userName: user.userName,
+    //       marketId,
+    //       marketName,
+    //       price: lotteryPrice,
+    //       profitLoss: -lotteryPrice,
+    //     });
 
     await user.save();
 

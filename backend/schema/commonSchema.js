@@ -515,13 +515,13 @@ export const validateRemoveExposer = [
     .withMessage('Market ID is required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
-  body('marketName')
-    .exists()
-    .withMessage('Market name is required')
-    .isString()
-    .withMessage('Market name must be a string')
-    .notEmpty()
-    .withMessage('Market name cannot be empty'),
+  // body('marketName')
+  //   .exists()
+  //   .withMessage('Market name is required')
+  //   .isString()
+  //   .withMessage('Market name must be a string')
+  //   .notEmpty()
+  //   .withMessage('Market name cannot be empty'),
 ];
 
 export const validateMarketId = [
