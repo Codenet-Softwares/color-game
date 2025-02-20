@@ -567,13 +567,13 @@ const GetMarketDetailByMarketId = () => {
                                   <>
                                     {Number(runnerData.runnerName.bal) === 0 &&
                                     !bidding.amount ? (
-                                      <span className=" text-success fw-bold mx-1">
+                                      <span className=" text-success fw-bold mx-1 A">
                                         0
                                       </span>
                                     ) : Number(runnerData.runnerName.bal) >
                                       0 ? (
                                       <span
-                                        className="text-success fw-bold A"
+                                        className="text-success fw-bold B"
                                         mx-2
                                       >
                                         +{Number(runnerData.runnerName.bal)}
@@ -582,7 +582,7 @@ const GetMarketDetailByMarketId = () => {
                                       <>
                                         {runnerData.runnerName.bal != 0 && (
                                           <span
-                                            className="text-danger fw-bold B"
+                                            className="text-danger fw-bold C"
                                             mx-2
                                           >
                                             {Number(runnerData.runnerName.bal)}
@@ -594,7 +594,7 @@ const GetMarketDetailByMarketId = () => {
                                     {Number(runnerData.runnerName.bal) -
                                       Math.round(Math.abs(winBalance)) >
                                     0 ? (
-                                      <span className=" text-success fw-bold C">
+                                      <span className=" text-success fw-bold D">
                                         {bidding.amount != 0 && (
                                           <span>
                                             (
@@ -606,7 +606,7 @@ const GetMarketDetailByMarketId = () => {
                                       </span>
                                     ) : (
                                       <>
-                                        <span className=" text-danger fw-bold D">
+                                        <span className=" text-danger fw-bold E">
                                           {bidding.amount != 0 && (
                                             <span>
                                               (
@@ -629,12 +629,12 @@ const GetMarketDetailByMarketId = () => {
                               {!shouldDisplayTempLay && (
                                 <>
                                   {Number(runnerData.runnerName.bal) === 0 ? (
-                                    <span className=" text-success fw-bold mx-1">
+                                    <span className=" text-success fw-bold mx-1 F">
                                       0
                                     </span>
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
-                                      className="text-success fw-bold E"
+                                      className="text-success fw-bold G"
                                       mx-2
                                     >
                                       {bidding.amount != 0 &&
@@ -646,7 +646,7 @@ const GetMarketDetailByMarketId = () => {
                                           0
                                             ? "success"
                                             : "danger"
-                                        } fw-bold`}
+                                        } fw-bold H`}
                                       >
                                         (
                                         {Number(runnerData.runnerName.bal) +
@@ -662,7 +662,7 @@ const GetMarketDetailByMarketId = () => {
                                         0
                                           ? "success"
                                           : "danger"
-                                      } fw-bold F`}
+                                      } fw-bold I`}
                                       mx-2
                                     >
                                       {runnerData.runnerName.bal != 0 &&
@@ -676,7 +676,7 @@ const GetMarketDetailByMarketId = () => {
                                           0
                                             ? "success"
                                             : "danger"
-                                        } fw-bold`}
+                                        } fw-bold J`}
                                       >
                                         (
                                         {Number(runnerData.runnerName.bal) +
@@ -736,13 +736,13 @@ const GetMarketDetailByMarketId = () => {
                                   <>
                                     {Number(runnerData.runnerName.bal) === 0 &&
                                     !bidding.amount ? (
-                                      <span className=" text-success fw-bold mx-1">
+                                      <span className=" text-success fw-bold mx-1 K">
                                         0
                                       </span>
                                     ) : Number(runnerData.runnerName.bal) >
                                       0 ? (
                                       <span
-                                        className="text-success fw-bold H"
+                                        className="text-success fw-bold L"
                                         mx-2
                                       >
                                         +{Number(runnerData.runnerName.bal)}
@@ -751,7 +751,7 @@ const GetMarketDetailByMarketId = () => {
                                       <>
                                         {runnerData.runnerName.bal != 0 && (
                                           <span
-                                            className="text-danger fw-bold I"
+                                            className="text-danger fw-bold M"
                                             mx-2
                                           >
                                             {Number(runnerData.runnerName.bal)}
@@ -764,7 +764,7 @@ const GetMarketDetailByMarketId = () => {
                                       Math.round(Math.abs(winBalance)) >
                                     0 ? (
                                       <>
-                                        <span className=" text-success  fw-bold J">
+                                        <span className=" text-success  fw-bold N">
                                           {bidding.amount != 0 && (
                                             <span>
                                               (
@@ -780,7 +780,7 @@ const GetMarketDetailByMarketId = () => {
                                         </span>
                                       </>
                                     ) : (
-                                      <span className=" text-danger fw-bold K">
+                                      <span className=" text-danger fw-bold O">
                                         {bidding.amount != 0 && (
                                           <span>
                                             (
@@ -799,12 +799,12 @@ const GetMarketDetailByMarketId = () => {
                                 <>
                                   {Number(runnerData.runnerName.bal) === 0 &&
                                   !bidding.amount ? (
-                                    <span className=" text-success fw-bold mx-1">
+                                    <span className=" text-success fw-bold mx-1 P">
                                       0
                                     </span>
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
-                                      className="text-success  fw-bold L"
+                                      className="text-success  fw-bold Q"
                                       mx-2
                                     >
                                       {bidding.amount != 0 &&
@@ -816,7 +816,7 @@ const GetMarketDetailByMarketId = () => {
                                           0
                                             ? "success"
                                             : "danger"
-                                        } fw-bold`}
+                                        } fw-bold R`}
                                       >
                                         (
                                         {Number(runnerData.runnerName.bal) -
@@ -832,7 +832,7 @@ const GetMarketDetailByMarketId = () => {
                                         0
                                           ? "success"
                                           : "danger"
-                                      } fw-bold M`}
+                                      } fw-bold S`}
                                       mx-2
                                     >
                                       {runnerData.runnerName.bal != 0 &&
