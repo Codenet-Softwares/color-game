@@ -28,16 +28,16 @@ const BetHistory = () => {
   const [openBet, setOpenBet] = useState([]);
   const [selectedGameName, setSelectedGameName] = useState("");
   const [selectedGameId, setSelectedGameId] = useState(null);
-  const [flag, setFlag] = useState(true);
+  const [flag, setFlag] = useState(true); //not use
   const [gameType, setGameType] = useState("");
   const defaultStartDate = new Date();
-  const [selected, setSelected] = useState(<Date />);
+  const [selected, setSelected] = useState(<Date />); //not use
   // <Date/>
   const [dateValue, setDateValue] = useState({
     startDate: defaultStartDate,
     endDate: new Date(),
   });
-  const [dateVisible, setDateVisible] = useState(false); // date visible only when user selects date
+  const [dateVisible, setDateVisible] = useState(false); // date visible only when user selects //date not use
   const [dropdownOpen, setDropdownOpen] = useState(null);
 
   const toggleDropdown = (id) => {

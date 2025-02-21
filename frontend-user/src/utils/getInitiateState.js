@@ -208,3 +208,24 @@ export function getUserLotteryBetHistory(body = {}) {
     itemPerPage: 10,
   };
 }
+
+export function getBetHistory(body = {}) {
+  return {
+    history: [],
+    totalPages: 0,
+    totalData: 0,
+    currentPage: 1,
+    totalEntries: 10,
+    endDate: null,
+    startDate: null,
+    dataSource: "live",
+    selectGame: "",
+    selectMenu: "",
+    selectMarket: "",
+    gameType: "",
+    openBetGameNames: [],
+    selectColorGame: "",
+    openBet: [],
+    gameSelectionData: []
+  };
+}
