@@ -168,12 +168,16 @@ const ProfitLoss = ({
     }
   }
 
-  async function getProfitLossLotteryEventWise(gameId, componentName) {
+  async function getProfitLossLotteryEventWise(
+    gameId,
+    componentName,
+    searchItem
+  ) {
     try {
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
       SetComponent(componentName);
-      SetGameId(gameId)
+      SetGameId(gameId);
 
       // Make the API call
       const response = await getProfitLossLotteryEvent({
@@ -183,7 +187,6 @@ const ProfitLoss = ({
         dataLimit: profitLossLotteryEventData.itemPerPage,
         searchName: profitLossLotteryEventData.searchItem,
       });
-
 
       // Update state with the response data
       SetProfitLossLotteryEventData((prevState) => ({
@@ -195,7 +198,6 @@ const ProfitLoss = ({
     } catch (error) {
       // Handle any errors that occur during the API call
       toast.error(customErrorHandler(error));
-
     }
   }
 
@@ -297,7 +299,7 @@ const ProfitLoss = ({
         getProfitLossLotteryEventWise={getProfitLossLotteryEventWise}
         profitLossLotteryEventData={profitLossLotteryEventData}
       />
-    )
+    );
   }
   else {
     componentToRender = (

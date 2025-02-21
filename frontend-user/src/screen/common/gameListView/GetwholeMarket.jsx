@@ -186,10 +186,15 @@ const GetwholeMarket = () => {
                       {gameWithMarketData &&
                         gameWithMarketData.markets.length > 0 && (
                           <div className="row px-0 m-0">
-                            <span className="col-6 text-dark text-decoration-none text-nowrap fw-bold h6"></span>
-                            <div className="col-3 rounded-top-2 fw-bold p-1" style={{background:"#80C2F1"}}>BACK</div>
-                            <div className="col-3 rounded-top-2 fw-bold"  style={{background:"#FAA9BA"}}>LAY</div>
+                          <span className="col-12 col-md-6 d-none d-md-block text-dark text-decoration-none text-nowrap fw-bold h6"></span>                        
+                          <div className="col-6 col-md-3 rounded-top-2 fw-bold p-1" style={{ background: "#80C2F1" }}>
+                            BACK
+                          </div>  
+                          <div className="col-6 col-md-3 rounded-top-2 fw-bold p-1" style={{ background: "#FAA9BA" }}>
+                            LAY
                           </div>
+                        </div>
+                        
                         )}
                       {gameWithMarketData &&
                         gameWithMarketData.markets
@@ -205,7 +210,8 @@ const GetwholeMarket = () => {
                               >
                                 <div className="row py-1 px-0 m-0 ">
                                   {/* Runner Name and Balance */}
-                                  <span className="col-6 text-dark text-decoration-none text-nowrap fw-bold h6 d-flex">
+                                  <span className="col-12 col-md-6 text-dark text-decoration-none text-nowrap h6 d-flex flex-wrap">
+                                  <i className="far fa-calendar-alt text-dark me-2 d-block d-md-none mt-1"></i>
                                     <span
                                       className=""
                                       style={{ color: "#022C44" }}
@@ -213,13 +219,13 @@ const GetwholeMarket = () => {
                                       {formatDate(marketData.startTime)}
                                     </span>
                                     |{" "}
-                                    <h6 className="text-primary px-1 fw-bold">
+                                    <h6 className="text-primary px-1">
                                       {marketData?.marketName}
                                     </h6>
                                   </span>
                                   {/* Back and Lay Rates */}
                                   <div
-                                    className="col-3 rounded p-1 fw-bold"
+                                    className="col-6 col-md-3 rounded p-1 h6"
                                     style={{ backgroundColor: "#80C2F1" }}
                                   >
                                     {marketData?.runners[0]?.rate[0]?.back ??
@@ -227,7 +233,7 @@ const GetwholeMarket = () => {
                                   </div>
 
                                   <div
-                                    className="col-3 rounded p-1 fw-bold"
+                                    className="col-6 col-md-3 rounded p-1 h6"
                                     style={{ backgroundColor: "#FAA9BA" }}
                                   >
                                     {marketData?.runners[0]?.rate[0]?.lay ??

@@ -12,7 +12,7 @@ const ProfitAndLossLotteryEvent = ({
   totalItems,
   handlePageChange,
   profitLossLotteryEventData,
-  getProfitLossLotteryEventWise
+  getProfitLossLotteryEventWise,
 }) => {
   const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
   const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
@@ -20,7 +20,7 @@ const ProfitAndLossLotteryEvent = ({
 
   const handelGotoLotteryBetHistory = (componentName, id) => {
     SetComponent(componentName);
-    SetMarketId(id)
+    SetMarketId(id);
   };
   const handleItemPerPage = (event) => {
     console.log("")
@@ -38,19 +38,22 @@ const ProfitAndLossLotteryEvent = ({
     }));
   };
 
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      getLotteryProfitLossEventWise(null, "ProfitAndLossLotteryEvent", profitLossLotteryEventData.searchItem);
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [profitLossLotteryEventData.searchItem]);
+  // useEffect(() => {
+  //   let timer = setTimeout(() => {
+  //     getLotteryProfitLossEventWise(
+  //       null,
+  //       "ProfitAndLossLotteryEvent",
+  //       profitLossLotteryEventData.searchItem
+  //     );
+  //   }, 300);
+  //   return () => clearTimeout(timer);
+  // }, [profitLossLotteryEventData.searchItem]);
 
   const handlePageChangeProfitAndLossLotteryEvent = async (page) => {
     handlePageChange(page);
-    let flag = Math.random()
+    let flag = Math.random();
     setRenderApi(flag);
-  }
-
+  };
 
   useEffect(() => {
     if (renderApi !== null) {
@@ -58,9 +61,11 @@ const ProfitAndLossLotteryEvent = ({
     }
   }, [renderApi]);
 
+
   useEffect(() => {
     getProfitLossLotteryEventWise(null, "ProfitAndLossLotteryEvent");
   }, [profitLossLotteryEventData.itemPerPage]);
+
 
   return (
     <>
@@ -151,26 +156,29 @@ const ProfitAndLossLotteryEvent = ({
                                 style={{ cursor: "pointer" }}
                                 onClick={() => {
                                   handelGotoLotteryBetHistory(
-                                    "UserLotteryBetHistory", data.marketId
+                                    "UserLotteryBetHistory",
+                                    data.marketId
                                   );
                                 }}
                               >
                                 {data?.marketName}
                               </td>
                               <td
-                                className={`fw-bold ${data?.profitLoss > 0
-                                  ? "text-success"
-                                  : "text-danger"
-                                  }`}
+                                className={`fw-bold ${
+                                  data?.profitLoss > 0
+                                    ? "text-success"
+                                    : "text-danger"
+                                }`}
                               >
                                 {data?.profitLoss}
                               </td>
                               <td>{data?.commission || 0}</td>
                               <td
-                                className={`fw-bold ${data?.profitLoss > 0
-                                  ? "text-success"
-                                  : "text-danger"
-                                  }`}
+                                className={`fw-bold ${
+                                  data?.profitLoss > 0
+                                    ? "text-success"
+                                    : "text-danger"
+                                }`}
                               >
                                 {data?.profitLoss}
                               </td>
