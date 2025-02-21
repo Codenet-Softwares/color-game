@@ -33,8 +33,8 @@ const Footer = () => {
     <div className="footerBox py-1">
       <div className="container">
         <footer className="">
-          <ul className="nav justify-content-center">
-            {footerImageData.map((item, index) => (
+        <div className="d-flex flex-wrap justify-content-center align-items-center">
+        {footerImageData.map((item, index) => (
               <li className="nav-item row" key={index}>
                 <img
                   src={item.image}
@@ -48,11 +48,11 @@ const Footer = () => {
                 />
               </li>
             ))}
-          </ul>
+          </div>
         </footer>
       </div>
       <div className="text-center">
-        <p className="text-white fw-bold ">
+        <p className="text-white fw-bold small px-3">
           You must be over 18 years old, or the legal age at which gambling or
           gaming activities are allowed under the law or jurisdiction that
           applies to you.
