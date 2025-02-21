@@ -415,7 +415,6 @@ export const createLotteryP_L = async (req, res) => {
   }
 };
 
-
 export const getLotteryP_L = async (req, res) => {
   try {
     const user = req.user;
@@ -425,37 +424,36 @@ export const getLotteryP_L = async (req, res) => {
     const parsedLimit = parseInt(limit);
     const offset = (currentPage - 1) * parsedLimit;
 
-    const allRecords = await LotteryProfit_Loss.findAll({
+    const { count: totalItems, rows: lotteryProfitLossRecords } = await LotteryProfit_Loss.findAndCountAll({
       where: { userId: user.userId },
-      attributes: ['marketId', 'marketName', 'gameName', 'profitLoss'],
+      attributes: ['gameName', 'marketName', 'marketId', 'profitLoss'],
     });
 
-    const groupedRecords = allRecords.reduce((acc, record) => {
-      const { marketId, marketName, gameName, profitLoss } = record;
-      if (!acc[marketId]) {
-        acc[marketId] = { marketId, marketName, gameName, profitLoss: 0 };
+    const uniqueRecords = [];
+    const marketIdSet = new Set();
+
+    lotteryProfitLossRecords.forEach(record => {
+      if (!marketIdSet.has(record.marketId)) {
+        marketIdSet.add(record.marketId);
+        uniqueRecords.push(record);
       }
-      acc[marketId].profitLoss += parseFloat(profitLoss); 
-      return acc;
-    }, {});
+    });
 
-    const uniqueProfitLossRecords = Object.values(groupedRecords);
-    const paginatedRecords = uniqueProfitLossRecords.slice(offset, offset + parsedLimit);
-    const totalItems = uniqueProfitLossRecords.length;
-    const totalPages = Math.ceil(totalItems / parsedLimit);
+    const paginatedUniqueRecords = uniqueRecords.slice(offset, offset + parsedLimit);
 
+    const totalPages = Math.ceil(uniqueRecords.length / parsedLimit);
     const pagination = {
       page: currentPage,
       limit: parsedLimit,
       totalPages,
-      totalItems,
+      totalItems: uniqueRecords.length, 
     };
 
     return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          paginatedRecords,
+          paginatedUniqueRecords,
           true,
           statusCode.success,
           'Success',
@@ -475,6 +473,66 @@ export const getLotteryP_L = async (req, res) => {
       );
   }
 };
+
+// export const getLotteryP_L = async (req, res) => {
+//   try {
+//     const user = req.user;
+//     const { page = 1, limit = 10 } = req.query;
+
+//     const currentPage = parseInt(page);
+//     const parsedLimit = parseInt(limit);
+//     const offset = (currentPage - 1) * parsedLimit;
+
+//     const allRecords = await LotteryProfit_Loss.findAll({
+//       where: { userId: user.userId },
+//       attributes: ['marketId', 'marketName', 'gameName', 'profitLoss'],
+//     });
+
+//     const groupedRecords = allRecords.reduce((acc, record) => {
+//       const { marketId, marketName, gameName, profitLoss } = record;
+//       if (!acc[marketId]) {
+//         acc[marketId] = { marketId, marketName, gameName, profitLoss: 0 };
+//       }
+//       acc[marketId].profitLoss += parseFloat(profitLoss); 
+//       return acc;
+//     }, {});
+
+//     const uniqueProfitLossRecords = Object.values(groupedRecords);
+//     const paginatedRecords = uniqueProfitLossRecords.slice(offset, offset + parsedLimit);
+//     const totalItems = uniqueProfitLossRecords.length;
+//     const totalPages = Math.ceil(totalItems / parsedLimit);
+
+//     const pagination = {
+//       page: currentPage,
+//       limit: parsedLimit,
+//       totalPages,
+//       totalItems,
+//     };
+
+//     return res
+//       .status(statusCode.success)
+//       .send(
+//         apiResponseSuccess(
+//           paginatedRecords,
+//           true,
+//           statusCode.success,
+//           'Success',
+//           pagination
+//         )
+//       );
+//   } catch (error) {
+//     return res
+//       .status(statusCode.internalServerError)
+//       .send(
+//         apiResponseErr(
+//           null,
+//           false,
+//           statusCode.internalServerError,
+//           error.message
+//         )
+//       );
+//   }
+// };
 
 export const getLotteryBetHistory = async (req, res) => {
   try {
