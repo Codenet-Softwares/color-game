@@ -378,7 +378,7 @@ export const getLotteryResults = async (req, res) => {
 
 export const createLotteryP_L = async (req, res) => {
   try {
-    const { userId, marketId, marketName } = req.body;
+    const { userId, marketId, marketName, lotteryPrice } = req.body;
 
     const winningData = await WinningAmount.findAll({
       where: { userId, marketId },
@@ -406,8 +406,9 @@ export const createLotteryP_L = async (req, res) => {
       marketId,
       marketName,
       profitLoss,
+      price : lotteryPrice
     });
-
+    console.log("newEntry................................",newEntry)
     return res.status(statusCode.create).send(apiResponseSuccess(newEntry, true, statusCode.create, 'Success'));
   } catch (error) {
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));

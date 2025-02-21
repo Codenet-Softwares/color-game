@@ -31,6 +31,10 @@ LotteryProfit_Loss.init(
             allowNull: false,
             defaultValue: 'Lottery',
         },
+        price: {
+            type: DataTypes.INTEGER,
+            allowNull: true,
+        },
 
     },
     {
