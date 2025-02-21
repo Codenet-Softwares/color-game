@@ -43,7 +43,7 @@ const HitGames = () => {
             <img
               src={item.image}
               className="card-img-top"
-              style={{borderRadius:"20px"}}
+              style={{borderRadius:"15px", objectFit: "cover"}}
               alt={`Card ${index}`}
             />
           </div>
