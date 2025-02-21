@@ -1,244 +1,92 @@
-/* =====>css for component carrousel */
+<div className="card w-100 rounded" style={{ marginTop: "150px" }}>
+  {/* Header Section with Title and Back Button */}
+  <div
+    className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
+    style={{ backgroundColor: "#2CB3D1" }}
+  >
+    <b>Bet History</b>
+    <span style={{ cursor: "pointer" }} title="Back" onClick={() => SetComponent("ProfitAndLossRunner")}>
+      <i className="fas fa-arrow-left"></i>
+    </span>
+  </div>
 
-#carouselExampleCaptions {
-height: 600px;
-  margin-bottom: 10px;
-}
-.carousel-indicators button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: #000; /* Indicator color */
-  border: none;
-  margin: 0 5px;
-}
+  {/* Button Section for Filtering Bets (Back, Lay, Void) */}
+  <div className="m-1 row g-2 justify-content-end">
+    <div className="col-auto">
+      <button className="btn text-white fw-bold" style={{ backgroundColor: "#80C2F1" }}>Back</button>
+    </div>
+    <div className="col-auto">
+      <button className="btn text-white fw-bold" style={{ backgroundColor: "#FAA9BA" }}>Lay</button>
+    </div>
+    <div className="col-auto">
+      <button className="btn btn-light fw-bold">Void</button>
+    </div>
+  </div>
 
-.carousel-indicators .active {
-  background-color: #fff; /* Active indicator color */
-}
-.carousel-indicators {
-  bottom: 10px !important; /* Adjust indicator position */
-}
+  {/* Main Table Section */}
+  <div className="table-responsive">
+    <table className="table lms_table_active3 table-bordered text-center">
+      <thead>
+        <tr style={{ backgroundColor: "#e6e9ed", color: "#5562a3" }}>
+          <th><b>Sport Name</b></th>
+          <th><b>Event Name</b></th>
+          <th><b>Market Name</b></th>
+          <th><b>Selection Name</b></th>
+          <th><b>Bet Type</b></th>
+          <th><b>User Price</b></th>
+          <th><b>Amount</b></th>
+          <th><b>Profit/Loss</b></th>
+          <th><b>Place Date</b></th>
+          <th><b>Match Date</b></th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* If Data Exists */}
+        {data?.data?.length > 0 ? (
+          data?.data?.map((bet, index) => (
+            <tr key={index}>
+              <td>{bet?.gameName}</td>
+              <td className="text-primary fw-bold" style={{ cursor: "pointer" }}>
+                {bet?.marketName}
+              </td>
+              <td>{"Winner"}</td>
+              <td>{bet?.runnerName}</td>
+              <td>{bet?.type}</td>
+              <td>{bet?.rate}</td>
+              <td>{bet?.value}</td>
+              <td>
+                <span className="text-success mx-1">{bet?.bidAmount}</span>
+                <span className="text-danger">(-{bet?.value})</span>
+              </td>
+              <td>{formatDate(bet?.placeDate)}</td>
+              <td>{formatDate(bet?.matchDate)}</td>
+            </tr>
+          ))
+        ) : (
+          // If No Data is Found
+          <tr>
+            <td colSpan="10">
+              <div className="alert alert-info fw-bold" role="alert">
+                No Data Found !!
+              </div>
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
+  </div>
 
-/* Adjusting the height of the carousel images */
-.carousel-inner img {
-  height: 630px;
-  /* height: 100vh; */
-  /* object-fit: cover; */
-}
-
-/* Adjusting the height of the carousel caption */
-.carousel-caption {
-  bottom: 0;
-  transform: translateY(calc(-100% - 10px));
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-}
-
-/* =======> css for component hti games -> Desktop screen*/
-.card-deck {
-  display: flex;
-  justify-content: space-between;
-  /* margin-top: 108px; */
-  /* margin-top: 5px; */
-  /* overflow-x: scroll; */
-  padding: 10px;
-}
-
-.card {
-  flex: 1;
-  margin-right: 10px;
-}
-
-.card:last-child {
-  margin-right: 0; /* Remove margin from the last card */
-}
-
-.card-img-top {
-  height: 300px;
-}
-
-/* =======> css for component hit games -> Mobile screen */
-
-@media (max-width: 767.98px) {
-  .card-img-top {
-    height: 120px;
-  }
-}
-
-/* ===========> css for component advertisement */
-.scrolling-container {
-  overflow: hidden;
-}
-
-/* .d-flex {
-    animation: scrolling 40s linear infinite;
-  } */
-
-@keyframes scrolling {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(calc(-100% - 16px));
-  }
-}
-/* ==========>css for component footer */
-.marquee {
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 0.969625350140056) 0%,
-    rgba(9, 102, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
-}
-.icontainer {
-  height: 60px;
-  width: 120px;
-  cursor: pointer;
-  /* margin: 10px; */
-}
-.imagecontainer {
-  height: 90px;
-  width: 90px;
-  margin: 10px;
-}
-.footerBox {
-  /* position: fixed; */
-  background-color: #045662;
-}
-@media (min-width: 100px) {
-  .imagecontainer {
-    height: 30px;
-    width: 30px;
-  }
-}
-@media (min-width: 246px) {
-  .imagecontainer {
-    height: 15px;
-    width: 15px;
-    margin: 5px;
-  }
-}
-@media (min-width: 356px) {
-  .imagecontainer {
-    height: 25px;
-    width: 25px;
-    margin: 5px;
-  }
-}
-@media (min-width: 576px) {
-  .imagecontainer {
-    height: 40px;
-    width: 40px;
-    margin: 10px;
-  }
-}
-@media (min-width: 600px) {
-  .imagecontainer {
-    height: 40px;
-    width: 40px;
-    margin: 10px;
-  }
-}
-@media (min-width: 768px) {
-  .imagecontainer {
-    height: 50px;
-    width: 50px;
-    margin: 10px;
-  }
-}
-@media (min-width: 992px) {
-  .imagecontainer {
-    height: 70px;
-    width: 70px;
-    margin: 10px;
-  }
-}
-@media (min-width: 1200px) {
-  .imagecontainer {
-    height: 90px;
-    width: 90px;
-    margin: 10px;
-  }
-}
-@media (min-width: 1400px) {
-  .imagecontainer {
-    height: 90px;
-    width: 90px;
-    margin: 10px;
-  }
-}
-.d-app {
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 0.969625350140056) 0%,
-    rgba(9, 102, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
-}
-.M-image {
-  color: aliceblue;
-}
-.Banner {
-  color: aliceblue;
-  margin-left: 20px;
-}
-/* Default height for large screens */
-/* Default height for large screens */
-/* Default height for large screens */
-.carousel-img-container {
-  height: 75vh; /* 75% of viewport height */
-  max-height: 600px; /* Prevent excessive height */
-  overflow: hidden;
-}
-
-.carousel-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensures image fills container without distortion */
-}
-
-/* Medium devices (tablets) - Fix extra space issue */
-@media (max-width: 992px) and (min-width: 595px) {
-  .carousel-img-container {
-    height: 55vh; /* Adjust height to remove extra space */
-    max-height: 450px;
-  }
-}
-
-/* Small devices (mobile screens) */
-@media (max-width: 768px) {
-  .carousel-img-container {
-    height: 50vh; /* Ensure no extra space */
-    max-height: 400px;
-  }
-}
-
-/* Extra small devices (phones) */
-@media (max-width: 576px) {
-  .carousel-img-container {
-    height: 40vh; /* Ensure proper fit */
-    max-height: 320px;
-  }
-}
-
-/* Force proper height handling below 576px */
-@media (max-width: 576px) {
-  #carouselExampleCaptions {
-    display: block !important; /* Ensure it's always visible */
-    height: auto !important;
-  }
-
-  .carousel-inner,
-  .carousel-item {
-    height: auto !important;
-  }
-}
-
-/* Fix extra space below carousel */
-.carousel {
-  margin-bottom: 0 !important;
-  padding-bottom: 0 !important;
-}
-
+  {/* Pagination */}
+  {data?.data?.length > 0 && (
+    <div className="d-flex justify-content-center p-2">
+      <Pagination
+        currentPage={data.currentPage}
+        totalPages={data.totalPages}
+        handlePageChange={handlePageChange}
+        startIndex={startIndex}
+        endIndex={endIndex}
+        totalData={data.totalData}
+      />
+    </div>
+  )}
+</div>
