@@ -1,45 +1,83 @@
-/* =====>css for component carrousel */
+/* =====> CSS for Component Carousel */
 
 #carouselExampleCaptions {
-height: 600px;
+  height: 600; 
   margin-bottom: 10px;
+  overflow: hidden;
 }
+
+/* Fix indicator alignment */
+.carousel-indicators {
+  bottom: 10px !important;
+}
+
 .carousel-indicators button {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: #000; /* Indicator color */
   border: none;
   margin: 0 5px;
 }
 
 .carousel-indicators .active {
-  background-color: #fff; /* Active indicator color */
+  background-color: #fff; 
 }
 
-/* Adjusting the height of the carousel images */
-.carousel-inner img {
-  height: 740px;
-  /* height: 100vh; */
-  /* object-fit: cover; */
+/* =======> Adjust Carousel Image Heights Across Different Screens */
+.carousel-img-container {
+  height: 75vh; 
+  max-height: 600px; 
+  overflow: hidden;
 }
 
-/* Adjusting the height of the carousel caption */
-.carousel-caption {
-  bottom: 0;
-  transform: translateY(calc(-100% - 10px));
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 10px;
+.carousel-img {
+  width: 100%;
+  height: 100%;
 }
 
-/* =======> css for component hti games -> Desktop screen*/
+/*Fix for 573px to 993px screens */
+@media (max-width: 993px) and (min-width: 573px) {
+  .carousel-img-container {
+    height: 55vh;
+    max-height: 450px;
+  }
+}
+
+/* Small devices (mobile screens) */
+@media (max-width: 768px) {
+  .carousel-img-container {
+    height: 50vh;
+    max-height: 400px;
+  }
+}
+
+/* Extra small devices (phones) */
+@media (max-width: 576px) {
+  .carousel-img-container {
+    height: 45vh;
+    max-height: 350px;
+  }
+}
+
+/* Force proper height handling below 576px */
+@media (max-width: 576px) {
+  #carouselExampleCaptions {
+    display: block !important;
+    height: auto !important;
+  }
+
+  .carousel-inner,
+  .carousel-item {
+    height: auto !important;
+  }
+}
+
+/* =======> CSS for Component HTI Games -> Desktop Screen */
 .card-deck {
   display: flex;
   justify-content: space-between;
-  margin-top: 108px;
-  /* margin-top: 5px; */
-  /* overflow-x: scroll; */
   padding: 10px;
+  margin-top:-30px ;
 }
 
 .card {
@@ -48,22 +86,21 @@ height: 600px;
 }
 
 .card:last-child {
-  margin-right: 0; /* Remove margin from the last card */
+  margin-right: 0; 
 }
 
 .card-img-top {
   height: 300px;
 }
 
-/* =======> css for component hit games -> Mobile screen */
-
+/* =======> CSS for Component HTI Games -> Mobile Screen */
 @media (max-width: 767.98px) {
   .card-img-top {
     height: 120px;
   }
 }
 
-/* ===========> css for component advertisement */
+/* ===========> CSS for Component Advertisement */
 .scrolling-container {
   overflow: hidden;
 }
@@ -80,15 +117,6 @@ height: 600px;
     transform: translateX(calc(-100% - 16px));
   }
 }
-/* ==========>css for component footer */
-.marquee {
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 0.969625350140056) 0%,
-    rgba(9, 102, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
-}
 .icontainer {
   height: 60px;
   width: 120px;
@@ -103,81 +131,4 @@ height: 600px;
 .footerBox {
   /* position: fixed; */
   background-color: #045662;
-}
-@media (min-width: 100px) {
-  .imagecontainer {
-    height: 30px;
-    width: 30px;
-  }
-}
-@media (min-width: 246px) {
-  .imagecontainer {
-    height: 15px;
-    width: 15px;
-    margin: 5px;
-  }
-}
-@media (min-width: 356px) {
-  .imagecontainer {
-    height: 25px;
-    width: 25px;
-    margin: 5px;
-  }
-}
-@media (min-width: 576px) {
-  .imagecontainer {
-    height: 40px;
-    width: 40px;
-    margin: 10px;
-  }
-}
-@media (min-width: 600px) {
-  .imagecontainer {
-    height: 40px;
-    width: 40px;
-    margin: 10px;
-  }
-}
-@media (min-width: 768px) {
-  .imagecontainer {
-    height: 50px;
-    width: 50px;
-    margin: 10px;
-  }
-}
-@media (min-width: 992px) {
-  .imagecontainer {
-    height: 70px;
-    width: 70px;
-    margin: 10px;
-  }
-}
-@media (min-width: 1200px) {
-  .imagecontainer {
-    height: 90px;
-    width: 90px;
-    margin: 10px;
-  }
-}
-@media (min-width: 1400px) {
-  .imagecontainer {
-    height: 90px;
-    width: 90px;
-    margin: 10px;
-  }
-}
-.d-app {
-  background: linear-gradient(
-    90deg,
-    rgba(2, 0, 36, 0.969625350140056) 0%,
-    rgba(9, 102, 121, 1) 35%,
-    rgba(0, 212, 255, 1) 100%
-  );
-}
-.M-image {
-  color: aliceblue;
-}
-.Banner {
-  color: aliceblue;
-  margin-left: 20px;
 }
