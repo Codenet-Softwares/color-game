@@ -10,6 +10,7 @@ const History = ({
   handleBetHistorySelectionMenu,
   renderNoDataFound,
   handlePageChange,
+  handleDateValue,
 }) => {
   return (
     <div>
@@ -18,6 +19,7 @@ const History = ({
         handleGetHistory={handleGetHistory}
         betHistoryData={betHistoryData}
         handleBetHistorySelectionMenu={handleBetHistorySelectionMenu}
+        handleDateValue={handleDateValue}
       />
 
       <Table

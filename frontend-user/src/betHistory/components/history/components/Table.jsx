@@ -13,7 +13,7 @@ const Table = ({
   );
   let endIndex = Math.min(
     betHistoryData.currentPage * betHistoryData.totalEntries,
-    betHistoryData.totalItems
+    betHistoryData.totalData
   );
   return (
     <div className="card shadow p-3 mb-5 bg-white rounded">
@@ -42,7 +42,7 @@ const Table = ({
               className="form-select"
               id="showEntriesDropdown"
               name="totalEntries"
-              value={totalEntries}
+              value={betHistoryData.totalEntries}
               onChange={(e) => handleBetHistorySelectionMenu(e)}
             >
               <option value="10" selected>
@@ -87,7 +87,7 @@ const Table = ({
                             >
                               View Tickets
                             </button>
-                            <div
+                            {/* <div
                               className="custom-dropdown-content"
                               style={{
                                 height: dropdownOpen === index ? "200px" : "0",
@@ -149,7 +149,7 @@ const Table = ({
                                   )}
                                 </div>
                               )}
-                            </div>
+                            </div> */}
                           </div>
                         </td>
                         <td>{item.sem}</td>
@@ -176,7 +176,7 @@ const Table = ({
                     </tr>
                   </thead>
                   <tbody>
-                    {betHistoryData?.map((item, index) => (
+                    {betHistoryData.history?.map((item, index) => (
                       <tr key={index} align="center">
                         <td>{item?.gameName}</td>
                         <td>{item?.marketName}</td>
@@ -192,7 +192,7 @@ const Table = ({
                         </td>
                         <td>{item?.rate}</td>
                         <td className="fw-bold">{item?.value}</td>
-                        <td>{<formatDateForUi></formatDateForUi>(item?.placeDate)}</td>
+                        <td>{formatDateForUi(item?.placeDate)}</td>
                         <td>{formatDateForUi(item?.date)}</td>
                       </tr>
                     ))}
@@ -207,7 +207,7 @@ const Table = ({
             handlePageChange={handlePageChange}
             startIndex={startIndex}
             endIndex={endIndex}
-            totalData={betHistoryData.totalItems}
+            totalData={betHistoryData.totalData}
           />
         </div>
       ) : (

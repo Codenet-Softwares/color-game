@@ -11,6 +11,7 @@ import History from "./components/history/History";
 import OpenBets from "./components/openBets/OpenBets";
 import AppDrawer from "../screen/common/appDrawer";
 import Layout from "../screen/layout/layout";
+import { formatDate } from "../utils/helper";
 
 const BetHistory = () => {
   const [betHistoryData, setBetHistoryData] = useState(getBetHistory());
@@ -28,6 +29,13 @@ const BetHistory = () => {
     setBetHistoryData((prev) => ({
       ...prev,
       currentPage: pageNumber,
+    }));
+  };
+
+  const handleDateValue = (name, value) => {
+    setBetHistoryData((prevData) => ({
+      ...prevData,
+      [name]: value,
     }));
   };
 
@@ -129,6 +137,19 @@ const BetHistory = () => {
     }
   }, [betHistoryData?.selectColorGame]);
 
+  useEffect(() => {
+    if(betHistoryData.selectGame===!""){
+    if (betHistoryData.selectGame === "lottery") {
+      getHistoryForLotteryBetHistory();
+    } else {
+      handleGetHistory();
+    }}
+  }, [
+    betHistoryData.currentPage,
+    betHistoryData.totalItems,
+    betHistoryData.totalEntries,
+  ]);
+
   return (
     <AppDrawer showCarousel={false}>
       <Layout />
@@ -141,6 +162,7 @@ const BetHistory = () => {
             handleBetHistorySelectionMenu={handleBetHistorySelectionMenu}
             renderNoDataFound={renderNoDataFound}
             handlePageChange={handlePageChange}
+            handleDateValue={handleDateValue}
           />
         </div>
 

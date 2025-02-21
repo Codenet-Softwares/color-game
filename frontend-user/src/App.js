@@ -78,14 +78,6 @@ function App() {
             }
           />
 
-          {/* <Route
-            path="/betHistory"
-            element={
-              <PrivateRoute>
-                <BetHistory />
-              </PrivateRoute>
-            }
-          /> */}
           <Route
             path="/betHistory"
             element={
