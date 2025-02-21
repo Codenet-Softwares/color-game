@@ -23,6 +23,7 @@ import ResultLayout from "./screen/Lottery/ResultLayout";
 import GetMarketDetailByMarketId from "./screen/common/gameListView/GetMarketDetailByMarketId";
 import GetSingleMarket from "./screen/common/gameListView/GetSingleMarket";
 import LotteryMarketDashBoard from "./screen/common/gameListView/LotteryMarketDashBoard";
+import LotteryBuyLayout from "./screen/Lottery/LotteryBuyLayout";
 // import GameWithMarketList from "./screen/common/gameListView/gameWithMarketList";
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
             element={<GetMarketDetailByMarketId />}
           />
           <Route path="/lottery/:marketId" element={<LotteryCards />} />
+          <Route path="/lottoPurchase/:marketId" element={<LotteryBuyLayout />} />
           <Route
             path="/LotteryPurchaseHistory"
             element={<LotteryPurchaseLayout />}
