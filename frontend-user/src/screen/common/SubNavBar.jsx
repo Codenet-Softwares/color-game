@@ -80,21 +80,39 @@ const SubNavbar = () => {
           </div>
         )}
 
-        <div className="container-fluid">
+        <div
+          className="container-fluid d-flex align-items-center justify-content-between"
+          style={{ maxWidth: "100%", padding: "5px 10px" }}
+        >
           <button
             className="btn btn-primary d-lg-none hambargerIcon"
             type="button"
-            style={{ width: "44px" }}
+            style={{
+              width: "44px",
+              height: "40px",
+              fontSize: "18px",
+              padding: "5px",
+            }}
             data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasScrolling" // Targeting the LeftNav offcanvas
+            data-bs-target="#offcanvasScrolling"
             aria-controls="offcanvasScrolling"
           >
             ☰
           </button>
 
-          <a className="navbar-brand " href={`/home`}>
-            <img src={Logo} alt="Logo" style={{ width: "170px" }} />
-          </a>
+          <a className="navbar-brand" href={`/home`}>
+  <img
+    src={Logo}
+    alt="Logo"
+    style={{
+      width: "170px", // Default size for larger screens
+      maxWidth: "100%", // Ensures it scales down on smaller screens
+      height: "auto", // Maintains aspect ratio
+    }}
+    className="img-fluid"
+  />
+</a>
+
           <button className="navbar-toggler border-0" type="button">
             {store.user.isLogin ? (
               <span
@@ -111,6 +129,7 @@ const SubNavbar = () => {
                     backgroundImage:
                       "linear-gradient(to top, #114551, #226575, #34879b, #47abc2, #5ad0eb)",
                     fontSize: "13px",
+                    padding: "5px 8px",
                   }}
                 >
                   <FaCoins style={{ color: "#fec015" }} />
@@ -123,6 +142,7 @@ const SubNavbar = () => {
                     backgroundImage:
                       "linear-gradient(to top, #114551, #226575, #34879b, #47abc2, #5ad0eb)",
                     fontSize: "13px",
+                    padding: "5px 8px",
                   }}
                 >
                   Exp : {exposureAndWallet.exposure ?? 0}
@@ -130,13 +150,14 @@ const SubNavbar = () => {
               </span>
             ) : (
               <span
-                className="btn text-white col p-2 px-3"
+                className="btn text-white"
                 style={{
                   backgroundImage:
                     "linear-gradient(to top, #21778A, #21778A, #34879b, #47abc2, #5ad0eb)",
-                  fontSize: "14px",
+                  fontSize: "13px",
                   border: "2px solid #72BBEF",
                   borderRadius: "12px",
+                  padding: "6px 10px",
                 }}
                 onClick={() => setShowModalLogin(true)}
               >

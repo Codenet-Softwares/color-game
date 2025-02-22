@@ -249,7 +249,7 @@ const AccountStatement = () => {
                                             handlePageChange={(newPage) => setGetAccountstatement((prevState) => ({ ...prevState, currentPage: newPage }))}
                                             startIndex={startIndex}
                                             endIndex={endIndex}
-                                            totalData={getAccountstatement.totalEntries}
+                                            totalData={getAccountstatement.totalData}
                                         />
                                     </li>
                                 )}

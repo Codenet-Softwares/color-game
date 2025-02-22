@@ -3,7 +3,7 @@ import { getSliderImgText } from "../../utils/apiService";
 
 const Carousel = () => {
   const [sliderData, setSliderData] = useState([]);
-  
+
   const fetchSliderImgText = async () => {
     try {
       const response = await getSliderImgText();
@@ -48,39 +48,18 @@ const Carousel = () => {
             key={item.id}
             className={`carousel-item ${index === 0 ? "active" : ""}`}
           >
-            <div style={{ position: "relative" }}>
+            <div className="carousel-img-container">
               <img
                 src={item.image}
-                className="d-block w-100"
+                className="d-block w-100 carousel-img"
                 alt={`Slide ${index + 1}`}
               />
-              {/* <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background:
-                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))",
-                  color: "white",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  padding: "20px",
-                }}
-              >
-                <h5>{item.headingText}</h5>
-                <p>{item.text}</p>
-              </div> */}
             </div>
           </div>
         ))}
       </div>
       <button
-        className="carousel-control-prev visually-hidden"
+        className="carousel-control-prev"
         type="button"
         data-bs-target="#carouselExampleCaptions"
         data-bs-slide="prev"
