@@ -88,7 +88,7 @@ const ProfitAndLossEvent = ({
           <select
 
             className="form-select fw-bold"
-            onChange={handelItemPerPage}
+            onChange={handleItemPerPage}
 
           >
             <option value="10">10 Entries</option>
