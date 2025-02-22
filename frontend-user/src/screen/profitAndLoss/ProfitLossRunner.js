@@ -11,17 +11,18 @@ const ProfitAndLossRunner = ({
   SetRunnerId,
   handlePageChange
 }) => {
-  const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
-  const endIndex = Math.min(data.currentPage * 10, data.totalData);
+  const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
+  const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
 
-  const handelItemPerPage = (event) => {
-    SetProfitLossRunnerData((prevState) => ({
+  const handleItemPerPage = (event) => {
+    console.log("")
+    SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
-      currentPage: Number(currentPage),
+      currentPage: Number(prevState.currentPage),
     }));
-    toast.error("Work Pending From ServerSide");
   };
+
   const handleSearch = (e) => {
     SetProfitLossRunnerData((prev) => ({
       ...prev,
@@ -57,12 +58,12 @@ const ProfitAndLossRunner = ({
         <div className="m-1 row g-2 align-items-center">
           <div className="col-12 col-md-auto mb-1">
           <select
+
             className="form-select fw-bold"
             onChange={handelItemPerPage}
+
           >
-            <option value="10" selected>
-              10 Entries
-            </option>
+            <option value="10">10 Entries</option>
             <option value="25">25 Entries</option>
             <option value="50">50 Entries</option>
             <option value="100">100 Entries</option>
