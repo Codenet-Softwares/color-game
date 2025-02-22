@@ -1141,7 +1141,7 @@ export const getRevokeMarket = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error("Error in getRevokeMarket:", error);
+    console.log("Error in getRevokeMarket:", error);
     return res
       .status(statusCode.internalServerError)
       .send(

@@ -62,6 +62,7 @@ const ProfitAndLossLotteryEvent = ({
   }, [renderApi]);
 
 
+
   useEffect(() => {
     getProfitLossLotteryEventWise(null, "ProfitAndLossLotteryEvent");
   }, [profitLossLotteryEventData.itemPerPage]);
