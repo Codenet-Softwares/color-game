@@ -1402,28 +1402,55 @@ export const calculateProfitLoss = async (req, res) => {
       offset: (page - 1) * limit,
       limit: limit,
     });
+/***********************************Previous logic************************************************************* */
+    // const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
+    //   attributes: [
+    //     [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
+    //   ],
+    //   where: {
+    //     userId: userId,
+    //   },
+    // });
+
+    // if (profitLossData.length === 0 && lotteryProfitLossData.length === 0) {
+    //   return res
+    //     .status(statusCode.success)
+    //     .send(
+    //       apiResponseSuccess(
+    //         [],
+    //         true,
+    //         statusCode.success,
+    //         "No profit/loss data found for the given date range."
+    //       )
+    //     );
+    // }
 
     const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
       attributes: [
-        [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
+        "userId",
+        [
+          Sequelize.literal(`
+            COALESCE((
+              SELECT SUM(lp.profitLoss)
+              FROM LotteryProfit_Loss lp
+              WHERE lp.userId = LotteryProfit_Loss.userId
+              AND lp.id = (
+                SELECT MIN(lp2.id)
+                FROM LotteryProfit_Loss lp2
+                WHERE lp2.marketId = lp.marketId
+              )
+            ), 0)
+          `),
+          "totalProfitLoss",
+        ],
       ],
       where: {
-        userId: userId,
+        userId: userId, 
       },
+      group: ["userId"],
     });
-
-    if (profitLossData.length === 0 && lotteryProfitLossData.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            [],
-            true,
-            statusCode.success,
-            "No profit/loss data found for the given date range."
-          )
-        );
-    }
+    
+    
 
     const combinedProfitLossData = [
       ...profitLossData.map((item) => ({
