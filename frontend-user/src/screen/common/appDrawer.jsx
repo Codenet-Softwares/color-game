@@ -34,8 +34,8 @@ function AppDrawer({
   useEffect(() => {
     user_getAllGames();
     fetchLotteryMarkets();
-    fetchLotteryNewMarkets()
-  }, [lotteryToggle,lotteryNewToggle]);
+    fetchLotteryNewMarkets();
+  }, [lotteryToggle, lotteryNewToggle]);
 
   // Function to fetch draw times from API
   async function fetchLotteryMarkets() {
@@ -49,7 +49,7 @@ function AppDrawer({
     }
   }
 
-// function for new page fetch
+  // function for new page fetch
   async function fetchLotteryNewMarkets() {
     const response = await getLotteryMarketsApi(store);
     if (response?.success) {
@@ -62,8 +62,6 @@ function AppDrawer({
   }
   const handleLotteryNewToggle = () => {
     setLotteryNewToggle(!lotteryNewToggle);
-    
-  
   };
   const handleAllId = (gameId, marketId) => {
     dispatch({
@@ -91,8 +89,6 @@ function AppDrawer({
 
   const handleLotteryToggle = () => {
     setLotteryToggle(!lotteryToggle);
-    
-  
   };
 
   function getLeftNavBar() {
@@ -156,35 +152,40 @@ function AppDrawer({
             </ul>
           )}
 
-<li
-            className="MenuHead lottery-section text-center"
-            onClick={handleLotteryNewToggle}
-          >
-            <div className="lottery-wrapper mt-2">
-              <span className="new-tag">New</span>
-              Lottery New
-              <span
-                className={`dropdown-icon ${lotteryNewToggle ? "active" : ""}`}
-              >
-                ▼
-              </span>
-            </div>
-          </li>
-          {/* Display lottery draw times */}
-          {lotteryNewToggle && lotteryNewDrawTimes.length > 0 && (
-            <ul className="subMenuItems">
-              {lotteryNewDrawTimes.map((market) => (
-                <li key={market.marketId} className="subMenuHead">
-                  <Link
-                    to={`/lottoPurchase/${market.marketId}`}
-                 
-                  >
-                    <span className="draw-date-icon">🎟️</span>
-                    {market.marketName}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {lotteryNewDrawTimes && lotteryNewDrawTimes.length > 0 && (
+            <li
+              className="MenuHead lottery-section text-center"
+              onClick={handleLotteryNewToggle}
+            >
+              <div className="lottery-wrapper mt-2">
+                <span className="new-tag">New</span>
+                Lottery New
+                <span
+                  className={`dropdown-icon ${
+                    lotteryNewToggle ? "active" : ""
+                  }`}
+                >
+                  ▼
+                </span>
+              </div>
+
+              {/* Display lottery draw times only when toggled */}
+              {lotteryNewToggle && (
+                <ul className="subMenuItems mt-4">
+                  {lotteryNewDrawTimes.map((market) => (
+                    <li key={market.marketId} className="subMenuHead mt-2">
+                      <Link
+                        to={`/lottoPurchase/${market.marketId}`}
+                        onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
+                      >
+                        <span className="draw-date-icon">🎟️</span>
+                        {market.marketName}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
           )}
 
           {/* <li
@@ -260,7 +261,7 @@ function AppDrawer({
             style={{
               // border: '1px solid red',
               height: "84vh",
-              overflowY: 'auto',
+              overflowY: "auto",
             }}
           >
             <div
