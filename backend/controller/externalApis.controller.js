@@ -899,26 +899,37 @@ export const getExternalLotteryP_L = async (req, res) => {
     const parsedLimit = parseInt(limit);
     const offset = (currentPage - 1) * parsedLimit;
 
-    const { count: totalItems, rows: lotteryProfitLossRecords } = await LotteryProfit_Loss.findAndCountAll({
+    const  lotteryProfitLossRecords  = await LotteryProfit_Loss.findAll({
       where: { userName },
-      attributes: ["gameName", "marketName", "marketId", "profitLoss"],
-      limit: parsedLimit,
-      offset,
+      attributes: ['gameName', 'marketName', 'marketId', 'profitLoss'],
     });
 
-    const totalPages = Math.ceil(totalItems / parsedLimit);
+    const uniqueRecords = [];
+    const marketIdSet = new Set();
+
+    lotteryProfitLossRecords.forEach(record => {
+      if (!marketIdSet.has(record.marketId)) {
+        marketIdSet.add(record.marketId);
+        uniqueRecords.push(record);
+      }
+    });
+
+    const paginatedUniqueRecords = uniqueRecords.slice(offset, offset + parsedLimit);
+
+    const totalPages = Math.ceil(uniqueRecords.length / parsedLimit);
     const pagination = {
       page: currentPage,
       limit: parsedLimit,
       totalPages,
-      totalItems,
+      totalItems: uniqueRecords.length, 
     };
+
 
     return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          lotteryProfitLossRecords,
+          paginatedUniqueRecords,
           true,
           statusCode.success,
           "Success",
