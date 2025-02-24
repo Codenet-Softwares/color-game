@@ -1434,10 +1434,11 @@ export const calculateProfitLoss = async (req, res) => {
               SELECT SUM(lp.profitLoss)
               FROM LotteryProfit_Loss lp
               WHERE lp.userId = LotteryProfit_Loss.userId
-              AND lp.id = (
-                SELECT MIN(lp2.id)
+              AND lp.id IN (
+                SELECT MIN(lp2.id) 
                 FROM LotteryProfit_Loss lp2
-                WHERE lp2.marketId = lp.marketId
+                WHERE lp2.userId = lp.userId
+                GROUP BY lp2.marketId
               )
             ), 0)
           `),
@@ -1445,13 +1446,24 @@ export const calculateProfitLoss = async (req, res) => {
         ],
       ],
       where: {
-        userId: userId, 
+        userId: userId,
       },
       group: ["userId"],
     });
-    
-    
 
+    if (lotteryProfitLossData.length === 0 ) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "No profit/loss data found for the given date range."
+          )
+        );
+    }
+  
     const combinedProfitLossData = [
       ...profitLossData.map((item) => ({
         gameId: item.gameId,
