@@ -515,13 +515,13 @@ export const validateRemoveExposer = [
     .withMessage('Market ID is required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
-  body('marketName')
-    .exists()
-    .withMessage('Market name is required')
-    .isString()
-    .withMessage('Market name must be a string')
-    .notEmpty()
-    .withMessage('Market name cannot be empty'),
+  // body('marketName')
+  //   .exists()
+  //   .withMessage('Market name is required')
+  //   .isString()
+  //   .withMessage('Market name must be a string')
+  //   .notEmpty()
+  //   .withMessage('Market name cannot be empty'),
 ];
 
 export const validateMarketId = [
@@ -537,13 +537,13 @@ export const validateCreateLotteryP_L = [
     .withMessage('User ID is required')
     .isUUID()
     .withMessage('User ID must be a valid UUID'),
-  body('userName')
-    .exists()
-    .withMessage('User name is required')
-    .isString()
-    .withMessage('User name must be a string')
-    .isLength({ max: 255 })
-    .withMessage('User name must not exceed 255 characters'),
+  // body('userName')
+  //   .exists()
+  //   .withMessage('User name is required')
+  //   .isString()
+  //   .withMessage('User name must be a string')
+  //   .isLength({ max: 255 })
+  //   .withMessage('User name must not exceed 255 characters'),
   body('marketId')
     .exists()
     .withMessage('Market ID is required')
@@ -556,19 +556,19 @@ export const validateCreateLotteryP_L = [
     .withMessage('Market name must be a string')
     .isLength({ max: 255 })
     .withMessage('Market name must not exceed 255 characters'),
-  body('price')
-    .optional()
-    .isInt({ min: 1 })
-    .withMessage('Price must be a positive integer'),
-  body('sem')
-    .optional()
-    .isInt({ values: [5, 10, 25, 50, 100, 200] })
-    .withMessage('Sem must be one of the values: 5, 10, 25, 50, 100, 200'),
-  body('profitLoss')
-    .exists()
-    .withMessage('Profit or loss is required')
-    .isDecimal({ decimal_digits: '0,2' })
-    .withMessage('Profit or loss must be a decimal with up to 2 digits after the decimal point'),
+  // body('price')
+  //   .optional()
+  //   .isInt({ min: 1 })
+  //   .withMessage('Price must be a positive integer'),
+  // body('sem')
+  //   .optional()
+  //   .isInt({ values: [5, 10, 25, 50, 100, 200] })
+  //   .withMessage('Sem must be one of the values: 5, 10, 25, 50, 100, 200'),
+  // body('profitLoss')
+  //   .exists()
+  //   .withMessage('Profit or loss is required')
+  //   .isDecimal({ decimal_digits: '0,2' })
+  //   .withMessage('Profit or loss must be a decimal with up to 2 digits after the decimal point'),
 ];
 
 export const validateDateWiseMarkets = [

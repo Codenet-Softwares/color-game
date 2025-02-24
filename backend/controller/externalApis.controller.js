@@ -675,63 +675,33 @@ export const getLiveBetGames = async (req, res) => {
         "gameName",
         "marketId",
         "marketName",
-        "id",
-        "userName",
         "userId",
+        "userName",
       ],
       order: [["createdAt", "DESC"]],
     });
 
     if (!currentOrders || currentOrders.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "No data found.")
-        );
+      return res.status(statusCode.success).send(
+        apiResponseSuccess([], true, statusCode.success, "No data found.")
+      );
     }
 
-    const uniqueMarkets = new Map();
+    const formattedResponse = currentOrders.map((order) => ({
+      marketId: order.marketId,
+      marketName: order.marketName,
+      gameName: order.gameName,
+      userId: order.userId,
+      userName: order.userName,
+    }));
 
-    currentOrders.forEach((order) => {
-      const key = `${order.gameId}-${order.marketId}`;
-
-      if (!uniqueMarkets.has(key)) {
-        // Initialize the market entry with relevant details and an empty userNames array
-        uniqueMarkets.set(key, {
-          gameId: order.gameId,
-          gameName: order.gameName,
-          marketId: order.marketId,
-          marketName: order.marketName,
-          userNames: [order.userName],
-        });
-      } else {
-        // If the market is already present, add the user name to the array if it's not already included
-        const market = uniqueMarkets.get(key);
-        if (!market.userNames.includes(order.userName)) {
-          market.userNames.push(order.userName);
-        }
-      }
-    });
-
-    const uniqueOrders = Array.from(uniqueMarkets.values());
-
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(uniqueOrders, true, statusCode.success, "Success")
-      );
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(formattedResponse, true, statusCode.success, "Success")
+    );
   } catch (error) {
-    console.error("Error fetching market data:", error);
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
 };
 
@@ -1171,7 +1141,7 @@ export const getRevokeMarket = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error("Error in getRevokeMarket:", error);
+    console.log("Error in getRevokeMarket:", error);
     return res
       .status(statusCode.internalServerError)
       .send(

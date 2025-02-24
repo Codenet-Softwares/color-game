@@ -10,6 +10,7 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import sequelize from "../db.js";
 import { user_Balance } from "./admin.controller.js";
 import WinningAmount from "../models/winningAmount.model.js";
+import { Op } from "sequelize";
 
 export const searchTicket = async (req, res) => {
   try {
@@ -286,40 +287,35 @@ export const getMarkets = async (req, res) => {
 
 export const updateBalance = async (req, res) => {
   try {
-    const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
-
+    const { userId, prizeAmount, marketId } = req.body;
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
     }
 
-    let totalBalanceUpdate = prizeAmount;
-    let updatedMarketListExposure = user.marketListExposure; // Start with the current value
-
-    totalBalanceUpdate += lotteryPrice;
-
-    // Modify the market exposure for the given marketId
-    const marketExposures = user.marketListExposure;
-
-    updatedMarketListExposure = marketExposures.map(exposure => {
-      if (exposure.hasOwnProperty(marketId)) {
-        exposure[marketId] -= lotteryPrice; // Decrease exposure for the given marketId
-      }
-      return exposure;
-    });
-
-    await userSchema.update(
-      { marketListExposure: updatedMarketListExposure },
-      { where: { userId } }
-    );
-
     await WinningAmount.create({
       userId: user.userId,
       userName: user.userName,
-      amount: prizeAmount,
+      amount:  prizeAmount,
       type: "win",
       marketId,
     });
+
+     const users = await userSchema.findAll({
+      where: { marketListExposure: { [Op.ne]: null } },
+    });
+
+    for (const user of users) {
+      if (user.marketListExposure) {
+        let updatedExposure = user.marketListExposure.filter((entry) => !entry[marketId]);
+
+        await userSchema.update(
+          { marketListExposure: updatedExposure },
+          { where: { userId: user.userId } }
+        );
+      }
+    }
+
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update"));
   } catch (error) {
@@ -329,45 +325,21 @@ export const updateBalance = async (req, res) => {
 
 export const removeExposer = async (req, res) => {
   try {
-    const { userId, marketId, marketName , lotteryPrice} = req.body;
-
+    const { userId,  marketId, lotteryPrice } = req.body;
+    
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
-      return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
+      return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
     }
 
-    if (user.marketListExposure) {
-      const exposures = Array.isArray(user.marketListExposure)
-        ? user.marketListExposure
-        : JSON.parse(user.marketListExposure);
-
-      const marketExposure = exposures.find(exposure => exposure[marketId] !== undefined);
-
-      if (marketExposure) {
-        user.marketListExposure = exposures.filter(exposure => !exposure[marketId]);
-
-        await LotteryProfit_Loss.create({
-          userId,
-          userName: user.userName,
-          marketId,
-          marketName,
-          price: lotteryPrice,
-          profitLoss: -lotteryPrice,
-        });
-
-        await WinningAmount.create({
-          userId: user.userId,
-          userName: user.userName,
-          amount: lotteryPrice,
-          type: "loss",
-          marketId: marketId,
-        })
-      }
-
-    }
-
+    await WinningAmount.create({
+      userId: user.userId,
+      userName: user.userName,
+      amount: lotteryPrice,
+      type: "loss",
+      marketId,
+    });
+    
     await user.save();
 
     return res
@@ -406,33 +378,42 @@ export const getLotteryResults = async (req, res) => {
 
 export const createLotteryP_L = async (req, res) => {
   try {
-    const {
-      userId,
-      userName,
-      marketId,
-      marketName,
-      ticketNumber,
-      price,
-      sem,
-      profitLoss,
-    } = req.body;
+    const { userId, marketId, marketName, lotteryPrice } = req.body;
+
+    const winningData = await WinningAmount.findAll({
+      where: { userId, marketId },
+      attributes: ['userId', 'userName', 'amount', 'type'],
+    });
+
+    let totalWin = 0;
+    let totalLoss = 0;
+    let userName = '';
+
+    winningData.forEach((entry) => {
+      if (entry.type === 'win') {
+        totalWin += entry.amount;
+      } else if (entry.type === 'loss') {
+        totalLoss += entry.amount;
+      }
+      userName = entry.userName;
+    });
+
+    const profitLoss = totalWin - totalLoss;
 
     const newEntry = await LotteryProfit_Loss.create({
       userId,
       userName,
       marketId,
       marketName,
-      ticketNumber,
-      price,
-      sem,
       profitLoss,
+      price : lotteryPrice
     });
-
+    console.log("newEntry................................",newEntry)
     return res.status(statusCode.create).send(apiResponseSuccess(newEntry, true, statusCode.create, 'Success'));
   } catch (error) {
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
-}
+};
 
 export const getLotteryP_L = async (req, res) => {
   try {
@@ -446,23 +427,33 @@ export const getLotteryP_L = async (req, res) => {
     const { count: totalItems, rows: lotteryProfitLossRecords } = await LotteryProfit_Loss.findAndCountAll({
       where: { userId: user.userId },
       attributes: ['gameName', 'marketName', 'marketId', 'profitLoss'],
-      limit: parsedLimit,
-      offset,
     });
 
-    const totalPages = Math.ceil(totalItems / parsedLimit);
+    const uniqueRecords = [];
+    const marketIdSet = new Set();
+
+    lotteryProfitLossRecords.forEach(record => {
+      if (!marketIdSet.has(record.marketId)) {
+        marketIdSet.add(record.marketId);
+        uniqueRecords.push(record);
+      }
+    });
+
+    const paginatedUniqueRecords = uniqueRecords.slice(offset, offset + parsedLimit);
+
+    const totalPages = Math.ceil(uniqueRecords.length / parsedLimit);
     const pagination = {
       page: currentPage,
       limit: parsedLimit,
       totalPages,
-      totalItems,
+      totalItems: uniqueRecords.length, 
     };
 
     return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          lotteryProfitLossRecords,
+          paginatedUniqueRecords,
           true,
           statusCode.success,
           'Success',
@@ -483,6 +474,65 @@ export const getLotteryP_L = async (req, res) => {
   }
 };
 
+// export const getLotteryP_L = async (req, res) => {
+//   try {
+//     const user = req.user;
+//     const { page = 1, limit = 10 } = req.query;
+
+//     const currentPage = parseInt(page);
+//     const parsedLimit = parseInt(limit);
+//     const offset = (currentPage - 1) * parsedLimit;
+
+//     const allRecords = await LotteryProfit_Loss.findAll({
+//       where: { userId: user.userId },
+//       attributes: ['marketId', 'marketName', 'gameName', 'profitLoss'],
+//     });
+
+//     const groupedRecords = allRecords.reduce((acc, record) => {
+//       const { marketId, marketName, gameName, profitLoss } = record;
+//       if (!acc[marketId]) {
+//         acc[marketId] = { marketId, marketName, gameName, profitLoss: 0 };
+//       }
+//       acc[marketId].profitLoss += parseFloat(profitLoss); 
+//       return acc;
+//     }, {});
+
+//     const uniqueProfitLossRecords = Object.values(groupedRecords);
+//     const paginatedRecords = uniqueProfitLossRecords.slice(offset, offset + parsedLimit);
+//     const totalItems = uniqueProfitLossRecords.length;
+//     const totalPages = Math.ceil(totalItems / parsedLimit);
+
+//     const pagination = {
+//       page: currentPage,
+//       limit: parsedLimit,
+//       totalPages,
+//       totalItems,
+//     };
+
+//     return res
+//       .status(statusCode.success)
+//       .send(
+//         apiResponseSuccess(
+//           paginatedRecords,
+//           true,
+//           statusCode.success,
+//           'Success',
+//           pagination
+//         )
+//       );
+//   } catch (error) {
+//     return res
+//       .status(statusCode.internalServerError)
+//       .send(
+//         apiResponseErr(
+//           null,
+//           false,
+//           statusCode.internalServerError,
+//           error.message
+//         )
+//       );
+//   }
+// };
 
 export const getLotteryBetHistory = async (req, res) => {
   try {

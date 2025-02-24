@@ -15,21 +15,21 @@ const ProfitAndLossEvent = ({
   gameId,
   profitLossEventData
 }) => {
-  const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
-  const endIndex = Math.min(data.currentPage * 10, data.totalData);
+  const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
+  const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
   const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoRunnerWiseProfitLoss = (marketId, componentName) => {
     SetComponent(componentName);
     SetMarketId(marketId);
   };
-  const handelItemPerPage = (event) => {
+  const handleItemPerPage = (event) => {
+    console.log("")
     SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
-      currentPage: Number(currentPage),
+      currentPage: Number(prevState.currentPage),
     }));
-    toast.error("Work Pending From ServerSide");
   };
 
   const handleSearch = (e) => {
@@ -57,7 +57,11 @@ const ProfitAndLossEvent = ({
     if (renderApi !== null) {
       getProfitLossEventWise(gameId, "ProfitAndLossEvent");
     }
-  }, [renderApi]);
+  }, [renderApi,profitLossEventData.itemPerPage]);
+
+  useEffect(() => {
+      getProfitLossEventWise(gameId, "ProfitAndLossEvent");
+  }, [ profitLossEventData.itemPerPage]);
 
   return (
     <>
@@ -82,11 +86,10 @@ const ProfitAndLossEvent = ({
         <div className="m-1 d-flex justify-content-between align-items-center">
           <select
             className="form-select w-auto m-1"
-            onChange={handelItemPerPage}
+            onChange={(e)=>handleItemPerPage(e)}
+            defaultValue="10"
           >
-            <option value="10" selected>
-              10 Entries
-            </option>
+            <option value="10">10 Entries</option>
             <option value="25">25 Entries</option>
             <option value="50">50 Entries</option>
             <option value="100">100 Entries</option>
