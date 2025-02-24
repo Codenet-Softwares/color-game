@@ -1,19 +1,12 @@
 import React, { useState, useCallback, useRef } from "react";
 import { Form, InputGroup, Dropdown } from "react-bootstrap";
 import { FixedSizeGrid as Grid } from "react-window";
-import "./ReusableDropdown.css";
+import "./ReusableDropdown.css"; 
 import useDebounce from "./useDebounce";
 
-const COLUMN_COUNT = 3;
+const COLUMN_COUNT = 3; 
 
-const ReusableDropdown = ({
-  label,
-  options = [],
-  name,
-  onSelect,
-  error,
-  touched,
-}) => {
+const ReusableDropdown = ({ label, options = [], name, onSelect, error, touched }) => {
   const [state, setState] = useState({
     search: "",
     selected: "",
@@ -26,63 +19,44 @@ const ReusableDropdown = ({
   const filteredOptions =
     typeof debouncedSearch === "string"
       ? options.filter((option) =>
-          option
-            .toString()
-            .toLowerCase()
-            .includes(debouncedSearch.toLowerCase())
+          option.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
         )
       : options;
 
-  const handleSelect = useCallback(
-    (option) => {
-      setState((prev) => ({
-        ...prev,
-        search: option,
-        selected: option,
-        showDropdown: false,
-      }));
-      onSelect(option);
-    },
-    [onSelect]
-  );
+  const handleSelect = useCallback((option) => {
+    setState((prev) => ({
+      ...prev,
+      search: option,
+      selected: option,
+      showDropdown: false,
+    }));
+    onSelect(option); // Ensure the parent component gets the selected value
+  }, [onSelect]);
 
-  const columnWidth = inputRef.current
-    ? inputRef.current.offsetWidth / COLUMN_COUNT
-    : 80;
+  const columnWidth = inputRef.current ? inputRef.current.offsetWidth / COLUMN_COUNT : 80;
   const rowCount = Math.ceil(filteredOptions.length / COLUMN_COUNT);
 
   return (
     <div className="dropdown-container">
+      <label className="dropdown-label">{label}</label>
       <InputGroup>
         <Form.Control
           ref={inputRef}
           type="text"
-          className={`dropdown-input ${touched && error ? "is-invalid" : ""}`} // Red border on error
-          placeholder={`Select ${name}`} // Placeholder instead of label
+          placeholder={`Search ${label}`}
           value={state.search}
-          onChange={(e) => {
-            const value = e.target.value;
+          onChange={(e) =>
             setState((prev) => ({
               ...prev,
-              search: value,
-              selected: value ? prev.selected : "", // Clear selection if empty
+              search: e.target.value,
               showDropdown: true,
-            }));
-
-            // Remove validation error when user types
-            if (value) {
-              onSelect(value);
-            } else {
-              onSelect(null); // Notify parent of empty value
-            }
-          }}
+            }))
+          }
           onFocus={() => setState((prev) => ({ ...prev, showDropdown: true }))}
           onBlur={() =>
-            setTimeout(
-              () => setState((prev) => ({ ...prev, showDropdown: false })),
-              200
-            )
+            setTimeout(() => setState((prev) => ({ ...prev, showDropdown: false })), 200)
           }
+          className={`dropdown-input ${touched && error ? "is-invalid" : ""}`} // Red border on error
         />
       </InputGroup>
 
@@ -116,15 +90,7 @@ const ReusableDropdown = ({
           </div>
         </Dropdown.Menu>
       )}
-      {/* Error Message with Fixed Space */}
-      <div className="dropdown-error">
-        {touched && error && (
-          <div className="d-flex align-items-center gap-1">
-            <i className="bi bi-info-circle"></i>
-            <span>{error}</span>
-          </div>
-        )}
-      </div>
+      {touched && error && <div className="text-danger">{error}</div>}
     </div>
   );
 };
