@@ -216,7 +216,7 @@ export function getBetHistory(body = {}) {
     totalData: 0,
     currentPage: 1,
     totalEntries: 10,
-    endDate: new Date(),
+    endDate: new Date().setDate(new Date().getDate() - 1),
     startDate: new Date(),
     dataSource: "live",
     selectGame: "",
