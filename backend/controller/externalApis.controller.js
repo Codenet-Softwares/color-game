@@ -220,17 +220,56 @@ export const calculateExternalProfitLoss = async (req, res) => {
       offset: (page - 1) * limit,
       limit: limit,
     });
+/*********************************Previous Logic***************************************************************************************************************** */
+    // const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
+    //   attributes: [
+    //     [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
+    //   ],
+    //   where: {
+    //     userName: userName,
+    //   },
+    // });
+
+    // if (profitLossData.length === 0 && lotteryProfitLossData.length === 0) {
+    //   return res
+    //     .status(statusCode.success)
+    //     .send(
+    //       apiResponseSuccess(
+    //         [],
+    //         true,
+    //         statusCode.success,
+    //         "No profit/loss data found for the given date range."
+    //       )
+    //     );
+    // }
 
     const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
       attributes: [
-        [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
+        "userId",
+        [
+          Sequelize.literal(`
+            COALESCE((
+              SELECT SUM(lp.profitLoss)
+              FROM LotteryProfit_Loss lp
+              WHERE lp.userId = LotteryProfit_Loss.userId
+              AND lp.id IN (
+                SELECT MIN(lp2.id) 
+                FROM LotteryProfit_Loss lp2
+                WHERE lp2.userId = lp.userId
+                GROUP BY lp2.marketId
+              )
+            ), 0)
+          `),
+          "totalProfitLoss",
+        ],
       ],
       where: {
-        userName: userName,
+         userName: userName,
       },
+      group: ["userId"],
     });
 
-    if (profitLossData.length === 0 && lotteryProfitLossData.length === 0) {
+    if (lotteryProfitLossData.length === 0 ) {
       return res
         .status(statusCode.success)
         .send(
