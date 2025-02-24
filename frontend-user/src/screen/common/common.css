@@ -212,10 +212,43 @@ label {
 /* *======================> */
 /* hambargerIcon*/
 /* *======================> */
-
+.user_navbar{
+  background-image: linear-gradient(to bottom, #0a262c, #03354C, #17687a, #1b8da6, #20b3d4);
+}
 .hambargerIcon {
   background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+  width: 44px;
+  height: 40px;
+  font-size: 18px;
+  padding: 5px;
 }
+.open_OffCanvas{
+  background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+  width: 44px;
+  height: 40px;
+  font-size: 18px;
+  /* padding: 5px; */
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  justify-content: center;
+  /* line-height: 1; */
+}
+.open_topHeading{
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.image_logo{
+  width: 170px;
+  max-width: 100%;
+  height: auto;
+}
+.sideCanvas_coin{
+  background-image: linear-gradient(to top, #114551, #226575, #34879b, #47abc2, #5ad0eb);
+  font-size: 13px;
+  padding: 5px 8px;
+}
+
 .hambargerIconTop {
   background: #0d505a;
   height: 20px;
@@ -225,7 +258,11 @@ label {
 .leftslidebar {
   color: #fff;
 }
-
+.announcementImg{
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+}
 /*======================
     bidding section
 =======================*/
