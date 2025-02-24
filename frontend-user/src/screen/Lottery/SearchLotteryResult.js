@@ -43,7 +43,7 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
   // };
 
   const handleBuy = async () => {
-    if (!responseData) return;
+    if (!responseData) return;  
 
     const body = {
       generateId: responseData.generateId || "defaultId",

@@ -208,3 +208,26 @@ export function getUserLotteryBetHistory(body = {}) {
     itemPerPage: 10,
   };
 }
+
+// initiallotteryState for loteryuserpurchase
+
+export function getInitialLotteryData() {
+  return {
+    groups: [],
+    series: [],
+    numbers: [],
+    semValues: ["5 sem", "10 sem", "25 sem", "50 sem", "100 sem", "200 sem"],
+    refreshKey: 0, 
+    marketName: "",
+    searchResult: null,
+  };
+}
+
+export function getInitialFormValues() {
+  return {
+    selectedSem: "",
+    selectedGroup: "",
+    selectedSeries: "",
+    selectedNumber: "",
+  };
+}

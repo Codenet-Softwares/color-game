@@ -135,13 +135,7 @@ const LotteryNewPage = ({ drawId }) => {
               moment.utc(currentMarket.end_time).format("YYYY-MM-DDTHH:mm:ss")
             );
 
-            // const currentTime = moment();
-
-            // if (currentTime.isSameOrAfter(start)) {
-            //   setShowCountdown(true);
-            // } else {
-            //   setShowCountdown(false);
-            // }
+           
           } else {
             console.warn("No market found matching the given drawId");
             setMarketName("Unknown Market");
@@ -351,27 +345,7 @@ const LotteryNewPage = ({ drawId }) => {
     setIsNumberPickerVisible(false);
   };
 
-  // const renderNumberGrid = () => {
-  //   return (
-  //     <div className="calendar-grid">
-  //       {filteredNumbers.length === 0 ? (
-  //         <div className="text-center">No Results</div>
-  //       ) : (
-  //         filteredNumbers.map((num) => (
-  //           <button
-  //             key={num}
-  //             className="calendar-cell"
-  //             onClick={() =>
-  //               handleNumberSelect(num.toString().padStart(5, "0"))
-  //             }
-  //           >
-  //             {num.toString().padStart(5, "0")}
-  //           </button>
-  //         ))
-  //       )}
-  //     </div>
-  //   );
-  // };
+ 
 
   const renderNumberGrid = () => {
     const containerWidth = 320;
@@ -557,17 +531,11 @@ const LotteryNewPage = ({ drawId }) => {
                     .subtract(45, "seconds")
                     .toDate()
                 ) < new Date() && (
-                  // <CountDownTimerLottery endDateTime={endTimeForTimer} />
                   <CountdownTimer
                     endDate={endTimeForShowCountdown}
                     fontSize={"16px"}
                   />
                 )}
-
-                {/* {isSuspend && (
-                  // <CountDownTimerLottery endDateTime={endTimeForTimer} />
-                  <CountdownTimer endDate={endTimeForShowCountdown} fontSize={"16px"} />
-                )} */}
               </div>
             </div>
 
@@ -587,23 +555,7 @@ const LotteryNewPage = ({ drawId }) => {
               </select>
             </div>
 
-            {/* Group Input */}
-            {/* <div className="mb-3">
-              <div className="input-wrapper">
-                <input
-                  type="text"
-                  placeholder="Group"
-                  className="form-control"
-                  value={group}
-                  onFocus={() => handleFocus("group")}
-                  onChange={handleGroupInputChange} 
-                  onBlur={() => setIsGroupPickerVisible(false)}
-                />
-                {isGroupPickerVisible && (
-                  <div className="picker-dropdown">{renderGroupGrid()}</div>
-                )}
-              </div>
-            </div> */}
+          
             <div className="mb-3">
               <div className="input-wrapper">
                 <input
