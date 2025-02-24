@@ -26,7 +26,7 @@ const InnerCarousel = () => {
   return (
     <div>
       <div className="row">
-        <div className="col-md-9">
+        <div className="col-md-12">
         <div
       id="carouselExampleCaptions"
       className="carousel slide "

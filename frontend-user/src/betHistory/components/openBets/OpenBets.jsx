@@ -4,7 +4,7 @@ import RenderLayTable from "./components/RenderLayTable";
 
 const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
   return (
-    <div className="card" style={{ marginTop: "150px", height: "800px" }}>
+    <div className="card" style={{ overflowY: "auto", height: "82vh" }}>
       <div
         className="card-header"
         style={{
