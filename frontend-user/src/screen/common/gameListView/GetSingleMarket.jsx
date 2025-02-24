@@ -72,7 +72,7 @@ const GetSingleMarket = () => {
                 <div className="row px-0 m-0">
                   <div className="col-8"></div>
                   <div
-                    className="col-2 fw-bold rounded-top-3"
+                    className="col-2 fw-bold rounded-top-3 text-uppercase"
                     style={{background: "#80C2F1",
                       fontSize: "14px",
                       padding: "5px",
@@ -82,7 +82,7 @@ const GetSingleMarket = () => {
                     Back
                   </div>
                   <div
-                    className="col-2 fw-bold rounded-top-3"
+                    className="col-2 fw-bold rounded-top-3 text-uppercase"
                     style={{
                       background: "#FAA9BA",
                       fontSize: "14px",

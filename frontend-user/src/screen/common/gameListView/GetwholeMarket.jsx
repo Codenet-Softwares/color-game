@@ -57,7 +57,7 @@ const GetwholeMarket = () => {
   return (
     <>
       {/* <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}> */}
-      <div className="row p-0 m-0 m-2">
+      <div className="row p-0 m-1">
         {user_allGamesWithMarketData &&
           user_allGamesWithMarketData
             .slice(0, store.user.isLogin ? 5 : 3)

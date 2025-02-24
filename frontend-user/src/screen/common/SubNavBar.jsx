@@ -64,7 +64,7 @@ const SubNavbar = () => {
             style={{ background: "#045662" }}
           >
             <img
-              src={ansmt}
+              // src={ansmt}
               alt="Announcement"
               style={{ width: "30px", height: "30px", marginLeft: "10px" }}
             />
@@ -85,7 +85,7 @@ const SubNavbar = () => {
           style={{ maxWidth: "100%", padding: "5px 10px" }}
         >
           <button
-            className="btn btn-primary d-lg-none hambargerIcon"
+            className="btn btn-primary d-lg-none d-md-none hambargerIcon"
             type="button"
             style={{
               width: "44px",
