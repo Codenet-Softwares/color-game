@@ -37,11 +37,13 @@ export const deleteLiveBetMarkets = async (req, res) => {
       where: { marketId, runnerId, userId },
     });
 
+    if(marketBalanceData)
+    {
+      await marketBalanceData.destroy({ transaction });
+    }
     const previousStateData = await PreviousState.findOne({
       where: { marketId, runnerId, userId },
     });
-
-    await marketBalanceData.destroy({ transaction });
 
     if (previousStateData > 0) {
       await previousStateData.destroy({ transaction });
