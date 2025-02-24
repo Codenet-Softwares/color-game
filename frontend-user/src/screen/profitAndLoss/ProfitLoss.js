@@ -81,9 +81,14 @@ const ProfitLoss = ({
   }, [
     marketId,
     profitLossRunnerData.itemPerPage,
-    profitLossRunnerData.searchItem,
-
   ]);
+
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      if (marketId) getProfitLossRunnerWise();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [profitLossRunnerData.searchItem]);
 
   useEffect(() => {
     if (runnerId) getUserBetHistoryWise();
@@ -311,6 +316,7 @@ const ProfitLoss = ({
         totalItems={profitLossRunnerData.totalData}
         SetRunnerId={SetRunnerId}
         handlePageChange={(page) => handelProfitLossRunnerDataPage(page)}
+        marketId={marketId}
       />
     );
   }

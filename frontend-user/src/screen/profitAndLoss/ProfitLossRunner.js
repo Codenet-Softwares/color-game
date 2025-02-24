@@ -15,8 +15,7 @@ const ProfitAndLossRunner = ({
   const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
 
   const handleItemPerPage = (event) => {
-    console.log("")
-    SetProfitLossEventData((prevState) => ({
+    SetProfitLossRunnerData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
       currentPage: Number(prevState.currentPage),
@@ -29,6 +28,8 @@ const ProfitAndLossRunner = ({
       searchItem: e.target.value,
     }));
   };
+
+ 
 
   const handelGotoBetHistory = (runnerId, componentName) => {
     SetComponent(componentName);
@@ -81,10 +82,16 @@ const ProfitAndLossRunner = ({
                 // Loader
                 <div
                   className="d-flex justify-content-center align-items-center"
-                  style={{ height: "100px" }}
+                  // style={{ height: "100px" }}
                 >
-                  <div className="spinner-border" role="status">
+                  {/* <div className="spinner-border" role="status">
                     <span className="sr-only">Loading...</span>
+                  </div> */}
+                  <div
+                    class="alert alert-info fw-bold"
+                    role="alert"
+                  >
+                    No Data Found !!
                   </div>
                 </div>
               ) : (
