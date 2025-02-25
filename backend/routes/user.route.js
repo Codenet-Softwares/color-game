@@ -31,7 +31,6 @@ import {
   bidTypeSchema,
   calculateProfitLossValidate,
   createUserValidate,
-  currentOrderSchema,
   marketProfitLossValidate,
   runnerProfitLossValidate,
   validateProfitLossInput,
@@ -87,8 +86,8 @@ export const UserRoute = (app) => {
   );
   // done
   app.get(
-    '/api/user-currentOrderHistory/:gameId',
-    currentOrderSchema,
+    '/api/user-currentOrderHistory/:marketId',
+    //currentOrderSchema,
     customErrorHandler,
     authorize([string.User]),
     currentOrderHistory,

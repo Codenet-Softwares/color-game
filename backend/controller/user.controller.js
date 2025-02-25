@@ -1274,11 +1274,11 @@ export const currentOrderHistory = async (req, res) => {
   try {
     const user = req.user;
     const userId = user.userId;
-    const gameId = req.params.gameId;
+    const marketId = req.params.marketId;
     // const page = parseInt(req.query.page, 10) || 1;
     // const limit = parseInt(req.query.limit, 10) || 5;
 
-    if (!gameId) {
+    if (!marketId) {
       return res
         .status(statusCode.badRequest)
         .send(
@@ -1286,7 +1286,7 @@ export const currentOrderHistory = async (req, res) => {
             null,
             statusCode.badRequest,
             false,
-            "Game ID is required"
+            "Market Id is required"
           )
         );
     }
@@ -1294,7 +1294,7 @@ export const currentOrderHistory = async (req, res) => {
     const { rows } = await CurrentOrder.findAndCountAll({
       where: {
         userId,
-        gameId,
+        marketId,
       },
       attributes: ["runnerName", "rate", "value", "type", "bidAmount"],
       // limit,
@@ -2012,8 +2012,8 @@ export const getUserCurrentOrderGames = async (req, res) => {
 
     const distinctGames = await CurrentOrder.findAll({
       where: { userId },
-      attributes: ["gameId", "gameName"],
-      group: ["gameId", "gameName"],
+      attributes: ["marketId", "marketName"],
+      group: ["marketId", "marketName"],
     });
 
     res

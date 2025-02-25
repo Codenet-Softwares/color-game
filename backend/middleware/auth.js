@@ -32,16 +32,20 @@ export const authorize = (roles, permissions) => {
 
       let existingUser;
 
-      // Check if the user is an admin or subAdmin
       if (roles.includes(string.Admin) || roles.includes(string.subAdmin)) {
         existingUser = await admins.findOne({
           where: {
             adminId: user.adminId,
           },
         });
+      } else if (roles.includes(string.User)) {
+        existingUser = await userSchema.findOne({
+          where: {
+            id: user.id,
+          },
+        });
       }
 
-      // If no user is found, return unauthorized
       if (!existingUser) {
         return res
           .status(statusCode.unauthorize)
@@ -50,7 +54,6 @@ export const authorize = (roles, permissions) => {
 
       const rolesArray = existingUser.roles.replace(/['"]+/g, '').split(',');
 
-      // Check if the user has the required role
       if (roles && roles.length > 0) {
         let userHasRequiredRole = false;
 
@@ -67,12 +70,10 @@ export const authorize = (roles, permissions) => {
         }
       }
 
-      // Check if the user has the required permissions
       if (permissions && permissions.length > 0) {
         const userPermissions = existingUser.permissions ? existingUser.permissions.split(',') : [];
         let userHasRequiredPermission = false;
 
-        // If the user is Admin, bypass permission checks
         if (rolesArray.includes(string.Admin)) {
           userHasRequiredPermission = true;
         } else {
@@ -90,7 +91,6 @@ export const authorize = (roles, permissions) => {
         }
       }
 
-      // Attach the user to the request object
       req.user = existingUser;
       next();
     } catch (err) {
