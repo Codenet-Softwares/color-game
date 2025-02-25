@@ -13,9 +13,9 @@ class stringConst {
 
 class apiPermissions  {
   constructor(){
-    this.gameView ='gameView',
-    this.marketView = 'marketView',
-    this.runnerView = 'runnerView',
+    // this.gameView ='gameView',
+    // this.marketView = 'marketView',
+    // this.runnerView = 'runnerView',
     this.resultAnnouncement='resultAnnouncement'
   }
 }
