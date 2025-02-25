@@ -5,7 +5,7 @@ import admins from '../models/admin.model.js';
 import { statusCode } from '../helper/statusCodes.js';
 import userSchema from '../models/user.model.js';
 
-export const authorize = (roles) => {
+export const authorize = (roles, permissions) => {
   return async (req, res, next) => {
     try {
       const authToken = req?.headers?.authorization;
@@ -32,7 +32,8 @@ export const authorize = (roles) => {
 
       let existingUser;
 
-      if (roles.includes(string.Admin)) {
+      // Check if the user is an admin or subAdmin
+      if (roles.includes(string.Admin) || roles.includes(string.subAdmin)) {
         existingUser = await admins.findOne({
           where: {
             adminId: user.adminId,
@@ -40,20 +41,7 @@ export const authorize = (roles) => {
         });
       }
 
-      if (roles.includes(string.User)) {
-        existingUser = await userSchema.findOne({
-          where: {
-            id: user.id,
-          },
-        });
-      }
-
-      if (roles.includes(string.User) && existingUser.token !== tokenParts[1]) {
-        return res
-          .status(statusCode.unauthorize)
-          .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
-      }
-
+      // If no user is found, return unauthorized
       if (!existingUser) {
         return res
           .status(statusCode.unauthorize)
@@ -62,6 +50,7 @@ export const authorize = (roles) => {
 
       const rolesArray = existingUser.roles.replace(/['"]+/g, '').split(',');
 
+      // Check if the user has the required role
       if (roles && roles.length > 0) {
         let userHasRequiredRole = false;
 
@@ -78,6 +67,30 @@ export const authorize = (roles) => {
         }
       }
 
+      // Check if the user has the required permissions
+      if (permissions && permissions.length > 0) {
+        const userPermissions = existingUser.permissions ? existingUser.permissions.split(',') : [];
+        let userHasRequiredPermission = false;
+
+        // If the user is Admin, bypass permission checks
+        if (rolesArray.includes(string.Admin)) {
+          userHasRequiredPermission = true;
+        } else {
+          permissions.forEach((permission) => {
+            if (userPermissions.includes(permission)) {
+              userHasRequiredPermission = true;
+            }
+          });
+        }
+
+        if (!userHasRequiredPermission) {
+          return res
+            .status(statusCode.unauthorize)
+            .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
+        }
+      }
+
+      // Attach the user to the request object
       req.user = existingUser;
       next();
     } catch (err) {
@@ -88,3 +101,4 @@ export const authorize = (roles) => {
     }
   };
 };
+
