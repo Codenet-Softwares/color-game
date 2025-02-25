@@ -13,10 +13,12 @@ import {
   liveUsersBet,
   getUsersLiveBetGames,
   getBetsAfterWin,
-  getBetMarketsAfterWin
+  getBetMarketsAfterWin,
+  createSubAdmin,
+  approveResult
 } from '../controller/admin.controller.js';
 import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin } from '../schema/commonSchema.js';
-import { string } from '../constructor/string.js';
+import { string, subAdminPermissions } from '../constructor/string.js';
 
 dotenv.config();
 
@@ -24,6 +26,7 @@ export const AdminRoute = (app) => {
   // done
   app.post('/api/admin-create', adminCreateValidate, customErrorHandler, authorize([string.Admin]), createAdmin);
 
+  app.post('/api/create-subAdmin', authorize([string.Admin]),createSubAdmin );
   // done
   app.post(
     '/api/update-market-status/:marketId',
@@ -37,7 +40,7 @@ export const AdminRoute = (app) => {
   // done
   app.post('/api/deposit-amount', depositSchema, customErrorHandler, authorize([string.Admin]), deposit);
 
-  app.post('/api/afterWining', winningSchema, customErrorHandler, authorize([string.Admin]), afterWining);
+  app.post('/api/afterWining', winningSchema, customErrorHandler, authorize([string.Admin,string.subAdmin], [subAdminPermissions.RESULT_ANNOUNCEMENT]), afterWining);
 
   app.post('/api/extrnal/balance-update', exUpdateBalanceSchema, customErrorHandler, updateByAdmin);
 
@@ -52,6 +55,9 @@ export const AdminRoute = (app) => {
   app.get('/api/get-bets-afterWin/:marketId', validateBetsAfterWin, customErrorHandler, authorize([string.Admin]), getBetsAfterWin);
 
   app.get('/api/get-bet-markets-afterWin', authorize([string.Admin]), getBetMarketsAfterWin);
+
+  app.post("/api/admin/approve-result",authorize([string.Admin]), approveResult);
+
 
 };
 
