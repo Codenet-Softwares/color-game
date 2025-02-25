@@ -291,7 +291,7 @@ export async function getProfitLossRunner(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getProfitLossRunner}/${body.marketId}`, ///&limit=${body.limit}&search=${body.searchName} ((by search sending blank server is not giving data))
+      `${urls.getProfitLossRunner}/${body.marketId}?page=${body.pageNumber}&limit=${body.dataLimit}&search=${body.searchName}`, ///&limit=${body.limit}&search=${body.searchName} ((by search sending blank server is not giving data))
       callParams,
       isToast
     );
