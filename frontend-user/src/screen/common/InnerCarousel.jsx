@@ -26,7 +26,7 @@ const InnerCarousel = () => {
   return (
     <div
       id="carouselExampleCaptions"
-      className="carousel slide "
+      className="carousel slide mt-4"
       data-bs-ride="carousel"
       style={{
         height:"350px",
@@ -60,6 +60,7 @@ const InnerCarousel = () => {
                 src={item.image}
                 className="d-block w-100"
                 alt={`Slide ${index + 1}`}
+                style={{height:"350px"}}
               />
               {/* <div
                 style={{
