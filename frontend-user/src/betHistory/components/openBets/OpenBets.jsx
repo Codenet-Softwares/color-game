@@ -35,8 +35,8 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
           >
             <option value={""}>Select Sport Name</option>
             {betHistoryData?.openBetGameNames.map((item, index) => (
-              <option key={index} value={item.gameId}>
-                {item.gameName}
+              <option key={index} value={item.marketId}>
+                {item.marketName}
               </option>
             ))}
           </select>
