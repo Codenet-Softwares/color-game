@@ -27,6 +27,11 @@ const admins = sequelize.define(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    permissions: {
+      type: DataTypes.STRING, 
+      allowNull: true,
+    },
+
   },
   {
     timestamps: false,

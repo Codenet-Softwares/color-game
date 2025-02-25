@@ -5,8 +5,20 @@ import "react-datepicker/dist/react-datepicker.css";
 import ProfitAndLossEvent from "./ProfitAndLossEvent";
 import ProfitAndLossRunner from "./ProfitLossRunner";
 import Pagination from "../common/Pagination";
-import { getprofitLossEventDataState, getprofitLossLotteryEventDataState, getprofitLossRunnerDataState, getUserBetHistory, getUserLotteryBetHistory } from "../../utils/getInitiateState";
-import { getProfitLossEvent, getProfitLossLotteryEvent, getProfitLossRunner, getUserBetHistory_api, getUserLotteryBetHistory_api } from "../../utils/apiService";
+import {
+  getprofitLossEventDataState,
+  getprofitLossLotteryEventDataState,
+  getprofitLossRunnerDataState,
+  getUserBetHistory,
+  getUserLotteryBetHistory,
+} from "../../utils/getInitiateState";
+import {
+  getProfitLossEvent,
+  getProfitLossLotteryEvent,
+  getProfitLossRunner,
+  getUserBetHistory_api,
+  getUserLotteryBetHistory_api,
+} from "../../utils/apiService";
 import { customErrorHandler } from "../../utils/helper";
 import UserBetHistory from "./UserBetHistory";
 import { toast } from "react-toastify";
@@ -27,20 +39,26 @@ const ProfitLoss = ({
   SetProfitLossData,
   handleDateForProfitLoss,
 }) => {
-
   //Pagination
   const startIndex = Math.min((currentPage - 1) * 10 + 1);
   const endIndex = Math.min(currentPage * 10, totalData);
 
-  const [profitLossEventData, SetProfitLossEventData] = useState(getprofitLossEventDataState());
+  const [profitLossEventData, SetProfitLossEventData] = useState(
+    getprofitLossEventDataState()
+  );
 
-  const [profitLossRunnerData, SetProfitLossRunnerData] = useState(getprofitLossRunnerDataState());
+  const [profitLossRunnerData, SetProfitLossRunnerData] = useState(
+    getprofitLossRunnerDataState()
+  );
 
-  const [profitLossLotteryEventData, SetProfitLossLotteryEventData] = useState(getprofitLossLotteryEventDataState());
+  const [profitLossLotteryEventData, SetProfitLossLotteryEventData] = useState(
+    getprofitLossLotteryEventDataState()
+  );
 
-
-  const [userBetHistory, setUserBetHistory] = useState(getUserBetHistory())
-  const [userLotteryBetHistory, setUserLotteryBetHistory] = useState(getUserLotteryBetHistory())
+  const [userBetHistory, setUserBetHistory] = useState(getUserBetHistory());
+  const [userLotteryBetHistory, setUserLotteryBetHistory] = useState(
+    getUserLotteryBetHistory()
+  );
 
   const [toggle, SetToggle] = useState(true);
   const [component, SetComponent] = useState(null);
@@ -72,7 +90,6 @@ const ProfitLoss = ({
     } catch (error) {
       // Handle any errors during the API call
       toast.error(customErrorHandler(error));
-
     }
   }
 
@@ -92,19 +109,16 @@ const ProfitLoss = ({
 
   useEffect(() => {
     if (runnerId) getUserBetHistoryWise();
-  }, [
-    runnerId,
-  ]);
+  }, [runnerId]);
 
   useEffect(() => {
     if (component === "UserLotteryBetHistory") getUserLotteryBetHistoryWise();
   }, [component]);
 
-
   useEffect(() => {
     if (profitLossLotteryEventData.currentPage > 1) {
-      getProfitLossLotteryEventWise()
-      SetComponent("ProfitAndLossLotteryEvent")
+      getProfitLossLotteryEventWise();
+      SetComponent("ProfitAndLossLotteryEvent");
     }
   }, [profitLossLotteryEventData.currentPage]);
 
@@ -113,14 +127,12 @@ const ProfitLoss = ({
   //   SetComponent("ProfitAndLossLotteryEvent")
   // }, [profitLossLotteryEventData.currentPage]);
 
-
-
   async function getProfitLossEventWise(gameId, componentName) {
     try {
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
       SetComponent(componentName);
-      SetGameId(gameId)
+      SetGameId(gameId);
 
       // Make the API call
       const response = await getProfitLossEvent({
@@ -130,7 +142,6 @@ const ProfitLoss = ({
         dataLimit: profitLossEventData.itemPerPage,
         searchName: profitLossEventData.searchItem,
       });
-
 
       // Update state with the response data
       SetProfitLossEventData((prevState) => ({
@@ -142,7 +153,6 @@ const ProfitLoss = ({
     } catch (error) {
       // Handle any errors that occur during the API call
       toast.error(customErrorHandler(error));
-
     }
   }
 
@@ -154,9 +164,8 @@ const ProfitLoss = ({
       const response = await getUserBetHistory_api({
         runnerId: runnerId,
         page: userBetHistory.currentPage,
-        limit: userBetHistory.itemPerPage
+        limit: userBetHistory.itemPerPage,
       });
-
 
       // Update state with the response data
       setUserBetHistory((prevState) => ({
@@ -164,12 +173,10 @@ const ProfitLoss = ({
         data: response.data,
         totalPages: response?.pagination?.totalPages,
         totalData: response?.pagination?.totalItems,
-
       }));
     } catch (error) {
       // Handle any errors that occur during the API call
       toast.error(customErrorHandler(error));
-
     }
   }
 
@@ -211,7 +218,9 @@ const ProfitLoss = ({
       // Set toggle to false before hitting the endpoint
       SetToggle(false);
       // Make the API call
-      const response = await getUserLotteryBetHistory_api({ marketId: marketId });
+      const response = await getUserLotteryBetHistory_api({
+        marketId: marketId,
+      });
 
       // Update state with the response data
       setUserLotteryBetHistory((prevState) => ({
@@ -219,12 +228,10 @@ const ProfitLoss = ({
         data: response?.data,
         totalPages: response?.pagination?.totalPages,
         totalData: response?.pagination?.totalItems,
-
       }));
     } catch (error) {
       // Handle any errors that occur during the API call
       toast.error(customErrorHandler(error));
-
     }
   }
 
@@ -263,7 +270,6 @@ const ProfitLoss = ({
     }));
   };
 
-
   let componentToRender;
   if (component === "ProfitAndLossEvent") {
     componentToRender = (
@@ -283,14 +289,21 @@ const ProfitLoss = ({
     );
   } else if (component === "UserBetHistory") {
     componentToRender = (
-      <UserBetHistory SetComponent={SetComponent} data={userBetHistory} handlePageChange={(page) => handelUserBetHistoryPage(page)} />
+      <UserBetHistory
+        SetComponent={SetComponent}
+        data={userBetHistory}
+        handlePageChange={(page) => handelUserBetHistoryPage(page)}
+      />
     );
   } else if (component === "UserLotteryBetHistory") {
     componentToRender = (
-      <UserLotteryBetHistory SetComponent={SetComponent} data={userLotteryBetHistory} handlePageChange={(page) => handelUserLotteryBetHistoryPage(page)} />
+      <UserLotteryBetHistory
+        SetComponent={SetComponent}
+        data={userLotteryBetHistory}
+        handlePageChange={(page) => handelUserLotteryBetHistoryPage(page)}
+      />
     );
-  }
-  else if (component === "ProfitAndLossLotteryEvent") {
+  } else if (component === "ProfitAndLossLotteryEvent") {
     componentToRender = (
       <ProfitAndLossLotteryEvent
         data={profitLossLotteryEventData}
@@ -305,8 +318,7 @@ const ProfitLoss = ({
         profitLossLotteryEventData={profitLossLotteryEventData}
       />
     );
-  }
-  else {
+  } else {
     componentToRender = (
       <ProfitAndLossRunner
         data={profitLossRunnerData}
@@ -329,10 +341,6 @@ const ProfitLoss = ({
     }));
   };
 
-
-
-
-
   const handleSearch = (e) => {
     SetProfitLossData((prev) => ({
       ...prev,
@@ -341,67 +349,66 @@ const ProfitLoss = ({
   };
 
   return (
-    <div className="col-sm-12 mt-3">
+    <div className="col-sm-12 mt-3 px-3">
       {toggle && (
         <div className="card mb-3 w-100 rounded" style={{ marginTop: "150px" }}>
           <div
-            className="card-body d-flex flex-column flex-md-row align-items-md-center justify-content-md-between"
-            style={{ backgroundColor: "#2CB3D1" }}
+            className="card-body"
+            style={{ backgroundColor: "#2CB3D1", borderRadius: "8px" }}
           >
-            <div className="form-group mb-3 mb-md-0 px-2">
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm fw-bold">Data Source</div>
-                  <div class="col-sm fw-bold">From:</div>
-                  <div class="col-sm fw-bold">To:</div>
-                  <div class="col-sm fw-bold"></div>
+            <div class="container">
+              <div class="row">
+                <div class="col-12 col-md-3 text-center">
+                  <label className="fw-bold mb-1">Data Source</label>{" "}
+                  <select
+                    class="form-select fw-bold"
+                    aria-label="Default select example"
+                    onChange={(e) => {
+                      SetProfitLossData((prevState) => ({
+                        ...prevState,
+                        dataSource: e.target.value,
+                      }));
+                    }}
+                  >
+                    <option className="fw-bold" value="live" selected>
+                      Live Data
+                    </option>
+                    <option className="fw-bold" value="backup">
+                      Backup Data
+                    </option>
+                    <option className="fw-bold" value="olddata">
+                      Old Data
+                    </option>
+                  </select>
                 </div>
-              </div>
-              <div class="container mt-1">
-                <div class="row">
-                  <div class="col-sm">
-                    {" "}
-                    <select
-                      class="form-select fw-bold"
-                      aria-label="Default select example"
-                      onChange={(e) => {
-                        SetProfitLossData((prevState) => ({
-                          ...prevState,
-                          dataSource: e.target.value,
-                        }));
-                      }}
-                    >
-                      <option className="fw-bold" value="live" selected >
-                        Live Data
-                      </option>
-                      <option className="fw-bold" value="backup">Backup Data</option>
-                      <option className="fw-bold" value="olddata">Old Data</option>
-                    </select>
-                  </div>
-                  <div class="col-sm">
-                    <DatePicker
-                      selected={startDate}
-                      onChange={(date) => setStartDate(date)}
-                      placeholderText={"Select Start Date"}
-                    />
-                  </div>
-                  <div class="col-sm">
-                    {" "}
-                    <DatePicker
-                      selected={endDate}
-                      onChange={(date) => setEndDate(date)}
-                      placeholderText={"Select End Date"}
-                    />
-                  </div>
-                  <div class="col-sm">
-                    <button
-                      className="btn btn-danger mb-2 fw-bold"
-                      disabled={startDate === null || endDate === null}
-                      onClick={handleDateForProfitLoss}
-                    >
-                      Get Statement
-                    </button>
-                  </div>
+                <div class="col-12 col-md-3 d-flex flex-column text-center">
+                  {" "}
+                  <label className="fw-bold mb-1">From:</label>
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    placeholderText={"Select Start Date"}
+                    className="form-control"
+                  />
+                </div>
+                <div class="col-12 col-md-3 d-flex flex-column text-center">
+                  {" "}
+                  <label className="fw-bold mb-1">To:</label>
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    placeholderText={"Select End Date"}
+                    className="form-control"
+                  />
+                </div>
+                <div class="col-12 col-md-3 d-flex align-items-end mt-3">
+                  <button
+                    className="btn btn-danger w-100 fw-bold"
+                    disabled={startDate === null || endDate === null}
+                    onClick={handleDateForProfitLoss}
+                  >
+                    Get Statement
+                  </button>
                 </div>
               </div>
             </div>
@@ -413,71 +420,75 @@ const ProfitLoss = ({
       {toggle ? (
         <div class="card w-100 rounded">
           <div
-            class="card-heade text-white p-2 text-center text-uppercase h5"
+            class="card-header text-white p-2 text-center text-uppercase h5"
             style={{ backgroundColor: "#2CB3D1" }}
           >
             <b>&nbsp;&nbsp;Profit & Loss</b>
           </div>
-
-          <div className="m-1 d-flex justify-content-between align-items-center">
-            <select
-              className="form-select w-auto m-1 fw-bold"
-              onChange={handelItemPerPage}
-            >
-              <option value="10" selected>
-                10 Entries
-              </option>
-              <option value="25">25 Entries</option>
-              <option value="50">50 Entries</option>
-              <option value="100">100 Entries</option>
-            </select>
-            <input
-              type="search"
-              className="form-control w-auto"
-              placeholder="Search..."
-              onChange={handleSearch}
-            />
+          <div className="m-1 row g-2 align-items-center">
+            <div className="col-12 col-md-auto mb-1">
+              <select
+                className="form-select fw-bold"
+                onChange={handelItemPerPage}
+              >
+                <option value="10" selected>
+                  10 Entries
+                </option>
+                <option value="25">25 Entries</option>
+                <option value="50">50 Entries</option>
+                <option value="100">100 Entries</option>
+              </select>
+              </div>
+              <div className="col-12 col-md-auto ms-auto">
+              <input
+                type="search"
+                className="form-control"
+                placeholder="Search..."
+                onChange={handleSearch}
+              />
+              </div>
           </div>
-          <ul class="list-group list-group-flush" >
-            <li class="list-group-item">
-              <div class="white_card_body">
                 {/* Table */}
-                <div class="QA_section" style={{ overflowX: "auto" }}>
-                  <div class="QA_table mb_30">
-                    <table class="table lms_table_active3 table-bordered">
+                  <div class="table-responsive">
+                    <table className="table lms_table_active3 table-bordered">
                       <thead>
                         <tr
                           style={{
                             backgroundColor: "#e6e9ed",
                             color: "#5562a3",
                           }}
-                          align="center"
-                          className=""
+                          className="text-center"
                         >
-                          <th scope="col">
+                          <th>
                             <h6 className="fw-bold">Sport Name</h6>
                           </th>
-                          <th scope="col">
+                          <th>
                             <h6 className="fw-bold">Profit & Loss</h6>
                           </th>
-                          <th scope="col">
+                          <th>
                             <h6 className="fw-bold">Commission</h6>
                           </th>
-                          <th scope="col">
+                          <th>
                             <h6 className="fw-bold">Total P&L</h6>
                           </th>
                         </tr>
+                        </thead>
+                        <tbody>
                         {dataGameWise?.length > 0 ? (
                           dataGameWise?.map((data) => (
                             <tr align="center">
                               {" "}
                               <td
                                 onClick={() =>
-                                  data?.gameName === "Lottery" ? getProfitLossLotteryEventWise(data?.gameId,
-                                    "ProfitAndLossLotteryEvent") : getProfitLossEventWise(
-                                      data?.gameId,
-                                      "ProfitAndLossEvent"
-                                    )
+                                  data?.gameName === "Lottery"
+                                    ? getProfitLossLotteryEventWise(
+                                        data?.gameId,
+                                        "ProfitAndLossLotteryEvent"
+                                      )
+                                    : getProfitLossEventWise(
+                                        data?.gameId,
+                                        "ProfitAndLossEvent"
+                                      )
                                 }
                                 className="text-primary fw-bold"
                                 style={{ cursor: "pointer" }}
@@ -485,20 +496,22 @@ const ProfitLoss = ({
                                 {data?.gameName}
                               </td>
                               <td
-                                className={`fw-bold ${data?.totalProfitLoss > 0
-                                  ? "text-success"
-                                  : "text-danger"
-                                  }`}
+                                className={`fw-bold ${
+                                  data?.totalProfitLoss > 0
+                                    ? "text-success"
+                                    : "text-danger"
+                                }`}
                               >
                                 {data?.totalProfitLoss}
                               </td>
                               <td>{data?.commission || 0}</td>
                               <td>
                                 <span
-                                  className={`fw-bold ${data?.totalProfitLoss > 0
-                                    ? "text-success"
-                                    : "text-danger"
-                                    }`}
+                                  className={`fw-bold ${
+                                    data?.totalProfitLoss > 0
+                                      ? "text-success"
+                                      : "text-danger"
+                                  }`}
                                 >
                                   {data?.totalProfitLoss}
                                 </span>
@@ -509,7 +522,7 @@ const ProfitLoss = ({
                           <tr align="center">
                             <td colspan="4">
                               <div
-                                class="alert alert-info fw-bold text-danger"
+                                className="alert alert-info fw-bold text-danger"
                                 role="alert"
                               >
                                 No Data Found !!
@@ -517,11 +530,11 @@ const ProfitLoss = ({
                             </td>
                           </tr>
                         )}
-                      </thead>
+                        </tbody>
+                      
                     </table>
                   </div>
                   {/* Table */}
-                </div>
 
                 {/* No Data Found */}
                 {/* {props.length === 0 && (
@@ -532,23 +545,29 @@ const ProfitLoss = ({
                 </div>
               )} */}
                 {/* End of No Data Found */}
-              </div>
-            </li>
-            <li class="list-group-item">
-              {/* Pagiantion */}
-              {dataGameWise.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  handlePageChange={handlePageChange}
-                  startIndex={startIndex}
-                  endIndex={endIndex}
-                  totalData={totalData}
-                />
-              )}
-              {/* Pagiantion */}
-            </li>
-          </ul>
+                <li
+  className="list-group-item"
+  style={{
+    overflowX: "auto",
+    overflowY: "hidden",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
+  }}
+>
+  {/* Pagination */}
+  {dataGameWise.length > 0 && (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      handlePageChange={handlePageChange}
+      startIndex={startIndex}
+      endIndex={endIndex}
+      totalData={totalData}
+    />
+  )}
+  {/* Pagination */}
+</li>
+
         </div>
       ) : (
         <>{componentToRender}</>

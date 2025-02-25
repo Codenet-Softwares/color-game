@@ -9,7 +9,7 @@ import "./App.css";
 import RulesPage from "./screen/common/rulesPage";
 import ForgotPassword from "./screen/chnagePassword/forgotPassword";
 import PrivateRoute from "./globlaCommon/privateRoute";
-import BetHistory from "./screen/history/BetHistory";
+// import BetHistory from "./screen/history/BetHistory";
 import Loading from "./globlaCommon/loading";
 import GameNameList from "./screen/profitAndLoss/gameNameList";
 import MarketNameList from "./screen/profitAndLoss/marketNameList";
@@ -23,6 +23,7 @@ import ResultLayout from "./screen/Lottery/ResultLayout";
 import GetMarketDetailByMarketId from "./screen/common/gameListView/GetMarketDetailByMarketId";
 import GetSingleMarket from "./screen/common/gameListView/GetSingleMarket";
 import LotteryMarketDashBoard from "./screen/common/gameListView/LotteryMarketDashBoard";
+import BetHistory from "./betHistory/BetHistory";
 // import GameWithMarketList from "./screen/common/gameListView/gameWithMarketList";
 
 function App() {

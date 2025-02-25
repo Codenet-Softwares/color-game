@@ -1,14 +1,25 @@
 class stringConst {
   constructor() {
     this.Admin = 'admin';
-    this.User = 'user';
-    this.superAdmin = 'superAdmin';
+    this.subAdmin = 'subAdmin'; 
+    this.User = 'user'; 
     this.whiteLabel = 'whiteLabel';
     this.hyperAgent = 'hyperAgent';
     this.superAgent = 'superAgent';
     this.masterAgent = 'masterAgent';
   }
 }
+
+class apiPermissions  {
+  constructor(){
+    this.gameView ='gameView',
+    this.marketView = 'marketView',
+    this.runnerView = 'runnerView',
+    this.resultAnnouncement='resultAnnouncement'
+  }
+}
+
+
 class statusPanelCode {
   constructor() {
     this.void = 400322;
@@ -19,5 +30,6 @@ class statusPanelCode {
 }
 
 export const string = new stringConst();
+export const subAdminPermissions= new apiPermissions()
 export const statusPanelCodes = new statusPanelCode();
 

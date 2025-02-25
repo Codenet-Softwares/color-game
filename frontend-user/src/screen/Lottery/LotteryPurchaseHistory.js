@@ -249,7 +249,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
           &lt;
         </button>
 
-        <div className="d-flex flex-wrap">
+        <div className="d-flex flex-wrap" style={{gap:"8px"}}>
           {visibleMarkets.length > 0 ? (
             visibleMarkets.map((market) => (
               <span

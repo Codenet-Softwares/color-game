@@ -4,13 +4,16 @@ import {
   getLotteryMarketsApi,
   user_getAllGamesWithMarketData_api,
 } from "../../utils/apiService";
-import { Link } from "react-router-dom";
-import { getAllGameDataInitialState } from "../../utils/getInitiateState";
+import { Link, useLocation } from "react-router-dom";
+import {
+  getAllGameDataInitialState,
+} from "../../utils/getInitiateState";
 import HamburgerNavBar from "./hamburgerNavBar";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../utils/constant/stringConstant";
 import InnerCarousel from "./InnerCarousel";
 import Footer from "./Footer";
+import OpenBets from "../../betHistory/components/openBets/OpenBets";
 
 function AppDrawer({
   children,
@@ -20,6 +23,8 @@ function AppDrawer({
   setShowResetModal,
   showResetModal,
   onMarketSelect, // New prop for market selection callback
+  openBetData,
+  handleOpenBetsSelectionMenu,
 }) {
   const [toggleStates, setToggleStates] = useState({});
   const [user_allGames, setUser_allGames] = useState(
@@ -28,7 +33,8 @@ function AppDrawer({
   const [lotteryDrawTimes, setLotteryDrawTimes] = useState([]);
   const [lotteryToggle, setLotteryToggle] = useState(false); // New state for toggling draw times
   const { dispatch, store } = useAppContext();
-
+  const location = useLocation();
+  console.log("location", location);
   useEffect(() => {
     user_getAllGames();
     fetchLotteryMarkets();
@@ -72,8 +78,6 @@ function AppDrawer({
 
   const handleLotteryToggle = () => {
     setLotteryToggle(!lotteryToggle);
-    
-  
   };
 
   function getLeftNavBar() {
@@ -195,7 +199,7 @@ function AppDrawer({
       getLeftNavBar()
     ) : (
       <div className="container-fluid">
-        <div className="row">
+        <div className="row" style={{ height: "100vh", display: "flex" }}>
           <div
             className="col-md-2 position-fixed d-none d-md-block vertical-navbar p-0"
             style={{
@@ -205,21 +209,36 @@ function AppDrawer({
           >
             {getLeftNavBar()}
           </div>
+
           <div
-            className="col-md-10 offset-md-2"
+            className={`col-md-${
+              ["/home", "/"].includes(location?.pathname) ? "7" : "10"
+            } offset-md-2`}
             style={{
-              // border: '1px solid red',
-              height: "84vh",
-              overflowY: 'auto',
+              overflowY: "auto",
+              height: "100vh",
             }}
           >
-            <div
-              className="col-md-12"
-              // style={{ background: "green", overflowX: "auto" }}
-            >
-              {showCarousel && <InnerCarousel />}
-            </div>
+            <div className="col-md-12">{showCarousel && <InnerCarousel />}</div>
             {children}
+          </div>
+
+          <div
+            className={`col-md-${
+              ["/home", "/"].includes(location?.pathname) ? "3" : ""
+            } d-none d-md-block  p-0`}
+            style={{
+              position: ["/home", "/"].includes(location?.pathname) && "fixed",
+              right: "0",
+              top: isHomePage ? "125px" : "",
+              height: "calc(100vh - 125px)",
+              overflowY: "auto",
+            }}
+          >
+            <OpenBets
+              betHistoryData={openBetData}
+              handleBetHistorySelectionMenu={handleOpenBetsSelectionMenu}
+            />
           </div>
         </div>
       </div>

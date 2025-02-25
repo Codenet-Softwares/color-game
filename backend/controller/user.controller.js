@@ -1274,11 +1274,11 @@ export const currentOrderHistory = async (req, res) => {
   try {
     const user = req.user;
     const userId = user.userId;
-    const gameId = req.params.gameId;
+    const marketId = req.params.marketId;
     // const page = parseInt(req.query.page, 10) || 1;
     // const limit = parseInt(req.query.limit, 10) || 5;
 
-    if (!gameId) {
+    if (!marketId) {
       return res
         .status(statusCode.badRequest)
         .send(
@@ -1286,7 +1286,7 @@ export const currentOrderHistory = async (req, res) => {
             null,
             statusCode.badRequest,
             false,
-            "Game ID is required"
+            "Market Id is required"
           )
         );
     }
@@ -1294,7 +1294,7 @@ export const currentOrderHistory = async (req, res) => {
     const { rows } = await CurrentOrder.findAndCountAll({
       where: {
         userId,
-        gameId,
+        marketId,
       },
       attributes: ["runnerName", "rate", "value", "type", "bidAmount"],
       // limit,
@@ -1434,10 +1434,11 @@ export const calculateProfitLoss = async (req, res) => {
               SELECT SUM(lp.profitLoss)
               FROM LotteryProfit_Loss lp
               WHERE lp.userId = LotteryProfit_Loss.userId
-              AND lp.id = (
-                SELECT MIN(lp2.id)
+              AND lp.id IN (
+                SELECT MIN(lp2.id) 
                 FROM LotteryProfit_Loss lp2
-                WHERE lp2.marketId = lp.marketId
+                WHERE lp2.userId = lp.userId
+                GROUP BY lp2.marketId
               )
             ), 0)
           `),
@@ -1445,13 +1446,24 @@ export const calculateProfitLoss = async (req, res) => {
         ],
       ],
       where: {
-        userId: userId, 
+        userId: userId,
       },
       group: ["userId"],
     });
-    
-    
 
+    if (lotteryProfitLossData.length === 0 ) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "No profit/loss data found for the given date range."
+          )
+        );
+    }
+  
     const combinedProfitLossData = [
       ...profitLossData.map((item) => ({
         gameId: item.gameId,
@@ -2000,8 +2012,8 @@ export const getUserCurrentOrderGames = async (req, res) => {
 
     const distinctGames = await CurrentOrder.findAll({
       where: { userId },
-      attributes: ["gameId", "gameName"],
-      group: ["gameId", "gameName"],
+      attributes: ["marketId", "marketName"],
+      group: ["marketId", "marketName"],
     });
 
     res
