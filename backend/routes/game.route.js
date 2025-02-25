@@ -39,7 +39,7 @@ export const GameRoute = (app) => {
   // done
   app.post('/api/create-games', createdGameSchema, customErrorHandler, authorize([string.Admin]), createGame);
   // done
-  app.get('/api/all-games', customErrorHandler, authorize([string.Admin,string.subAdmin],[subAdminPermissions.GAME_VIEW]), getAllGames);
+  app.get('/api/all-games', customErrorHandler, authorize([string.Admin,string.subAdmin],[subAdminPermissions.gameView]), getAllGames);
   // done
   app.put('/api/update/game', updateGameSchema, customErrorHandler, authorize([string.Admin]), updateGame);
   // done
@@ -51,7 +51,7 @@ export const GameRoute = (app) => {
     createMarket,
   );
   // done
-  app.get('/api/all-markets/:gameId', customErrorHandler, authorize([string.Admin,string.subAdmin],[subAdminPermissions.MARKET_VIEW]), getAllMarkets);
+  app.get('/api/all-markets/:gameId', customErrorHandler, authorize([string.Admin,string.subAdmin],[subAdminPermissions.marketView]), getAllMarkets);
   // done
   app.put('/api/update/market', updateMarketSchema, customErrorHandler, authorize([string.Admin]), updateMarket);
   // done
@@ -65,7 +65,7 @@ export const GameRoute = (app) => {
   // done
   app.put('/api/update/runner', updateRunnerSchema, customErrorHandler, authorize([string.Admin]), updateRunner);
   // done
-  app.get('/api/all-runners/:marketId', customErrorHandler, authorize([string.Admin,string.subAdmin],[subAdminPermissions.RUNNER_VIEW]), getAllRunners);
+  app.get('/api/all-runners/:marketId', customErrorHandler, authorize([string.Admin,string.subAdmin],[subAdminPermissions.runnerView]), getAllRunners);
   // done
   app.post('/api/create-Rate/:runnerId', createdRateSchema, authorize([string.Admin]), customErrorHandler, createRate);
   // done

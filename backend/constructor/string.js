@@ -1,8 +1,8 @@
 class stringConst {
   constructor() {
-    this.Admin = 'admin'; // Represents superAdmin
-    this.subAdmin = 'subAdmin'; // Sub admin
-    this.User = 'user'; // Regular user
+    this.Admin = 'admin';
+    this.subAdmin = 'subAdmin'; 
+    this.User = 'user'; 
     this.whiteLabel = 'whiteLabel';
     this.hyperAgent = 'hyperAgent';
     this.superAgent = 'superAgent';
@@ -12,10 +12,10 @@ class stringConst {
 
 class apiPermissions  {
   constructor(){
-    this.GAME_VIEW ='game-view',
-    this.MARKET_VIEW = 'market-view',
-    this.RUNNER_VIEW = 'runner-view',
-    this.RESULT_ANNOUNCEMENT='result-declare'
+    this.gameView ='gameView',
+    this.marketView = 'marketView',
+    this.runnerView = 'runnerView',
+    this.resultAnnouncement='resultAnnouncement'
   }
 }
 
