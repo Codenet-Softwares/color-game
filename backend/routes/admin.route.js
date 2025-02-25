@@ -40,7 +40,7 @@ export const AdminRoute = (app) => {
   // done
   app.post('/api/deposit-amount', depositSchema, customErrorHandler, authorize([string.Admin]), deposit);
 
-  app.post('/api/afterWining', winningSchema, customErrorHandler, authorize([string.Admin,string.subAdmin], [subAdminPermissions.RESULT_ANNOUNCEMENT]), afterWining);
+  app.post('/api/afterWining', winningSchema, customErrorHandler, authorize([string.Admin,string.subAdmin], [subAdminPermissions.resultAnnouncement]), afterWining);
 
   app.post('/api/extrnal/balance-update', exUpdateBalanceSchema, customErrorHandler, updateByAdmin);
 
