@@ -44,7 +44,7 @@ const SubNavbar = () => {
       setAnnouncementData([]);
     }
   };
-
+  
   useEffect(() => {
     fetchAnnouncement();
   }, []);
@@ -64,7 +64,7 @@ const SubNavbar = () => {
             style={{ background: "#045662" }}
           >
             <img
-              // src={ansmt}
+              src={ansmt}
               alt="Announcement"
               style={{ width: "30px", height: "30px", marginLeft: "10px" }}
             />

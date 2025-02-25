@@ -538,20 +538,29 @@ const ProfitLoss = ({
                 </div>
               )} */}
                 {/* End of No Data Found */}
-            <li class="list-group-item">
-              {/* Pagiantion */}
-              {dataGameWise.length > 0 && (
-                <Pagination
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  handlePageChange={handlePageChange}
-                  startIndex={startIndex}
-                  endIndex={endIndex}
-                  totalData={totalData}
-                />
-              )}
-              {/* Pagiantion */}
-            </li>
+                <li
+  className="list-group-item"
+  style={{
+    overflowX: "auto",
+    overflowY: "hidden",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
+  }}
+>
+  {/* Pagination */}
+  {dataGameWise.length > 0 && (
+    <Pagination
+      currentPage={currentPage}
+      totalPages={totalPages}
+      handlePageChange={handlePageChange}
+      startIndex={startIndex}
+      endIndex={endIndex}
+      totalData={totalData}
+    />
+  )}
+  {/* Pagination */}
+</li>
+
         </div>
       ) : (
         <>{componentToRender}</>

@@ -36,7 +36,9 @@ const ActivityLog = () => {
     <>
       <AppDrawer showCarousel={false}>
         <Layout />
-        <div className="container-fluid d-flex justify-content-center align-items-center min-vh-100">
+        <div className="container-fluid d-flex justify-content-center align-items-center min-vh-100" style={{
+          background:"#E6F7FF"
+        }}>
           <div className="row justify-content-center w-100">
             <div className="col-12 col-md-10 col-lg-8 col-xl-6">
               <div className="card rounded">

@@ -149,7 +149,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
         </table>
       </div>
       {data?.data?.length > 0 && (
-        <div className="d-flex justify-content-center p-2">
+        <div className="d-flex justify-content-center p-2 overflow-auto ">
           <Pagination
             currentPage={data.currentPage}
             totalPages={data.totalPages}

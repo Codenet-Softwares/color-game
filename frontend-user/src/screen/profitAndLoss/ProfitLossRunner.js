@@ -178,7 +178,7 @@ const ProfitAndLossRunner = ({
                 </div>
               )}
             </div>
-          <li className="list-group-item">
+          <li className="list-group-item overflow-auto">
             {/* Pagination */}
             {data?.data?.length > 0 && (
               <Pagination

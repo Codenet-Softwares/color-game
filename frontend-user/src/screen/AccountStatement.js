@@ -303,7 +303,7 @@ const AccountStatement = () => {
 
                 {/* Pagination */}
                 {getAccountstatement?.statement?.length > 0 && (
-                  <li className="list-group-item">
+                  <li className="list-group-item overflow-auto">
                     <Pagination
                       currentPage={getAccountstatement.currentPage}
                       totalPages={getAccountstatement.totalPages}
