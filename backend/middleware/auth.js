@@ -26,6 +26,7 @@ export const authorize = (roles, permissions) => {
           .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
       }
       let existingUser;
+
       if (roles.includes(string.Admin) || roles.includes(string.subAdmin)) {
         existingUser = await admins.findOne({
           where: {
@@ -39,12 +40,14 @@ export const authorize = (roles, permissions) => {
           },
         });
       }
+
       if (!existingUser) {
         return res
           .status(statusCode.unauthorize)
           .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
       }
       const rolesArray = existingUser.roles.replace(/['"]+/g, '').split(',');
+
       if (roles && roles.length > 0) {
         let userHasRequiredRole = false;
         roles.forEach((role) => {
@@ -58,9 +61,12 @@ export const authorize = (roles, permissions) => {
             .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
         }
       }
+
+
       if (permissions && permissions.length > 0) {
         const userPermissions = existingUser.permissions ? existingUser.permissions.split(',') : [];
         let userHasRequiredPermission = false;
+
         if (rolesArray.includes(string.Admin)) {
           userHasRequiredPermission = true;
         } else {
@@ -76,6 +82,7 @@ export const authorize = (roles, permissions) => {
             .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
         }
       }
+
       req.user = existingUser;
       next();
     } catch (err) {

@@ -36,9 +36,9 @@ export const bidHistorySchema = [
     .withMessage("Limit must be a positive integer."),
 ];
 
-export const currentOrderSchema = [
-  param("gameId").exists().withMessage("Game ID is required."),
-];
+// export const currentOrderSchema = [
+//   param("marketId").exists().withMessage("Market ID is required."),
+// ];
 
 export const winningSchema = [
   body("marketId").notEmpty().withMessage("Market ID is required"),
