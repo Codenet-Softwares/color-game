@@ -3,6 +3,7 @@ class stringConst {
     this.Admin = 'admin';
     this.subAdmin = 'subAdmin'; 
     this.User = 'user'; 
+    this.superAdmin ='superAdmin'
     this.whiteLabel = 'whiteLabel';
     this.hyperAgent = 'hyperAgent';
     this.superAgent = 'superAgent';
