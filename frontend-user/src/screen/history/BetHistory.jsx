@@ -151,7 +151,7 @@ const BetHistory = () => {
 
   const openBetsGame = async () => {
     const response = await getOpenBetsGame();
-    setOpenBetGameNames(response.data);
+    setOpenBetGameNames(response?.data);
   };
 
   // useeffect for bet history and open bets selection input boxes only

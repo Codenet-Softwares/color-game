@@ -7,54 +7,134 @@ import userSchema from '../models/user.model.js';
 import axios from 'axios';
 import userTrashData from '../models/userTrashData.model.js';
 import { v4 as uuid4 } from 'uuid';
+import { string } from '../constructor/string.js';
 
 // done
+// export const adminLogin = async (req, res) => {
+//   const { userName, password } = req.body;
+//   try {
+//     const existingAdmin = await admins.findOne({ where: { userName } });
+
+//     if (!existingAdmin) {
+//       return res
+//         .status(statusCode.badRequest)
+//         .send(apiResponseErr(null, false, statusCode.badRequest, 'Admin Does Not Exist'));
+//     }
+
+//     const isPasswordValid = await bcrypt.compare(password, existingAdmin.password);
+
+//     if (!isPasswordValid) {
+//       return res
+//         .status(statusCode.badRequest)
+//         .send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid password'));
+//     }
+
+//     const accessTokenResponse = {
+//       id: existingAdmin.id,
+//       adminId: existingAdmin.adminId,
+//       userName: existingAdmin.userName,
+//       userType: existingAdmin.userType || 'admin',
+//     };
+
+//     const accessToken = jwt.sign(accessTokenResponse, process.env.JWT_SECRET_KEY, {
+//       expiresIn: '1d',
+//     });
+
+//     return res.status(statusCode.success).send(
+//       apiResponseSuccess(
+//         {
+//           accessToken,
+//           adminId: existingAdmin.adminId,
+//           userName: existingAdmin.userName,
+//           userType: existingAdmin.userType || 'admin',
+//         },
+//         true,
+//         statusCode.success,
+//         'Admin login successfully',
+//       ),
+//     );
+//   } catch (error) {
+//     console.error('Error in adminLogin:', error.message);
+//     res
+//       .status(statusCode.internalServerError)
+//       .send(
+//         apiResponseErr(
+//           error.data ?? null,
+//           false,
+//           error.responseCode ?? statusCode.internalServerError,
+//           error.errMessage ?? error.message,
+//         ),
+//       );
+//   }
+// };
+
 export const adminLogin = async (req, res) => {
   const { userName, password } = req.body;
-  try {
-    const existingAdmin = await admins.findOne({ where: { userName } });
 
-    if (!existingAdmin) {
+  try {
+    // Validate input
+    if (!userName || !password) {
       return res
         .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, 'Admin Does Not Exist'));
+        .send(apiResponseErr(null, false, statusCode.badRequest, 'Username and password are required'));
     }
 
-    const isPasswordValid = await bcrypt.compare(password, existingAdmin.password);
+    // Find the user by userName
+    const existingUser = await admins.findOne({ where: { userName } });
 
+    // If no user is found, return error
+    if (!existingUser) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, 'User does not exist'));
+    }
+
+    // Check if the user is either Admin or subAdmin
+    if (existingUser.roles !== string.Admin && existingUser.roles !== string.subAdmin) {
+      return res
+        .status(statusCode.unauthorize)
+        .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
+    }
+
+    // Compare passwords
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
     if (!isPasswordValid) {
       return res
         .status(statusCode.badRequest)
         .send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid password'));
     }
 
+    // Generate JWT token
     const accessTokenResponse = {
-      id: existingAdmin.id,
-      adminId: existingAdmin.adminId,
-      userName: existingAdmin.userName,
-      userType: existingAdmin.userType || 'admin',
+      id: existingUser.id,
+      adminId: existingUser.adminId,
+      userName: existingUser.userName,
+      roles: existingUser.roles,
+      permissions: existingUser.permissions,
     };
 
     const accessToken = jwt.sign(accessTokenResponse, process.env.JWT_SECRET_KEY, {
-      expiresIn: '1d',
+      expiresIn: '1d', // Token expires in 1 day
     });
 
+    // Return the token and user details
     return res.status(statusCode.success).send(
       apiResponseSuccess(
         {
           accessToken,
-          adminId: existingAdmin.adminId,
-          userName: existingAdmin.userName,
-          userType: existingAdmin.userType || 'admin',
+          adminId: existingUser.adminId,
+          userName: existingUser.userName,
+          roles: existingUser.roles,
+          permissions: existingUser.permissions,
         },
         true,
         statusCode.success,
-        'Admin login successfully',
+        'Login successful',
       ),
     );
   } catch (error) {
-    console.error('Error in adminLogin:', error.message);
-    res
+    console.error('Error in adminAndSubAdminLogin:', error.message);
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(

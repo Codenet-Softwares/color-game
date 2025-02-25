@@ -151,7 +151,7 @@ app.get('/events', (req, res) => {
 });
 
 sequelize
-  .sync({ alter: false })
+  .sync({ alter: true })
   .then(() => {
     console.log('Database & tables created!');
     app.listen(process.env.PORT, () => {
@@ -233,7 +233,7 @@ sequelize
           }
         });
 
-        console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
+      //  console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
 
       } catch (error) {
         console.error('Error checking market statuses:', error);

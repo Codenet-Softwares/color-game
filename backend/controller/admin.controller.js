@@ -21,6 +21,7 @@ import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
 import sequelize from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
+import ResultRequest from "../models/result.model.js";
 
 
 dotenv.config();
@@ -58,10 +59,64 @@ export const createAdmin = async (req, res) => {
       .status(statusCode.create)
       .send(
         apiResponseSuccess(
-          null,
+          newAdmin,
           true,
           statusCode.create,
           "Admin created successfully"
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message
+        )
+      );
+  }
+};
+
+export const createSubAdmin = async (req, res) => {
+  try {
+    const { userName, password, permissions } = req.body;
+
+    // Validate input
+    if (!userName || !password || !permissions) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "All fields are required"
+          )
+        );
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create the subAdmin with the subAdmin role
+    const subAdmin = await admins.create({
+      adminId: uuidv4(),
+      userName,
+      password: hashedPassword,
+      roles: string.subAdmin, // Assign the subAdmin role
+      permissions: permissions.join(','), // Store permissions as a comma-separated string
+    });
+
+    return res
+      .status(statusCode.create)
+      .send(
+        apiResponseSuccess(
+          subAdmin,
+          true,
+          statusCode.create,
+          "SubAdmin created successfully"
         )
       );
   } catch (error) {
@@ -391,7 +446,17 @@ export const storePreviousState = async (
 export const afterWining = async (req, res) => {
   try {
     const { marketId, runnerId, isWin } = req.body;
-    let gameId = null;
+    const declaredBy = req.user?.userName; 
+    const userRole = req.user?.roles; 
+
+    if (!declaredBy) {
+      return res
+        .status(statusCode.unauthorize)
+        .send(
+          apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: User not authenticated")
+        );
+    }
+
     const market = await Market.findOne({
       where: { marketId },
       include: [{ model: Runner, required: false }],
@@ -405,164 +470,174 @@ export const afterWining = async (req, res) => {
         );
     }
 
-    gameId = market.gameId;
+    const gameId = market.gameId; 
 
-    // Update market runners with win status
-    if (market.runners) {
-      market.runners.forEach((runner) => {
-        runner.isWin = String(runner.runnerId) === runnerId ? isWin : false;
+    if (userRole === 'subAdmin') {
+      await ResultRequest.create({
+        gameId,
+        marketId,
+        runnerId,
+        isWin,
+        declaredBy,
       });
+
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Result declaration by sub-admin successfully"
+          )
+        );
     }
 
-    if (isWin) {
-      const runners = await Runner.findAll({ where: { runnerId } });
-      for (const runner of runners) {
-        runner.isWin = true;
-        await runner.save();
-      }
-      market.announcementResult = true;
-    }
-    await market.save();
-
-    const users = await MarketBalance.findAll({ where: { marketId } });
-
-    for (const user of users) {
-      try {
-        const runnerBalance = await MarketBalance.findOne({
-          where: { marketId, runnerId, userId: user.userId },
+    if (userRole === 'admin') {
+      if (market.runners) {
+        market.runners.forEach((runner) => {
+          runner.isWin = String(runner.runnerId) === runnerId ? isWin : false;
         });
+      }
 
-        if (runnerBalance) {
-          const userDetails = await userSchema.findOne({
-            where: { userId: user.userId },
+      if (isWin) {
+        const runners = await Runner.findAll({ where: { runnerId } });
+        for (const runner of runners) {
+          runner.isWin = true;
+          await runner.save();
+        }
+        market.announcementResult = true;
+      }
+      await market.save();
+
+      const users = await MarketBalance.findAll({ where: { marketId } });
+
+      for (const user of users) {
+        try {
+          const runnerBalance = await MarketBalance.findOne({
+            where: { marketId, runnerId, userId: user.userId },
           });
 
-          if (userDetails) {
-            await storePreviousState(
-              userDetails,
-              marketId,
-              runnerId,
-              gameId,
-              Number(runnerBalance.bal)
-            );
+          if (runnerBalance) {
+            const userDetails = await userSchema.findOne({
+              where: { userId: user.userId },
+            });
 
-            const marketExposureEntry = userDetails.marketListExposure.find(
-              (item) => Object.keys(item)[0] === marketId
-            );
-            if (marketExposureEntry) {
-              const marketExposureValue = Number(marketExposureEntry[marketId]);
-              const runnerBalanceValue = Number(runnerBalance.bal);
-
-              if (isWin) {
-                await WinningAmount.create({
-                  userId: userDetails.userId,
-                  userName: userDetails.userName,
-                  amount: runnerBalanceValue,
-                  type: "win",
-                  marketId: marketId,
-                  runnerId: runnerId,
-                })
-
-              } else {
-                await WinningAmount.create({
-                  userId: userDetails.userId,
-                  userName: userDetails.userName,
-                  amount: Math.abs(marketExposureValue),
-                  type: "loss",
-                  marketId: marketId,
-                  runnerId: runnerId,
-                })
-              }
-
-              await ProfitLoss.create({
-                userId: user.userId,
-                userName: userDetails.userName,
-                gameId,
+            if (userDetails) {
+              await storePreviousState(
+                userDetails,
                 marketId,
                 runnerId,
-                date: new Date(),
-                profitLoss: runnerBalanceValue,
-              });
-
-              userDetails.marketListExposure =
-                userDetails.marketListExposure.filter(
-                  (item) => Object.keys(item)[0] !== marketId
-                );
-
-              await userSchema.update(
-                { marketListExposure: userDetails.marketListExposure },
-                { where: { userId: user.userId } }
+                gameId,
+                Number(runnerBalance.bal)
               );
 
-              await userDetails.save();
+              const marketExposureEntry = userDetails.marketListExposure.find(
+                (item) => Object.keys(item)[0] === marketId
+              );
 
-              const marketExposure = userDetails.marketListExposure;
-              let totalExposure = 0;
-              marketExposure.forEach(market => {
-                const exposure = Object.values(market)[0];
-                totalExposure += exposure;
-              });
+              if (marketExposureEntry) {
+                const marketExposureValue = Number(marketExposureEntry[marketId]);
+                const runnerBalanceValue = Number(runnerBalance.bal);
 
-              await MarketBalance.destroy({
-                where: { marketId, runnerId, userId: user.userId },
-              });
+                if (isWin) {
+                  await WinningAmount.create({
+                    userId: userDetails.userId,
+                    userName: userDetails.userName,
+                    amount: runnerBalanceValue,
+                    type: "win",
+                    marketId: marketId,
+                    runnerId: runnerId,
+                  });
+                } else {
+                  await WinningAmount.create({
+                    userId: userDetails.userId,
+                    userName: userDetails.userName,
+                    amount: Math.abs(marketExposureValue),
+                    type: "loss",
+                    marketId: marketId,
+                    runnerId: runnerId,
+                  });
+                }
+
+                await ProfitLoss.create({
+                  userId: user.userId,
+                  userName: userDetails.userName,
+                  gameId,
+                  marketId,
+                  runnerId,
+                  date: new Date(),
+                  profitLoss: runnerBalanceValue,
+                });
+
+                userDetails.marketListExposure =
+                  userDetails.marketListExposure.filter(
+                    (item) => Object.keys(item)[0] !== marketId
+                  );
+
+                await userSchema.update(
+                  { marketListExposure: userDetails.marketListExposure },
+                  { where: { userId: user.userId } }
+                );
+
+                await userDetails.save();
+
+                await MarketBalance.destroy({
+                  where: { marketId, runnerId, userId: user.userId },
+                });
+              }
             }
           }
+        } catch (error) {
+          console.error("Error processing user:", error);
         }
-      } catch (error) {
-        console.error("Error processing user:", error);
-      }
-    }
-
-    if (isWin) {
-      const orders = await CurrentOrder.findAll({ where: { marketId } });
-
-      for (const order of orders) {
-        await BetHistory.create({
-          betId: order.betId,
-          userId: order.userId,
-          userName: order.userName,
-          gameId: order.gameId,
-          gameName: order.gameName,
-          marketId: order.marketId,
-          marketName: order.marketName,
-          runnerId: order.runnerId,
-          runnerName: order.runnerName,
-          rate: order.rate,
-          value: order.value,
-          type: order.type,
-          date: new Date(),
-          matchDate: order.date,
-          bidAmount: order.bidAmount,
-          isWin: order.isWin,
-          profitLoss: order.profitLoss,
-          placeDate: order.createdAt
-        });
       }
 
-      await CurrentOrder.destroy({ where: { marketId } });
-    }
+      if (isWin) {
+        const orders = await CurrentOrder.findAll({ where: { marketId } });
 
-    await Market.update(
-      {
-        isRevoke: false,
-        hideMarketUser: true,
-        hideRunnerUser: true,
-        hideMarket: true,
-        hideRunner: true,
-      },
-      { where: { marketId } }
-    );
+        for (const order of orders) {
+          await BetHistory.create({
+            betId: order.betId,
+            userId: order.userId,
+            userName: order.userName,
+            gameId: order.gameId,
+            gameName: order.gameName,
+            marketId: order.marketId,
+            marketName: order.marketName,
+            runnerId: order.runnerId,
+            runnerName: order.runnerName,
+            rate: order.rate,
+            value: order.value,
+            type: order.type,
+            date: new Date(),
+            matchDate: order.date,
+            bidAmount: order.bidAmount,
+            isWin: order.isWin,
+            profitLoss: order.profitLoss,
+            placeDate: order.createdAt,
+          });
+        }
+
+        await CurrentOrder.destroy({ where: { marketId } });
+      }
+
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Result declaration by admin successfully"
+          )
+        );
+    }
 
     return res
-      .status(statusCode.success)
+      .status(statusCode.unauthorize)
       .send(
-        apiResponseSuccess(
-          null,
-          true,
-          statusCode.success,
-          "Result declaration successfully"
-        )
+        apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: Invalid user role")
       );
   } catch (error) {
     console.error("Error sending balance:", error);
@@ -1132,5 +1207,204 @@ export const user_Balance = async (userId) => {
     return balance;
   } catch (error) {
     throw new Error(`Error calculating balance: ${error.message}`);
+  }
+};
+
+export const approveResult = async (req, res) => {
+  try {
+    const { marketId, runnerId } = req.body;
+
+    const resultRequests = await ResultRequest.findAll({
+      where: { marketId, runnerId },
+    });
+
+    if (resultRequests.length < 2) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Not approved,Dont Match Runner")
+        );
+    }
+
+    const firstDeclaration = resultRequests[0].isWin;
+    const isMatch = resultRequests.every(request => request.isWin === firstDeclaration);
+
+    if (!isMatch) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Declarations do not match")
+        );
+    }
+
+    await ResultRequest.update(
+      { isApproved: true, type: 'Matched' },
+      { where: { marketId, runnerId } }
+    );
+
+    await Market.update(
+      {
+        isRevoke: false,
+        hideMarketUser: true,
+        hideRunnerUser: true,
+        hideMarket: true,
+        hideRunner: true,
+      },
+      { where: { marketId } }
+    );
+
+    await Runner.update(
+      { isWin: firstDeclaration },
+      { where: { runnerId } }
+    );
+
+    const market = await Market.findOne({
+      where: { marketId },
+    });
+
+    if (!market) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
+        );
+    }
+
+    const gameId = market.gameId; 
+
+    const users = await MarketBalance.findAll({ where: { marketId } });
+
+    for (const user of users) {
+      try {
+        const runnerBalance = await MarketBalance.findOne({
+          where: { marketId, runnerId, userId: user.userId },
+        });
+
+        if (runnerBalance) {
+          const userDetails = await userSchema.findOne({
+            where: { userId: user.userId },
+          });
+
+          if (userDetails) {
+            await storePreviousState(
+              userDetails,
+              marketId,
+              runnerId,
+              gameId,
+              Number(runnerBalance.bal)
+            );
+
+            const marketExposureEntry = userDetails.marketListExposure.find(
+              (item) => Object.keys(item)[0] === marketId
+            );
+
+            if (marketExposureEntry) {
+              const marketExposureValue = Number(marketExposureEntry[marketId]);
+              const runnerBalanceValue = Number(runnerBalance.bal);
+
+              if (firstDeclaration) {
+                await WinningAmount.create({
+                  userId: userDetails.userId,
+                  userName: userDetails.userName,
+                  amount: runnerBalanceValue,
+                  type: "win",
+                  marketId: marketId,
+                  runnerId: runnerId,
+                });
+              } else {
+                await WinningAmount.create({
+                  userId: userDetails.userId,
+                  userName: userDetails.userName,
+                  amount: Math.abs(marketExposureValue),
+                  type: "loss",
+                  marketId: marketId,
+                  runnerId: runnerId,
+                });
+              }
+
+              await ProfitLoss.create({
+                userId: user.userId,
+                userName: userDetails.userName,
+                gameId,
+                marketId,
+                runnerId,
+                date: new Date(),
+                profitLoss: runnerBalanceValue,
+              });
+
+              userDetails.marketListExposure =
+                userDetails.marketListExposure.filter(
+                  (item) => Object.keys(item)[0] !== marketId
+                );
+
+              await userSchema.update(
+                { marketListExposure: userDetails.marketListExposure },
+                { where: { userId: user.userId } }
+              );
+
+              await userDetails.save();
+
+              await MarketBalance.destroy({
+                where: { marketId, runnerId, userId: user.userId },
+              });
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error processing user:", error);
+      }
+    }
+
+    if (firstDeclaration) {
+      const orders = await CurrentOrder.findAll({ where: { marketId } });
+
+      for (const order of orders) {
+        await BetHistory.create({
+          betId: order.betId,
+          userId: order.userId,
+          userName: order.userName,
+          gameId: order.gameId,
+          gameName: order.gameName,
+          marketId: order.marketId,
+          marketName: order.marketName,
+          runnerId: order.runnerId,
+          runnerName: order.runnerName,
+          rate: order.rate,
+          value: order.value,
+          type: order.type,
+          date: new Date(),
+          matchDate: order.date,
+          bidAmount: order.bidAmount,
+          isWin: order.isWin,
+          profitLoss: order.profitLoss,
+          placeDate: order.createdAt,
+        });
+      }
+
+      await CurrentOrder.destroy({ where: { marketId } });
+    }
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Result approved and declared successfully"
+        )
+      );
+  } catch (error) {
+    console.error("Error approving result:", error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
   }
 };

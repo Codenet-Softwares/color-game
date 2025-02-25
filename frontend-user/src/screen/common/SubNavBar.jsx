@@ -45,7 +45,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
       setAnnouncementData([]);
     }
   };
-
+  
   useEffect(() => {
     fetchAnnouncement();
   }, []);
@@ -75,7 +75,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
           className="container-fluid d-flex align-items-center justify-content-between"
           style={{ maxWidth: "100%", padding: "5px 10px" }}
         >
-          <div className="d-flex flex-column">
+ <div className="d-flex flex-column">
             <button
               className="btn btn-primary d-lg-none hambargerIcon"
               type="button"

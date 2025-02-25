@@ -18,10 +18,9 @@ const WinningAmount = sequelize.define(
             allowNull: false,
         },
         type: {
-            type: DataTypes.STRING,
+            type: DataTypes.ENUM('win', 'loss'),
             allowNull: false,
-            defaultValue: "loss",
-        },
+          },
         marketId: {
             type: DataTypes.STRING,
             allowNull: false,

@@ -11,17 +11,18 @@ const ProfitAndLossRunner = ({
   SetRunnerId,
   handlePageChange
 }) => {
-  const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
-  const endIndex = Math.min(data.currentPage * 10, data.totalData);
+  const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
+  const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
 
-  const handelItemPerPage = (event) => {
-    SetProfitLossRunnerData((prevState) => ({
+  const handleItemPerPage = (event) => {
+    console.log("")
+    SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
-      currentPage: Number(currentPage),
+      currentPage: Number(prevState.currentPage),
     }));
-    toast.error("Work Pending From ServerSide");
   };
+
   const handleSearch = (e) => {
     SetProfitLossRunnerData((prev) => ({
       ...prev,
@@ -37,9 +38,9 @@ const ProfitAndLossRunner = ({
   return (
     <>
       {/* card */}
-      <div className="card w-100 rounded">
+      <div className="card w-100 rounded"  style={{ marginTop: "150px" }}>
         <div
-          className="card-heade text-white p-1 d-flex justify-content-between"
+          className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
           style={{ backgroundColor: "#2CB3D1" }}
         >
           <b>&nbsp;&nbsp;Profit & Loss Markets</b>
@@ -54,29 +55,31 @@ const ProfitAndLossRunner = ({
             <i className="fas fa-arrow-left"></i>
           </span>
         </div>
-        <div className="m-1 d-flex justify-content-between align-items-center">
+        <div className="m-1 row g-2 align-items-center">
+          <div className="col-12 col-md-auto mb-1">
           <select
-            className="form-select w-auto m-1"
-            onChange={handelItemPerPage}
+
+            className="form-select fw-bold"
+            onChange={handleItemPerPage}
+
           >
-            <option value="10" selected>
-              10 Entries
-            </option>
+            <option value="10">10 Entries</option>
             <option value="25">25 Entries</option>
             <option value="50">50 Entries</option>
             <option value="100">100 Entries</option>
           </select>
+          </div>
+          <div className="col-12 col-md-auto ms-auto">
           <input
             type="search"
-            className="form-control w-auto"
+            className="form-control"
             placeholder="Search..."
             onChange={handleSearch}
           />
+          </div>
         </div>
 
-        <ul className="list-group list-group-flush">
-          <li className="list-group-item">
-            <div className="white_card_body">
+            <div className="table-responsive">
               {data?.data?.length === 0 && totalItems !== 0 ? ( // Problem : if really no data from server always it is spinning
                 // Loader
                 <div
@@ -101,28 +104,28 @@ const ProfitAndLossRunner = ({
                           align="center"
                         >
                           <th scope="col">
-                            <b>Sport Name</b>
+                            Sport Name
                           </th>
                           <th scope="col">
-                            <b>Event Name</b>
+                            Event Name
                           </th>
                           <th scope="col">
-                            <b>Market Id</b>
+                            Market Id
                           </th>
                           <th scope="col">
-                            <b>Market Name</b>
+                            Market Name
                           </th>
                           <th scope="col">
-                            <b>Result</b>
+                            Result
                           </th>
                           <th scope="col">
-                            <b>Profit & Loss</b>
+                            Profit & Loss
                           </th>
                           <th scope="col">
-                            <b>Commission</b>
+                            Commission
                           </th>
                           <th scope="col">
-                            <b>Settle Time</b>
+                            Settle Time
                           </th>
                         </tr>
                         {data?.data?.length > 0 ? (
@@ -175,8 +178,7 @@ const ProfitAndLossRunner = ({
                 </div>
               )}
             </div>
-          </li>
-          <li className="list-group-item">
+          <li className="list-group-item overflow-auto">
             {/* Pagination */}
             {data?.data?.length > 0 && (
               <Pagination
@@ -192,7 +194,6 @@ const ProfitAndLossRunner = ({
             )}
             {/* Pagination */}
           </li>
-        </ul>
       </div>
       {/* card */}
     </>

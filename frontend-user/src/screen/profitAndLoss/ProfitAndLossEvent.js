@@ -15,21 +15,21 @@ const ProfitAndLossEvent = ({
   gameId,
   profitLossEventData
 }) => {
-  const startIndex = Math.min((data.currentPage - 1) * 10 + 1);
-  const endIndex = Math.min(data.currentPage * 10, data.totalData);
+  const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
+  const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
   const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoRunnerWiseProfitLoss = (marketId, componentName) => {
     SetComponent(componentName);
     SetMarketId(marketId);
   };
-  const handelItemPerPage = (event) => {
+  const handleItemPerPage = (event) => {
+    console.log("")
     SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
-      currentPage: Number(currentPage),
+      currentPage: Number(prevState.currentPage),
     }));
-    toast.error("Work Pending From ServerSide");
   };
 
   const handleSearch = (e) => {
@@ -57,14 +57,18 @@ const ProfitAndLossEvent = ({
     if (renderApi !== null) {
       getProfitLossEventWise(gameId, "ProfitAndLossEvent");
     }
-  }, [renderApi]);
+  }, [renderApi,profitLossEventData.itemPerPage]);
+
+  useEffect(() => {
+      getProfitLossEventWise(gameId, "ProfitAndLossEvent");
+  }, [ profitLossEventData.itemPerPage]);
 
   return (
     <>
       {/* card */}
-      <div className="card w-100 rounded">
+      <div className="card w-100 rounded " style={{ marginTop: "150px" }}>
         <div
-          className="card-heade text-white p-1 d-flex justify-content-between"
+          className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
           style={{ backgroundColor: "#2CB3D1" }}
         >
           <b>&nbsp;&nbsp;Profit & Loss Events</b>
@@ -79,25 +83,29 @@ const ProfitAndLossEvent = ({
             <i className="fas fa-arrow-left"></i>
           </span>
         </div>
-        <div className="m-1 d-flex justify-content-between align-items-center">
+        <div className="m-1 row g-2 align-items-center">
+          <div className="col-12 col-md-auto mb-1">
           <select
-            className="form-select w-auto m-1"
-            onChange={handelItemPerPage}
+
+            className="form-select fw-bold"
+            onChange={handleItemPerPage}
+
           >
-            <option value="10" selected>
-              10 Entries
-            </option>
+            <option value="10">10 Entries</option>
             <option value="25">25 Entries</option>
             <option value="50">50 Entries</option>
             <option value="100">100 Entries</option>
           </select>
+          </div>
+          <div className="col-12 col-md-auto ms-auto">
           <input
             type="search"
-            className="form-control w-auto"
+            className="form-control"
             placeholder="Search..."
             onChange={handleSearch}
           />
-        </div>
+          </div>
+          </div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
             <div className="white_card_body">
@@ -124,22 +132,25 @@ const ProfitAndLossEvent = ({
                           }}
                           align="center"
                         >
-                          <th scope="col">
-                            <b>Sport Name</b>
+                          <th>
+                            Sport Name
                           </th>
-                          <th scope="col">
-                            <b>Event Name</b>
+                          <th>
+                            Event Name
                           </th>
-                          <th scope="col">
-                            <b>Profit & Loss</b>
+                          <th>
+                            Profit & Loss
                           </th>
-                          <th scope="col">
-                            <b>Commission</b>
+                          <th>
+                            Commission
                           </th>
-                          <th scope="col">
-                            <b>Total P&L</b>
+                          <th>
+                            Total P&L
                           </th>
                         </tr>
+                        </thead>
+                        <tbody>
+
                         {data?.data?.length > 0 ? (
                           data?.data?.map((data, index) => (
                             <tr key={index} align="center">
@@ -187,14 +198,15 @@ const ProfitAndLossEvent = ({
                             </td>
                           </tr>
                         )}
-                      </thead>
+                    
+                        </tbody>
                     </table>
                   </div>
                 </div>
               )}
             </div>
           </li>
-          <li className="list-group-item">
+          <li className="list-group-item overflow-auto">
             {/* Pagination */}
             {data?.data?.length > 0 && (
               <Pagination

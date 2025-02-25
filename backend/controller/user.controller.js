@@ -1274,11 +1274,11 @@ export const currentOrderHistory = async (req, res) => {
   try {
     const user = req.user;
     const userId = user.userId;
-    const gameId = req.params.gameId;
+    const marketId = req.params.marketId;
     // const page = parseInt(req.query.page, 10) || 1;
     // const limit = parseInt(req.query.limit, 10) || 5;
 
-    if (!gameId) {
+    if (!marketId) {
       return res
         .status(statusCode.badRequest)
         .send(
@@ -1286,7 +1286,7 @@ export const currentOrderHistory = async (req, res) => {
             null,
             statusCode.badRequest,
             false,
-            "Game ID is required"
+            "Market Id is required"
           )
         );
     }
@@ -1294,7 +1294,7 @@ export const currentOrderHistory = async (req, res) => {
     const { rows } = await CurrentOrder.findAndCountAll({
       where: {
         userId,
-        gameId,
+        marketId,
       },
       attributes: ["runnerName", "rate", "value", "type", "bidAmount"],
       // limit,
@@ -1402,17 +1402,56 @@ export const calculateProfitLoss = async (req, res) => {
       offset: (page - 1) * limit,
       limit: limit,
     });
+/***********************************Previous logic************************************************************* */
+    // const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
+    //   attributes: [
+    //     [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
+    //   ],
+    //   where: {
+    //     userId: userId,
+    //   },
+    // });
+
+    // if (profitLossData.length === 0 && lotteryProfitLossData.length === 0) {
+    //   return res
+    //     .status(statusCode.success)
+    //     .send(
+    //       apiResponseSuccess(
+    //         [],
+    //         true,
+    //         statusCode.success,
+    //         "No profit/loss data found for the given date range."
+    //       )
+    //     );
+    // }
 
     const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
       attributes: [
-        [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
+        "userId",
+        [
+          Sequelize.literal(`
+            COALESCE((
+              SELECT SUM(lp.profitLoss)
+              FROM LotteryProfit_Loss lp
+              WHERE lp.userId = LotteryProfit_Loss.userId
+              AND lp.id IN (
+                SELECT MIN(lp2.id) 
+                FROM LotteryProfit_Loss lp2
+                WHERE lp2.userId = lp.userId
+                GROUP BY lp2.marketId
+              )
+            ), 0)
+          `),
+          "totalProfitLoss",
+        ],
       ],
       where: {
         userId: userId,
       },
+      group: ["userId"],
     });
 
-    if (profitLossData.length === 0 && lotteryProfitLossData.length === 0) {
+    if (lotteryProfitLossData.length === 0 ) {
       return res
         .status(statusCode.success)
         .send(
@@ -1424,7 +1463,7 @@ export const calculateProfitLoss = async (req, res) => {
           )
         );
     }
-
+  
     const combinedProfitLossData = [
       ...profitLossData.map((item) => ({
         gameId: item.gameId,
@@ -1492,83 +1531,53 @@ export const calculateProfitLoss = async (req, res) => {
 
 export const marketProfitLoss = async (req, res) => {
   try {
-    const user = req.user;
-    const userId = user.userId;
+    const userId = req.user.userId;
     const gameId = req.params.gameId;
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 5;
-    const searchMarketName = req.query.search || "";
+    let { page = 1, limit = 10, search = "" } = req.query;
+    page = Math.max(parseInt(page, 10), 1);
+    limit = Math.max(parseInt(limit, 10), 1);
 
     const distinctMarketIds = await ProfitLoss.findAll({
-      attributes: [
-        [Sequelize.fn("DISTINCT", Sequelize.col("marketId")), "marketId"],
-      ],
-      where: { userId: userId, gameId: gameId },
+      attributes: [[Sequelize.fn("DISTINCT", Sequelize.col("marketId")), "marketId"]],
+      where: { userId, gameId },
     });
 
     if (distinctMarketIds.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            [],
-            true,
-            statusCode.success,
-            "No profit/loss data found."
-          )
-        );
+      return res.status(statusCode.success).send(
+        apiResponseSuccess([], true, statusCode.success, "No profit/loss data found.", {
+          page,
+          limit,
+          totalItems: 0,
+          totalPages: 0,
+        })
+      );
     }
 
-    const marketsProfitLoss = await Promise.all(
+    let marketsProfitLoss = await Promise.all(
       distinctMarketIds.map(async (market) => {
         const profitLossEntries = await ProfitLoss.findAll({
           attributes: [
             "marketId",
-            [
-              Sequelize.literal("CAST(profitLoss AS DECIMAL(10, 2))"),
-              "profitLoss",
-            ],
+            [Sequelize.literal("CAST(profitLoss AS DECIMAL(10, 2))"), "profitLoss"],
           ],
-          where: {
-            userId: userId,
-            marketId: market.marketId,
-          },
+          where: { userId, marketId: market.marketId },
         });
 
-        if (profitLossEntries.length === 0) {
-          return res
-            .status(statusCode.success)
-            .send(
-              apiResponseSuccess(
-                [],
-                true,
-                statusCode.success,
-                "No profit/loss data found for the given date range."
-              )
-            );
-        }
-
-        const marketQuery = {
-          marketId: market.marketId,
-        };
-
-        if (searchMarketName) {
-          marketQuery.marketName = { [Op.like]: `%${searchMarketName}%` };
-        }
+        if (profitLossEntries.length === 0) return null;
 
         const game = await Game.findOne({
           include: [
             {
               model: Market,
-              where: marketQuery,
+              where: { marketId: market.marketId },
               attributes: ["marketName"],
             },
           ],
           attributes: ["gameName"],
-          where: { gameId: gameId },
+          where: { gameId },
         });
 
-        if (!game) return null;
+        if (!game || !game.Markets.length) return null;
 
         const gameName = game.gameName;
         const marketName = game.Markets[0].marketName;
@@ -1577,73 +1586,51 @@ export const marketProfitLoss = async (req, res) => {
           0
         );
 
-        const formattedTotalProfitLoss = totalProfitLoss.toFixed(2);
-
         return {
           marketId: market.marketId,
           marketName,
           gameName,
-          totalProfitLoss: formattedTotalProfitLoss,
+          totalProfitLoss: totalProfitLoss.toFixed(2),
         };
       })
     );
-    const filteredMarketsProfitLoss = marketsProfitLoss.filter(
-      (item) => item !== null
-    );
 
-    if (filteredMarketsProfitLoss.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            [],
-            true,
-            statusCode.success,
-            "No matching markets found."
-          )
-        );
+    marketsProfitLoss = marketsProfitLoss.filter(Boolean);
+
+    if (search) {
+      marketsProfitLoss = marketsProfitLoss.filter((item) =>
+        item.marketName.toLowerCase().includes(search.toLowerCase())
+      );
     }
 
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const paginatedProfitLossData = filteredMarketsProfitLoss.slice(
-      startIndex,
-      endIndex
-    );
-    const totalItems = filteredMarketsProfitLoss.length;
+    const totalItems = marketsProfitLoss.length;
     const totalPages = Math.ceil(totalItems / limit);
 
-    const paginationData = {
-      page: page,
-      totalPages: totalPages,
-      totalItems: totalItems,
+    if (page > totalPages) {
+      page = Math.max(totalPages, 1);
+    }
+
+    const offset = (page - 1) * limit;
+
+    const paginatedResults = marketsProfitLoss.slice(offset, offset + limit);
+
+    const pagination = {
+      page,
+      limit,
+      totalItems,
+      totalPages,
     };
 
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          paginatedProfitLossData,
-          true,
-          statusCode.success,
-          "Success",
-          paginationData
-        )
-      );
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(paginatedResults, true, statusCode.success, "Success", pagination)
+    );
   } catch (error) {
-    console.error("Error from API:", error.message);
-    res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
 };
+
 
 export const runnerProfitLoss = async (req, res) => {
   try {
@@ -2025,8 +2012,8 @@ export const getUserCurrentOrderGames = async (req, res) => {
 
     const distinctGames = await CurrentOrder.findAll({
       where: { userId },
-      attributes: ["gameId", "gameName"],
-      group: ["gameId", "gameName"],
+      attributes: ["marketId", "marketName"],
+      group: ["marketId", "marketName"],
     });
 
     res
