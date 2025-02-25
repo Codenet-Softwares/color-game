@@ -85,29 +85,31 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             >
               ☰
             </button>
-            <button
-              className="btn btn-primary mt-2 d-lg-none hambargerIcon"
-              type="button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasTop"
-              aria-controls="offcanvasTop"
-              style={{
-                width: "44px",
-                height: "40px",
-                fontSize: "18px",
-                padding: "5px",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                lineHeight: "1",
-              }}
-            >
-              <small style={{ fontSize: "12px", marginBottom: "2px" }}>
-                Bets
-              </small>
-              <FaDollarSign size={15} color="white" />
-            </button>
+            {store.isLogin && (
+              <button
+                className="btn btn-primary mt-2 d-lg-none hambargerIcon"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasTop"
+                aria-controls="offcanvasTop"
+                style={{
+                  width: "44px",
+                  height: "40px",
+                  fontSize: "18px",
+                  padding: "5px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  lineHeight: "1",
+                }}
+              >
+                <small style={{ fontSize: "12px", marginBottom: "2px" }}>
+                  Bets
+                </small>
+                <FaDollarSign size={15} color="white" />
+              </button>
+            )}
           </div>
 
           <OpenBetsOffCanvas
