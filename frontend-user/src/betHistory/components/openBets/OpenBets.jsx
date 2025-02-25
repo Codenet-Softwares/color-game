@@ -5,7 +5,7 @@ import RenderLayTable from "./components/RenderLayTable";
 const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
   console.log("first", betHistoryData);
   return (
-    <div className="card" style={{ overflowY: "auto", height: "82vh" }}>
+    <div className="card" style={{ height: "82vh", overflow: "hidden" }}>
       <div
         className="card-header"
         style={{
@@ -16,7 +16,15 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
       >
         <h5 className="card-title text-uppercase fw-bold">Open Bets</h5>
       </div>
-      <div className="card-body">
+      <div
+        className="card-body"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          height: "calc(82vh - 56px)",
+          overflow: "hidden",
+        }}
+      >
         <div className="form-group">
           <select
             className="form-select form-select-lg"
@@ -33,14 +41,29 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
             ))}
           </select>
         </div>
-        {console.log("first", betHistoryData)}
-        {/* Render back  and laytable if market is selected */}
+
+        {/* Render back and lay table if market is selected */}
         {betHistoryData?.selectColorGame.length > 0 &&
-          !betHistoryData?.selectColorGame == "" && (
-            <>
-              <RenderBackTable betHistoryData={betHistoryData} />
-              <RenderLayTable betHistoryData={betHistoryData} />
-            </>
+          betHistoryData?.selectColorGame !== "" && (
+            <div
+              style={{
+                flexGrow: 1,
+                display: "flex",
+                flexDirection: "column",
+                gap: "10px",
+                overflow: "hidden",
+              }}
+            >
+              <div style={{ height: "35vh", overflowY: "auto" }}>
+                <RenderBackTable betHistoryData={betHistoryData} />
+              </div>
+              <div
+                className="mt-3"
+                style={{ height: "35vh", overflowY: "auto" }}
+              >
+                <RenderLayTable betHistoryData={betHistoryData} />
+              </div>
+            </div>
           )}
       </div>
     </div>

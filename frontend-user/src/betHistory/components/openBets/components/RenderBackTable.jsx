@@ -3,6 +3,7 @@ import React from "react";
 const RenderBackTable = ({ betHistoryData }) => {
   console.log("first", betHistoryData);
 
+
   // Ensure openBet is always an array
   const openBets = betHistoryData?.openBet || [];
 

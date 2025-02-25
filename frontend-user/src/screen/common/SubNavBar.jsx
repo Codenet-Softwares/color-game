@@ -7,7 +7,7 @@ import { getAnnouncement } from "../../utils/apiService";
 import Login from "../loginModal/loginModal";
 import OpenBetsOffCanvas from "../../components/OpenBetsOffCanvas";
 
-const SubNavbar = () => {
+const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const { store } = useAppContext();
   const [announcementData, setAnnouncementData] = useState([]);
   const [showModalLogin, setShowModalLogin] = useState(false);
@@ -110,7 +110,10 @@ const SubNavbar = () => {
             </button>
           </div>
 
-          <OpenBetsOffCanvas />
+          <OpenBetsOffCanvas
+            handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
+            openBetData={openBetData}
+          />
           <a className="navbar-brand" href={`/home`}>
             <img
               src={Logo}

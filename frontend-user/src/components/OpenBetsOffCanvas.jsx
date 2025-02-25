@@ -1,12 +1,14 @@
 import React from "react";
+import OpenBets from "../betHistory/components/openBets/OpenBets";
 
-const OpenBetsOffCanvas = () => {
+const OpenBetsOffCanvas = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   return (
     <div
-      className="offcanvas offcanvas-top"
+      className="offcanvas offcanvas-top d-md-none"
       tabIndex="-1"
       id="offcanvasTop"
       aria-labelledby="offcanvasTopLabel"
+      style={{ height: "80vh" }}
     >
       <div
         className="offcanvas-header text-light text-uppercase"
@@ -20,7 +22,12 @@ const OpenBetsOffCanvas = () => {
           aria-label="Close"
         ></button>
       </div>
-      <div className="offcanvas-body">...</div>
+      <div className="offcanvas-body">
+        <OpenBets
+          betHistoryData={openBetData}
+          handleBetHistorySelectionMenu={handleOpenBetsSelectionMenu}
+        />
+      </div>
     </div>
   );
 };

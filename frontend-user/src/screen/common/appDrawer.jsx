@@ -2,14 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./appDrawer.css";
 import {
   getLotteryMarketsApi,
-  getOpenBetsGame,
   user_getAllGamesWithMarketData_api,
-  user_getBackLayData_api,
 } from "../../utils/apiService";
 import { Link, useLocation } from "react-router-dom";
 import {
   getAllGameDataInitialState,
-  getOpenBet,
 } from "../../utils/getInitiateState";
 import HamburgerNavBar from "./hamburgerNavBar";
 import { useAppContext } from "../../contextApi/context";
@@ -26,6 +23,8 @@ function AppDrawer({
   setShowResetModal,
   showResetModal,
   onMarketSelect, // New prop for market selection callback
+  openBetData,
+  handleOpenBetsSelectionMenu,
 }) {
   const [toggleStates, setToggleStates] = useState({});
   const [user_allGames, setUser_allGames] = useState(
@@ -33,7 +32,6 @@ function AppDrawer({
   );
   const [lotteryDrawTimes, setLotteryDrawTimes] = useState([]);
   const [lotteryToggle, setLotteryToggle] = useState(false); // New state for toggling draw times
-  const [openBetaData, setOpenBetaData] = useState(getOpenBet());
   const { dispatch, store } = useAppContext();
   const location = useLocation();
   console.log("location", location);
@@ -81,47 +79,6 @@ function AppDrawer({
   const handleLotteryToggle = () => {
     setLotteryToggle(!lotteryToggle);
   };
-
-  const handleOpenBetsSelectionMenu = (e) => {
-    const { name, value } = e.target;
-
-    setOpenBetaData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  async function handleGetData() {
-    const response = await user_getBackLayData_api({
-      marketId: openBetaData?.selectColorGame,
-    });
-    if (response?.data) {
-      setOpenBetaData((prev) => ({
-        ...prev,
-        openBet: response.data,
-      }));
-    }
-  }
-
-  const openBetsGame = async () => {
-    const response = await getOpenBetsGame();
-    if (response?.data) {
-      setOpenBetaData((prev) => ({
-        ...prev,
-        openBetGameNames: response.data,
-      }));
-    }
-  };
-  console.log("openBetaData", openBetaData);
-  useEffect(() => {
-    openBetsGame();
-  }, []);
-
-  useEffect(() => {
-    if (openBetaData?.selectColorGame != "") {
-      handleGetData();
-    }
-  }, [openBetaData?.selectColorGame]);
 
   function getLeftNavBar() {
     return (
@@ -279,7 +236,7 @@ function AppDrawer({
             }}
           >
             <OpenBets
-              betHistoryData={openBetaData}
+              betHistoryData={openBetData}
               handleBetHistorySelectionMenu={handleOpenBetsSelectionMenu}
             />
           </div>

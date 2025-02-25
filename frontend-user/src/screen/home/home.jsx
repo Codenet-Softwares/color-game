@@ -14,16 +14,63 @@ import Footer from "../common/Footer";
 import Login from "../loginModal/loginModal";
 import AOS from "aos";
 import GetwholeMarket from "../common/gameListView/GetwholeMarket";
+import { getOpenBet } from "../../utils/getInitiateState";
+import {
+  getOpenBetsGame,
+  user_getBackLayData_api,
+} from "../../utils/apiService";
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [openBetData, setOpenBetData] = useState(getOpenBet());
 
   const { store } = useAppContext();
 
   useEffect(() => {
     AOS.init();
   }, []);
+
+  const handleOpenBetsSelectionMenu = (e) => {
+    const { name, value } = e.target;
+
+    setOpenBetData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  async function handleGetData() {
+    const response = await user_getBackLayData_api({
+      marketId: openBetData?.selectColorGame,
+    });
+    if (response?.data) {
+      setOpenBetData((prev) => ({
+        ...prev,
+        openBet: response.data,
+      }));
+    }
+  }
+
+  const openBetsGame = async () => {
+    const response = await getOpenBetsGame();
+    if (response?.data) {
+      setOpenBetData((prev) => ({
+        ...prev,
+        openBetGameNames: response.data,
+      }));
+    }
+  };
+  console.log("openBetData", openBetData);
+  useEffect(() => {
+    openBetsGame();
+  }, []);
+
+  useEffect(() => {
+    if (openBetData?.selectColorGame != "") {
+      handleGetData();
+    }
+  }, [openBetData?.selectColorGame]);
 
   const getLoginHomePage = () => (
     <div className="global-margin-top-logged">
@@ -33,6 +80,8 @@ const Home = () => {
         isHomePage={true}
         showResetModal={showResetModal}
         setShowResetModal={setShowResetModal}
+        openBetData={openBetData}
+        handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
       >
         <GetwholeMarket />
       </AppDrawer>
@@ -40,20 +89,23 @@ const Home = () => {
   );
 
   const homePage = () => (
-    <div className="global-margin-top" >
+    <div className="global-margin-top">
       <Carousel />
       <HitGames />
       <Gif />
       <GetwholeMarket />
       <DownloadApp />
       <Footer />
-      <Login showLogin={showLogin} setShowLogin={setShowLogin}/>
+      <Login showLogin={showLogin} setShowLogin={setShowLogin} />
     </div>
   );
 
   const getBody = () => (
     <>
-      <Layout />
+      <Layout
+        openBetData={openBetData}
+        handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
+      />
       {store.user.isLogin ? getLoginHomePage() : homePage()}
     </>
   );

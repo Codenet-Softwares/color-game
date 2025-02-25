@@ -25,7 +25,7 @@ import { logout, userWallet } from "../../utils/apiService";
 import SideNavbar from "./SubNavBar";
 import SubNavbar from "./SubNavBar";
 
-const NavBar = () => {
+const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showModalLogin, setShowModalLogin] = useState(false);
@@ -150,7 +150,12 @@ const NavBar = () => {
   const formattedDate = currentDate.toLocaleDateString("en-US", options);
 
   function getNav() {
-    return <SubNavbar />;
+    return (
+      <SubNavbar
+        handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
+        openBetData={openBetData}
+      />
+    );
   }
 
   function getRightSlider() {
