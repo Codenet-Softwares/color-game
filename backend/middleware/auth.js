@@ -4,32 +4,27 @@ import { string } from '../constructor/string.js';
 import admins from '../models/admin.model.js';
 import { statusCode } from '../helper/statusCodes.js';
 import userSchema from '../models/user.model.js';
-
 export const authorize = (roles, permissions) => {
   return async (req, res, next) => {
     try {
       const authToken = req?.headers?.authorization;
-
       if (!authToken) {
         return res
           .status(statusCode.unauthorize)
           .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
       }
-
       const tokenParts = authToken.split(' ');
       if (tokenParts.length !== 2 || !(tokenParts[0] === 'Bearer' && tokenParts[1])) {
         return res
           .status(statusCode.unauthorize)
           .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
       }
-
       const user = jwt.verify(tokenParts[1], process.env.JWT_SECRET_KEY);
       if (!user) {
         return res
           .status(statusCode.unauthorize)
           .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
       }
-
       let existingUser;
 
       if (roles.includes(string.Admin) || roles.includes(string.subAdmin)) {
@@ -51,24 +46,22 @@ export const authorize = (roles, permissions) => {
           .status(statusCode.unauthorize)
           .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
       }
-
       const rolesArray = existingUser.roles.replace(/['"]+/g, '').split(',');
 
       if (roles && roles.length > 0) {
         let userHasRequiredRole = false;
-
         roles.forEach((role) => {
           if (rolesArray.includes(role)) {
             userHasRequiredRole = true;
           }
         });
-
         if (!userHasRequiredRole) {
           return res
             .status(statusCode.unauthorize)
             .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
         }
       }
+
 
       if (permissions && permissions.length > 0) {
         const userPermissions = existingUser.permissions ? existingUser.permissions.split(',') : [];
@@ -83,7 +76,6 @@ export const authorize = (roles, permissions) => {
             }
           });
         }
-
         if (!userHasRequiredPermission) {
           return res
             .status(statusCode.unauthorize)
@@ -101,4 +93,3 @@ export const authorize = (roles, permissions) => {
     }
   };
 };
-
