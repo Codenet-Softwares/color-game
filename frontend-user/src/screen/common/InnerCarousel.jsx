@@ -24,7 +24,10 @@ const InnerCarousel = () => {
   }, []);
 
   return (
-    <div
+    <div>
+      <div className="row">
+        <div className="col-md-12">
+        <div
       id="carouselExampleCaptions"
       className="carousel slide mt-4"
       data-bs-ride="carousel"
@@ -106,6 +109,10 @@ const InnerCarousel = () => {
         <span className="visually-hidden">Next</span>
       </button>
     </div>
+        </div>
+      </div>
+    </div>
+    
   );
 };
 
