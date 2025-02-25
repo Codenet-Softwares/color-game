@@ -63,7 +63,7 @@ const Home = () => {
   };
   console.log("openBetData", openBetData);
   useEffect(() => {
-    openBetsGame();
+    if (store.user.isLogin) openBetsGame();
   }, []);
 
   useEffect(() => {

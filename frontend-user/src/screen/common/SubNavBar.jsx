@@ -85,7 +85,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             >
               ☰
             </button>
-            {store.isLogin && (
+            {store.user.isLogin && (
               <button
                 className="btn btn-primary mt-2 d-lg-none hambargerIcon"
                 type="button"
