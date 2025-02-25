@@ -131,6 +131,7 @@ const BetHistory = () => {
       }));
     }
   }
+
   useEffect(() => {
     if (betHistoryData?.selectColorGame != "") {
       handleGetData();

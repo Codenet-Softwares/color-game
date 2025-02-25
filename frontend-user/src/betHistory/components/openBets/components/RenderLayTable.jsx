@@ -1,6 +1,8 @@
 import React from "react";
 
 const RenderLayTable = ({ betHistoryData }) => {
+  console.log("first", betHistoryData);
+
   return (
     <div
       className="card shadow p-3 mb-5 rounded"
@@ -19,14 +21,14 @@ const RenderLayTable = ({ betHistoryData }) => {
                 <th className="d-table-cell d-sm-none">Details</th>
               </tr>
             </thead>
-            {/* Table body - data to be filled dynamically */}
+           
             <tbody>
               {/* Insert rows for lay bets */}
-              {betHistoryData?.openBet.filter((item) => item.type === "lay")
-                .length > 0 ? (
-                openBet
-                  .filter((item) => item.type === "lay")
-                  .map((item, index) => (
+              {betHistoryData?.openBet?.filter((item) => item?.type === "lay")
+                ?.length > 0 ? (
+                betHistoryData?.openBet
+                  ?.filter((item) => item?.type === "lay")
+                  ?.map((item, index) => (
                     <tr key={index} align="center">
                       {/* Show for larger screens */}
                       <td className="d-none d-sm-table-cell">
@@ -35,8 +37,7 @@ const RenderLayTable = ({ betHistoryData }) => {
                       <td className="d-none d-sm-table-cell">{item.rate}</td>
                       <td className="d-none d-sm-table-cell">{item.value}</td>
                       <td className="d-none d-sm-table-cell">
-                        {Math.round(item.value)}(-
-                        {Math.round(item.bidAmount)})
+                        {Math.round(item.value)}(-{Math.round(item.bidAmount)})
                       </td>
 
                       {/* Show for smaller screens */}
@@ -51,8 +52,7 @@ const RenderLayTable = ({ betHistoryData }) => {
                           <strong>Stake:</strong> {item.value}
                         </div>
                         <div>
-                          <strong>Liability:</strong> {Math.round(item.value)}
-                          (-
+                          <strong>Liability:</strong> {Math.round(item.value)}(-
                           {Math.round(item.bidAmount)})
                         </div>
                       </td>

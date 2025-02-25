@@ -5,6 +5,7 @@ import { useAppContext } from "../../contextApi/context";
 import Logo from "../../asset/Logo.png";
 import { getAnnouncement } from "../../utils/apiService";
 import Login from "../loginModal/loginModal";
+import OpenBetsOffCanvas from "../../components/OpenBetsOffCanvas";
 
 const SubNavbar = () => {
   const { store } = useAppContext();
@@ -51,18 +52,13 @@ const SubNavbar = () => {
 
   return (
     <>
-      <nav
-        className="user_navbar p-0">
+      <nav className="user_navbar p-0">
         {!store.user.isLogin && (
           <div
             className="w-100 d-flex justify-content-between "
             style={{ background: "#045662" }}
           >
-            <img
-              src={ansmt}
-              alt="Announcement"
-              className="announcementImg"
-            />
+            <img src={ansmt} alt="Announcement" className="announcementImg" />
             <marquee className="text-white" style={{ fontSize: "18px" }}>
               {announcementData.map((item) => item.announcement).join(" | ")}
             </marquee>
@@ -83,7 +79,6 @@ const SubNavbar = () => {
             <button
               className="btn btn-primary d-lg-none hambargerIcon"
               type="button"
-              
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvasScrolling"
               aria-controls="offcanvasScrolling"
@@ -115,30 +110,14 @@ const SubNavbar = () => {
             </button>
           </div>
 
-          <div
-            className="offcanvas offcanvas-top"
-            tabIndex="-1"
-            id="offcanvasTop"
-            aria-labelledby="offcanvasTopLabel"
-          >
-            <div className="offcanvas-header text-light text-uppercase" style={{background:"#176577"}}>
-              <h5 id="offcanvasTopLabel" >Open Bets</h5>
-              <button
-                type="button"
-                className="btn-close text-reset"
-                data-bs-dismiss="offcanvas"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="offcanvas-body">...</div>
-          </div>
+          <OpenBetsOffCanvas />
           <a className="navbar-brand" href={`/home`}>
             <img
               src={Logo}
               alt="Logo"
               style={{
-                width: "170px", 
-                maxWidth: "100%", 
+                width: "170px",
+                maxWidth: "100%",
                 height: "auto",
               }}
               className="img-fluid"

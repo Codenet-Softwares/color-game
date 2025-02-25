@@ -1,17 +1,22 @@
 import React from "react";
 
 const RenderBackTable = ({ betHistoryData }) => {
+  console.log("first", betHistoryData);
+
+  // Ensure openBet is always an array
+  const openBets = betHistoryData?.openBet || [];
+
   return (
     <div
       className="card shadow p-3 mb-5 rounded"
       style={{ backgroundColor: "#cfe2f3" }}
     >
       <div className="card-body">
-        <div className="table-responsive ">
+        <div className="table-responsive">
           <table className="table table-striped table-sm">
             {/* Table header */}
             <thead>
-              <tr align="center fs-6">
+              <tr align="center" className="fs-6">
                 <th className="d-none d-sm-table-cell">Back</th>
                 <th className="d-none d-sm-table-cell">Odds</th>
                 <th className="d-none d-sm-table-cell">Stake</th>
@@ -19,27 +24,22 @@ const RenderBackTable = ({ betHistoryData }) => {
                 <th className="d-table-cell d-sm-none">Details</th>
               </tr>
             </thead>
-            {/* Table body - data to be filled dynamically */}
+            {/* Table body */}
             <tbody>
-              {/* Insert rows for back bets */}
-              {betHistoryData?.openBet.filter((item) => item.type === "back")
-                .length > 0 ? (
-                openBet
+              {openBets.filter((item) => item.type === "back").length > 0 ? (
+                openBets
                   .filter((item) => item.type === "back")
                   .map((item, index) => (
                     <tr key={index} align="center">
-                      {/* Show for larger screens */}
                       <td className="d-none d-sm-table-cell">
                         {item.runnerName}
                       </td>
                       <td className="d-none d-sm-table-cell">{item.rate}</td>
                       <td className="d-none d-sm-table-cell">{item.value}</td>
                       <td className="d-none d-sm-table-cell">
-                        {Math.round(item.value)}(-
-                        {Math.round(item.bidAmount)})
+                        {Math.round(item.value)} (-{Math.round(item.bidAmount)})
                       </td>
-
-                      {/* Show for smaller screens */}
+                      {/* Mobile View */}
                       <td className="d-table-cell d-sm-none">
                         <div>
                           <strong>Back (Bet For):</strong> {item.runnerName}
@@ -51,8 +51,7 @@ const RenderBackTable = ({ betHistoryData }) => {
                           <strong>Stake:</strong> {item.value}
                         </div>
                         <div>
-                          <strong>Profit:</strong> {Math.round(item.value)}
-                          (-
+                          <strong>Profit:</strong> {Math.round(item.value)} (-
                           {Math.round(item.bidAmount)})
                         </div>
                       </td>

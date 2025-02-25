@@ -3,6 +3,7 @@ import RenderBackTable from "./components/RenderBackTable";
 import RenderLayTable from "./components/RenderLayTable";
 
 const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
+  console.log("first", betHistoryData);
   return (
     <div className="card" style={{ overflowY: "auto", height: "82vh" }}>
       <div
@@ -32,7 +33,7 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
             ))}
           </select>
         </div>
-
+        {console.log("first", betHistoryData)}
         {/* Render back  and laytable if market is selected */}
         {betHistoryData?.selectColorGame.length > 0 &&
           !betHistoryData?.selectColorGame == "" && (

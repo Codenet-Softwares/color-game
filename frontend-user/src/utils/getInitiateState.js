@@ -229,3 +229,11 @@ export function getBetHistory(body = {}) {
     gameSelectionData: []
   };
 }
+
+export function getOpenBet(body = {}) {
+  return {
+    openBetGameNames: [],
+    selectColorGame: "",
+    openBet: [],
+  };
+}
