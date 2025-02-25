@@ -74,7 +74,7 @@ Runner.init(
     tableName: 'runner',
     timestamps: true,
     updatedAt: false,
-    paranoid: true, // Enable soft delete
+    paranoid: true, 
     deletedAt: 'deletedAt',
   },
 );
