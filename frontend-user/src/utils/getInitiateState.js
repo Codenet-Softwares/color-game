@@ -220,6 +220,11 @@ export function getInitialLotteryData() {
     refreshKey: 0, 
     marketName: "",
     searchResult: null,
+    startTime:null,
+    endTime:null,
+    startTimeForShowCountdown:null,
+    endTimeForShowCountdown: null,
+    endTimeForTimer: null,
   };
 }
 

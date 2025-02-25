@@ -1,98 +1,147 @@
-import React, { useState, useCallback, useRef } from "react";
-import { Form, InputGroup, Dropdown } from "react-bootstrap";
-import { FixedSizeGrid as Grid } from "react-window";
-import "./ReusableDropdown.css"; 
-import useDebounce from "./useDebounce";
+import React, { useEffect, useState, useCallback } from "react";
+import { Formik, Form } from "formik";
+import ReusableDropdown from "../../globlaCommon/ReusableDropdown";
+import { LotteryRange, SearchLotteryTicketUser } from "../../utils/apiService";
+import { generateLotteryOptions } from "../../utils/helper";
+import lotteryValidationSchema from "../../schema/lotteryValidationSchema";
+import { getInitialFormValues, getInitialLotteryData } from "../../utils/getInitiateState";
+import SearchResultsNew from "./SearchResultsNew";
+import "./LotteryUserPurchase.css";
+import moment from "moment";
+import CountdownTimer from "../../globlaCommon/CountdownTimer";
 
-const COLUMN_COUNT = 3; 
+const LotteryUserPurchase = ({ MarketId }) => {
+  const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
 
-const ReusableDropdown = ({ label, options = [], name, onSelect, error, touched }) => {
-  const [state, setState] = useState({
-    search: "",
-    selected: "",
-    showDropdown: false,
-  });
+  const fetchLotteryData = useCallback(async () => {
+    const response = await LotteryRange();
+    const marketData = response?.data?.find((market) => market.marketId === MarketId);
 
-  const inputRef = useRef(null);
-  const debouncedSearch = useDebounce(state.search, 300);
+    if (marketData) {
+      const {
+        group_start,
+        group_end,
+        series_start,
+        series_end,
+        number_start,
+        number_end,
+        marketName,
+        start_time,
+        end_time,
+        isActive,
+      } = marketData;
+      const { groupOptions, seriesOptions, numberOptions } = generateLotteryOptions(
+        group_start,
+        group_end,
+        series_start,
+        series_end,
+        number_start,
+        number_end
+      );
 
-  const filteredOptions =
-    typeof debouncedSearch === "string"
-      ? options.filter((option) =>
-          option.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
-        )
-      : options;
+      setLotteryData((prevData) => ({
+        ...prevData,
+        groups: groupOptions,
+        series: seriesOptions,
+        numbers: numberOptions,
+        marketName: marketName || "Unknown Market",
+        endTimeForShowCountdown: end_time,
+        startTimeForShowCountdown: start_time,
+        isActive,
+      }));
+    }
+  }, [MarketId]);
 
-  const handleSelect = useCallback((option) => {
-    setState((prev) => ({
-      ...prev,
-      search: option,
-      selected: option,
-      showDropdown: false,
+  useEffect(() => {
+    setLotteryData(getInitialLotteryData());
+    fetchLotteryData();
+  }, [MarketId]);
+
+  const handleSubmit = useCallback(async (values, { setSubmitting, resetForm }) => {
+    const requestBody = {
+      marketId: MarketId,
+      sem: values.selectedSem ? parseInt(values.selectedSem) : null,
+      group: values.selectedGroup,
+      series: values.selectedSeries,
+      number: values.selectedNumber,
+    };
+
+    const response = await SearchLotteryTicketUser(requestBody);
+    setLotteryData((prevData) => ({
+      ...prevData,
+      searchResult: response?.data || null,
     }));
-    onSelect(option); // Ensure the parent component gets the selected value
-  }, [onSelect]);
 
-  const columnWidth = inputRef.current ? inputRef.current.offsetWidth / COLUMN_COUNT : 80;
-  const rowCount = Math.ceil(filteredOptions.length / COLUMN_COUNT);
+    resetForm();
+    setSubmitting(false);
+    setLotteryData((prevData) => ({
+      ...prevData,
+      refreshKey: prevData.refreshKey + 1,
+    }));
+  }, [MarketId]);
+
+  const handleBack = () => {
+    setLotteryData((prevData) => ({
+      ...prevData,
+      searchResult: null,
+    }));
+  };
+
+  const DROPDOWN_FIELDS = [
+    { label: "Sem Value", stateKey: "semValues", field: "selectedSem" },
+    { label: "Group", stateKey: "groups", field: "selectedGroup" },
+    { label: "Series", stateKey: "series", field: "selectedSeries" },
+    { label: "Number", stateKey: "numbers", field: "selectedNumber" },
+  ];
 
   return (
-    <div className="dropdown-container">
-      <label className="dropdown-label">{label}</label>
-      <InputGroup>
-        <Form.Control
-          ref={inputRef}
-          type="text"
-          placeholder={`Search ${label}`}
-          value={state.search}
-          onChange={(e) =>
-            setState((prev) => ({
-              ...prev,
-              search: e.target.value,
-              showDropdown: true,
-            }))
-          }
-          onFocus={() => setState((prev) => ({ ...prev, showDropdown: true }))}
-          onBlur={() =>
-            setTimeout(() => setState((prev) => ({ ...prev, showDropdown: false })), 200)
-          }
-          className={`dropdown-input ${touched && error ? "is-invalid" : ""}`} // Red border on error
-        />
-      </InputGroup>
-
-      {state.showDropdown && filteredOptions.length > 0 && (
-        <Dropdown.Menu show className="dropdown-menu">
-          <div className="dropdown-grid-container">
-            <Grid
-              columnCount={COLUMN_COUNT}
-              columnWidth={columnWidth}
-              height={150}
-              rowCount={rowCount}
-              rowHeight={35}
-              width={inputRef.current ? inputRef.current.offsetWidth : 250}
-              className="grid-list"
-            >
-              {({ rowIndex, columnIndex, style }) => {
-                const itemIndex = rowIndex * COLUMN_COUNT + columnIndex;
-                if (itemIndex >= filteredOptions.length) return null;
-
-                return (
-                  <Dropdown.Item
-                    style={style}
-                    onMouseDown={() => handleSelect(filteredOptions[itemIndex])}
-                    className="dropdown-item"
-                  >
-                    {filteredOptions[itemIndex]}
-                  </Dropdown.Item>
-                );
-              }}
-            </Grid>
+    <div className="outer-container">
+      <div className={`form-wrapper ${!lotteryData.isActive ? "blurred" : ""}`}>
+        <div className="form-container">
+          <h4>
+            Lottery User Purchase - <span style={{ color: "#4682B4" }}>{lotteryData.marketName}</span>
+          </h4>
+          {lotteryData.isActive && new Date(moment(lotteryData.startTimeForShowCountdown).local().subtract(5, "hours").subtract(30, "minutes").subtract(45, "seconds").toDate()) < new Date() && (
+            <CountdownTimer endDate={lotteryData.endTimeForShowCountdown} fontSize={"16px"} />
+          )}
+          <Formik
+            key={lotteryData.refreshKey}
+            initialValues={getInitialFormValues()}
+            enableReinitialize
+            validationSchema={lotteryValidationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ setFieldValue, errors, touched, isSubmitting }) => (
+              <Form>
+                {DROPDOWN_FIELDS.map(({ label, stateKey, field }) => (
+                  <div key={field} className="mb-3">
+                    <ReusableDropdown
+                      name={label}
+                      options={lotteryData[stateKey]}
+                      onSelect={(value) => setFieldValue(field, value || null)}
+                      error={errors[field]}
+                      touched={touched[field]}
+                    />
+                  </div>
+                ))}
+                <button type="submit" className="btn text-uppercase text-white submit-btn" disabled={isSubmitting}>
+                  {isSubmitting ? "Processing..." : "Search"}
+                </button>
+              </Form>
+            )}
+          </Formik>
+        </div>
+      </div>
+      {!lotteryData.isActive && (
+        <div className="suspended-overlay">
+          <div className="suspended-message">
+            <h3>Lottery Market Suspended</h3>
+            <p>The lottery market is currently unavailable.</p>
           </div>
-        </Dropdown.Menu>
+        </div>
       )}
-      {touched && error && <div className="text-danger">{error}</div>}
     </div>
   );
 };
 
-export default ReusableDropdown;
+export default LotteryUserPurchase;

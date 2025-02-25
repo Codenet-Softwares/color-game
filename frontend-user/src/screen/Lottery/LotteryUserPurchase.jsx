@@ -8,6 +8,10 @@ import {
   getInitialFormValues,
   getInitialLotteryData,
 } from "../../utils/getInitiateState";
+import SearchResultsNew from "./SearchResultsNew";
+import "./LotteryUserPurchase.css";
+import moment from "moment";
+import CountdownTimer from "../../globlaCommon/CountdownTimer";
 
 const LotteryUserPurchase = ({ MarketId }) => {
   const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
@@ -28,6 +32,9 @@ const LotteryUserPurchase = ({ MarketId }) => {
         number_start,
         number_end,
         marketName,
+        start_time,
+        end_time,
+        isActive, 
       } = marketData;
       const { groupOptions, seriesOptions, numberOptions } =
         generateLotteryOptions(
@@ -45,13 +52,17 @@ const LotteryUserPurchase = ({ MarketId }) => {
         series: seriesOptions,
         numbers: numberOptions,
         marketName: marketName || "Unknown Market",
+        endTimeForShowCountdown: end_time,
+        startTimeForShowCountdown: start_time,
+        isActive,
       }));
     }
   }, [MarketId]);
 
   // Reset state when MarketId changes
   useEffect(() => {
-    setLotteryData(getInitialLotteryData()); // Reset search result and form state
+    // Reset search result and form state
+    setLotteryData(getInitialLotteryData());
     fetchLotteryData();
   }, [MarketId]); // Runs when MarketId changes
 
@@ -95,66 +106,78 @@ const LotteryUserPurchase = ({ MarketId }) => {
     { label: "Number", stateKey: "numbers", field: "selectedNumber" },
   ];
   return (
-    <div className="mt-5">
-      <h3>
-        Lottery User Purchase -{" "}
-        <span style={{ color: "#4682B4" }}>{lotteryData.marketName}</span>
-      </h3>
-      {lotteryData?.searchResult && lotteryData?.searchResult ? (
-        <div className="card p-4 shadow mt-4">
-          <h4>Search Results</h4>
-          <p>
-            <strong>Generate ID:</strong> {lotteryData.searchResult.generateId}
-          </p>
-          <p>
-            <strong>Price:</strong> ${lotteryData.searchResult.price}
-          </p>
-          <p>
-            <strong>Sem:</strong> {lotteryData.searchResult.sem}
-          </p>
-          <h5>Tickets</h5>
-          <ul>
-            {lotteryData.searchResult.tickets.map((ticket, index) => (
-              <li key={index}>{ticket}</li>
-            ))}
-          </ul>
-          <button className="btn btn-secondary mt-3" onClick={handleBack}>
-            Back to Search
-          </button>
+    <div className="outer-container">
+
+      
+      {lotteryData.isActive ? ( lotteryData?.searchResult && lotteryData?.searchResult.tickets.length > 0 ? (
+        <div className="inner-container border rounded shadow mx-auto p-3 d-flex flex-column justify-content-center align-items-center ">
+          <SearchResultsNew lotteryData={lotteryData} handleBack={handleBack}/>
         </div>
       ) : (
-        <Formik
-          key={lotteryData.refreshKey}
-          initialValues={getInitialFormValues()}
-          enableReinitialize
-          validationSchema={lotteryValidationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ setFieldValue, errors, touched, isSubmitting }) => (
-            <Form>
-              {DROPDOWN_FIELDS.map(({ label, stateKey, field }) => (
-                <div key={field} className="mb-3">
-                  <ReusableDropdown
-                    name={label}
-                    options={lotteryData[stateKey]}
-                    onSelect={(value) => setFieldValue(field, value || null)}
-                    error={errors[field]}
-                    touched={touched[field]}
-                  />
-                </div>
-              ))}
+        <div className="form-wrapper">
+          <div className="form-container">
+            <h4>
+              Lottery User Purchase -{" "}
+              <span style={{ color: "#4682B4" }}>{lotteryData.marketName}</span>
+            </h4>
+            <div className="d-flex justify-content-center">
+              {new Date(
+                moment(lotteryData.startTimeForShowCountdown)
+                  .local()
+                  .subtract(5, "hours")
+                  .subtract(30, "minutes")
+                  .subtract(45, "seconds")
+                  .toDate()
+              ) < new Date() && (
+                <CountdownTimer
+                  endDate={lotteryData.endTimeForShowCountdown}
+                  fontSize={"16px"}
+                />
+              )}
+            </div>
+            <Formik
+              key={lotteryData.refreshKey}
+              initialValues={getInitialFormValues()}
+              enableReinitialize
+              validationSchema={lotteryValidationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ setFieldValue, errors, touched, isSubmitting }) => (
+                <Form>
+                  {DROPDOWN_FIELDS.map(({ label, stateKey, field }) => (
+                    <div key={field} className="mb-3">
+                      <ReusableDropdown
+                        name={label}
+                        options={lotteryData[stateKey]}
+                        onSelect={(value) =>
+                          setFieldValue(field, value || null)
+                        }
+                        error={errors[field]}
+                        touched={touched[field]}
+                      />
+                    </div>
+                  ))}
 
-              <button
-                type="submit"
-                className="btn btn-primary mt-3"
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Processing..." : "Search"}
-              </button>
-            </Form>
-          )}
-        </Formik>
-      )}
+                  <button
+                    type="submit"
+                    className="btn text-uppercase text-white submit-btn"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Processing..." : "Search"}
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      ) ) : (
+        <div className="suspended-overlay">
+        <div className="suspended-message">
+          <h3>Lottery Market Suspended</h3>
+          <p>The lottery market is currently unavailable.</p>
+        </div>
+      </div>
+)}
     </div>
   );
 };
