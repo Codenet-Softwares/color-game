@@ -1222,7 +1222,7 @@ export const approveResult = async (req, res) => {
       return res
         .status(statusCode.badRequest)
         .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Not approved")
+          apiResponseErr(null, false, statusCode.badRequest, "Not approved,Dont Match Runner")
         );
     }
 
@@ -1238,7 +1238,7 @@ export const approveResult = async (req, res) => {
     }
 
     await ResultRequest.update(
-      { isApproved: true },
+      { isApproved: true, type: 'Matched' },
       { where: { marketId, runnerId } }
     );
 
