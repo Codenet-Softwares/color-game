@@ -224,7 +224,7 @@ export function getInitialLotteryData() {
     endTime:null,
     startTimeForShowCountdown:null,
     endTimeForShowCountdown: null,
-    endTimeForTimer: null,
+    isSuspend: false, // Added this field
   };
 }
 
