@@ -139,12 +139,13 @@ const BetHistory = () => {
   }, [betHistoryData?.selectColorGame]);
 
   useEffect(() => {
-    if(betHistoryData.selectGame===!""){
+    if(betHistoryData.selectGame){
     if (betHistoryData.selectGame === "lottery") {
       getHistoryForLotteryBetHistory();
     } else {
       handleGetHistory();
-    }}
+    }
+  }
   }, [
     betHistoryData.currentPage,
     betHistoryData.totalItems,
