@@ -1,12 +1,14 @@
 import React from "react";
 import Pagination from "../../../../screen/common/Pagination";
 import { formatDateForUi } from "../../../../utils/helper";
+import ViewTicketsModal from "./ViewTicketsModal";
 
 const Table = ({
   renderNoDataFound,
   betHistoryData,
   handleBetHistorySelectionMenu,
   handlePageChange,
+  setBetHistoryData,
 }) => {
   let startIndex = Math.min(
     (betHistoryData.currentPage - 1) * betHistoryData.totalEntries + 1
@@ -15,6 +17,15 @@ const Table = ({
     betHistoryData.currentPage * betHistoryData.totalEntries,
     betHistoryData.totalData
   );
+
+  const openModalWithTickets = (ticketNumbers) => {
+    setBetHistoryData((prev) => ({
+      ...prev,
+      selectedTickets: ticketNumbers,
+      modalOpen: true,
+    }));
+  };
+
   return (
     <div className="card shadow p-3 mb-5 bg-white rounded">
       <div
@@ -81,12 +92,22 @@ const Table = ({
                             style={{ position: "relative" }}
                           >
                             <button
-                              className="btn btn-link dropdown-toggle"
+                              className="btn btn-link "
                               type="button"
-                              onClick={() => toggleDropdown(index)}
+                              onClick={() => openModalWithTickets(item.tickets)}
                             >
                               View Tickets
                             </button>
+                            <ViewTicketsModal
+                              isOpen={betHistoryData.modalOpen}
+                              onClose={() =>
+                                setBetHistoryData((prev) => ({
+                                  ...prev,
+                                  modalOpen: false,
+                                }))
+                              }
+                              ticketNumbers={betHistoryData.selectedTickets}
+                            />
                             {/* <div
                               className="custom-dropdown-content"
                               style={{

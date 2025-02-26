@@ -226,7 +226,9 @@ export function getBetHistory(body = {}) {
     openBetGameNames: [],
     selectColorGame: "",
     openBet: [],
-    gameSelectionData: []
+    gameSelectionData: [],
+    selectedTickets: [],
+    modalOpen: false
   };
 }
 
