@@ -117,11 +117,11 @@ const ReusableDropdown = ({
         </Dropdown.Menu>
       )}
       {/* Error Message with Fixed Space */}
-      <div className="dropdown-error">
+      <div className="dropdown-error fw-bold">
         {touched && error && (
-          <div className="d-flex align-items-center gap-1">
+          <div className="d-flex align-items-center gap-1 ">
             <i className="bi bi-info-circle"></i>
-            <span>{error}</span>
+            <span >{error}</span>
           </div>
         )}
       </div>

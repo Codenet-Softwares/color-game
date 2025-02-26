@@ -1,71 +1,18 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Formik, Form } from "formik";
 import ReusableDropdown from "../../globlaCommon/ReusableDropdown";
-import { LotteryRange, SearchLotteryTicketUser } from "../../utils/apiService";
-import { generateLotteryOptions } from "../../utils/helper";
+import { SearchLotteryTicketUser } from "../../utils/apiService";
 import lotteryValidationSchema from "../../schema/lotteryValidationSchema";
-import {
-  getInitialFormValues,
-  getInitialLotteryData,
-} from "../../utils/getInitiateState";
+import { getInitialFormValues } from "../../utils/getInitiateState";
 import SearchResultsNew from "./SearchResultsNew";
-import "./LotteryUserPurchase.css";
-import moment from "moment";
 import CountdownTimer from "../../globlaCommon/CountdownTimer";
-import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
+import moment from "moment";
+import "./LotteryUserPurchase.css";
+import useLotteryData from "../customHook/useLotteryData";
 
 const LotteryUserPurchase = ({ MarketId }) => {
-  const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
-
-  const fetchLotteryData = useCallback(async () => {
-    const response = await LotteryRange();
-    console.log("line17", response);
-    const marketData = response?.data?.find(
-      (market) => market.marketId === MarketId
-    );
-
-    if (marketData) {
-      const {
-        group_start,
-        group_end,
-        series_start,
-        series_end,
-        number_start,
-        number_end,
-        marketName,
-        start_time,
-        end_time,
-        isActive,
-      } = marketData;
-      const { groupOptions, seriesOptions, numberOptions } =
-        generateLotteryOptions(
-          group_start,
-          group_end,
-          series_start,
-          series_end,
-          number_start,
-          number_end
-        );
-
-      setLotteryData((prevData) => ({
-        ...prevData,
-        groups: groupOptions,
-        series: seriesOptions,
-        numbers: numberOptions,
-        marketName: marketName || "Unknown Market",
-        endTimeForShowCountdown: end_time,
-        startTimeForShowCountdown: start_time,
-        isSuspend: !isActive, // Set isSuspend based on isActive
-      }));
-    }
-  }, [MarketId]);
-
-  // Reset state when MarketId changes
-  useEffect(() => {
-    // Reset search result and form state
-    setLotteryData(getInitialLotteryData());
-    fetchLotteryData();
-  }, [MarketId]); // Runs when MarketId changes
+  const { lotteryData, setLotteryData } = useLotteryData(MarketId);
+  console.log("line15", lotteryData);
 
   const handleSubmit = useCallback(
     async (values, { setSubmitting, resetForm }) => {
@@ -91,8 +38,9 @@ const LotteryUserPurchase = ({ MarketId }) => {
         refreshKey: prevData.refreshKey + 1, // Trigger refresh
       }));
     },
-    [MarketId]
+    [MarketId, setLotteryData]
   );
+
   //back button after search button clicked
   const handleBack = () => {
     setLotteryData((prevData) => ({
@@ -100,6 +48,8 @@ const LotteryUserPurchase = ({ MarketId }) => {
       searchResult: null, // Reset search result to go back
     }));
   };
+
+  //all input boxes with dropdown defined here
   const DROPDOWN_FIELDS = [
     { label: "Sem Value", stateKey: "semValues", field: "selectedSem" },
     { label: "Group", stateKey: "groups", field: "selectedGroup" },
@@ -107,113 +57,78 @@ const LotteryUserPurchase = ({ MarketId }) => {
     { label: "Number", stateKey: "numbers", field: "selectedNumber" },
   ];
 
-  useEffect(() => {
-    const eventSource = updateLotteryMarketEventEmitter();
-    eventSource.onmessage = function (event) {
-      const updates = JSON.parse(event.data);
-
-      if (updates?.length) {
-        updates.forEach((market) => {
-          setLotteryData((prevData) => ({
-            ...prevData,
-            isSuspend: !market.isActive, // Update isSuspend dynamically
-          }));
-
-          if (market.isActive) {
-            toast.success(`${market.marketName} is now Active`);
-          } else {
-            toast.info(`${market.marketName} has been Suspended`);
-          }
-        });
-      }
-    };
-
-    eventSource.onerror = (err) => {
-      console.error("[SSE] Connection error:", err);
-      eventSource.close();
-    };
-
-    return () => {
-      eventSource.close();
-    };
-  }, []);
   return (
     <div className="outer-container">
-      {!lotteryData.isSuspend ? (
-        lotteryData?.searchResult &&
-        lotteryData?.searchResult.tickets.length > 0 ? (
-          <div className="inner-container border rounded shadow mx-auto p-3 d-flex flex-column justify-content-center align-items-center ">
-            <SearchResultsNew
-              lotteryData={lotteryData}
-              handleBack={handleBack}
-            />
-          </div>
-        ) : (
-          <div className="form-wrapper">
-            <div className="form-container text-uppercase">
-              <h4>
-                {/* Lottery User Purchase -{" "} */}
-                <span style={{ color: "#4682B4" }}>
-                  {lotteryData.marketName}
-                </span>
-              </h4>
-              <div className="d-flex justify-content-center">
-                {new Date(
-                  moment(lotteryData.startTimeForShowCountdown)
-                    .local()
-                    .subtract(5, "hours")
-                    .subtract(30, "minutes")
-                    .subtract(45, "seconds")
-                    .toDate()
-                ) < new Date() && (
-                  <CountdownTimer
-                    endDate={lotteryData.endTimeForShowCountdown}
-                    fontSize={"16px"}
-                    onExpire={fetchLotteryData()}
-                  />
-                )}
-              </div>
-              <Formik
-                key={lotteryData.refreshKey}
-                initialValues={getInitialFormValues()}
-                enableReinitialize
-                validationSchema={lotteryValidationSchema}
-                onSubmit={handleSubmit}
-              >
-                {({ setFieldValue, errors, touched, isSubmitting }) => (
-                  <Form>
-                    {DROPDOWN_FIELDS.map(({ label, stateKey, field }) => (
-                      <div key={field} className="mb-3">
-                        <ReusableDropdown
-                          name={label}
-                          options={lotteryData[stateKey]}
-                          onSelect={(value) =>
-                            setFieldValue(field, value || null)
-                          }
-                          error={errors[field]}
-                          touched={touched[field]}
-                        />
-                      </div>
-                    ))}
-
-                    <button
-                      type="submit"
-                      className="btn text-uppercase text-white submit-btn"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Processing..." : "Search"}
-                    </button>
-                  </Form>
-                )}
-              </Formik>
-            </div>
-          </div>
-        )
+      {lotteryData?.searchResult &&
+      lotteryData?.searchResult.tickets.length > 0 ? (
+        <div className="inner-container border rounded shadow mx-auto p-3 d-flex flex-column justify-content-center align-items-center ">
+          <SearchResultsNew lotteryData={lotteryData} handleBack={handleBack} />
+        </div>
       ) : (
-        <div className="suspended-overlay">
-          <div className="suspended-message">
-            <h3>Lottery Market Suspended</h3>
-            <p>The lottery market is currently unavailable.</p>
+        <div className="form-wrapper position-relative">
+          {/*The starting of overlay suspended message coming over the form after market gets suspended*/}
+          {lotteryData.isSuspend && (
+            <div className="suspended-overlay">
+              <div className="suspended-message">
+                <h3>Lottery Market Suspended</h3>
+                <p>The lottery market is currently unavailable.</p>
+              </div>
+            </div>
+          )}
+          {/*The ending of overlay suspended message coming over the form after market gets suspended*/}
+          <div className="form-container text-uppercase">
+            <h4>
+              <span style={{ color: "#4682B4" }}>{lotteryData.marketName}</span>
+            </h4>
+            <div className="d-flex justify-content-center">
+              {new Date(
+                moment(lotteryData.startTimeForShowCountdown)
+                  .local()
+                  .subtract(5, "hours")
+                  .subtract(30, "minutes")
+                  .subtract(45, "seconds")
+                  .toDate()
+              ) < new Date() && (
+                <CountdownTimer
+                  endDate={lotteryData.endTimeForShowCountdown}
+                  fontSize={"16px"}
+                />
+              )}
+            </div>
+
+            <Formik
+              key={lotteryData.refreshKey}
+              initialValues={getInitialFormValues()}
+              enableReinitialize
+              validationSchema={lotteryValidationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ setFieldValue, errors, touched, isSubmitting }) => (
+                <Form>
+                  {DROPDOWN_FIELDS.map(({ label, stateKey, field }) => (
+                    <div key={field} className="mb-3">
+                      <ReusableDropdown
+                        name={label}
+                        options={lotteryData[stateKey]}
+                        onSelect={(value) =>
+                          setFieldValue(field, value || null)
+                        }
+                        error={errors[field]}
+                        touched={touched[field]}
+                      />
+                    </div>
+                  ))}
+
+                  <button
+                    type="submit"
+                    className="btn text-uppercase text-white submit-btn"
+                    disabled={isSubmitting || lotteryData.isSuspend}
+                  >
+                    {isSubmitting ? "Processing..." : "Search"}
+                  </button>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       )}

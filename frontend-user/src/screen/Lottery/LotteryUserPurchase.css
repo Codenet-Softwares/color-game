@@ -1,73 +1,282 @@
 .outer-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 84vh;
-    background: #f8f9fa;
-    overflow: hidden;
-    /* overflow: auto; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 84vh;
+  background: #f8f9fa;
+  overflow: hidden;
+}
+
+.form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200%;
+  height: 200%;
+}
+
+.form-container {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  border: 3px solid #4682b4; /* Steel Blue Border */
+  max-width: 1000px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.custom-form {
+  width: 100%;
+}
+
+.form-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #3b6e91;
+  margin-bottom: 20px;
+}
+
+.submit-btn {
+  width: 40%;
+  background: #4682b4;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.submit-btn:hover {
+  background: #355a7e;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  .form-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 200%;
-    height: 200%;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .form-container {
-    background: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
-    border: 3px solid #4682b4; /* Steel Blue Border */
-    max-width: 1000px;
-    width: 100%;
-    text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
+}
+.form-wrapper {
+  position: relative;
+}
+
+.suspended-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Dim the background */
+  backdrop-filter: blur(8px); /* Premium glassmorphism effect */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top */
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.suspended-message {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 69, 58, 0.9),
+    rgba(255, 105, 97, 0.9)
+  ); /* Premium gradient */
+  color: white;
+  padding: 24px 40px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  position: relative;
+  animation: slideIn 0.4s ease-out;
+}
+
+.suspended-message h3 {
+  margin-bottom: 10px;
+  font-size: 26px;
+  font-weight: 700;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.suspended-message p {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.blurred {
+  filter: blur(6px); /* Make form appear subtly frosted */
+  pointer-events: none; /* Disable form interactions */
+  transition: filter 0.3s ease-in-out;
+}
+
+/*  Animations for a Dynamic Feel */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .custom-form {
-    width: 100%;
+  to {
+    opacity: 1;
   }
-  
-  .form-title {
-    font-size: 24px;
-    font-weight: bold;
-    color: #3b6e91;
-    margin-bottom: 20px;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
   }
-  
-  .submit-btn {
-    width: 40%;
-    background: #4682b4;
-    border: none;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    transition: all 0.3s ease-in-out;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  .submit-btn:hover {
-    background: #355a7e;
-    transform: scale(1.05);
+}
+.form-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa, #e6f7ff);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/*Suspended Overlay - Frosted Glass Effect */
+.suspended-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65); /* Deep black overlay with transparency */
+  backdrop-filter: blur(3px) saturate(150%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensures it's always on top */
+  animation: fadeIn 0.4s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Message Box */
+.suspended-message {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.15
+  ); /* Semi-transparent white for glass effect */
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
+  padding: 30px 50px;
+  text-align: center;
+  backdrop-filter: blur(10px) saturate(180%);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  animation: popUp 0.5s ease-out;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  overflow: hidden;
+}
+
+/*Decorative Light Streaks */
+.suspended-message::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 69, 58, 0.5),
+    rgba(255, 105, 97, 0.5),
+    rgba(255, 255, 255, 0.3)
+  );
+  opacity: 0.15;
+  transform: rotate(25deg);
+  animation: lightStreak 6s linear infinite;
+}
+
+/* Heading */
+.suspended-message h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow: 6px 8px 4px rgba(0, 0, 0, 2000);
+  margin-bottom: 8px;
+  letter-spacing: 1.5px;
+}
+
+/*Subtext */
+.suspended-message p {
+  font-size: 18px;
+  font-weight: 500;
+  color: #eaeaea;
+  opacity: 0.9;
+  text-shadow: 6px 8px 4px rgba(0, 0, 0, 50);
+}
+
+
+
+/*Entrance Animations*/
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popUp {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/*Light Streak Animation */
+@keyframes lightStreak {
+  0% {
+    transform: rotate(25deg) translateX(0);
+  }
+  100% {
+    transform: rotate(25deg) translateX(200%);
+  }
+}
+
+/*Mobile & Tablet Optimization*/
+@media (max-width: 768px) {
+  .suspended-message {
+    padding: 20px 30px;
+    max-width: 90%;
   }
 
- 
-  
+  .suspended-message h3 {
+    font-size: 22px;
+  }
 
-  
+  .suspended-message p {
+    font-size: 16px;
+  }
+}

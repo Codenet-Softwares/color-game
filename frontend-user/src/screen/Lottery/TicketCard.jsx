@@ -1,5 +1,5 @@
 import React from "react";
-import "./TicketCard.css"; // Import the new CSS file
+import "./TicketCard.css"; 
 
 const TicketCard = ({ ticket }) => {
   const firstThree = ticket.slice(0, 4);

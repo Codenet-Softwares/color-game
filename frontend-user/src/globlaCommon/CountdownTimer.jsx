@@ -6,20 +6,7 @@ const CountdownTimer = ({ endDate, fontSize, onExpire }) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      const newTimeLeft = calculateTimeLeft(endDate);
       setTimeLeft(calculateTimeLeft(endDate));
-          // Check if the countdown has reached 00:00:00:00
-          if (
-            newTimeLeft.days === 0 &&
-            newTimeLeft.hours === 0 &&
-            newTimeLeft.minutes === 0 &&
-            newTimeLeft.seconds === 0
-          ) {
-            clearInterval(interval);
-            if (onExpire) {
-              onExpire(); // Trigger data refetch
-            }
-          }
     }, 1000);
     return () => clearInterval(interval);
   }, [endDate, onExpire]);

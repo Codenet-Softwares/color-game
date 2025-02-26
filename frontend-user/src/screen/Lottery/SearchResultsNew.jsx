@@ -1,6 +1,6 @@
 import React from "react";
 import TicketCard from "./TicketCard";
-import "./SearchResultsNew.css"; // Import the new CSS file
+import "./SearchResultsNew.css"; 
 
 const SearchResultsNew = ({ lotteryData, handleBack }) => {
   return (
