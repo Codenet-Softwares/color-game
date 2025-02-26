@@ -222,24 +222,26 @@ function AppDrawer({
             <div className="col-md-12">{showCarousel && <InnerCarousel />}</div>
             {children}
           </div>
-
-          <div
-            className={`col-md-${
-              ["/home", "/"].includes(location?.pathname) ? "3" : ""
-            } d-none d-md-block  p-0`}
-            style={{
-              position: ["/home", "/"].includes(location?.pathname) && "fixed",
-              right: "0",
-              top: isHomePage ? "125px" : "",
-              height: "calc(100vh - 125px)",
-              overflowY: "auto",
-            }}
-          >
-            <OpenBets
-              betHistoryData={openBetData}
-              handleBetHistorySelectionMenu={handleOpenBetsSelectionMenu}
-            />
-          </div>
+          {["/home", "/"].includes(location?.pathname) && (
+            <div
+              className={`col-md-${
+                ["/home", "/"].includes(location?.pathname) ? "3" : ""
+              } d-none d-md-block  p-0`}
+              style={{
+                position:
+                  ["/home", "/"].includes(location?.pathname) && "fixed",
+                right: "0",
+                top: isHomePage ? "125px" : "",
+                height: "calc(100vh - 125px)",
+                overflowY: "auto",
+              }}
+            >
+              <OpenBets
+                betHistoryData={openBetData}
+                handleBetHistorySelectionMenu={handleOpenBetsSelectionMenu}
+              />
+            </div>
+          )}
         </div>
       </div>
     );
