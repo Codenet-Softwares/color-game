@@ -11,6 +11,7 @@ const History = ({
   renderNoDataFound,
   handlePageChange,
   handleDateValue,
+  setBetHistoryData,
 }) => {
   return (
     <div>
@@ -27,6 +28,7 @@ const History = ({
         renderNoDataFound={renderNoDataFound}
         handleBetHistorySelectionMenu={handleBetHistorySelectionMenu}
         handlePageChange={handlePageChange}
+        setBetHistoryData={setBetHistoryData}
       />
     </div>
   );
