@@ -118,6 +118,7 @@
 .blurred {
   filter: blur(6px); /* Make form appear subtly frosted */
   pointer-events: none; /* Disable form interactions */
+  user-select: none;
   transition: filter 0.3s ease-in-out;
 }
 
@@ -232,8 +233,6 @@
   text-shadow: 6px 8px 4px rgba(0, 0, 0, 50);
 }
 
-
-
 /*Entrance Animations*/
 @keyframes fadeIn {
   from {
@@ -279,4 +278,104 @@
   .suspended-message p {
     font-size: 16px;
   }
+}
+
+.time-display-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 5px;
+}
+
+.time-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: linear-gradient(135deg, #f3f8ff, #e6f7ff);
+  padding: 0.1px 4px;
+  border-radius: 10px;
+  box-shadow: 0 3px 5px rgba(95, 105, 110, 125);
+  text-align: center;
+  min-width: 140px;
+}
+
+.time-title {
+  font-size: 11px;
+  font-weight: 900;
+  color: #3b6e91;
+  letter-spacing: 0.9px;
+  text-transform: uppercase;
+}
+
+@media (min-width: 768px) {
+  /* Applies only on medium (md) and large (lg) screens */
+  .time-value.text-primary::after {
+    content: " ─── ✦ ───";
+    color: #3b6e91;
+    font-weight: bold;
+    margin: 0 100px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Applies on small (sm) and extra-small (xs) screens */
+  .time-value.text-primary::after {
+    content: ""; /* Hides the separator in small or mobile screens */
+  }
+}
+
+.time-value {
+  font-size: 11px;
+  font-weight: 900;
+}
+.market-name {
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #3b6e91, #4682b4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 5px 10px;
+  border-bottom: 1px solid #4682b4;
+  display: inline-block;
+}
+
+/* Price Container - Top Left Inside Form */
+.price-container {
+  position: relative;
+  top: 10px;
+  left: 95px;
+  background: linear-gradient(135deg, #3b6e91, #4682b4);
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  font-family: "Playfair Display", serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #080808;
+  text-transform: uppercase;
+}
+
+/* Responsive for Small Screens */
+@media (max-width: 768px) {
+  .price-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 8px auto;
+    text-align: center;
+    width: fit-content;
+    display: block;
+  }
+}
+
+/* Stylish Badge Effect */
+.price-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 10px;
+  border-radius: 5px;
 }

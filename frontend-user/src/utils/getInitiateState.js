@@ -184,7 +184,7 @@ export function getLotteryRange(body = {}) {
     series_end: "",
     number_start: "",
     number_end: "",
-    isActive: null
+    isActive: null,
   };
 }
 
@@ -217,12 +217,11 @@ export function getInitialLotteryData() {
     series: [],
     numbers: [],
     semValues: ["5 sem", "10 sem", "25 sem", "50 sem", "100 sem", "200 sem"],
-    refreshKey: 0, 
+    refreshKey: 0,
     marketName: "",
     searchResult: null,
-    startTime:null,
-    endTime:null,
-    startTimeForShowCountdown:null,
+    price: null,
+    startTimeForShowCountdown: null,
     endTimeForShowCountdown: null,
     isSuspend: false, // Added this field
   };

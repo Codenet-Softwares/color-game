@@ -60,7 +60,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
   return (
     <div className="outer-container">
       {lotteryData?.searchResult &&
-      lotteryData?.searchResult.tickets.length > 0 ? (
+      lotteryData?.searchResult?.tickets?.length > 0 ? (
         <div className="inner-container border rounded shadow mx-auto p-3 d-flex flex-column justify-content-center align-items-center ">
           <SearchResultsNew lotteryData={lotteryData} handleBack={handleBack} />
         </div>
@@ -76,9 +76,37 @@ const LotteryUserPurchase = ({ MarketId }) => {
             </div>
           )}
           {/*The ending of overlay suspended message coming over the form after market gets suspended*/}
-          <div className="form-container text-uppercase">
+
+          <div
+            className={`form-container text-uppercase ${
+              lotteryData.isSuspend ? "blurred" : ""
+            }`}
+          >
+            {/* Price Display - Always Visible */}
+
+            {/* <span className=" price-container price-badge">
+              Price: <strong>{lotteryData.price}</strong>
+            </span> */}
+
             <h4>
-              <span style={{ color: "#4682B4" }}>{lotteryData.marketName}</span>
+              <span className="market-name">{lotteryData.marketName}</span>
+              <div className="time-display-container">
+                <div className="time-box">
+                  <div className="time-title">Start Time:</div>
+                  <div className="time-value text-primary">
+                    {moment
+                      .utc(lotteryData.startTimeForShowCountdown)
+                      .format("DD MMM YYYY, hh:mm A")}
+                  </div>
+
+                  <div className="time-title">End Time:</div>
+                  <div className="time-value text-danger">
+                    {moment
+                      .utc(lotteryData.endTimeForShowCountdown)
+                      .format("DD MMM YYYY, hh:mm A")}
+                  </div>
+                </div>
+              </div>
             </h4>
             <div className="d-flex justify-content-center">
               {new Date(
@@ -122,7 +150,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   <button
                     type="submit"
                     className="btn text-uppercase text-white submit-btn"
-                    disabled={isSubmitting || lotteryData.isSuspend}
+                    disabled={isSubmitting || lotteryData?.isSuspend}
                   >
                     {isSubmitting ? "Processing..." : "Search"}
                   </button>

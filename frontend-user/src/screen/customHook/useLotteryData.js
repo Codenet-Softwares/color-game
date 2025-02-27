@@ -3,6 +3,7 @@ import { LotteryRange } from "../../utils/apiService";
 import { generateLotteryOptions } from "../../utils/helper";
 import { getInitialLotteryData } from "../../utils/getInitiateState";
 import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
+import { toast } from "react-toastify";
 
 const useLotteryData = (MarketId) => {
   const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
@@ -28,6 +29,7 @@ const useLotteryData = (MarketId) => {
         start_time,
         end_time,
         isActive,
+        price
       } = marketData;
 
       const { groupOptions, seriesOptions, numberOptions } =
@@ -46,9 +48,11 @@ const useLotteryData = (MarketId) => {
         series: seriesOptions,
         numbers: numberOptions,
         marketName: marketName || "Unknown Market",
+       
         endTimeForShowCountdown: end_time,
         startTimeForShowCountdown: start_time,
         isSuspend: !isActive,
+        price: price
       }));
     }
   }, [MarketId]);
