@@ -41,6 +41,12 @@ ResultHistory.init({
         type: DataTypes.ENUM('Matched', 'unMatched'),
         allowNull: false,
       },
+      declaredByNames: {
+        type: DataTypes.JSON, 
+        allowNull: false,
+        defaultValue: [], 
+      },
+      
       createdAt: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,

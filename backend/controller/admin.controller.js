@@ -447,52 +447,85 @@ export const storePreviousState = async (
 export const afterWining = async (req, res) => {
   try {
     const { marketId, runnerId, isWin } = req.body;
-    const declaredBy = req.user?.userName; 
-    const userRole = req.user?.roles; 
+const declaredBy = req.user?.userName; 
+const declaredById = req.user?.adminId; 
+const userRole = req.user?.roles; 
 
-    if (!declaredBy) {
-      return res
-        .status(statusCode.unauthorize)
-        .send(
-          apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: User not authenticated")
-        );
+if (!declaredBy || !declaredById) {
+  return res
+    .status(statusCode.unauthorize)
+    .send(
+      apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: User not authenticated")
+    );
+}
+
+const market = await Market.findOne({
+  where: { marketId },
+  include: [{ model: Runner, required: false }],
+});
+
+if (!market) {
+  return res
+    .status(statusCode.badRequest)
+    .send(
+      apiResponseErr(null, false, statusCode.badRequest, "Market not found")
+    );
+}
+
+const gameId = market.gameId; 
+
+if (userRole === 'subAdmin') {
+  const existingResultRequest = await ResultRequest.findOne({
+    where: { 
+      marketId,
+      declaredById, 
+      deletedAt: null 
     }
+  });
 
-    const market = await Market.findOne({
-      where: { marketId },
-      include: [{ model: Runner, required: false }],
-    });
+  if (existingResultRequest) {
+    return res
+      .status(statusCode.badRequest)
+      .send(
+        apiResponseErr(null, false, statusCode.badRequest, "You have already created a result request for this market")
+      );
+  }
 
-    if (!market) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
-        );
+  const activeResultRequests = await ResultRequest.count({
+    where: { 
+      marketId,
+      deletedAt: null 
     }
+  });
 
-    const gameId = market.gameId; 
+  if (activeResultRequests >= 2) {
+    return res
+      .status(statusCode.badRequest)
+      .send(
+        apiResponseErr(null, false, statusCode.badRequest, "Maximum number of result requests reached for this market")
+      );
+  }
 
-    if (userRole === 'subAdmin') {
-      await ResultRequest.create({
-        gameId,
-        marketId,
-        runnerId,
-        isWin,
-        declaredBy,
-      });
+  await ResultRequest.create({
+    gameId,
+    marketId,
+    runnerId,
+    isWin,
+    declaredBy,
+    declaredById, 
+  });
 
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            null,
-            true,
-            statusCode.success,
-            "Result declaration by sub-admin successfully"
-          )
-        );
-    }
+  return res
+    .status(statusCode.success)
+    .send(
+      apiResponseSuccess(
+        null,
+        true,
+        statusCode.success,
+        "Result declaration by sub-admin successful"
+      )
+    );
+}
 
     if (userRole === 'admin') {
       if (market.runners) {
@@ -1215,12 +1248,10 @@ export const approveResult = async (req, res) => {
   try {
     const { marketId } = req.body;
 
-    // Fetch all result requests for the given marketId
     const resultRequests = await ResultRequest.findAll({
       where: { marketId },
     });
 
-    // Check if there are exactly two result requests
     if (resultRequests.length !== 2) {
       return res
         .status(statusCode.badRequest)
@@ -1229,16 +1260,16 @@ export const approveResult = async (req, res) => {
         );
     }
 
-    // Extract the runnerIds from the two result requests
     const runnerId1 = resultRequests[0].runnerId;
     const runnerId2 = resultRequests[1].runnerId;
+    const gameId = resultRequests[0].gameId; 
+    const declaredByNames = resultRequests.map((request) => request.declaredBy); 
 
-    // Fetch additional data (gameName, marketName, runnerName)
     const market = await Market.findOne({
       where: { marketId },
       include: [
-        { model: Game, attributes: ['gameName'] }, // Fetch gameName
-        { model: Runner, where: { runnerId: runnerId1 }, attributes: ['runnerName'] }, // Fetch runnerName
+        { model: Game, attributes: ['gameName'] }, 
+        { model: Runner, where: { runnerId: runnerId1 }, attributes: ['runnerName'] },
       ],
     });
 
@@ -1254,13 +1285,11 @@ export const approveResult = async (req, res) => {
     const marketName = market.marketName;
     const runnerName = market.Runners[0].runnerName;
 
-    // Determine if the result is approved or rejected based on runnerIds match
     const isApproved = runnerId1 === runnerId2;
     const type = isApproved ? 'Matched' : 'unMatched';
 
-    // Create a single ResultHistory entry
     await ResultHistory.create({
-      gameId: resultRequests[0].gameId,
+      gameId: gameId, 
       gameName: gameName,
       marketId: marketId,
       marketName: marketName,
@@ -1268,13 +1297,12 @@ export const approveResult = async (req, res) => {
       runnerName: runnerName,
       isApproved: isApproved,
       type: type,
+      declaredByNames: declaredByNames,
       createdAt: new Date(),
     });
 
-    // Destroy all ResultRequest entries for the marketId
     await ResultRequest.destroy({ where: { marketId } });
 
-    // Update Market and Runner tables
     await Market.update(
       {
         isRevoke: false,
@@ -1344,8 +1372,8 @@ export const approveResult = async (req, res) => {
               await ProfitLoss.create({
                 userId: user.userId,
                 userName: userDetails.userName,
-                gameId,
-                marketId,
+                gameId: gameId, 
+                marketId: marketId,
                 runnerId: runnerId1,
                 date: new Date(),
                 profitLoss: runnerBalanceValue,
@@ -1382,7 +1410,7 @@ export const approveResult = async (req, res) => {
           betId: order.betId,
           userId: order.userId,
           userName: order.userName,
-          gameId: order.gameId,
+          gameId: gameId, 
           gameName: order.gameName,
           marketId: order.marketId,
           marketName: order.marketName,
@@ -1415,6 +1443,137 @@ export const approveResult = async (req, res) => {
       );
   } catch (error) {
     console.error("Error approving result:", error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+export const getResultRequests = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows: resultRequests } = await ResultRequest.findAndCountAll({
+      where: {
+        deletedAt: null,
+      },
+      include: [
+        {
+          model: Game,
+          attributes: ['gameName'],
+        },
+        {
+          model: Market,
+          attributes: ['marketName'],
+        },
+        {
+          model: Runner,
+          attributes: ['runnerName'],
+        },
+      ],
+      order: [['createdAt', 'DESC']],
+      limit: limit,
+      offset: offset,
+    });
+
+    const formattedResultRequests = resultRequests.map((request) => ({
+      gameName: request.Game.gameName,
+      marketName: request.Market.marketName,
+      runnerName: request.Runner.runnerName,
+      isWin: request.isWin,
+      declaredBy: request.declaredBy,
+    }));
+
+    const totalPages = Math.ceil(count / limit); 
+    const pagination = {
+      Page: page, 
+      limit: limit,
+      totalPages: totalPages,
+      totalItems: count,
+     
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          formattedResultRequests,
+          true,
+          statusCode.success,
+          "Result requests fetched successfully",
+          pagination 
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+export const getSubAdminResultHistory = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 10; 
+    const offset = (page - 1) * limit; 
+    const type = req.query.type; 
+
+    const queryOptions = {
+      attributes: {
+        exclude: ['id', 'deletedAt'], 
+      },
+      order: [['createdAt', 'DESC']], 
+      limit: limit, 
+      offset: offset, 
+    };
+
+    if (type) {
+      queryOptions.where = {
+        type: type,
+      };
+    }
+
+
+    const { count, rows: resultHistories } = await ResultHistory.findAndCountAll(queryOptions);
+
+    const totalPages = Math.ceil(count / limit); 
+    const pagination = {
+      page: page, 
+      limit: limit,
+      totalPages: totalPages, 
+      totalItems: count,
+       
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          resultHistories,
+          true,
+          statusCode.success,
+          "Subadmin result histories fetched successfully",
+          pagination 
+        )
+      );
+  } catch (error) {
+    console.error('Error fetching result histories:', error);
     return res
       .status(statusCode.internalServerError)
       .send(

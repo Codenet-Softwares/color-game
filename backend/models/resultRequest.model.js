@@ -1,5 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db.js';
+import Game from './game.model.js';
+import Market from './market.model.js';
+import Runner from './runner.model.js';
 
 class ResultRequest extends Model { }
 
@@ -30,6 +33,10 @@ ResultRequest.init(
       declaredBy: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      declaredById: {
+        type: DataTypes.STRING,
+        allowNull: false,
       }
     },
     {
@@ -42,6 +49,9 @@ ResultRequest.init(
     }
   );
   
+  ResultRequest.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
+  ResultRequest.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
+  ResultRequest.belongsTo(Runner, { foreignKey: 'runnerId', targetKey: 'runnerId' });
 
 
 export default ResultRequest;

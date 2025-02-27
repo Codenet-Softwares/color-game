@@ -15,7 +15,11 @@ import {
   getBetsAfterWin,
   getBetMarketsAfterWin,
   createSubAdmin,
-  approveResult
+  approveResult,
+  getResultRequests,
+  getSubAdminResultHistory
+  
+
 } from '../controller/admin.controller.js';
 import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
@@ -57,6 +61,9 @@ export const AdminRoute = (app) => {
   app.get('/api/get-bet-markets-afterWin', authorize([string.Admin]), getBetMarketsAfterWin);
 
   app.post("/api/admin/approve-result",authorize([string.Admin]), approveResult);
+
+  app.get('/api/get-result-requests',getResultRequests);
+  app.get('/api/subAdmin/result-histories', getSubAdminResultHistory );
 
 
 };
