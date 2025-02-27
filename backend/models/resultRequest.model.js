@@ -30,16 +30,7 @@ ResultRequest.init(
       declaredBy: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      isApproved: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      type: {
-        type: DataTypes.ENUM('Matched', 'unMatched'),
-        allowNull: false,
-        defaultValue: 'unMatched', 
-      },
+      }
     },
     {
       sequelize,

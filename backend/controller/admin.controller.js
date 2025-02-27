@@ -21,7 +21,8 @@ import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
 import sequelize from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
-import ResultRequest from "../models/result.model.js";
+import ResultRequest from "../models/resultRequest.model.js";
+import ResultHistory from "../models/resultHistory.model.js";
 
 
 dotenv.config();
@@ -1212,36 +1213,68 @@ export const user_Balance = async (userId) => {
 
 export const approveResult = async (req, res) => {
   try {
-    const { marketId, runnerId } = req.body;
+    const { marketId } = req.body;
 
+    // Fetch all result requests for the given marketId
     const resultRequests = await ResultRequest.findAll({
-      where: { marketId, runnerId },
+      where: { marketId },
     });
 
-    if (resultRequests.length < 2) {
+    // Check if there are exactly two result requests
+    if (resultRequests.length !== 2) {
       return res
         .status(statusCode.badRequest)
         .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Not approved,Dont Match Runner")
+          apiResponseErr(null, false, statusCode.badRequest, "Exactly two declarations are required")
         );
     }
 
-    const firstDeclaration = resultRequests[0].isWin;
-    const isMatch = resultRequests.every(request => request.isWin === firstDeclaration);
+    // Extract the runnerIds from the two result requests
+    const runnerId1 = resultRequests[0].runnerId;
+    const runnerId2 = resultRequests[1].runnerId;
 
-    if (!isMatch) {
+    // Fetch additional data (gameName, marketName, runnerName)
+    const market = await Market.findOne({
+      where: { marketId },
+      include: [
+        { model: Game, attributes: ['gameName'] }, // Fetch gameName
+        { model: Runner, where: { runnerId: runnerId1 }, attributes: ['runnerName'] }, // Fetch runnerName
+      ],
+    });
+
+    if (!market) {
       return res
         .status(statusCode.badRequest)
         .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Declarations do not match")
+          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
         );
     }
 
-    await ResultRequest.update(
-      { isApproved: true, type: 'Matched' },
-      { where: { marketId, runnerId } }
-    );
+    const gameName = market.Game.gameName;
+    const marketName = market.marketName;
+    const runnerName = market.Runners[0].runnerName;
 
+    // Determine if the result is approved or rejected based on runnerIds match
+    const isApproved = runnerId1 === runnerId2;
+    const type = isApproved ? 'Matched' : 'unMatched';
+
+    // Create a single ResultHistory entry
+    await ResultHistory.create({
+      gameId: resultRequests[0].gameId,
+      gameName: gameName,
+      marketId: marketId,
+      marketName: marketName,
+      runnerId: runnerId1,
+      runnerName: runnerName,
+      isApproved: isApproved,
+      type: type,
+      createdAt: new Date(),
+    });
+
+    // Destroy all ResultRequest entries for the marketId
+    await ResultRequest.destroy({ where: { marketId } });
+
+    // Update Market and Runner tables
     await Market.update(
       {
         isRevoke: false,
@@ -1254,30 +1287,16 @@ export const approveResult = async (req, res) => {
     );
 
     await Runner.update(
-      { isWin: firstDeclaration },
-      { where: { runnerId } }
+      { isWin: resultRequests[0].isWin },
+      { where: { runnerId: runnerId1 } }
     );
-
-    const market = await Market.findOne({
-      where: { marketId },
-    });
-
-    if (!market) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
-        );
-    }
-
-    const gameId = market.gameId; 
 
     const users = await MarketBalance.findAll({ where: { marketId } });
 
     for (const user of users) {
       try {
         const runnerBalance = await MarketBalance.findOne({
-          where: { marketId, runnerId, userId: user.userId },
+          where: { marketId, runnerId: runnerId1, userId: user.userId },
         });
 
         if (runnerBalance) {
@@ -1289,7 +1308,7 @@ export const approveResult = async (req, res) => {
             await storePreviousState(
               userDetails,
               marketId,
-              runnerId,
+              runnerId1,
               gameId,
               Number(runnerBalance.bal)
             );
@@ -1302,14 +1321,14 @@ export const approveResult = async (req, res) => {
               const marketExposureValue = Number(marketExposureEntry[marketId]);
               const runnerBalanceValue = Number(runnerBalance.bal);
 
-              if (firstDeclaration) {
+              if (resultRequests[0].isWin) {
                 await WinningAmount.create({
                   userId: userDetails.userId,
                   userName: userDetails.userName,
                   amount: runnerBalanceValue,
                   type: "win",
                   marketId: marketId,
-                  runnerId: runnerId,
+                  runnerId: runnerId1,
                 });
               } else {
                 await WinningAmount.create({
@@ -1318,7 +1337,7 @@ export const approveResult = async (req, res) => {
                   amount: Math.abs(marketExposureValue),
                   type: "loss",
                   marketId: marketId,
-                  runnerId: runnerId,
+                  runnerId: runnerId1,
                 });
               }
 
@@ -1327,7 +1346,7 @@ export const approveResult = async (req, res) => {
                 userName: userDetails.userName,
                 gameId,
                 marketId,
-                runnerId,
+                runnerId: runnerId1,
                 date: new Date(),
                 profitLoss: runnerBalanceValue,
               });
@@ -1345,7 +1364,7 @@ export const approveResult = async (req, res) => {
               await userDetails.save();
 
               await MarketBalance.destroy({
-                where: { marketId, runnerId, userId: user.userId },
+                where: { marketId, runnerId: runnerId1, userId: user.userId },
               });
             }
           }
@@ -1355,7 +1374,7 @@ export const approveResult = async (req, res) => {
       }
     }
 
-    if (firstDeclaration) {
+    if (resultRequests[0].isWin) {
       const orders = await CurrentOrder.findAll({ where: { marketId } });
 
       for (const order of orders) {
