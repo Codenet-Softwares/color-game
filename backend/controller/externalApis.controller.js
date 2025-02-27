@@ -1110,7 +1110,7 @@ export const getRevokeMarket = async (req, res) => {
 
     for (const user of users) {
       if (!userProfitLossMap[user.userId]) {
-        console.warn(`User ${user.userId} not found in profit/loss map.`);
+        console.log(`User ${user.userId} not found in profit/loss map.`);
         continue;
       }
 
