@@ -33,6 +33,8 @@ import InnerAnnouncement from "../Pages/Announcements/InnerAnnouncement";
 import OuterAnnouncement from "../Pages/Announcements/OuterAnnouncement";
 import UpdateOuterAnnouncement from "../Pages/Announcements/UpdateOuterAnnouncement";
 import UpdateInnerAnnouncement from "../Pages/Announcements/UpdateInnerAnnouncement";
+import CreateSubAdmin from "../Components/CreateSubAdmin";
+import ViewWinningRequest from "../Components/ViewWinningRequest";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -183,6 +185,14 @@ const AppRoutes = () => {
             }
           />
           <Route
+            path="create-subadmin"
+            element={
+              <RequireAuth>
+                <CreateSubAdmin />
+              </RequireAuth>
+            }
+          />
+          <Route
             path="create-image"
             element={
               <RequireAuth>
@@ -246,7 +256,7 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
-           <Route
+          <Route
             path="outer-announcement"
             element={
               <RequireAuth>
@@ -254,7 +264,7 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
-           <Route
+          <Route
             path="update-outer-announcement"
             element={
               <RequireAuth>
@@ -270,7 +280,7 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
-         <Route
+          <Route
             path="update-inner-announcement"
             element={
               <RequireAuth>
@@ -278,6 +288,12 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
+          <Route path="viewWinningRequest"
+            element={
+              <RequireAuth>
+                <ViewWinningRequest />
+              </RequireAuth>
+            } />
         </Route>
       </Routes>
     </BrowserRouter>
