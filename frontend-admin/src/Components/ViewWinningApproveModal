@@ -1,6 +1,6 @@
 import React from "react";
 
-const ViewWinningApproveModal = ({ isOpen, onClose, ticketNumbers }) => {
+const ViewWinningApproveModal = ({ isOpen, onClose, data }) => {
     return (
         <div
             className={`modal fade ${isOpen ? "show d-block" : ""}`}
@@ -8,12 +8,11 @@ const ViewWinningApproveModal = ({ isOpen, onClose, ticketNumbers }) => {
             role="dialog"
             style={{ backdropFilter: "blur(0.7px)" }}
         >
-            <div
+            {/* <div
                 className="modal-dialog modal-dialog-centered modal-lg"
                 role="document"
             >
                 <div className="modal-content border-0 shadow-lg rounded">
-                    {/* Header */}
                     <div className="modal-header bg-dark text-white d-flex justify-content-center position-relative">
                         <div className="w-100 text-center">
                             <h5 className="modal-title fw-bold"> Purchased Tickets</h5>
@@ -25,12 +24,11 @@ const ViewWinningApproveModal = ({ isOpen, onClose, ticketNumbers }) => {
                         ></button>
                     </div>
 
-                    {/* Modal Body  */}
                     <div className="modal-body p-4 bg-light">
-                        
+
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };

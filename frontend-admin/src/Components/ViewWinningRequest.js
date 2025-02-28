@@ -11,9 +11,14 @@ const ViewWinningRequest = () => {
     const [viewWinningRequest, setViewWinningRequest] = useState(getViewWinningRequest())
     const auth = useAuth();
 
-    const openModalWithTickets = (ticketNumbers) => {
-        
+    const openModalWithData = (data) => {
+        setViewWinningRequest((prev) => ({
+            ...prev,
+            modalOpen: true,
+            data: data,
+        }));
     };
+
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -193,18 +198,12 @@ const ViewWinningRequest = () => {
                                                     <td>
                                                         <button
                                                             className="btn btn-primary "
+                                                            onClick={() => openModalWithData(bet.data)}
                                                         >
                                                             View More
                                                         </button>
+
                                                     </td>
-                                                    <ViewWinningApproveModal
-                                                        isOpen={viewWinningRequest.modalOpen}
-                                                        onClose={() => setViewWinningRequest((prev) => ({
-                                                            ...prev,
-                                                            modalOpen: false
-                                                        }))}
-                                                        data={viewWinningRequest.data}
-                                                    />
                                                 </tr>
                                             ))}
                                         </>
@@ -216,8 +215,10 @@ const ViewWinningRequest = () => {
                                         </tr>
                                     )}
                                 </tbody>
-
                             </table>
+
+
+
                         </div>
                     </SingleCard>
 
@@ -233,6 +234,14 @@ const ViewWinningRequest = () => {
                     )} */}
                 </div>
             </div>
+            <ViewWinningApproveModal
+                isOpen={viewWinningRequest.modalOpen}
+                onClose={() => setViewWinningRequest((prev) => ({
+                    ...prev,
+                    modalOpen: false
+                }))}
+                data={viewWinningRequest.data}  // Add this line
+            />
         </div>
     )
 }
