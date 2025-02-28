@@ -62,8 +62,9 @@ export const AdminRoute = (app) => {
 
   app.post("/api/admin/approve-result",authorize([string.Admin]), approveResult);
 
-  app.get('/api/get-result-requests',getResultRequests);
-  app.get('/api/subAdmin/result-histories', getSubAdminResultHistory );
+  app.get('/api/get-result-requests',authorize([string.Admin]),getResultRequests);
+
+  app.get('/api/subAdmin/result-histories',authorize([string.Admin,string.subAdmin]), getSubAdminResultHistory );
 
 
 };
