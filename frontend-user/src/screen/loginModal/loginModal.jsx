@@ -7,11 +7,11 @@ import { useFormik } from "formik";
 import LoginSchema from "../../schema/loginSchema";
 import "./loginModal.css";
 import { useNavigate } from "react-router-dom";
-
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   const [loginCred, setLoginCred] = useState(setInitialValues());
   const navigate = useNavigate();
-
+  const [showPassword, setShowPassword] = useState(false);
   const { dispatch, store } = useAppContext();
 
   useEffect(() => {
@@ -75,11 +75,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   function header() {
     return (
       <h4
-        className="d-flex justify-content-center text-uppercase fw-bold"
-        style={{ color: "#1A839B" }}
-      >
-        Login 👇🏾
-      </h4>
+        className="d-flex justify-content-center text-uppercase fw-bold login_heading">Login 👇🏾</h4>
     );
   }
 
@@ -89,42 +85,45 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
         <div className="d-flex justify-content-center position-relative">
           <input
             type="text"
-            className="form-control w-75"
+            className="form-control w-75 border-1 border-dark"
             placeholder="Enter Username"
             name="userName"
-            style={{ border: "1px solid black" }}
             value={values.userName}
             onChange={handleChange}
           />
           <span
-            className="position-absolute small"
-            style={{ left: "60px", top: "36px" }}
+            className="position-absolute small error_msg"
           >
             {errors.userName && touched.userName ? (
-              <p className="text-danger">{errors.userName}</p>
+              <p className="text-danger fw-bold">{errors.userName}</p>
             ) : null}
           </span>
         </div>
+        
         <br />
         <div className="d-flex justify-content-center position-relative ">
           <input
-            type="password"
-            className="form-control w-75"
+            type={showPassword ? "text" : "password"}
+            className="form-control w-75 border-1 border-dark"
             placeholder="Enter Password"
             name="password"
-            // style={{ border: '1px solid black' }}
             value={values.password}
             onChange={handleChange}
           />
 
           <span
-            className="position-absolute small"
-            style={{ left: "60px", top: "36px" }}
+            className="position-absolute  password_show"           
+            onClick={() => setShowPassword(!showPassword)}
           >
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
+            </span>
+            <span className="position-absolute small error_msg"
+            >
             {errors.password && touched.password ? (
-              <p className="text-danger">{errors.password}</p>
+              <p className="text-danger fw-bold">{errors.password}</p>
             ) : null}
-          </span>
+            </span>
+          
         </div>
       </div>
     );
@@ -134,10 +133,9 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
     return (
       <div className="d-flex flex-column w-100 ">
         <Button
-          className="text-uppercase fw-bold"
+          className="text-uppercase fw-bold sign_button"
           variant="secondary"
           onClick={handleSubmit}
-          style={{ background: "linear-gradient(to bottom, #18ADC5, #17687A)" }}
         >
           Sign in
         </Button>

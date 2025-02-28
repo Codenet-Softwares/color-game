@@ -1,0 +1,16 @@
+.login_heading{
+    color: #1A839B;
+}
+.error_msg{
+    left: 170px;
+    top: 38px;
+}
+.password_show{
+    right: 65px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+.sign_button{
+    background: linear-gradient(to bottom, #18ADC5, #17687A);
+}

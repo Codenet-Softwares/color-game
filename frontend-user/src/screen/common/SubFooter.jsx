@@ -25,7 +25,7 @@ const SubFooter = () => {
 
   return (
     <nav
-      className="navbar p-0 d-none d-md-block"
+      className="navbar p-0 d-none d-md-block d-sm-none"
       style={{
         background: "linear-gradient(to bottom, #18ADC5,rgb(63, 125, 139))",
         color: "white",

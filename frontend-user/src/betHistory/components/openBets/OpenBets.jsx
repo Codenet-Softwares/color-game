@@ -54,12 +54,11 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
                 overflow: "hidden",
               }}
             >
-              <div style={{ height: "35vh", overflowY: "auto" }}>
+              <div>
                 <RenderBackTable betHistoryData={betHistoryData} />
               </div>
               <div
-                className="mt-3"
-                style={{ height: "35vh", overflowY: "auto" }}
+                className="mt-2"
               >
                 <RenderLayTable betHistoryData={betHistoryData} />
               </div>

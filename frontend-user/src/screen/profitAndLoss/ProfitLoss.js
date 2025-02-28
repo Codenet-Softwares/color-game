@@ -555,7 +555,7 @@ const ProfitLoss = ({
   }}
 >
   {/* Pagination */}
-  {dataGameWise.length > 0 && (
+  {dataGameWise?.length > 0 && (
     <Pagination
       currentPage={currentPage}
       totalPages={totalPages}
