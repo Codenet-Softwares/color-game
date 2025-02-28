@@ -1485,7 +1485,7 @@ export const approveResult = async (req, res) => {
 
 export const getResultRequests = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; 
+    const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
@@ -1512,21 +1512,33 @@ export const getResultRequests = async (req, res) => {
       offset: offset,
     });
 
-    const formattedResultRequests = resultRequests.map((request) => ({
-      gameName: request.Game.gameName,
-      marketName: request.Market.marketName,
-      runnerName: request.Runner.runnerName,
-      isWin: request.isWin,
-      declaredBy: request.declaredBy,
-    }));
+    const groupedData = resultRequests.reduce((acc, request) => {
+      const key = `${request.Game.gameName}-${request.Market.marketName}`;
+      if (!acc[key]) {
+        acc[key] = {
+          gameName: request.Game.gameName,
+          marketName: request.Market.marketName,
+          isWin: request.isWin,
+          data: [],
+        };
+      }
+      acc[key].data.push({
+        declaredBy: request.declaredBy,
+        runnerName: request.Runner.runnerName,
+      });
+      return acc;
+    }, {});
 
-    const totalPages = Math.ceil(count / limit); 
+    const formattedResultRequests = Object.values(groupedData);
+
+    const totalItems = formattedResultRequests.length; 
+    const totalPages = Math.ceil(totalItems / limit); 
+
     const pagination = {
-      Page: page, 
+      Page: page,
       limit: limit,
       totalPages: totalPages,
-      totalItems: count,
-     
+      totalItems: totalItems,
     };
 
     return res
@@ -1537,7 +1549,7 @@ export const getResultRequests = async (req, res) => {
           true,
           statusCode.success,
           "Result requests fetched successfully",
-          pagination 
+          pagination
         )
       );
   } catch (error) {
@@ -1556,18 +1568,16 @@ export const getResultRequests = async (req, res) => {
 
 export const getSubAdminResultHistory = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1; 
-    const limit = parseInt(req.query.limit) || 10; 
-    const offset = (page - 1) * limit; 
-    const type = req.query.type; 
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+    const type = req.query.type;
 
     const queryOptions = {
       attributes: {
-        exclude: ['id', 'deletedAt'], 
+        exclude: ['id', 'deletedAt'],
       },
-      order: [['createdAt', 'DESC']], 
-      limit: limit, 
-      offset: offset, 
+      order: [['createdAt', 'DESC']],
     };
 
     if (type) {
@@ -1576,27 +1586,53 @@ export const getSubAdminResultHistory = async (req, res) => {
       };
     }
 
-
     const { count, rows: resultHistories } = await ResultHistory.findAndCountAll(queryOptions);
 
-    const totalPages = Math.ceil(count / limit); 
+    const groupedData = resultHistories.reduce((acc, history) => {
+      const key = `${history.gameId}-${history.gameName}-${history.marketId}-${history.marketName}-${history.isApproved}-${history.type}`;
+      if (!acc[key]) {
+        acc[key] = {
+          gameId: history.gameId,
+          gameName: history.gameName,
+          marketId: history.marketId,
+          marketName: history.marketName,
+          isApproved: history.isApproved,
+          type: history.type,
+          data: [],
+        };
+      }
+      history.declaredByNames.forEach((declaredBy) => {
+        acc[key].data.push({
+          declaredByNames: declaredBy,
+          runnerId: history.runnerId,
+          runnerName: history.runnerName,
+        });
+      });
+      return acc;
+    }, {});
+
+    const formattedResultHistories = Object.values(groupedData);
+
+    const paginatedData = formattedResultHistories.slice(offset, offset + limit);
+
+    const totalItems = paginatedData.length; 
+    const totalPages = Math.ceil(formattedResultHistories.length / limit);
     const pagination = {
-      page: page, 
+      page: page,
       limit: limit,
-      totalPages: totalPages, 
-      totalItems: count,
-       
+      totalPages: totalPages,
+      totalItems: totalItems, 
     };
 
     return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          resultHistories,
+          paginatedData,
           true,
           statusCode.success,
           "Subadmin result histories fetched successfully",
-          pagination 
+          pagination
         )
       );
   } catch (error) {
