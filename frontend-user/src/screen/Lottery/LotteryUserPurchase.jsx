@@ -1,45 +1,18 @@
 import React, { useCallback, useState } from "react";
 import { Formik, Form } from "formik";
 import ReusableDropdown from "../../globlaCommon/ReusableDropdown";
-import { SearchLotteryTicketUser } from "../../utils/apiService";
+import { PurhaseLotteryTicketUser } from "../../utils/apiService";
 import lotteryValidationSchema from "../../schema/lotteryValidationSchema";
 import { getInitialFormValues } from "../../utils/getInitiateState";
 import SearchResultsNew from "./SearchResultsNew";
-import CountdownTimer from "../../globlaCommon/CountdownTimer";
 import moment from "moment";
 import "./LotteryUserPurchase.css";
 import useLotteryData from "../customHook/useLotteryData";
+import CountdownTimerLotto from "../../globlaCommon/CountdownTimerLotto";
 
 const LotteryUserPurchase = ({ MarketId }) => {
-  const { lotteryData, setLotteryData } = useLotteryData(MarketId);
-  console.log("line15", lotteryData);
-
-  const handleSubmit = useCallback(
-    async (values, { setSubmitting, resetForm }) => {
-      const requestBody = {
-        marketId: MarketId,
-        sem: values.selectedSem ? parseInt(values.selectedSem) : null,
-        group: values.selectedGroup,
-        series: values.selectedSeries,
-        number: values.selectedNumber,
-      };
-
-      const response = await SearchLotteryTicketUser(requestBody);
-      console.log("Purchase successful", response);
-      setLotteryData((prevData) => ({
-        ...prevData,
-        searchResult: response?.data || null, // Store search results
-      }));
-
-      resetForm();
-      setSubmitting(false);
-      setLotteryData((prevData) => ({
-        ...prevData,
-        refreshKey: prevData.refreshKey + 1, // Trigger refresh
-      }));
-    },
-    [MarketId, setLotteryData]
-  );
+  const { lotteryData, setLotteryData, handleSubmit, handleBuy } =
+    useLotteryData(MarketId);
 
   //back button after search button clicked
   const handleBack = () => {
@@ -62,7 +35,11 @@ const LotteryUserPurchase = ({ MarketId }) => {
       {lotteryData?.searchResult &&
       lotteryData?.searchResult?.tickets?.length > 0 ? (
         <div className="inner-container border rounded shadow mx-auto p-3 d-flex flex-column justify-content-center align-items-center ">
-          <SearchResultsNew lotteryData={lotteryData} handleBack={handleBack} />
+          <SearchResultsNew
+            lotteryData={lotteryData}
+            handleBack={handleBack}
+            handleBuy={handleBuy}
+          />
         </div>
       ) : (
         <div className="form-wrapper position-relative">
@@ -82,11 +59,10 @@ const LotteryUserPurchase = ({ MarketId }) => {
               lotteryData.isSuspend ? "blurred" : ""
             }`}
           >
-            {/* Price Display - Always Visible */}
-
-            {/* <span className=" price-container price-badge">
-              Price: <strong>{lotteryData.price}</strong>
-            </span> */}
+            {/* Price Display - Always Visible  on top left */}
+            <div className="price-pill fw-semibold ">
+              PRICE: <strong>{lotteryData.price}</strong>
+            </div>
 
             <h4>
               <span className="market-name">{lotteryData.marketName}</span>
@@ -117,7 +93,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   .subtract(45, "seconds")
                   .toDate()
               ) < new Date() && (
-                <CountdownTimer
+                <CountdownTimerLotto
                   endDate={lotteryData.endTimeForShowCountdown}
                   fontSize={"16px"}
                 />
@@ -125,7 +101,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
             </div>
 
             <Formik
-              key={lotteryData.refreshKey}
+              key={MarketId}
               initialValues={getInitialFormValues()}
               enableReinitialize
               validationSchema={lotteryValidationSchema}

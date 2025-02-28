@@ -1,5 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
-import { LotteryRange } from "../../utils/apiService";
+import {
+  LotteryRange,
+  SearchLotteryTicketUser,
+  PurhaseLotteryTicketUser,
+} from "../../utils/apiService";
 import { generateLotteryOptions } from "../../utils/helper";
 import { getInitialLotteryData } from "../../utils/getInitiateState";
 import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
@@ -7,7 +11,6 @@ import { toast } from "react-toastify";
 
 const useLotteryData = (MarketId) => {
   const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
-
 
   // FETCHING ALL THE DROPDOWN DATA WITH RESPECT TO EACH MARKETiD ONLY
   const fetchLotteryData = useCallback(async () => {
@@ -29,7 +32,7 @@ const useLotteryData = (MarketId) => {
         start_time,
         end_time,
         isActive,
-        price
+        price,
       } = marketData;
 
       const { groupOptions, seriesOptions, numberOptions } =
@@ -48,11 +51,11 @@ const useLotteryData = (MarketId) => {
         series: seriesOptions,
         numbers: numberOptions,
         marketName: marketName || "Unknown Market",
-       
+
         endTimeForShowCountdown: end_time,
         startTimeForShowCountdown: start_time,
         isSuspend: !isActive,
-        price: price
+        price: price,
       }));
     }
   }, [MarketId]);
@@ -66,7 +69,7 @@ const useLotteryData = (MarketId) => {
   useEffect(() => {
     console.log("[useEffect] Initialized: Listening for market updates...");
     const eventSource = updateLotteryMarketEventEmitter();
-    console.log('EVENTsOURCE LINE62',eventSource)
+    console.log("EVENTsOURCE LINE62", eventSource);
     eventSource.onmessage = function (event) {
       const updates = JSON.parse(event.data);
       if (updates?.length) {
@@ -95,7 +98,59 @@ const useLotteryData = (MarketId) => {
     };
   }, []);
 
-  return { lotteryData, setLotteryData, fetchLotteryData };
+  // API FETCHING FOR THE SEARCH BUTTON AFTER WHICH THE SEARCHRESULTSNEW PAGE IS EXECUTED
+  const handleSubmit = useCallback(
+    async (values, { setSubmitting, resetForm }) => {
+      const requestBody = {
+        marketId: MarketId,
+        sem: values.selectedSem ? parseInt(values.selectedSem) : null,
+        group: values.selectedGroup,
+        series: values.selectedSeries,
+        number: values.selectedNumber,
+      };
+
+      const response = await SearchLotteryTicketUser(requestBody);
+      console.log("Purchase successful", response);
+      setLotteryData((prevData) => ({
+        ...prevData,
+        searchResult: response?.data || null, // Store search results
+      }));
+
+      resetForm();
+      setSubmitting(false);
+      setLotteryData((prevData) => ({
+        ...prevData,
+        refreshKey: prevData.refreshKey + 1, // Trigger refresh
+      }));
+    },
+    [MarketId, setLotteryData]
+  );
+
+  // API FETCH FOR BUYING TICKETS FROM SEARCHRESULTSNEW PAGE
+  const handleBuy = useCallback(async () => {
+    if (!lotteryData?.searchResult) return;
+
+    const body = {
+      generateId: lotteryData.searchResult.generateId || "defaultId",
+      lotteryPrice: lotteryData.searchResult.price || "5.00",
+      marketId: MarketId || "defaultMarketId",
+    };
+
+    await PurhaseLotteryTicketUser(body);
+
+    // Reset back to form after purchase
+    setLotteryData((prevData) => ({
+      ...prevData,
+      searchResult: null,
+    }));
+  }, [lotteryData, MarketId]);
+  return {
+    lotteryData,
+    setLotteryData,
+    fetchLotteryData,
+    handleSubmit,
+    handleBuy,
+  };
 };
 
 export default useLotteryData;

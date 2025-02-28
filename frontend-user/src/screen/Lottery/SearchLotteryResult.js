@@ -60,9 +60,9 @@ const SearchLotteryResult = ({ responseData, marketId, setShowSearch }) => {
       // setShowSearch(true);
 
       // Delay window reload by 2 seconds (2000 milliseconds)
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 500);
     } catch (error) {
       console.error("Error purchasing ticket:", error);
     } finally {

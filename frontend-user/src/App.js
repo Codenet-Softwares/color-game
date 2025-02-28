@@ -52,7 +52,7 @@ function App() {
             path="/gameView/:gameName/:market/:id"
             element={<GetMarketDetailByMarketId />}
           />
-          <Route path="/lottery/:marketId" element={<LotteryCards />} />
+          {/* <Route path="/lottery/:marketId" element={<LotteryCards />} /> */}
           <Route path="/lottoPurchase/:marketId" element={<LotteryBuyLayout />} />
           <Route
             path="/LotteryPurchaseHistory"

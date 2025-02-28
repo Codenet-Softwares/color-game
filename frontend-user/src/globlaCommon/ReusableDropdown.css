@@ -63,7 +63,7 @@
 /* Error Message Styling */
 .dropdown-error {
   min-height: 20px; /* Fixed space to prevent form shifting */
-  font-size: 12px;
+  font-size: 10.5px;
   color: red;
   display: flex;
   align-items: center;

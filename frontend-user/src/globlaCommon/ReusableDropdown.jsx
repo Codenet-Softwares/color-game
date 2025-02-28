@@ -86,33 +86,39 @@ const ReusableDropdown = ({
         />
       </InputGroup>
 
-      {state.showDropdown && filteredOptions.length > 0 && (
+      {state?.showDropdown && (
         <Dropdown.Menu show className="dropdown-menu">
           <div className="dropdown-grid-container">
-            <Grid
-              columnCount={COLUMN_COUNT}
-              columnWidth={columnWidth}
-              height={150}
-              rowCount={rowCount}
-              rowHeight={35}
-              width={inputRef.current ? inputRef.current.offsetWidth : 250}
-              className="grid-list"
-            >
-              {({ rowIndex, columnIndex, style }) => {
-                const itemIndex = rowIndex * COLUMN_COUNT + columnIndex;
-                if (itemIndex >= filteredOptions.length) return null;
+            {filteredOptions?.length > 0 ? (
+              <Grid
+                columnCount={COLUMN_COUNT}
+                columnWidth={columnWidth}
+                height={150}
+                rowCount={rowCount}
+                rowHeight={35}
+                width={inputRef.current ? inputRef.current.offsetWidth : 250}
+                className="grid-list"
+              >
+                {({ rowIndex, columnIndex, style }) => {
+                  const itemIndex = rowIndex * COLUMN_COUNT + columnIndex;
+                  if (itemIndex >= filteredOptions.length) return null;
 
-                return (
-                  <Dropdown.Item
-                    style={style}
-                    onMouseDown={() => handleSelect(filteredOptions[itemIndex])}
-                    className="dropdown-item"
-                  >
-                    {filteredOptions[itemIndex]}
-                  </Dropdown.Item>
-                );
-              }}
-            </Grid>
+                  return (
+                    <Dropdown.Item
+                      style={style}
+                      onMouseDown={() =>
+                        handleSelect(filteredOptions[itemIndex])
+                      }
+                      className="dropdown-item"
+                    >
+                      {filteredOptions[itemIndex]}
+                    </Dropdown.Item>
+                  );
+                }}
+              </Grid>
+            ) : (
+              <div className="no-matched-data">No matched data found</div>
+            )}
           </div>
         </Dropdown.Menu>
       )}
@@ -121,7 +127,7 @@ const ReusableDropdown = ({
         {touched && error && (
           <div className="d-flex align-items-center gap-1 ">
             <i className="bi bi-info-circle"></i>
-            <span >{error}</span>
+            <span>{error}</span>
           </div>
         )}
       </div>

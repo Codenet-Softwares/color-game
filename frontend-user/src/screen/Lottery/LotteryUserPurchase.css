@@ -343,39 +343,37 @@
   display: inline-block;
 }
 
-/* Price Container - Top Left Inside Form */
-.price-container {
-  position: relative;
-  top: 10px;
-  left: 95px;
-  background: linear-gradient(135deg, #3b6e91, #4682b4);
-  padding: 6px 12px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  font-family: "Playfair Display", serif;
-  font-size: 14px;
-  font-weight: 700;
-  color: #080808;
-  text-transform: uppercase;
+/* Price Display - Always Visible  on top left */
+.price-pill {
+  position: absolute;
+  background: white;
+  color: #333;
+  font-size: 13px;
+  padding: 2px 12px;
+  border-radius: 50px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  border: 3px solid rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.5px;
 }
 
-/* Responsive for Small Screens */
-@media (max-width: 768px) {
-  .price-container {
-    position: relative;
-    top: auto;
-    left: auto;
-    margin: 8px auto;
-    text-align: center;
-    width: fit-content;
-    display: block;
+/*Price Display - Medium & Small screens: Make price-pill appear above the market-name */
+@media (max-width: 991px) {
+  .price-pill {
+    position: static;
+    margin-bottom: 1px;
+    width: 20%;
+    font-weight: bold;
+    font-size: 10px;
   }
 }
 
-/* Stylish Badge Effect */
-.price-badge {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 4px 10px;
-  border-radius: 5px;
+/* Price Display - Mobile screens (≤480px) */
+@media (max-width: 480px) {
+  .price-pill {
+    font-weight: bold;
+    font-size: 8px;
+    padding: 2px 0px;
+    width: 25%;
+  }
 }

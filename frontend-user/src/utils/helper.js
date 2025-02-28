@@ -85,7 +85,7 @@ export const generateLotteryOptions = (
   return {
     groupOptions: Array.from(
       { length: groupEnd - groupStart + 1 },
-      (_, i) => groupStart + i
+      (_, i) => String(groupStart + i)
     ),
     seriesOptions: Array.from(
       { length: seriesEnd.charCodeAt(0) - seriesStart.charCodeAt(0) + 1 },

@@ -2,7 +2,8 @@ import React from "react";
 import TicketCard from "./TicketCard";
 import "./SearchResultsNew.css"; 
 
-const SearchResultsNew = ({ lotteryData, handleBack }) => {
+const SearchResultsNew = ({ lotteryData, handleBack, handleBuy }) => {
+
   return (
     <div className="text-center">
       {/* Back Button */}
@@ -36,6 +37,10 @@ const SearchResultsNew = ({ lotteryData, handleBack }) => {
             <h5>
               SEM: <span className="result-sem">{lotteryData.searchResult.sem}</span>
             </h5>
+             {/* Buy Button */}
+             <button className="btn btn-primary buy-button " onClick={handleBuy}>
+              Buy Ticket
+            </button>
           </>
         ) : (
           <p>No tickets found.</p>

@@ -118,7 +118,7 @@ function AppDrawer({
         </span>
 
         <ul className="overflow-auto">
-          <li
+          {/* <li
             className="MenuHead lottery-section text-center"
             onClick={handleLotteryToggle}
           >
@@ -131,9 +131,9 @@ function AppDrawer({
                 ▼
               </span>
             </div>
-          </li>
+          </li> */}
           {/* Display lottery draw times */}
-          {lotteryToggle && lotteryDrawTimes.length > 0 && (
+          {/* {lotteryToggle && lotteryDrawTimes.length > 0 && (
             <ul className="subMenuItems">
               {lotteryDrawTimes.map((market) => (
                 <li key={market.marketId} className="subMenuHead">
@@ -150,7 +150,7 @@ function AppDrawer({
                 </li>
               ))}
             </ul>
-          )}
+          )} */}
 
           {lotteryNewDrawTimes && lotteryNewDrawTimes.length > 0 && (
             <li
