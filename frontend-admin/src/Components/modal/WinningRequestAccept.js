@@ -45,13 +45,17 @@ const WinningRequestAccept = ({ isOpen, onClose, data }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {data.slice(0, Math.ceil(data.length / 2)).map((item, index) => (
-                          <tr key={index}>
-                            <td>{index + 1}</td>
-                            <td>{item.declaredBy}</td>
-                            <td className="fw-bold text-danger">{item.runnerName}</td>
-                          </tr>
-                        ))}
+                        {data
+                          .slice(0, Math.ceil(data.length / 2))
+                          .map((item, index) => (
+                            <tr key={index}>
+                              <td>{index + 1}</td>
+                              <td>{item.declaredBy}</td>
+                              <td className="fw-bold text-danger">
+                                {item.runnerName}
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </div>
@@ -73,13 +77,17 @@ const WinningRequestAccept = ({ isOpen, onClose, data }) => {
                         </tr>
                       </thead>
                       <tbody>
-                        {data.slice(Math.ceil(data.length / 2)).map((item, index) => (
-                          <tr key={index}>
-                            <td>{index + 1 + Math.ceil(data.length / 2)}</td>
-                            <td>{item.declaredBy}</td>
-                            <td className="fw-bold text-danger">{item.runnerName}</td>
-                          </tr>
-                        ))}
+                        {data
+                          .slice(Math.ceil(data.length / 2))
+                          .map((item, index) => (
+                            <tr key={index}>
+                              <td>{index + 1 + Math.ceil(data.length / 2)}</td>
+                              <td>{item.declaredBy}</td>
+                              <td className="fw-bold text-danger">
+                                {item.runnerName}
+                              </td>
+                            </tr>
+                          ))}
                       </tbody>
                     </table>
                   </div>
