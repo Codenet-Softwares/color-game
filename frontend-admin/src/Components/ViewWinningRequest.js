@@ -1,91 +1,100 @@
-import React, { useEffect, useState } from 'react'
-import { getViewWinningRequest } from '../Utils/intialState';
-import AccountServices from '../Services/AccountServices';
-import { useAuth } from '../Utils/Auth';
-import { toast } from 'react-toastify';
-import { customErrorHandler } from '../Utils/helper';
-import SingleCard from './common/singleCard';
-import ViewWinningApproveModal from './ViewWinningApproveModal';
+import React, { useEffect, useState } from "react";
+import { getViewWinningRequest } from "../Utils/intialState";
+import AccountServices from "../Services/AccountServices";
+import { useAuth } from "../Utils/Auth";
+import { toast } from "react-toastify";
+import { customErrorHandler } from "../Utils/helper";
+import SingleCard from "./common/singleCard";
+import WinningRequestAccept from "./modal/WinningRequestAccept";
 
 const ViewWinningRequest = () => {
-    const [viewWinningRequest, setViewWinningRequest] = useState(getViewWinningRequest())
-    const auth = useAuth();
+  const [viewWinningRequest, setViewWinningRequest] = useState(
+    getViewWinningRequest()
+  );
+  const auth = useAuth();
+  console.log("isopen", viewWinningRequest);
+  const openModalWithData = (data) => {
+    setViewWinningRequest((prev) => ({
+      ...prev,
+      modalOpen: true,
+      data: data,
+    }));
+  };
 
-    const openModalWithData = (data) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setViewWinningRequest((prev) => ({
+        ...prev,
+        debouncedSearchTerm: prev.searchTerm,
+      }));
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [viewWinningRequest.searchTerm]);
+
+  useEffect(() => {
+    fetchViewWinningRequest();
+  }, [
+    viewWinningRequest.currentPage,
+    viewWinningRequest.totalEntries,
+    viewWinningRequest.debouncedSearchTerm,
+  ]);
+
+  const fetchViewWinningRequest = () => {
+    auth.showLoader();
+    AccountServices.viewWinningRequest(
+      auth.user,
+      viewWinningRequest.currentPage,
+      viewWinningRequest.totalEntries
+      // viewWinningRequest.debouncedSearchTerm
+    )
+      .then((res) => {
         setViewWinningRequest((prev) => ({
-            ...prev,
-            modalOpen: true,
-            data: data,
+          ...prev,
+          request: res?.data?.data || [],
+          // totalPages: res?.data.pagination?.totalPages,
+          // totalData: res?.data.pagination?.totalItems,
         }));
-    };
+      })
+      .catch((err) => {
+        toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
+      });
+  };
 
+  console.log("first", viewWinningRequest);
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setViewWinningRequest((prev) => ({
-                ...prev,
-                debouncedSearchTerm: prev.searchTerm
-            }));
-        }, 500);
+  let startIndex = Math.min(
+    (Number(viewWinningRequest.currentPage) - 1) *
+      Number(viewWinningRequest.totalEntries) +
+      1,
+    Number(viewWinningRequest.totalData)
+  );
+  let endIndex = Math.min(
+    Number(viewWinningRequest.currentPage) *
+      Number(viewWinningRequest.totalEntries),
+    Number(viewWinningRequest.totalData)
+  );
 
-        return () => clearTimeout(timer);
-    }, [viewWinningRequest.searchTerm]);
-
-
-    useEffect(() => {
-        fetchViewWinningRequest();
-    }, [viewWinningRequest.currentPage, viewWinningRequest.totalEntries, viewWinningRequest.debouncedSearchTerm]);
-
-    const fetchViewWinningRequest = () => {
-        auth.showLoader();
-        AccountServices.viewWinningRequest(
-            auth.user,
-            viewWinningRequest.currentPage,
-            viewWinningRequest.totalEntries,
-            // viewWinningRequest.debouncedSearchTerm
-        )
-            .then((res) => {
-                setViewWinningRequest((prev) => ({
-                    ...prev,
-                    request: res?.data?.data || [],
-                    // totalPages: res?.data.pagination?.totalPages,
-                    // totalData: res?.data.pagination?.totalItems,
-                }));
-            })
-            .catch((err) => {
-                toast.error(customErrorHandler(err));
-            })
-            .finally(() => {
-                auth.hideLoader();
-            });
-    };
-
-    console.log("first", viewWinningRequest)
-
-    let startIndex = Math.min(
-        (Number(viewWinningRequest.currentPage) - 1) * Number(viewWinningRequest.totalEntries) + 1,
-        Number(viewWinningRequest.totalData)
-    );
-    let endIndex = Math.min(
-        Number(viewWinningRequest.currentPage) * Number(viewWinningRequest.totalEntries),
-        Number(viewWinningRequest.totalData)
-    );
-
-    return (
-        <div className="container my-5 p-5">
-            <div className="card shadow-lg">
-                <div
-                    className="card-header"
-                    style={{
-                        backgroundColor: "#3E5879",
-                        color: "#FFFFFF",
-                    }}
-                >
-                    <h3 className="mb-0 fw-bold text-center text-uppercase">Winning Request</h3>
-                </div>
-                <div className="card-body" style={{ background: "#E1D1C7" }}>
-                    {/* Search and Entries Selection */}
-                    {/* <div className="row mb-4">
+  return (
+    <div className="container my-5 p-5">
+      <div className="card shadow-lg">
+        <div
+          className="card-header"
+          style={{
+            backgroundColor: "#3E5879",
+            color: "#FFFFFF",
+          }}
+        >
+          <h3 className="mb-0 fw-bold text-center text-uppercase">
+            Winning Request
+          </h3>
+        </div>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
+          {/* Search and Entries Selection */}
+          {/* <div className="row mb-4">
                         <div className="col-md-6 position-relative">
                             <FaSearch
                                 style={{
@@ -156,94 +165,91 @@ const ViewWinningRequest = () => {
                         </div>
                     </div> */}
 
-                    {/* Table */}
-                    <SingleCard
-                        className=" mb-5 text-center"
-                        style={{
-                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
-                        }}
-                    >
-                        <div className="table-responsive">
-                            <table
-                                className="table table-striped table-hover rounded-table"
-                                style={{
-                                    border: "2px solid #3E5879",
-                                    borderRadius: "10px",
-                                }}
+          {/* Table */}
+          <SingleCard
+            className=" mb-5 text-center"
+            style={{
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
+            }}
+          >
+            <div className="table-responsive">
+              <table
+                className="table table-striped table-hover rounded-table"
+                style={{
+                  border: "2px solid #3E5879",
+                  borderRadius: "10px",
+                }}
+              >
+                <thead
+                  className="table-primary text-uppercase"
+                  style={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 1,
+                  }}
+                >
+                  <tr>
+                    <th>Serial Number</th>
+                    <th>Game Name</th>
+                    <th>Market Name</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {viewWinningRequest?.request.length > 0 ? (
+                    <>
+                      {viewWinningRequest?.request.map((bet, index) => (
+                        <tr key={index}>
+                          <td>{startIndex + index}</td>
+                          <td>{bet.gameName}</td>
+                          <td>{bet.marketName}</td>
+                          <td>
+                            <button
+                              className="btn btn-primary "
+                              onClick={() => openModalWithData(bet.data)}
                             >
-                                <thead
-                                    className="table-primary text-uppercase"
-                                    style={{
-                                        position: "sticky",
-                                        top: 0,
-                                        zIndex: 1,
-                                    }}
-                                >
-                                    <tr>
-                                        <th>Serial Number</th>
-                                        <th>Game Name</th>
-                                        <th>Market Name</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                    {viewWinningRequest?.request.length > 0 ? (
-                                        <>
-                                            {viewWinningRequest?.request.map((bet, index) => (
-                                                <tr key={index}>
-                                                    <td>{startIndex + index}</td>
-                                                    <td>{bet.gameName}</td>
-                                                    <td>{bet.marketName}</td>
-                                                    <td>
-                                                        <button
-                                                            className="btn btn-primary "
-                                                            onClick={() => openModalWithData(bet.data)}
-                                                        >
-                                                            View More
-                                                        </button>
-
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </>
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" className="text-center text-danger fw-bold">
-                                                No Data Found
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
-
-
-
-                        </div>
-                    </SingleCard>
-
-                    {/* {viewWinningRequest.request.length > 0 && (
-                        <Pagination
-                            currentPage={viewWinningRequest.currentPage}
-                            totalPages={liveBets.totalPages}
-                            handlePageChange={handlePageChange}
-                            startIndex={startIndex}
-                            endIndex={endIndex}
-                            totalData={liveBets.totalData}
-                        />
-                    )} */}
-                </div>
+                              View More
+                            </button>
+                            <WinningRequestAccept
+                              data={viewWinningRequest.data}
+                              isOpen={viewWinningRequest.modalOpen}
+                              onClose={() =>
+                                setViewWinningRequest((prev) => ({
+                                  ...prev,
+                                  modalOpen: false,
+                                }))
+                              }
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="text-center text-danger fw-bold"
+                      >
+                        No Data Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-            <ViewWinningApproveModal
-                isOpen={viewWinningRequest.modalOpen}
-                onClose={() => setViewWinningRequest((prev) => ({
-                    ...prev,
-                    modalOpen: false
-                }))}
-                data={viewWinningRequest.data}  // Add this line
-            />
+          </SingleCard>
         </div>
-    )
-}
+      </div>
+      {/* <ViewWinningApproveModal
+      // isOpen={viewWinningRequest.modalOpen}
+      // onClose={() => setViewWinningRequest((prev) => ({
+      //     ...prev,
+      //     modalOpen: false
+      // }))}
+      // data={viewWinningRequest.data}  // Add this line
+      /> */}
+    </div>
+  );
+};
 
 export default ViewWinningRequest;

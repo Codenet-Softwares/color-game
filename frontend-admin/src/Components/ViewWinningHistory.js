@@ -1,22 +1,26 @@
-import React from 'react'
+import React from "react";
 
 const ViewWinningHistory = () => {
-    const [viewWinningHistory, setViewWinningHistory] = useState(getViewWinningRequest())
-    return (
-        <div className="container my-5 p-5">
-            <div className="card shadow-lg">
-                <div
-                    className="card-header"
-                    style={{
-                        backgroundColor: "#3E5879",
-                        color: "#FFFFFF",
-                    }}
-                >
-                    <h3 className="mb-0 fw-bold text-center text-uppercase">Winning Request</h3>
-                </div>
-                <div className="card-body" style={{ background: "#E1D1C7" }}>
-                    {/* Search and Entries Selection */}
-                    {/* <div className="row mb-4">
+  const [viewWinningHistory, setViewWinningHistory] = useState(
+    getViewWinningRequest()
+  );
+  return (
+    <div className="container my-5 p-5">
+      <div className="card shadow-lg">
+        <div
+          className="card-header"
+          style={{
+            backgroundColor: "#3E5879",
+            color: "#FFFFFF",
+          }}
+        >
+          <h3 className="mb-0 fw-bold text-center text-uppercase">
+            Winning History
+          </h3>
+        </div>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
+          {/* Search and Entries Selection */}
+          {/* <div className="row mb-4">
                         <div className="col-md-6 position-relative">
                             <FaSearch
                                 style={{
@@ -87,54 +91,55 @@ const ViewWinningHistory = () => {
                         </div>
                     </div> */}
 
-                    {/* Table */}
-                    <SingleCard
-                        className=" mb-5 text-center"
-                        style={{
-                            boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
-                        }}
-                    >
-                        <div className="table-responsive">
-                            <table
-                                className="table table-striped table-hover rounded-table"
-                                style={{
-                                    border: "2px solid #3E5879",
-                                    borderRadius: "10px",
-                                }}
-                            >
-                                <thead
-                                    className="table-primary text-uppercase"
-                                    style={{
-                                        position: "sticky",
-                                        top: 0,
-                                        zIndex: 1,
-                                    }}
-                                >
-                                    <tr>
-                                        <th>Serial Number</th>
-                                        <th>Game Name</th>
-                                        <th>Market Name</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+          {/* Table */}
+          <SingleCard
+            className=" mb-5 text-center"
+            style={{
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
+            }}
+          >
+            <div className="table-responsive">
+              <table
+                className="table table-striped table-hover rounded-table"
+                style={{
+                  border: "2px solid #3E5879",
+                  borderRadius: "10px",
+                }}
+              >
+                <thead
+                  className="table-primary text-uppercase"
+                  style={{
+                    position: "sticky",
+                    top: 0,
+                    zIndex: 1,
+                  }}
+                >
+                  <tr>
+                    <th>Serial Number</th>
+                    <th>Game Name</th>
+                    <th>Market Name</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {viewWinningRequest.request.length > 0 ? (
+                    <></>
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="text-center text-danger fw-bold"
+                      >
+                        No Data Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </SingleCard>
 
-                                    {viewWinningRequest.request.length > 0 ? (
-                                        <></>
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" className="text-center text-danger fw-bold">
-                                                No Data Found
-                                            </td>
-                                        </tr>
-                                    )}
-                                </tbody>
-
-                            </table>
-                        </div>
-                    </SingleCard>
-
-                    {/* {viewWinningRequest.request.length > 0 && (
+          {/* {viewWinningRequest.request.length > 0 && (
                         <Pagination
                             currentPage={viewWinningRequest.currentPage}
                             totalPages={liveBets.totalPages}
@@ -144,10 +149,10 @@ const ViewWinningHistory = () => {
                             totalData={liveBets.totalData}
                         />
                     )} */}
-                </div>
-            </div>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default ViewWinningHistory
+export default ViewWinningHistory;
