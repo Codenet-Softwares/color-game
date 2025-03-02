@@ -205,11 +205,19 @@ const ViewWinningRequest = () => {
                           <td>{bet.marketName}</td>
                           <td>
                             <button
-                              className="btn btn-primary "
-                              onClick={() => openModalWithData(bet.data)}
+                              className="btn btn-primary"
+                              onClick={() => {
+                                if (viewWinningRequest.request.length === 1) {
+                                  alert("Only one request is available.");
+                                } else {
+                                  openModalWithData(bet.data);
+                                }
+                              }}
+                            //   disabled={viewWinningRequest.request.length === 1}
                             >
                               View More
                             </button>
+
                             <WinningRequestAccept
                               data={viewWinningRequest.data}
                               isOpen={viewWinningRequest.modalOpen}
