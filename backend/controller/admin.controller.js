@@ -1282,10 +1282,11 @@ export const approveResult = async (req, res) => {
     const market = await Market.findOne({
       where: { marketId },
       include: [
-        { model: Game, attributes: ['gameName'] }, 
-        { model: Runner, where: { runnerId: runnerId1 }, attributes: ['runnerName'] },
+        { model: Game, attributes: ['gameName'] },
+        { model: Runner, attributes: ['runnerId', 'runnerName'] },
       ],
     });
+
 
     if (!market) {
       return res
@@ -1297,23 +1298,26 @@ export const approveResult = async (req, res) => {
 
     const gameName = market.Game.gameName;
     const marketName = market.marketName;
-    const runnerName = market.Runners[0].runnerName;
+    const runnerNames = market.Runners.filter(
+      (runner) => runner.runnerId === runnerId1 || runner.runnerId === runnerId2
+    ).map((runner) => runner.runnerName);
 
     const isApproved = runnerId1 === runnerId2;
     const type = isApproved ? 'Matched' : 'Unmatched';
 
     await ResultHistory.create({
-      gameId: gameId, 
+      gameId: gameId,
       gameName: gameName,
       marketId: marketId,
       marketName: marketName,
-      runnerId: runnerId1,
-      runnerName: runnerName,
+      runnerId: [runnerId1, runnerId2], 
+      runnerNames: runnerNames,
       isApproved: isApproved,
       type: type,
-      declaredByNames: declaredByNames,
+      declaredByNames: declaredByNames, 
       createdAt: new Date(),
     });
+    
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -1566,6 +1570,7 @@ export const getResultRequests = async (req, res) => {
   }
 };
 
+
 export const getSubAdminResultHistory = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -1588,6 +1593,19 @@ export const getSubAdminResultHistory = async (req, res) => {
 
     const { count, rows: resultHistories } = await ResultHistory.findAndCountAll(queryOptions);
 
+    const marketIds = resultHistories.map(history => history.marketId);
+    const markets = await Market.findAll({
+      where: { marketId: marketIds },
+      include: [
+        { model: Runner, attributes: ['runnerId', 'runnerName'] },
+      ],
+    });
+
+    const marketRunnersMap = new Map();
+    markets.forEach(market => {
+      marketRunnersMap.set(market.marketId, market.Runners);
+    });
+
     const groupedData = resultHistories.reduce((acc, history) => {
       const key = `${history.gameId}-${history.gameName}-${history.marketId}-${history.marketName}-${history.isApproved}-${history.type}`;
       if (!acc[key]) {
@@ -1601,13 +1619,20 @@ export const getSubAdminResultHistory = async (req, res) => {
           data: [],
         };
       }
-      history.declaredByNames.forEach((declaredBy) => {
+
+      history.declaredByNames.forEach((declaredBy, index) => {
+        const runnerId = history.runnerId[index];
+        const runners = marketRunnersMap.get(history.marketId) || [];
+        const runner = runners.find(r => r.runnerId === runnerId);
+        const runnerName = runner ? runner.runnerName : 'Unknown';
+
         acc[key].data.push({
           declaredByNames: declaredBy,
-          runnerId: history.runnerId,
-          runnerName: history.runnerName,
+          runnerId: runnerId,
+          runnerName: runnerName,
         });
       });
+
       return acc;
     }, {});
 
@@ -1615,13 +1640,13 @@ export const getSubAdminResultHistory = async (req, res) => {
 
     const paginatedData = formattedResultHistories.slice(offset, offset + limit);
 
-    const totalItems = paginatedData.length; 
-    const totalPages = Math.ceil(formattedResultHistories.length / limit);
+    const totalItems = formattedResultHistories.length; 
+    const totalPages = Math.ceil(totalItems / limit);
     const pagination = {
       page: page,
       limit: limit,
       totalPages: totalPages,
-      totalItems: totalItems, 
+      totalItems: totalItems,
     };
 
     return res
@@ -1636,7 +1661,6 @@ export const getSubAdminResultHistory = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error('Error fetching result histories:', error);
     return res
       .status(statusCode.internalServerError)
       .send(
