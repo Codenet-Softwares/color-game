@@ -1,5 +1,5 @@
 import { user_Balance } from "../controller/admin.controller.js";
-import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte, getAllLotteryMarket, getExposure } from "../controller/externalApis.controller.js";
+import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte, getAllLotteryMarket, getExposure, deleteBetAfterWin } from "../controller/externalApis.controller.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
 import { authenticateAdmin } from "../middleware/lottery.auth.js";
 import { authenticateSuperAdmin } from "../middleware/whiteLabelAuth.js";
@@ -30,6 +30,7 @@ export const externalApisRoute = (app) => {
 
   app.post('/api/external/delete-liveMarket-lottery', validateDeleteLiveMarket, customErrorHandler, authenticateAdmin, getDeleteLiveMarket)
 
+
   app.post('/api/external/revoke-liveBet-lottery', validateRevokeLiveMarket, customErrorHandler, authenticateAdmin, revokeLiveBet)
 
   app.get('/api/external/user-live-bet/:marketId', validateUserLiveBet, customErrorHandler, authenticateSuperAdmin, userLiveBte)
@@ -48,4 +49,8 @@ export const externalApisRoute = (app) => {
 
   app.get('/api/external/get-exposure/:userId', getExposure)
 
+  app.post('/api/external/delete-bet-afterWin-lottery',  deleteBetAfterWin)
+
+
 }
+

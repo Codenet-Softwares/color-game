@@ -1367,3 +1367,38 @@ export const getExposure = async (req, res) => {
 
   }
 }
+
+export const deleteBetAfterWin = async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const { marketId, userId, price } = req.body;
+  
+
+
+    await user.save();
+    await t.commit();
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Balances updated successfully and bet Deleted"
+        )
+      );
+  } catch (error) {
+    await t.rollback();
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
