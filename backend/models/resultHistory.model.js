@@ -26,19 +26,21 @@ ResultHistory.init({
         allowNull: false,
       },
       runnerId: {
-        type: DataTypes.CHAR(36),
+        type: DataTypes.JSON, 
         allowNull: false,
+        defaultValue: [],
       },
-      runnerName: {
-        type: DataTypes.STRING,
+      runnerNames: {
+        type: DataTypes.JSON, 
         allowNull: false,
-      },
+        defaultValue: [], 
+      },  
       isApproved: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
       type: {
-        type: DataTypes.ENUM('Matched', 'unMatched'),
+        type: DataTypes.ENUM('Matched', 'Unmatched'),
         allowNull: false,
       },
       declaredByNames: {
