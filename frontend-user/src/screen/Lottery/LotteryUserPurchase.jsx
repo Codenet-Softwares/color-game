@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { Formik, Form } from "formik";
 import ReusableDropdown from "../../globlaCommon/ReusableDropdown";
-import { PurhaseLotteryTicketUser } from "../../utils/apiService";
 import lotteryValidationSchema from "../../schema/lotteryValidationSchema";
 import { getInitialFormValues } from "../../utils/getInitiateState";
 import SearchResultsNew from "./SearchResultsNew";
@@ -11,24 +10,8 @@ import useLotteryData from "../customHook/useLotteryData";
 import CountdownTimerLotto from "../../globlaCommon/CountdownTimerLotto";
 
 const LotteryUserPurchase = ({ MarketId }) => {
-  const { lotteryData, setLotteryData, handleSubmit, handleBuy } =
+  const { lotteryData, handleSubmit, handleBuy, handleBack, DROPDOWN_FIELDS } =
     useLotteryData(MarketId);
-
-  //back button after search button clicked
-  const handleBack = () => {
-    setLotteryData((prevData) => ({
-      ...prevData,
-      searchResult: null, // Reset search result to go back
-    }));
-  };
-
-  //all input boxes with dropdown defined here
-  const DROPDOWN_FIELDS = [
-    { label: "Sem Value", stateKey: "semValues", field: "selectedSem" },
-    { label: "Group", stateKey: "groups", field: "selectedGroup" },
-    { label: "Series", stateKey: "series", field: "selectedSeries" },
-    { label: "Number", stateKey: "numbers", field: "selectedNumber" },
-  ];
 
   return (
     <div className="outer-container">

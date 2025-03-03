@@ -1,21 +1,29 @@
 import { useEffect, useState, useCallback } from "react";
+import { toast } from "react-toastify";
+import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
+import { getInitialLotteryData } from "../../utils/getInitiateState";
+import { generateLotteryOptions } from "../../utils/helper";
 import {
   LotteryRange,
   SearchLotteryTicketUser,
   PurhaseLotteryTicketUser,
 } from "../../utils/apiService";
-import { generateLotteryOptions } from "../../utils/helper";
-import { getInitialLotteryData } from "../../utils/getInitiateState";
-import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
-import { toast } from "react-toastify";
 
 const useLotteryData = (MarketId) => {
   const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
 
-  // FETCHING ALL THE DROPDOWN DATA WITH RESPECT TO EACH MARKETiD ONLY
+  //all input boxes with dropdown defined here
+  const DROPDOWN_FIELDS = [
+    { label: "Sem Value", stateKey: "semValues", field: "selectedSem" },
+    { label: "Group", stateKey: "groups", field: "selectedGroup" },
+    { label: "Series", stateKey: "series", field: "selectedSeries" },
+    { label: "Number", stateKey: "numbers", field: "selectedNumber" },
+  ];
+
+  // FETCHING ALL THE DROPDOWN DATA WITH RESPECT TO EACH MARKETID ONLY
   const fetchLotteryData = useCallback(async () => {
     const response = await LotteryRange();
-    console.log("line17", response);
+
     const marketData = response?.data?.find(
       (market) => market.marketId === MarketId
     );
@@ -65,11 +73,9 @@ const useLotteryData = (MarketId) => {
     fetchLotteryData();
   }, [MarketId]);
 
-  // THE EVENT MESSAGE FOR  SSE(SERVER SIDE EVENT)
+  // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
   useEffect(() => {
-    console.log("[useEffect] Initialized: Listening for market updates...");
     const eventSource = updateLotteryMarketEventEmitter();
-    console.log("EVENTsOURCE LINE62", eventSource);
     eventSource.onmessage = function (event) {
       const updates = JSON.parse(event.data);
       if (updates?.length) {
@@ -89,7 +95,6 @@ const useLotteryData = (MarketId) => {
     };
 
     eventSource.onerror = (err) => {
-      console.error("[SSE] Connection error:", err);
       eventSource.close();
     };
 
@@ -144,12 +149,22 @@ const useLotteryData = (MarketId) => {
       searchResult: null,
     }));
   }, [lotteryData, MarketId]);
+
+  //back button after search button clicked
+  const handleBack = () => {
+    setLotteryData((prevData) => ({
+      ...prevData,
+      searchResult: null,
+    }));
+  };
+
   return {
     lotteryData,
-    setLotteryData,
     fetchLotteryData,
     handleSubmit,
     handleBuy,
+    handleBack,
+    DROPDOWN_FIELDS,
   };
 };
 
