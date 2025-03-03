@@ -17,6 +17,8 @@ export function getViewWinningRequest(body = {}) {
     debouncedSearchTerm: "",
     modalOpen: false,
     data: [],
+    marketId: "",
+    isRefresh: true
   };
 }
 
@@ -30,5 +32,6 @@ export function getViewWinningHistory(body = {}) {
     totalData: 0,
     searchTerm: "",
     debouncedSearchTerm: "",
+    openRowIndex: null
   };
 }

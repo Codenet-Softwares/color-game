@@ -35,6 +35,7 @@ import UpdateOuterAnnouncement from "../Pages/Announcements/UpdateOuterAnnouncem
 import UpdateInnerAnnouncement from "../Pages/Announcements/UpdateInnerAnnouncement";
 import CreateSubAdmin from "../Components/CreateSubAdmin";
 import ViewWinningRequest from "../Components/ViewWinningRequest";
+import ViewWinningHistory from "../Components/ViewWinningHistory";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -292,6 +293,12 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <ViewWinningRequest />
+              </RequireAuth>
+            } />
+          <Route path="viewWinningHistory"
+            element={
+              <RequireAuth>
+                <ViewWinningHistory />
               </RequireAuth>
             } />
         </Route>

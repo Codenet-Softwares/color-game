@@ -143,7 +143,7 @@ class AccountService {
   viewWinningRequestAccept(data, user) {
     return axios({
       method: "POST",
-      url: API_HOST + ``,
+      url: API_HOST + `/api/admin/approve-result`,
       data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -151,11 +151,10 @@ class AccountService {
     });
   }
 
-  viewWinninghistory(data, user) {
+  viewWinninghistory(user, page, pageSize) {
     return axios({
       method: "GET",
-      url: API_HOST + ``,
-      data: data,
+      url: API_HOST + `/api/subAdmin/result-histories?page=${page}&pageSize=${pageSize}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

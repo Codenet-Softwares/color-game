@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import SingleCard from "./common/singleCard";
 import WinningRequestAccept from "./modal/WinningRequestAccept";
+import Pagination from "./Pagination";
 
 const ViewWinningRequest = () => {
   const [viewWinningRequest, setViewWinningRequest] = useState(
@@ -13,12 +14,22 @@ const ViewWinningRequest = () => {
   );
   const auth = useAuth();
   console.log("isopen", viewWinningRequest);
-  const openModalWithData = (data) => {
+  const openModalWithData = (data, marketId) => {
     setViewWinningRequest((prev) => ({
       ...prev,
       modalOpen: true,
       data: data,
+      marketId: marketId
     }));
+  };
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= viewWinningRequest?.totalPages) {
+      setViewWinningRequest((prev) => ({
+        ...prev,
+        currentPage: page
+      }));
+    }
   };
 
   useEffect(() => {
@@ -30,30 +41,31 @@ const ViewWinningRequest = () => {
     }, 500);
 
     return () => clearTimeout(timer);
-  }, [viewWinningRequest.searchTerm]);
+  }, [viewWinningRequest?.searchTerm]);
 
   useEffect(() => {
     fetchViewWinningRequest();
   }, [
-    viewWinningRequest.currentPage,
-    viewWinningRequest.totalEntries,
-    viewWinningRequest.debouncedSearchTerm,
+    viewWinningRequest?.currentPage,
+    viewWinningRequest?.totalEntries,
+    viewWinningRequest?.debouncedSearchTerm,
+    viewWinningRequest?.isRefresh
   ]);
 
   const fetchViewWinningRequest = () => {
     auth.showLoader();
     AccountServices.viewWinningRequest(
       auth.user,
-      viewWinningRequest.currentPage,
-      viewWinningRequest.totalEntries
+      viewWinningRequest?.currentPage,
+      viewWinningRequest?.totalEntries
       // viewWinningRequest.debouncedSearchTerm
     )
       .then((res) => {
         setViewWinningRequest((prev) => ({
           ...prev,
           request: res?.data?.data || [],
-          // totalPages: res?.data.pagination?.totalPages,
-          // totalData: res?.data.pagination?.totalItems,
+          totalPages: res?.data.pagination?.totalPages,
+          totalData: res?.data.pagination?.totalItems,
         }));
       })
       .catch((err) => {
@@ -67,15 +79,15 @@ const ViewWinningRequest = () => {
   console.log("first", viewWinningRequest);
 
   let startIndex = Math.min(
-    (Number(viewWinningRequest.currentPage) - 1) *
-      Number(viewWinningRequest.totalEntries) +
-      1,
-    Number(viewWinningRequest.totalData)
+    (Number(viewWinningRequest?.currentPage) - 1) *
+    Number(viewWinningRequest?.totalEntries) +
+    1,
+    Number(viewWinningRequest?.totalData)
   );
   let endIndex = Math.min(
-    Number(viewWinningRequest.currentPage) *
-      Number(viewWinningRequest.totalEntries),
-    Number(viewWinningRequest.totalData)
+    Number(viewWinningRequest?.currentPage) *
+    Number(viewWinningRequest?.totalEntries),
+    Number(viewWinningRequest?.totalData)
   );
 
   return (
@@ -200,33 +212,31 @@ const ViewWinningRequest = () => {
                     <>
                       {viewWinningRequest?.request.map((bet, index) => (
                         <tr key={index}>
-                          <td>{startIndex + index}</td>
-                          <td>{bet.gameName}</td>
-                          <td>{bet.marketName}</td>
+                          <td>{index + 1}</td>
+                          <td>{bet?.gameName}</td>
+                          <td>{bet?.marketName}</td>
                           <td>
                             <button
                               className="btn btn-primary"
                               onClick={() => {
-                                if (viewWinningRequest.request.length === 1) {
-                                  alert("Only one request is available.");
-                                } else {
-                                  openModalWithData(bet.data);
-                                }
+                                openModalWithData(bet.data, bet.marketId);
                               }}
-                            //   disabled={viewWinningRequest.request.length === 1}
                             >
                               View More
                             </button>
 
                             <WinningRequestAccept
-                              data={viewWinningRequest.data}
-                              isOpen={viewWinningRequest.modalOpen}
+                              data={viewWinningRequest?.data}
+                              isOpen={viewWinningRequest?.modalOpen}
                               onClose={() =>
                                 setViewWinningRequest((prev) => ({
                                   ...prev,
                                   modalOpen: false,
                                 }))
                               }
+                              marketId={viewWinningRequest?.marketId}
+                              setViewWinningRequest={setViewWinningRequest}
+                              viewWinningRequest={viewWinningRequest}
                             />
                           </td>
                         </tr>
@@ -246,16 +256,18 @@ const ViewWinningRequest = () => {
               </table>
             </div>
           </SingleCard>
+          {viewWinningRequest?.request?.length > 0 && (
+            <Pagination
+              currentPage={viewWinningRequest?.currentPage}
+              totalPages={viewWinningRequest?.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={viewWinningRequest?.totalData}
+            />
+          )}
         </div>
       </div>
-      {/* <ViewWinningApproveModal
-      // isOpen={viewWinningRequest.modalOpen}
-      // onClose={() => setViewWinningRequest((prev) => ({
-      //     ...prev,
-      //     modalOpen: false
-      // }))}
-      // data={viewWinningRequest.data}  // Add this line
-      /> */}
     </div>
   );
 };
