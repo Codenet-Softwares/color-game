@@ -1500,7 +1500,7 @@ export const getResultRequests = async (req, res) => {
         },
         {
           model: Market,
-          attributes: ['marketName'],
+          attributes: ['marketName','marketId'],
         },
         {
           model: Runner,
@@ -1518,7 +1518,7 @@ export const getResultRequests = async (req, res) => {
         acc[key] = {
           gameName: request.Game.gameName,
           marketName: request.Market.marketName,
-          isWin: request.isWin,
+          marketId: request.Market.marketId,
           data: [],
         };
       }
