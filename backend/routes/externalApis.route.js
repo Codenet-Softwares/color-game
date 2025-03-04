@@ -3,7 +3,7 @@ import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, 
 import customErrorHandler from "../middleware/customErrorHandler.js";
 import { authenticateAdmin } from "../middleware/lottery.auth.js";
 import { authenticateSuperAdmin } from "../middleware/whiteLabelAuth.js";
-import { betHistorySchema, calculateProfitLossSchema, marketProfitLossSchema, runnerProfitLossSchema, validateDeleteLiveMarket, validateGetLiveUserBet, validateMarketId, validateRevokeLiveMarket, validateRevokeMarket, validateUserLiveBet, validateVoidMarket } from "../schema/commonSchema.js";
+import { betHistorySchema, calculateProfitLossSchema, marketProfitLossSchema, runnerProfitLossSchema, validateDeleteBetAfterWin, validateDeleteLiveMarket, validateGetLiveUserBet, validateMarketId, validateRevokeLiveMarket, validateRevokeMarket, validateUserLiveBet, validateVoidMarket } from "../schema/commonSchema.js";
 
 export const externalApisRoute = (app) => {
   app.get('/api/external-user-betHistory/:userName/:gameId', betHistorySchema, customErrorHandler, authenticateSuperAdmin, getExternalUserBetHistory);
@@ -49,7 +49,7 @@ export const externalApisRoute = (app) => {
 
   app.get('/api/external/get-exposure/:userId', getExposure)
 
-  app.post('/api/external/delete-bet-afterWin-lottery',  deleteBetAfterWin)
+  app.post('/api/external/delete-bet-afterWin-lottery',validateDeleteBetAfterWin, customErrorHandler, authenticateAdmin, deleteBetAfterWin)
 
 
 }

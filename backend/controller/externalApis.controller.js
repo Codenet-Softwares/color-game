@@ -1371,13 +1371,74 @@ export const getExposure = async (req, res) => {
 export const deleteBetAfterWin = async (req, res) => {
   const t = await sequelize.transaction();
   try {
-    const { marketId, userId, price } = req.body;
-  
+    const {
+      marketId,
+      userId,
+      sem,
+      prizeAmount,
+      prizeCategory,
+      complementaryPrize,
+    } = req.body;
 
+    let subtractAmount;
+    if (prizeCategory === "First Prize") {
+      subtractAmount = prizeAmount;
+    } else {
+      subtractAmount = sem * prizeAmount;
+    }
 
-    await user.save();
+    const winningAmount = await WinningAmount.findOne({
+      where: { userId, marketId },
+      transaction: t,
+    });
+
+    if (!winningAmount) {
+      await t.rollback();
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "Winning amount not found"
+          )
+        );
+    }
+
+    // Update the amount by subtracting the calculated amount
+    const updatedAmount = winningAmount.amount - subtractAmount;
+    await WinningAmount.update(
+      { amount: updatedAmount },
+      { where: { userId, marketId, type: "win" }, transaction: t }
+    );
+
+    const profitLossAmount = await LotteryProfit_Loss.findOne({
+      where: { userId, marketId },
+      transaction: t,
+    });
+
+    if (!profitLossAmount) {
+      await t.rollback();
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "profitLossAmount not found"
+          )
+        );
+    }
+
+    const updatedProfitLoss = profitLossAmount.profitLoss - subtractAmount;
+    await LotteryProfit_Loss.update(
+      { profitLoss: updatedProfitLoss },
+      { where: { userId, marketId }, transaction: t }
+    );
+
     await t.commit();
-
     return res
       .status(statusCode.success)
       .send(
@@ -1385,7 +1446,7 @@ export const deleteBetAfterWin = async (req, res) => {
           null,
           true,
           statusCode.success,
-          "Balances updated successfully and bet Deleted"
+          "Balances updated successfully and bet deleted"
         )
       );
   } catch (error) {

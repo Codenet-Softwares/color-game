@@ -750,3 +750,18 @@ export const validateUserLiveBet = [
     .isUUID()
     .withMessage("Invalid Market ID."),
 ];
+
+export const validateDeleteBetAfterWin = [
+  body('marketId')
+    .notEmpty().withMessage('Market ID is required')
+    .isUUID().withMessage('Market ID must be a valid UUID'),
+  body('userId')
+    .notEmpty().withMessage('userId is required')
+    .isUUID().withMessage('userId must be a valid UUID'),
+  body('sem')
+    .notEmpty().withMessage('sem is required'),
+  body('prizeAmount')
+    .notEmpty().withMessage('prizeAmount is required'),
+  body('prizeCategory')
+    .notEmpty().withMessage('prizeCategory is required')
+]
