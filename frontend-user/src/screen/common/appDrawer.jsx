@@ -216,7 +216,7 @@ function AppDrawer({
             } offset-md-2`}
             style={{
               overflowY: "auto",
-              height: "calc(100vh - 50px)",
+              height: "calc(100vh - 150px)",
             }}
           >
             <div className="col-md-12">{showCarousel && <InnerCarousel />}</div>

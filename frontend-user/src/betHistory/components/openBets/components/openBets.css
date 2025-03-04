@@ -5,7 +5,7 @@ background-color: #f8d7da;
     background-color: #cfe2f3;
 }
 .open-custom-scrollbar{
-    height: 245px;
+    height: 225px;
     overflow-y: auto;
 }
 .open-custom-scrollbar::-webkit-scrollbar {

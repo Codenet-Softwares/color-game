@@ -984,7 +984,7 @@ const GetMarketDetailByMarketId = () => {
                             <div className="row py-1 px-0 m-0">
                               <div className="d-block col-6 d-sm-none d-md-none d-lg-none d-xl-none">
                                 <button
-                                  className=" btn btn-sm bg-white border border-2 rounded-3 col-12 fw-bold"
+                                  className=" btn btn-sm border border-2 rounded-3 col-12 fw-bold"
                                   style={{ background: "#F84769" }}
                                   onClick={() => handleCancel()}
                                 >
