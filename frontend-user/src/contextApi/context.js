@@ -59,7 +59,7 @@ const AppProvider = ({ children }) => {
     if (store.user.isLogin) {
       fetchWalletBalance();
     }
-  }, [store.user.isLogin, fetchWalletBalance]);
+  }, [store.user.isLogin]);
 
 
   // Save state to local storage whenever it changes
@@ -69,7 +69,7 @@ const AppProvider = ({ children }) => {
     localStorage.setItem(strings.LOCAL_STORAGE_KEY, JSON.stringify(dummyStore));
   }, [store]);
 
-  return <AppContext.Provider value={{ store, dispatch, fetchWalletBalance, updateWalletAndExposure }}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={{ store, dispatch, updateWalletAndExposure }}>{children}</AppContext.Provider>;
 };
 
 const useAppContext = () => {

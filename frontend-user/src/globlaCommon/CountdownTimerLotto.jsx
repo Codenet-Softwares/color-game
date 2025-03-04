@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 import "./CountdownTimerLotto.css";
-const CountdownTimerLotto = ({ endDate, fontSize, onExpire }) => {
+const CountdownTimerLotto = ({ endDate }) => {
       const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(endDate));
         useEffect(() => {
           const interval = setInterval(() => {
             setTimeLeft(calculateTimeLeft(endDate));
           }, 1000);
           return () => clearInterval(interval);
-        }, [endDate, onExpire]);
+        }, [endDate]);
       
         const { days, hours, minutes, seconds } = timeLeft;
   return (

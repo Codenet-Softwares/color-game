@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
 
-const CountdownTimer = ({ endDate, fontSize, onExpire }) => {
+const CountdownTimer = ({ endDate, fontSize }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(endDate));
 
   useEffect(() => {
@@ -9,7 +9,7 @@ const CountdownTimer = ({ endDate, fontSize, onExpire }) => {
       setTimeLeft(calculateTimeLeft(endDate));
     }, 1000);
     return () => clearInterval(interval);
-  }, [endDate, onExpire]);
+  }, [endDate]);
 
   const { days, hours, minutes, seconds } = timeLeft;
 
