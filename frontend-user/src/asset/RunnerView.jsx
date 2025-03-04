@@ -1,11 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from 'react';
-import { useParams, useLocation, Link, useSearchParams } from 'react-router-dom';
-import AccountServices from '../../Services/AccountServices';
-import Pagination from '../../Components/Pagination';
-import { useAuth } from '../../Utils/Auth';
-import CreateRate from '../../Components/modal/CreateRate';
-import './runnerView.css';
+import React, { useEffect, useState } from "react";
+import {
+  useParams,
+  useLocation,
+  Link,
+  useSearchParams,
+} from "react-router-dom";
+import AccountServices from "../../Services/AccountServices";
+import Pagination from "../../Components/Pagination";
+import { useAuth } from "../../Utils/Auth";
+import CreateRate from "../../Components/modal/CreateRate";
+import "./runnerView.css";
 
 const RunnerView = () => {
   const auth = useAuth();
@@ -15,25 +20,27 @@ const RunnerView = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [totalEntries, setTotalEntries] = useState(5);
   const [totalData, setTotalData] = useState(0);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [rateShow, setRateShow] = useState(false);
-  const [runnerName, setRunnerName] = useState('');
-  const [gameid, setGameId] = useState('');
+  const [runnerName, setRunnerName] = useState("");
+  const [gameid, setGameId] = useState("");
   const [searchParams] = useSearchParams();
 
-  console.log(runner, marketPlace, runners);
-
-  const marketid = searchParams.get('marketId');
+  const marketid = searchParams.get("marketId");
 
   const location = useLocation();
   const gameidManage = location.state === null ? gameid : location.state.gameid;
-  console.log('gameid===>', location.state);
-  console.log('manageGameid===>', gameidManage);
 
   const fetchdata = () => {
-    AccountServices.ViewRunner(auth.user, currentPage, totalEntries, marketid, gameidManage, search)
+    AccountServices.ViewRunner(
+      auth.user,
+      currentPage,
+      totalEntries,
+      marketid,
+      gameidManage,
+      search
+    )
       .then((res) => {
-        console.log(res);
         setRunners(res.data.data); // Update the state with the received runners
         setTotalPages(res.data.pagination.totalPages); // Update the total pages
         setTotalData(res.data.pagination.totalItems); // Update the total data count
@@ -46,7 +53,7 @@ const RunnerView = () => {
     setRunnerName(name);
     setGameId(id);
   };
-  console.log(gameid);
+
   useEffect(() => {
     fetchdata();
   }, [auth, rateShow, currentPage, totalEntries, marketId, search]);
@@ -55,7 +62,6 @@ const RunnerView = () => {
   let endIndex = Math.min(currentPage * totalEntries, totalData);
 
   const handlePageChange = (page) => {
-    console.log('page', page);
     setCurrentPage(page);
   };
 
@@ -67,7 +73,9 @@ const RunnerView = () => {
             <div className="page_title_left">
               <h3 className="f_s_30 f_w_700 dark_text">
                 <Link to="/gameMarket">GameMarket</Link>&nbsp;/&nbsp;
-                <Link to={`/gameMarket/${marketPlace}?gameId=${gameidManage}`}>{marketPlace}&nbsp;</Link>
+                <Link to={`/gameMarket/${marketPlace}?gameId=${gameidManage}`}>
+                  {marketPlace}&nbsp;
+                </Link>
                 /&nbsp;<Link>{runner}</Link>
               </h3>
             </div>
@@ -87,7 +95,10 @@ const RunnerView = () => {
               />
             </div>
             <div className="col-md-6">
-              <select className="form-select mb-3" onChange={(e) => setTotalEntries(parseInt(e.target.value))}>
+              <select
+                className="form-select mb-3"
+                onChange={(e) => setTotalEntries(parseInt(e.target.value))}
+              >
                 <option value="5">Show 5 entries</option>
                 <option value="10">10 entries</option>
                 <option value="15">15 entries</option>
@@ -123,21 +134,21 @@ const RunnerView = () => {
                             onClick={() => {
                               handleRateModalOpen(
                                 runner.runnerId,
-                                location.state === null ? gameid : location.state.gameid,
+                                location.state === null
+                                  ? gameid
+                                  : location.state.gameid
                               );
-                              console.log(runner.runnerName);
+                    
                             }}
                           >
-                            {' '}
-                            <i className="ti-arrow-circle-right"></i> Create Rate
+                            {" "}
+                            <i className="ti-arrow-circle-right"></i> Create
+                            Rate
                           </a>
                           <a
                             className="dropdown-item"
                             href="#"
-                            // onClick={() => {
-                            //   handleRateModalOpen(runner.runnerName);
-                            //   console.log(runner.runnerName);
-                            // }}
+                        
                           >
                             <i className="ti-arrow-circle-right"></i>View Rate
                           </a>
@@ -170,8 +181,14 @@ const RunnerView = () => {
           <h1>Suspended</h1>
         </div>
       )}
-      {/* {console.log(location.state.gameid)} */}
-      <CreateRate show={rateShow} setShow={setRateShow} gameName={gameid} runner={marketid} runnerName={runnerName} />
+ 
+      <CreateRate
+        show={rateShow}
+        setShow={setRateShow}
+        gameName={gameid}
+        runner={marketid}
+        runnerName={runnerName}
+      />
     </div>
   );
 };

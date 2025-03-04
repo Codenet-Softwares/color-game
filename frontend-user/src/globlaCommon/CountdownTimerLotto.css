@@ -1,0 +1,76 @@
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    width: 26%;
+    border: 3px solid #8b4513; /* Wooden touch */
+    max-height: 20px;
+  }
+  
+  /* Glowing LED digits */
+  .countdown-timer-lotto-cuxtomx__time {
+    font-size: 0.77rem;
+    font-weight: bold;
+    color: hsl(0, 100%, 50%);
+    font-family: "DS-Digital", "Seven Segment", monospace;
+  }
+  
+  /* Labels under time digits */
+  .countdown-timer-lotto-cuxtomx__label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+  }
+  
+  /* Blinking colons effect */
+  .countdown-timer-lotto-cuxtomx__colon {
+    font-weight: bold;
+    color: #ff4747;
+    text-shadow: 0 0 10px #ff4747, 0 0 20px #ff4747, 0 0 30px #ff4747;
+    animation: blink 1s infinite alternate;
+    margin: 0 10px;
+    transform: translateY(-1px);
+  }
+  
+  /* Blink animation */
+  @keyframes blink {
+    0% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.2;
+    }
+  }
+  
+  /* Responsive Design for mobile and tablet */
+  @media (max-width: 768px) {
+    .countdown-container {
+      width: 70%;
+      max-height: 60px;
+    }
+  
+    .countdown-timer-lotto-cuxtomx__time {
+      font-size: 0.77rem;
+      font-family: "DS-Digital", "Seven Segment", monospace;
+    }
+    .countdown-timer-lotto-cuxtomx__colon {
+      font-size: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .countdown-container {
+      width: 120%;
+      max-height: 34px;
+    }
+  
+    .countdown-timer-lotto-cuxtomx__time {
+      font-size: 0.77rem;
+      font-family: "DS-Digital", "Seven Segment", monospace;
+    }
+    .countdown-timer-lotto-cuxtomx__colon {
+      font-size: 0.8rem;
+      transform: translateY(-1px);
+    }
+  }
+  
