@@ -256,7 +256,7 @@ const GetMarketDetailByMarketId = () => {
         }
       }
     }
-    console.log("highestNegetive", arr);
+
     const highestNegetive = lowestNegativeNumber(arr);
 
     if (Math.abs(preExposure) >= Math.abs(highestNegetive.toFixed(2))) {

@@ -8,8 +8,10 @@ import {
   SearchLotteryTicketUser,
   PurhaseLotteryTicketUser,
 } from "../../utils/apiService";
+import { useAppContext } from "../../contextApi/context";
 
 const useLotteryData = (MarketId) => {
+  const { updateWalletAndExposure } = useAppContext(); // Get update function from context for wallet and exposure
   const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
 
   //all input boxes with dropdown defined here
@@ -115,7 +117,7 @@ const useLotteryData = (MarketId) => {
       };
 
       const response = await SearchLotteryTicketUser(requestBody);
-      console.log("Purchase successful", response);
+
       setLotteryData((prevData) => ({
         ...prevData,
         searchResult: response?.data || null, // Store search results
@@ -142,6 +144,9 @@ const useLotteryData = (MarketId) => {
     };
 
     await PurhaseLotteryTicketUser(body);
+
+    //  Update wallet & exposure after purchase
+    updateWalletAndExposure();
 
     // Reset back to form after purchase
     setLotteryData((prevData) => ({

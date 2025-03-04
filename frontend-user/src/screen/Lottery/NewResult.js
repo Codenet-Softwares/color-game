@@ -17,7 +17,7 @@ const NewResult = () => {
     scrollIndex,
     scrollIndex + maxVisibleMarkets
   );
-  console.log("line 19 =======>>", results);
+
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index); // Toggle open/close
   };
@@ -53,45 +53,18 @@ const NewResult = () => {
   useEffect(() => {
     fetchMarkets();
   }, [selectedDate]);
-   // let this be commented do not delete for future reference 
-  // const fetchResults = () => {
-  //   if (!selectedMarket) return;
-
-  //   setError(null);
-  //   console.log("Fetching results for:", selectedMarket.marketId, "on date:", selectedDate);
-
-  //   GetWiningResult({ marketId: selectedMarket.marketId, date: selectedDate }).then((response) => {
-  //     console.log("Results API Response:", response);
-
-  //     if (response && response.success) {
-  //       if (response.data && response.data.length > 0) {
-  //         setResults(response.data);
-  //       } else {
-  //         setResults([]);
-  //         setError("No prize data available for this date.");
-  //       }
-  //     } else {
-  //       setError(response?.message || "Error fetching results.");
-  //     }
-  //   });
-  // };
 
   const fetchResults = () => {
     if (!selectedMarket) return; // Ensure a market is selected
 
     setError(null); // Clear previous errors
-    console.log(
-      "Fetching results for:",
-      selectedMarket.marketId,
-      "on date:",
-      selectedDate
-    );
+  
 
     GetWiningResult({
       marketId: selectedMarket.marketId,
       date: selectedDate,
     }).then((response) => {
-      console.log("Results API Response:", response);
+    
 
       if (response && response.success) {
         if (response.data && response.data.length > 0) {

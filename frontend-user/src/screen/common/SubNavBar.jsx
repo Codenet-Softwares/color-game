@@ -101,17 +101,17 @@ const SubNavbar = () => {
           </button>
 
           <a className="navbar-brand" href={`/home`}>
-  <img
-    src={Logo}
-    alt="Logo"
-    style={{
-      width: "170px", // Default size for larger screens
-      maxWidth: "100%", // Ensures it scales down on smaller screens
-      height: "auto", // Maintains aspect ratio
-    }}
-    className="img-fluid"
-  />
-</a>
+            <img
+              src={Logo}
+              alt="Logo"
+              style={{
+                width: "170px", // Default size for larger screens
+                maxWidth: "100%", // Ensures it scales down on smaller screens
+                height: "auto", // Maintains aspect ratio
+              }}
+              className="img-fluid"
+            />
+          </a>
 
           <button className="navbar-toggler border-0" type="button">
             {store.user.isLogin ? (
@@ -145,7 +145,7 @@ const SubNavbar = () => {
                     padding: "5px 8px",
                   }}
                 >
-                  Exp : {exposureAndWallet.exposure ?? 0}
+                  Exp : {exposureAndWallet.exposure ?? store?.user?.wallet?.exposure ?? 0}
                 </span>
               </span>
             ) : (

@@ -25,29 +25,16 @@ function AppDrawer({
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
   );
-  const [lotteryDrawTimes, setLotteryDrawTimes] = useState([]);
-  const [lotteryToggle, setLotteryToggle] = useState(false); // New state for toggling draw times
+
   const [lotteryNewDrawTimes, setLotteryNewDrawTimes] = useState([]);
   const [lotteryNewToggle, setLotteryNewToggle] = useState(false); // New state for toggling draw times
   const { dispatch, store } = useAppContext();
 
   useEffect(() => {
     user_getAllGames();
-    fetchLotteryMarkets();
-    fetchLotteryNewMarkets();
-  }, [lotteryToggle, lotteryNewToggle]);
 
-  // Function to fetch draw times from API
-  async function fetchLotteryMarkets() {
-    const response = await getLotteryMarketsApi(store);
-    if (response?.success) {
-      setLotteryDrawTimes(response.data);
-      // window.location.reload();
-    } else {
-      console.warn("Failed to fetch lottery markets. Response:", response);
-      setLotteryDrawTimes([]);
-    }
-  }
+    fetchLotteryNewMarkets();
+  }, [lotteryNewToggle]);
 
   // function for new page fetch
   async function fetchLotteryNewMarkets() {
@@ -87,14 +74,10 @@ function AppDrawer({
     }
   };
 
-  const handleLotteryToggle = () => {
-    setLotteryToggle(!lotteryToggle);
-  };
-
   function getLeftNavBar() {
     return (
       <div
-        className="sidebar border mt-4"
+        className="sidebar border mt-5"
         style={{ overflowY: "auto", height: "82vh" }}
       >
         <span
@@ -117,42 +100,8 @@ function AppDrawer({
           />
         </span>
 
-        <ul className="overflow-auto">
-          {/* <li
-            className="MenuHead lottery-section text-center"
-            onClick={handleLotteryToggle}
-          >
-            <div className="lottery-wrapper mt-2">
-              <span className="new-tag">New</span>
-              Lottery
-              <span
-                className={`dropdown-icon ${lotteryToggle ? "active" : ""}`}
-              >
-                ▼
-              </span>
-            </div>
-          </li> */}
-          {/* Display lottery draw times */}
-          {/* {lotteryToggle && lotteryDrawTimes.length > 0 && (
-            <ul className="subMenuItems">
-              {lotteryDrawTimes.map((market) => (
-                <li key={market.marketId} className="subMenuHead">
-                  <Link
-                    to={`/lottery/${market.marketId}`}
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent default client-side navigation
-                      window.location.href = `/lottery/${market.marketId}`; // Force page reload
-                    }}
-                  >
-                    <span className="draw-date-icon">🎟️</span>
-                    {market.marketName}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )} */}
-
-          {lotteryNewDrawTimes && lotteryNewDrawTimes.length > 0 && (
+        
+        {lotteryNewDrawTimes && lotteryNewDrawTimes.length > 0 && (
             <li
               className="MenuHead lottery-section text-center"
               onClick={handleLotteryNewToggle}
@@ -178,7 +127,6 @@ function AppDrawer({
                         to={`/lottoPurchase/${market.marketId}`}
                         onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
                       >
-                        <span className="draw-date-icon">🎟️</span>
                         {market.marketName}
                       </Link>
                     </li>
@@ -187,13 +135,13 @@ function AppDrawer({
               )}
             </li>
           )}
+        
+        
+        
+        
+        <ul className="overflow-auto">
+        
 
-          {/* <li
-            className={toggleStates["inPlay"] ? "subMenuHead" : "MenuHead"}
-            onClick={() => handleToggle("inPlay")}
-          >
-            <a href="#">In-Play</a>
-          </li> */}
           {user_allGames?.map((gameObj, index) => (
             <React.Fragment key={index}>
               {gameObj?.gameName === "Lottery" ? (

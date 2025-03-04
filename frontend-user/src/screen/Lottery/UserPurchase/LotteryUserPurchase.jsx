@@ -1,13 +1,13 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import ReusableDropdown from "../../globlaCommon/ReusableDropdown";
-import lotteryValidationSchema from "../../schema/lotteryValidationSchema";
-import { getInitialFormValues } from "../../utils/getInitiateState";
-import SearchResultsNew from "./SearchResultsNew";
+import ReusableDropdown from "../../../globlaCommon/ReusableDropdown";
+import lotteryValidationSchema from "../../../schema/lotteryValidationSchema";
+import { getInitialFormValues } from "../../../utils/getInitiateState";
 import moment from "moment";
 import "./LotteryUserPurchase.css";
-import useLotteryData from "../customHook/useLotteryData";
-import CountdownTimerLotto from "../../globlaCommon/CountdownTimerLotto";
+import useLotteryData from "../../customHook/useLotteryData";
+import CountdownTimerLotto from "../../../globlaCommon/CountdownTimerLotto";
+import SearchResultsNew from "./SearchResultsNew";
 
 const LotteryUserPurchase = ({ MarketId }) => {
   const { lotteryData, handleSubmit, handleBuy, handleBack, DROPDOWN_FIELDS } =
@@ -17,7 +17,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
     <div className="outer-container">
       {lotteryData?.searchResult &&
       lotteryData?.searchResult?.tickets?.length > 0 ? (
-        <div className="inner-container border rounded shadow mx-auto p-3 d-flex flex-column justify-content-center align-items-center ">
+        <div className="inner-container border rounded shadow mx-auto  p-3 d-flex flex-column justify-content-center align-items-center ">
           <SearchResultsNew
             lotteryData={lotteryData}
             handleBack={handleBack}
@@ -108,7 +108,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
 
                   <button
                     type="submit"
-                    className="btn text-uppercase text-white submit-btn"
+                    className="text-uppercase text-white submit-btn"
                     disabled={isSubmitting || lotteryData?.isSuspend}
                   >
                     {isSubmitting ? "Processing..." : "Search"}

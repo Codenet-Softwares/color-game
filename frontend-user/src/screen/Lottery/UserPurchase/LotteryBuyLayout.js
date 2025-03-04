@@ -1,8 +1,8 @@
 import React from "react";
-import AppDrawer from "../common/appDrawer";
-import { useAppContext } from "../../contextApi/context";
-import Layout from "../layout/layout";
-import "./LotteryCards.css";
+import AppDrawer from "../../common/appDrawer";
+import { useAppContext } from "../../../contextApi/context";
+import Layout from "../../layout/layout";
+
 
 import { useParams } from "react-router-dom";
 import LotteryUserPurchase from "./LotteryUserPurchase";
@@ -17,7 +17,7 @@ const LotteryBuyLayout = () => {
       <div
         className={`global-margin-top${store.user.isLogin ? "-logged" : ""} `}
       >
-        <AppDrawer showCarousel={false} isMobile={false} isHomePage={true}>
+        <AppDrawer showCarousel={false} isHomePage={true}>
           <LotteryUserPurchase MarketId={marketId} />
         </AppDrawer>
       </div>

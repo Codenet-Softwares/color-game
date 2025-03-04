@@ -87,7 +87,7 @@ const ReusableDropdown = ({
       </InputGroup>
 
       {state?.showDropdown && (
-        <Dropdown.Menu show className="dropdown-menu">
+        <Dropdown.Menu show className="dropdown-menu text-center">
           <div className="dropdown-grid-container">
             {filteredOptions?.length > 0 ? (
               <Grid
