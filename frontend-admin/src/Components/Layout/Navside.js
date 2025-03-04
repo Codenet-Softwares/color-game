@@ -16,7 +16,7 @@ const Navside = () => {
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [isInnerAnnouncement, setIsInnerAnnouncement] = useState(false);
   const [isOuterAnnouncement, setIsOuterAnnouncement] = useState(false);
-  const [isWinningRequest, setIsWinningRequest] = useState(false);
+  const [isWinningRequest, setIsWinningRequest] = useState(true);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
 
