@@ -72,10 +72,11 @@ export const getExternalUserBetHistory = async (req, res) => {
         );
     }
 
+    let model
+
     const whereCondition = {
       userName: userName,
       gameId: gameId,
-      isVoid: false,
       date: {
         [Op.between]: [startDate, endDate],
       },
@@ -83,9 +84,21 @@ export const getExternalUserBetHistory = async (req, res) => {
 
     if (type === "void") {
       whereCondition.isVoid = true;
+      model = BetHistory;
+    }else if(type === "settle")
+    {
+      whereCondition.isWin = true;
+      model = BetHistory;
+    }else if(type === "unsettle")
+    {
+      whereCondition.isWin = false;
+      model = CurrentOrder;
+    }else{
+      whereCondition.isVoid = false;
+      model = BetHistory;
     }
 
-    const { count, rows } = await BetHistory.findAndCountAll({
+    const { count, rows } = await model.findAndCountAll({
       where: whereCondition,
       attributes: [
         "userId",
@@ -97,8 +110,6 @@ export const getExternalUserBetHistory = async (req, res) => {
         "value",
         "type",
         "date",
-        "matchDate",
-        "placeDate",
       ],
       limit,
       offset: (page - 1) * limit,
@@ -117,6 +128,7 @@ export const getExternalUserBetHistory = async (req, res) => {
       })
     );
   } catch (error) {
+    console.log("error",error)
     res
       .status(statusCode.internalServerError)
       .send(
