@@ -1,0 +1,44 @@
+/* Back Button */
+.back-button {
+  background-color: #6c757d;
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
+/* Heading */
+.search-results-heading {
+  color: #4682B4;
+  font-weight: bold;
+}
+
+/* Search Result Container */
+.search-result-container {
+  margin-top: 1rem;
+}
+
+/* Ticket List Container */
+.ticket-list-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #B0B0B0;
+}
+
+/* Ticket Grid */
+.ticket-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 4fr);
+  gap: 20px;
+}
+
+/* Dynamic Scroll Behavior */
+.scrollable-container {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+/* Price & SEM Text */
+.result-price, .result-sem {
+  color: #3b6e91;
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+}

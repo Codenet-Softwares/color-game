@@ -184,7 +184,7 @@ export function getLotteryRange(body = {}) {
     series_end: "",
     number_start: "",
     number_end: "",
-    isActive: null
+    isActive: null,
   };
 }
 
@@ -206,6 +206,34 @@ export function getUserLotteryBetHistory(body = {}) {
     totalData: 0,
     currentPage: 1,
     itemPerPage: 10,
+  };
+}
+
+
+// initiallotteryState for loteryuserpurchase
+
+export function getInitialLotteryData() {
+  return {
+    groups: [],
+    series: [],
+    numbers: [],
+    semValues: ["5 sem", "10 sem", "25 sem", "50 sem", "100 sem", "200 sem"],
+    refreshKey: 0,
+    marketName: "",
+    searchResult: null,
+    price: null,
+    startTimeForShowCountdown: null,
+    endTimeForShowCountdown: null,
+    isSuspend: false, // Added this field
+  };
+}
+
+export function getInitialFormValues() {
+  return {
+    selectedSem: "",
+    selectedGroup: "",
+    selectedSeries: "",
+    selectedNumber: "",
   };
 }
 
@@ -239,3 +267,4 @@ export function getOpenBet(body = {}) {
     openBet: [],
   };
 }
+

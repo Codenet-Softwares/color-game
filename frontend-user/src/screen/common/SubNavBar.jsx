@@ -75,6 +75,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
           className="container-fluid d-flex align-items-center justify-content-between"
           style={{ maxWidth: "100%", padding: "5px 10px" }}
         >
+
  <div className="d-flex flex-column">
             <button
               className="btn btn-primary d-lg-none hambargerIcon d-md-none"
@@ -89,6 +90,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               <button
                 className="btn btn-primary mt-2 d-lg-none hambargerIcon d-md-none"
                 type="button"
+
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasTop"
                 aria-controls="offcanvasTop"
@@ -177,9 +179,13 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                   }}
                   onClick={() => setShowModalLogin(true)}
                 >
+
+                  Exp : {exposureAndWallet.exposure ?? store?.user?.wallet?.exposure ?? 0}
+
                   <FaUser style={{ width: "12px" }} className="mb-1" />
                   &nbsp;
                   <b>LOG IN</b>
+
                 </span>
               )}
             </button>

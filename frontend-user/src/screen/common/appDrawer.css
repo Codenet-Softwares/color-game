@@ -106,13 +106,13 @@
 }
 
 .sidebar ul li a:hover {
-  background-color: #2cb3d1;
-  color: white;
+  background-color: #e6f7ff;
+  color: hsl(216, 5%, 57%);
 }
 
 .sidebar ul li.subMenuItems a:hover {
-  background-color: #2cb3d1;
-  color: white;
+  background-color:#d3e0ea;
+  color: #f8f9fa;
 }
 
 /* lottery section  */
@@ -122,17 +122,21 @@
   font-weight: bold;
   color: #fff;
   padding: 10px;
-  background-color: #27a6c3;
-  /* margin: 10px 0; */
+
   list-style-type: none;
   cursor: pointer; 
   transition: background-color 0.3s; 
 }
 
+.lottery-section:hover {
+  background-color: #f1f5f8; /* Soft gray */
+  color: #f8f9fa !important; /* Off-white for contrast */
+}
+
 .lottery-wrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between; 
+
 }
 
 .new-tag {
@@ -146,9 +150,6 @@
   animation: blink 1s infinite;
 }
 
-.lottery-section:hover {
-  background-color: #27a6c3; 
-}
 
 .dropdown-icon {
   margin-left: 10px;
@@ -166,7 +167,7 @@
 
 .subMenuHead {
   font-size: 15px;
-  color: #444;
+  /* color: #444; */
   font-weight: bold;
   display: flex;
   align-items: center;
@@ -174,12 +175,11 @@
   background: linear-gradient(135deg, #e6f7ff, #fff); 
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid rgb(211, 208, 208);
+  border: 2px solid rgb(211, 208, 208);
 }
 
 .subMenuHead:hover {
-  color: #333;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); 
+
 }
 
 /* Draw date icon styling */

@@ -23,7 +23,7 @@ const ProfitAndLossLotteryEvent = ({
     SetMarketId(id);
   };
   const handleItemPerPage = (event) => {
-    console.log("")
+ 
     SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),

@@ -30,28 +30,32 @@ function AppDrawer({
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
   );
-  const [lotteryDrawTimes, setLotteryDrawTimes] = useState([]);
-  const [lotteryToggle, setLotteryToggle] = useState(false); // New state for toggling draw times
+
+  const [lotteryNewDrawTimes, setLotteryNewDrawTimes] = useState([]);
+  const [lotteryNewToggle, setLotteryNewToggle] = useState(false); // New state for toggling draw times
   const { dispatch, store } = useAppContext();
   const location = useLocation();
   console.log("location", location);
   useEffect(() => {
     user_getAllGames();
-    fetchLotteryMarkets();
-  }, [lotteryToggle]);
 
-  // Function to fetch draw times from API
-  async function fetchLotteryMarkets() {
+    fetchLotteryNewMarkets();
+  }, [lotteryNewToggle]);
+
+  // function for new page fetch
+  async function fetchLotteryNewMarkets() {
     const response = await getLotteryMarketsApi(store);
     if (response?.success) {
-      setLotteryDrawTimes(response.data);
+      setLotteryNewDrawTimes(response.data);
       // window.location.reload();
     } else {
       console.warn("Failed to fetch lottery markets. Response:", response);
-      setLotteryDrawTimes([]);
+      setLotteryNewDrawTimes([]);
     }
   }
-
+  const handleLotteryNewToggle = () => {
+    setLotteryNewToggle(!lotteryNewToggle);
+  };
   const handleAllId = (gameId, marketId) => {
     dispatch({
       type: strings.placeBidding,
@@ -76,9 +80,6 @@ function AppDrawer({
     }
   };
 
-  const handleLotteryToggle = () => {
-    setLotteryToggle(!lotteryToggle);
-  };
 
   function getLeftNavBar() {
     return (
@@ -106,47 +107,48 @@ function AppDrawer({
           />
         </span>
 
-        <ul className="overflow-auto">
-          <li
-            className="MenuHead lottery-section text-center"
-            onClick={handleLotteryToggle}
-          >
-            <div className="lottery-wrapper mt-2">
-              <span className="new-tag">New</span>
-              Lottery
-              <span
-                className={`dropdown-icon ${lotteryToggle ? "active" : ""}`}
-              >
-                ▼
-              </span>
-            </div>
-          </li>
-          {/* Display lottery draw times */}
-          {lotteryToggle && lotteryDrawTimes.length > 0 && (
-            <ul className="subMenuItems">
-              {lotteryDrawTimes.map((market) => (
-                <li key={market.marketId} className="subMenuHead">
-                  <Link
-                    to={`/lottery/${market.marketId}`}
-                    onClick={(e) => {
-                      e.preventDefault(); // Prevent default client-side navigation
-                      window.location.href = `/lottery/${market.marketId}`; // Force page reload
-                    }}
-                  >
-                    <span className="draw-date-icon">🎟️</span>
-                    {market.marketName}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
+        
+        {lotteryNewDrawTimes && lotteryNewDrawTimes.length > 0 && (
+            <li
+              className="MenuHead lottery-section text-center"
+              onClick={handleLotteryNewToggle}
+            >
+              <div className="lottery-wrapper text-dark mt-2 text-uppercase">
+                <span className="new-tag">New</span>
+                Lottery New
+                <span
+                  className={`dropdown-icon ${
+                    lotteryNewToggle ? "active" : ""
+                  }`}
+                >
+                  ▼
+                </span>
+              </div>
 
-          {/* <li
-            className={toggleStates["inPlay"] ? "subMenuHead" : "MenuHead"}
-            onClick={() => handleToggle("inPlay")}
-          >
-            <a href="#">In-Play</a>
-          </li> */}
+              {/* Display lottery draw times only when toggled */}
+              {lotteryNewToggle && (
+                <ul className="subMenuItems text-info mt-4">
+                  {lotteryNewDrawTimes.map((market) => (
+                    <li key={market.marketId} className="subMenuHead mt-2 text-info text-uppercase">
+                      <Link
+                        to={`/lottoPurchase/${market.marketId}`}
+                        onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
+                      >
+                        {market.marketName}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          )}
+        
+        
+        
+        
+        <ul className="overflow-auto">
+        
+
           {user_allGames?.map((gameObj, index) => (
             <React.Fragment key={index}>
               {gameObj?.gameName === "Lottery" ? (
@@ -215,8 +217,11 @@ function AppDrawer({
               ["/home", "/"].includes(location?.pathname) ? "7" : "10"
             } offset-md-2`}
             style={{
+
               overflowY: "auto",
+
               height: "calc(100vh - 150px)",
+
             }}
           >
             <div className="col-md-12">{showCarousel && <InnerCarousel />}</div>
