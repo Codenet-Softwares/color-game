@@ -84,7 +84,7 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className="sidebar border mt-5"
+        className="sidebar border mt-4"
         style={{ overflowY: "auto", height: "82vh" }}
       >
         <span
@@ -113,7 +113,7 @@ function AppDrawer({
               className="MenuHead lottery-section text-center"
               onClick={handleLotteryNewToggle}
             >
-              <div className="lottery-wrapper mt-2">
+              <div className="lottery-wrapper text-dark mt-2 text-uppercase">
                 <span className="new-tag">New</span>
                 Lottery New
                 <span
@@ -127,9 +127,9 @@ function AppDrawer({
 
               {/* Display lottery draw times only when toggled */}
               {lotteryNewToggle && (
-                <ul className="subMenuItems mt-4">
+                <ul className="subMenuItems text-info mt-4">
                   {lotteryNewDrawTimes.map((market) => (
-                    <li key={market.marketId} className="subMenuHead mt-2">
+                    <li key={market.marketId} className="subMenuHead mt-2 text-info text-uppercase">
                       <Link
                         to={`/lottoPurchase/${market.marketId}`}
                         onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
