@@ -1,15 +1,16 @@
 import React from "react";
+import "./openBets.css"; // Import external CSS file
 
 const RenderLayTable = ({ betHistoryData }) => {
   console.log("first", betHistoryData);
 
   return (
     <div
-      className="card shadow p-3 mb-5 rounded"
+      className="card shadow p-1 rounded"
       style={{ backgroundColor: "#f8d7da" }}
     >
-      <div className="card-body">
-        <div className="table-responsive">
+      <div className="card-body"> 
+        <div className="table-responsive open-custom-scrollbar" >
           <table className="table table-striped table-sm">
             {/* Table header */}
             <thead>

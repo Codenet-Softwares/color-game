@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./gameListView.css";
 import {
   userBidding,
   userWallet,
@@ -440,39 +441,20 @@ const GetMarketDetailByMarketId = () => {
             >
               {/* Foreground: SUSPENDED message */}
               {!isActive && (
-                <div
-                  className="position-absolute  d-flex justify-content-center align-items-center"
-                  style={{
-                    zIndex: 10, // Ensure this is higher than the zIndex of other content
-                    backgroundColor: "rgba(0, 0, 0, 0.2)", // Optional: semi-transparent background
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    top: 0,
-                  }}
-                >
-                  <h1
-                    className="fw-bold fs-3 text-danger"
-                    style={{
-                      zIndex: 11,
-                      width: "100% ",
-                      height: "100% ",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <span>SUSPENDED</span>
+                <div className="position-absolute d-flex justify-content-center align-items-center suspend_main">
+                  <h1 className="suspend_heading">
+                    <span className="h1 fw-bold text-danger">SUSPENDED</span>
                   </h1>
                 </div>
               )}
-              <div
-                className="col-12 p-1 mt-2 fw-bold d-flex justify-content-between align-items-center rounded px-3"
-                style={{ backgroundColor: "#2CB3D1" }}
-              >
+              <div className="col-12 p-2 mt-2 fw-bold d-flex flex-column flex-md-row justify-content-between align-items-center rounded px-3 shadow-sm market-row time_background">
                 {/* Left side: Market Name and Countdown Timer */}
-                <div>
-                  {user_marketWithRunnerData.marketName}{" "}
+                <div className="d-flex align-items-center text-center text-md-start market-info">
+                  <span className="market-name me-3">
+                    {" "}
+                    {user_marketWithRunnerData.marketName}{" "}
+                  </span>
+
                   {new Date(
                     moment(user_marketWithRunnerData.startTime)
                       .local()
@@ -481,35 +463,34 @@ const GetMarketDetailByMarketId = () => {
                       .subtract(40, "seconds")
                       .toDate()
                   ) < new Date() && (
-                    <CountdownTimer
-                      endDate={user_marketWithRunnerData.endTime}
-                      fontSize={"12px"}
-                    />
+                    <div className="countdown-container">
+                      <div className="countdown-timer">
+                        <CountdownTimer
+                          endDate={user_marketWithRunnerData.endTime}
+                          fontSize={"12px"}
+                        />
+                      </div>
+                    </div>
                   )}
-                  {/* {isSuspend && (
+                </div>
+
+                {/* {isSuspend && (
                     <CountdownTimer
                       endDate={user_marketWithRunnerData.endTime}
                       fontSize={"12px"}
                     />
                   )} */}
-                </div>
 
                 {/* Right side: Start Time and End Time with Headings */}
-                <div
-                  style={{
-                    color: "#022C44",
-                    textAlign: "right",
-                    fontSize: "12px",
-                  }}
-                >
+                <div className="text-end text-md-right market-times ">
                   <div>
-                    <strong>Start Time:</strong>{" "}
+                    <span className="market-name">Start Time:</span>{" "}
                     {moment
                       .utc(user_marketWithRunnerData.startTime)
                       .format("DD MMM YYYY, HH:mm")}
                   </div>
                   <div>
-                    <strong>End Time:</strong>{" "}
+                    <span className="market-name">End Time:</span>{" "}
                     {moment
                       .utc(user_marketWithRunnerData.endTime)
                       .format("DD MMM YYYY, HH:mm")}
@@ -519,17 +500,11 @@ const GetMarketDetailByMarketId = () => {
 
               <div className="row py-1 px-0 m-0 border-bottom">
                 <div className="col-4"></div>
-                <div
-                  className="col-4 rounded-top-3 p-1 fw-bold"
-                  style={{ backgroundColor: "#80C2F1" }}
-                >
-                  Back
+                <div className="col-4 rounded-top-3 p-1 fw-bold back_bg">
+                  BACK
                 </div>
-                <div
-                  className="col-4 rounded-top-3 p-1 fw-bold"
-                  style={{ backgroundColor: "#FAA9BA" }}
-                >
-                  Lay
+                <div className="col-4 rounded-top-3 p-1 fw-bold lay_bg">
+                  LAY
                 </div>
               </div>
 
@@ -847,6 +822,7 @@ const GetMarketDetailByMarketId = () => {
                               style={{
                                 backgroundColor: "#80C2F1",
                                 borderRadius: "7px",
+                                cursor: "pointer",
                               }}
                               onClick={() =>
                                 handleToggle(
@@ -866,6 +842,7 @@ const GetMarketDetailByMarketId = () => {
                               style={{
                                 backgroundColor: "#FAA9BA",
                                 borderRadius: "7px",
+                                cursor: "pointer",
                               }}
                               onClick={() =>
                                 handleToggle(
@@ -1007,7 +984,7 @@ const GetMarketDetailByMarketId = () => {
                             <div className="row py-1 px-0 m-0">
                               <div className="d-block col-6 d-sm-none d-md-none d-lg-none d-xl-none">
                                 <button
-                                  className=" btn btn-sm bg-white border border-2 rounded-3 col-12 fw-bold"
+                                  className=" btn btn-sm border border-2 rounded-3 col-12 fw-bold"
                                   style={{ background: "#F84769" }}
                                   onClick={() => handleCancel()}
                                 >

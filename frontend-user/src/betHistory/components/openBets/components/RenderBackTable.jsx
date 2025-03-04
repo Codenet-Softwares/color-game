@@ -1,4 +1,5 @@
 import React from "react";
+import "./openBets.css"; // Import external CSS file
 
 const RenderBackTable = ({ betHistoryData }) => {
   console.log("first", betHistoryData);
@@ -9,12 +10,12 @@ const RenderBackTable = ({ betHistoryData }) => {
 
   return (
     <div
-      className="card shadow p-3 mb-5 rounded"
+      className="card shadow p-1 rounded"
       style={{ backgroundColor: "#cfe2f3" }}
     >
       <div className="card-body">
-        <div className="table-responsive">
-          <table className="table table-striped table-sm">
+      <div className="table-responsive open-custom-scrollbar">
+      <table className="table table-striped table-sm">
             {/* Table header */}
             <thead>
               <tr align="center" className="fs-6">

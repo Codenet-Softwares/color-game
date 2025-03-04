@@ -10,7 +10,7 @@ const ActivityLog = () => {
 
   const fetchActivityLog = async () => {
     const response = await activityLog();
-    SetData(response.data);
+    SetData(response?.data);
   };
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const ActivityLog = () => {
                               scope="row"
                               className="text-center text-truncate"
                             >
-                              {formatDate(data.loginDateTime)}
+                              {formatDate(data?.loginDateTime)}
                             </td>
                             <td className="text-center text-truncate">
                               {data?.loginStatus}

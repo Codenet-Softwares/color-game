@@ -78,7 +78,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
 
  <div className="d-flex flex-column">
             <button
-              className="btn btn-primary d-lg-none hambargerIcon"
+              className="btn btn-primary d-lg-none hambargerIcon d-md-none"
               type="button"
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvasScrolling"
@@ -88,7 +88,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             </button>
             {store.user.isLogin && (
               <button
-                className="btn btn-primary mt-2 d-lg-none hambargerIcon"
+                className="btn btn-primary mt-2 d-lg-none hambargerIcon d-md-none"
                 type="button"
 
                 data-bs-toggle="offcanvas"

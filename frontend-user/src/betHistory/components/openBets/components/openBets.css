@@ -1,0 +1,29 @@
+.openBets_lay_bgcolor{
+background-color: #f8d7da;
+}
+.openBets_back_bgcolor{
+    background-color: #cfe2f3;
+}
+.open-custom-scrollbar{
+    height: 225px;
+    overflow-y: auto;
+}
+.open-custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .open-custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .open-custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    width: 4px;
+
+  }
+  
+  .open-custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.4);
+  }
+  

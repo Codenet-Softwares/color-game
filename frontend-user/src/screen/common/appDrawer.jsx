@@ -206,20 +206,21 @@ function AppDrawer({
             className="col-md-2 position-fixed d-none d-md-block vertical-navbar p-0"
             style={{
               height: "100vh",
-              marginTop: isHomePage ? "0px" : "93px",
+              marginTop: isHomePage ? "0px" : "48px",
             }}
           >
             {getLeftNavBar()}
           </div>
 
           <div
-            className={`col-md-${
+            className={`custom-scrollbar col-md-${
               ["/home", "/"].includes(location?.pathname) ? "7" : "10"
             } offset-md-2`}
             style={{
 
               overflowY: "auto",
-              height: "100vh",
+
+              height: "calc(100vh - 150px)",
 
             }}
           >
