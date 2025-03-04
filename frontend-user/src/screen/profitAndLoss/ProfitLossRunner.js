@@ -15,7 +15,9 @@ const ProfitAndLossRunner = ({
   const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
 
   const handleItemPerPage = (event) => {
+
     SetProfitLossRunnerData((prevState) => ({
+
       ...prevState,
       itemPerPage: Number(event.target.value),
       currentPage: Number(prevState.currentPage),

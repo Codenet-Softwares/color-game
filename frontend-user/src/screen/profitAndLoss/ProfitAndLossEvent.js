@@ -24,7 +24,7 @@ const ProfitAndLossEvent = ({
     SetMarketId(marketId);
   };
   const handleItemPerPage = (event) => {
-    console.log("")
+  
     SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),

@@ -2,7 +2,7 @@ import React from "react";
 import Pagination from "../common/Pagination";
 
 const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
-  console.log("first", data.currentPage);
+
 
   const formatDate = (isoString) => {
     const date = new Date(isoString);
