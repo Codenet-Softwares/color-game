@@ -8,53 +8,14 @@
   border-bottom: 2px solid rgb(226, 225, 225);
 }
 .sidebar {
-  scrollbar-width: thin;
-  scrollbar-color: lightgray transparent;
-}
-
-.sidebar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.sidebar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  width: 4px;
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.4);
-}
-.custom-scrollbar {
-  scrollbar-width: thin;
-  scrollbar-color: lightgray transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.4);
+  height: 82vh; /* Allow sidebar to grow with content */
+  overflow-y: auto; /* Enable scrolling for sidebar */
+  margin-top: 35px;
 }
 
 .subMenuItems {
-  max-height: none;
-  overflow-y: visible;
+  max-height: none; /* Remove any max-height limit */
+  overflow-y: visible; /* Ensure content isn't hidden */
 }
 
 .sidebar ul li a {
@@ -124,8 +85,8 @@
   padding: 10px;
 
   list-style-type: none;
-  cursor: pointer; 
-  transition: background-color 0.3s; 
+  cursor: pointer; /* Change cursor to pointer for better UX */
+  transition: background-color 0.3s; /* Smooth transition on hover */
 }
 
 .lottery-section:hover {
@@ -136,6 +97,7 @@
 .lottery-wrapper {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* Space between text and icon */
 
 }
 
@@ -150,19 +112,18 @@
   animation: blink 1s infinite;
 }
 
-
 .dropdown-icon {
-  margin-left: 10px;
-  transition: transform 0.3s; 
+  margin-left: 10px; /* Space between text and icon */
+  transition: transform 0.3s; /* Smooth transition for rotation */
 }
 
 .dropdown-icon.active {
-  transform: rotate(180deg); 
+  transform: rotate(180deg); /* Rotate icon when active */
 }
 
 .subMenuItems {
-  padding-left: 20px; 
-  list-style-type: none; 
+  padding-left: 20px; /* Indent submenu items for differentiation */
+  list-style-type: none; /* Remove default bullets */
 }
 
 .subMenuHead {
@@ -172,24 +133,25 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #e6f7ff, #fff); 
+  background: linear-gradient(135deg, #e6f7ff, #fff); /* Light background */
   transition: all 0.3s ease;
   cursor: pointer;
   border: 2px solid rgb(211, 208, 208);
 }
 
 .subMenuHead:hover {
-
+  color: #444;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow on hover */
 }
 
 /* Draw date icon styling */
 .draw-date-icon {
   font-size: 18px;
-  color: #ff6347;
+  color: #ff6347; /* Coral color for a vibrant look */
 }
 
 .lottery-section a::after {
-  content: none !important; 
+  content: none !important; /* Prevent any default arrow icon */
 }
 
 @keyframes blink {
