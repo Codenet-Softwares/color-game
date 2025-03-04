@@ -12,7 +12,6 @@ const ProfitAndLoss = () => {
     getprofitLossDataState()
   );
 
-  
   const formatDate = (dateString) => {
     // Parse the date string to create a Date object
     const date = new Date(dateString);
@@ -57,7 +56,6 @@ const ProfitAndLoss = () => {
         searchName: profitLossData.searchItem,
         dataSource: profitLossData.dataSource,
       });
-
 
       // Update state with the response data
       SetProfitLossData((prevState) => ({

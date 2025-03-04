@@ -209,6 +209,7 @@ export function getUserLotteryBetHistory(body = {}) {
   };
 }
 
+
 // initiallotteryState for loteryuserpurchase
 
 export function getInitialLotteryData() {
@@ -235,3 +236,35 @@ export function getInitialFormValues() {
     selectedNumber: "",
   };
 }
+
+export function getBetHistory(body = {}) {
+  return {
+    history: [],
+    totalPages: 0,
+    totalData: 0,
+    currentPage: 1,
+    totalEntries: 10,
+    endDate: new Date(),
+    startDate: new Date().setDate(new Date().getDate() - 1),
+    dataSource: "live",
+    selectGame: "",
+    selectMenu: "",
+    selectMarket: "",
+    gameType: "",
+    openBetGameNames: [],
+    selectColorGame: "",
+    openBet: [],
+    gameSelectionData: [],
+    selectedTickets: [],
+    modalOpen: false
+  };
+}
+
+export function getOpenBet(body = {}) {
+  return {
+    openBetGameNames: [],
+    selectColorGame: "",
+    openBet: [],
+  };
+}
+

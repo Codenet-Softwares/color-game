@@ -629,9 +629,7 @@ const GetMarketDetailByMarketId = () => {
                               {!shouldDisplayTempLay && (
                                 <>
                                   {Number(runnerData.runnerName.bal) === 0 ? (
-                                    <span className=" text-success fw-bold mx-1 F">
-                                      0
-                                    </span>
+                                    ""
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
                                       className="text-success fw-bold G"
@@ -736,9 +734,7 @@ const GetMarketDetailByMarketId = () => {
                                   <>
                                     {Number(runnerData.runnerName.bal) === 0 &&
                                     !bidding.amount ? (
-                                      <span className=" text-success fw-bold mx-1 K">
-                                        0
-                                      </span>
+                                      ""
                                     ) : Number(runnerData.runnerName.bal) >
                                       0 ? (
                                       <span
@@ -799,9 +795,7 @@ const GetMarketDetailByMarketId = () => {
                                 <>
                                   {Number(runnerData.runnerName.bal) === 0 &&
                                   !bidding.amount ? (
-                                    <span className=" text-success fw-bold mx-1 P">
-                                      0
-                                    </span>
+                                    ""
                                   ) : Number(runnerData.runnerName.bal) > 0 ? (
                                     <span
                                       className="text-success  fw-bold Q"

@@ -12,7 +12,22 @@ const NewResult = () => {
   const today = format(new Date(), "yyyy-MM-dd");
   const [selectedDate, setSelectedDate] = useState(today); // For date filter
   const [openIndex, setOpenIndex] = useState(null); // Track open accordion
-  const maxVisibleMarkets = 5;
+  const [maxVisibleMarkets, setMaxVisibleMarkets] = useState(5);
+  useEffect(() => {
+    const updateMaxVisibleMarkets = () => {
+      if (window.innerWidth <= 768) {
+        setMaxVisibleMarkets(1);
+      } else {
+        setMaxVisibleMarkets(5);
+      }
+    };
+
+    updateMaxVisibleMarkets();
+    window.addEventListener("resize", updateMaxVisibleMarkets);
+    return () => {
+      window.removeEventListener("resize", updateMaxVisibleMarkets);
+    };
+  }, []);
   const visibleMarkets = markets.slice(
     scrollIndex,
     scrollIndex + maxVisibleMarkets
@@ -21,7 +36,8 @@ const NewResult = () => {
   const toggleAccordion = (index) => {
     setOpenIndex(openIndex === index ? null : index); // Toggle open/close
   };
-  // let this be commented do not delete for future reference 
+
+  // let this be commented do not delete for future reference
   // const fetchMarkets = () => {
   //   GetResultMarket({ date: selectedDate }).then((response) => {
   //     if (response && response.success && response.data) {
@@ -54,6 +70,7 @@ const NewResult = () => {
     fetchMarkets();
   }, [selectedDate]);
 
+
   const fetchResults = () => {
     if (!selectedMarket) return; // Ensure a market is selected
 
@@ -70,7 +87,7 @@ const NewResult = () => {
         if (response.data && response.data.length > 0) {
           setResults(response.data);
         } else {
-          setResults([]); // No results found
+          setResults([]);
           setError("No prize data available for this date.");
         }
       } else {
@@ -99,122 +116,22 @@ const NewResult = () => {
     setSelectedDate(formattedDate);
   };
   return (
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        margin: "20px",
-        background: "#f0f0f0",
-        minHeight: "75vh",
-      }}
-    >
-      <div
-        className="container-result mt-5 p-3 "
-        style={{
-          backgroundColor: "#2CB3D1",
-          padding: "10px",
-          borderRadius: "8px",
-          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        {/* Top Navigation Bar */}
-        <div
-          className="d-flex align-items-center"
-          style={{
-            backgroundColor: "#2CB3D1",
-            padding: "10px",
-            borderRadius: "8px",
-            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          {/* Left Arrow */}
-          <button
-            className="btn btn-light"
-            style={{
-              padding: "5px 10px",
-              fontSize: "18px",
-              borderRadius: "50%",
-              marginRight: "10px",
-            }}
-            onClick={handleScrollLeft}
-            disabled={scrollIndex === 0}
-          >
-            &#8249;
-          </button>
-
-          {/* Market Buttons */}
-          <div
-            className="d-flex flex-nowrap justify-content-center"
-            style={{
-              overflow: "hidden",
-              gap: "10px",
-            }}
-          >
-            {visibleMarkets.length > 0 ? (
-              visibleMarkets.map((market) => (
-                <button
-                  key={market.marketId}
-                  className={`btn ${
-                    market.marketId === selectedMarket?.marketId
-                      ? "btn-primary"
-                      : "btn-outline-light"
-                  }`}
-                  onClick={() => setSelectedMarket(market)}
-                  style={{
-                    fontSize: "16px",
-                    borderRadius: "4px",
-                    boxShadow:
-                      market.marketId === selectedMarket?.marketId
-                        ? "0px 4px 6px rgba(0, 0, 0, 0.2)"
-                        : "none",
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  {market.marketName}
-                </button>
-              ))
-            ) : (
-              <div
-                style={{
-                  color: "#ffffff",
-                  fontSize: "16px",
-                  fontWeight: "bold",
-                }}
-              >
-                No markets found with results declared.
-              </div>
-            )}
-          </div>
-
-          {/* Right Arrow */}
-          <button
-            className="btn btn-light"
-            style={{
-              padding: "5px 10px",
-              fontSize: "18px",
-              borderRadius: "50%",
-              marginLeft: "10px",
-            }}
-            onClick={handleScrollRight}
-            disabled={scrollIndex + maxVisibleMarkets >= markets.length}
-          >
-            &#8250;
-          </button>
-
-          {/* Date Filter UI */}
-          <div className="date-filter-container">
-            <div>
-              <label htmlFor="date-filter" className="date-filter-label">
-                <i
-                  className="fas fa-calendar-alt me-2"
-                  style={{ color: "#4682B4" }}
-                ></i>
-                Select Declared Result Lottery Market Date:
-              </label>
-              <p className="date-filter-description">
-                Please choose a date to view past available results of lottery
-                markets.
-              </p>
-            </div>
+    <div className="whole_container">
+      <div className="container_result p-3">
+        <div className="market-container shadow-lg">
+          {/* Datepicker (Auto Moves Below on Small Screens) */}
+          <div className="date-filter-container mt-3">
+            <label htmlFor="date-filter" className="date-filter-label">
+              <i
+                className="fas fa-calendar-alt me-2"
+                style={{ color: "#4682B4" }}
+              ></i>
+              Select Declared Result Lottery Market Date:
+            </label>
+            <h6 className="date-filter-description">
+              Please choose a date to view past available results of lottery
+              markets.
+            </h6>
             <input
               type="date"
               id="date-filter"
@@ -226,12 +143,54 @@ const NewResult = () => {
               onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
             />
           </div>
+          <div className="d-flex align-items-center justify-content-between shadow-lg p-2 rounded-3 mt-2">
+            {/* Left Arrow */}
+            <button
+              className="btn btn-light arrow-btn me-2"
+              onClick={handleScrollLeft}
+              disabled={scrollIndex === 0}
+            >
+              &#8249;
+            </button>
+
+            {/* Market Buttons */}
+            <div className="market-buttons-container">
+              {visibleMarkets.length > 0 ? (
+                visibleMarkets.slice(0, maxVisibleMarkets).map((market) => (
+                  <button
+                    key={market.marketId}
+                    className={`btn market-btn ${
+                      market.marketId === selectedMarket?.marketId
+                        ? "btn-primary"
+                        : "btn-outline-light"
+                    }`}
+                    onClick={() => setSelectedMarket(market)}
+                  >
+                    {market.marketName}
+                  </button>
+                ))
+              ) : (
+                <div className="no-markets-text text-center">
+                  No Markets Found With Results Declared.
+                </div>
+              )}
+            </div>
+
+            {/* Right Arrow */}
+            <button
+              className="btn btn-light arrow-btn ms-2"
+              onClick={handleScrollRight}
+              disabled={scrollIndex + maxVisibleMarkets >= markets.length}
+            >
+              &#8250;
+            </button>
+          </div>
         </div>
         {/* Market Result Display */}
         <div className="mt-4">
           {markets.length > 0 ? (
             <>
-              <h2 className="text-center">
+              <h2 className="text-center fw-bold">
                 Results For{" "}
                 <span className="text-decoration-underline">
                   {selectedMarket?.marketName || "Selected Market"}
@@ -242,85 +201,92 @@ const NewResult = () => {
               {error && <p className="text-danger text-center">{error}</p>}
 
               {/* Prize Distribution */}
-              {results.length === 0 && !error ? (
+              {results?.length === 0 && !error ? (
                 <p className="text-center text-muted">No prize declared yet.</p>
               ) : (
                 <div className="accordion mt-4">
-                {results.map((result, index) => (
-                  <div className="accordion-item" key={result.resultId}>
-                    <h2 className="accordion-header">
-                      <button
-                        className={`accordion-button ${openIndex === index ? "" : "collapsed"}`}
-                        onClick={() => toggleAccordion(index)}
-                      >
-                        {result.prizeCategory} - Amount: ₹{result.prizeAmount}
-                        {result.complementaryPrize > 0 && (
-                          <span className="badge bg-success ms-2">
-                            Complementary Prize: ₹{result.complementaryPrize}
-                          </span>
-                        )}
-                      </button>
-                    </h2>
-          
-                    {openIndex === index && ( // Show content only if openIndex matches
-                      <div className="accordion-collapse show">
-                        <div className="accordion-body" style={{ padding: "20px", fontFamily: "'Poppins', sans-serif" }}>
-                          <strong style={{ fontSize: "1.2rem", color: "#3b6e91", display: "block", marginBottom: "15px" }}>
-                            Winning Ticket Numbers:
-                          </strong>
-                          <div
-                            style={{
-                              display: "grid",
-                              gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
-                              gap: "15px",
-                              backgroundColor: "#f8faff",
-                              padding: "20px",
-                              borderRadius: "12px",
-                              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)",
-                            }}
+                  {results?.sort((a, b) => {
+                      // Define the order of prizes
+                      const order = {
+                        "First Prize": 1,
+                        "Second Prize": 2,
+                        "Third Prize": 3,
+                        "Fourth Prize": 4,
+                        "Fifth Prize": 5,
+                      };
+                    
+                      return (
+                        (order[a.prizeCategory]) -
+                        (order[b.prizeCategory])
+                      );
+                    })
+                    .map((result, index) => (
+                      <div className="accordion-item" key={result.resultId}>
+                        <h2 className="accordion-header">
+                          <button
+                            className={`accordion-button d-flex flex-column flex-md-row justify-content-between align-items-start ${
+                              openIndex === index ? "" : "collapsed"
+                            }`}
+                            onClick={() => toggleAccordion(index)}
                           >
-                            {result.ticketNumber.map((ticket, idx) => (
-                              <div
-                                key={idx}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                  padding: "15px",
-                                  backgroundColor: "#fff",
-                                  borderRadius: "10px",
-                                  fontSize: "1rem",
-                                  fontWeight: "600",
-                                  color: "#555",
-                                  textAlign: "center",
-                                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-                                  transition: "transform 0.3s ease, box-shadow 0.3s ease",
-                                }}
-                                onMouseEnter={(e) => {
-                                  e.currentTarget.style.transform = "scale(1.1)";
-                                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.2)";
-                                }}
-                                onMouseLeave={(e) => {
-                                  e.currentTarget.style.transform = "scale(1)";
-                                  e.currentTarget.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.1)";
-                                }}
-                              >
-                                {ticket}
+                            <span>
+                              {result.prizeCategory} -{" "}
+                              <small className="text-primary fw-bold">
+                                Amount:
+                              </small>{" "}
+                              ₹{result.prizeAmount}
+                            </span>
+                            {result.complementaryPrize > 0 && (
+                              <span className="badge bg-success mt-md-0 ms-2 mt-1">
+                                <small>
+                                  {" "}
+                                  Complementary Prize: ₹
+                                  {result.complementaryPrize}
+                                </small>
+                              </span>
+                            )}
+                          </button>
+                        </h2>
+
+                        {openIndex === index && ( // Show content only if openIndex matches
+                          <div className="accordion-collapse show">
+                            <div className="accordion-body whole_accordion_body">
+                              <strong className="winning_num">
+                                Winning Ticket Numbers:
+                              </strong>
+                              <div className="complete_ticket_prize">
+                                {result.ticketNumber.map((ticket, idx) => (
+                                  <div
+                                    key={idx}
+                                    className="ticket-number"
+                                    onMouseEnter={(e) => {
+                                      e.currentTarget.style.transform =
+                                        "scale(1.1)";
+                                      e.currentTarget.style.boxShadow =
+                                        "0 4px 12px rgba(0, 0, 0, 0.2)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                      e.currentTarget.style.transform =
+                                        "scale(1)";
+                                      e.currentTarget.style.boxShadow =
+                                        "0 2px 5px rgba(0, 0, 0, 0.1)";
+                                    }}
+                                  >
+                                    {ticket}
+                                  </div>
+                                ))}
                               </div>
-                            ))}
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-              
+                    ))}
+                </div>
               )}
             </>
           ) : (
             <p className="text-center text-danger fw-bold">
-              No markets found for the selected date.
+              No Markets Found For The Selected Date.
             </p>
           )}
         </div>

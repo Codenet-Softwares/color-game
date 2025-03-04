@@ -7,7 +7,7 @@ import strings from "../../utils/constant/stringConstant";
 import SubFooter from "../common/SubFooter";
 import { Link, useLocation } from "react-router-dom";
 
-function Layout() {
+function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
   const [user_allGames, setUser_allGames] = useState([]);
   const { dispatch, store } = useAppContext();
   const location = useLocation();
@@ -48,7 +48,8 @@ function Layout() {
           className="p-2 text-white"
           style={{
             fontWeight: 600,
-            backgroundColor: location.pathname === "/home" ? "#5ECBDD" : "transparent",
+            backgroundColor:
+              location.pathname === "/home" ? "#5ECBDD" : "transparent",
             cursor: "pointer",
           }}
         >
@@ -57,14 +58,17 @@ function Layout() {
           </Link>
         </li>
         {user_allGames.map((gameObj) => {
-          const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${gameObj.gameId}`;
+          const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
+            gameObj.gameId
+          }`;
           return (
             <li
               key={gameObj.gameId}
               className="p-2 text-white"
               style={{
                 fontWeight: 600,
-                backgroundColor: location.pathname === gamePath ? "#5ECBDD" : "transparent",
+                backgroundColor:
+                  location.pathname === gamePath ? "#5ECBDD" : "transparent",
                 cursor: "pointer",
               }}
             >
@@ -86,7 +90,10 @@ function Layout() {
   return (
     <div>
       <div className="fixed-top">
-        <NavBar />
+        <NavBar
+          handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
+          openBetData={openBetData}
+        />
         {user_allGames && getNavBarOption()}
       </div>
       {store?.user?.isLogin && (

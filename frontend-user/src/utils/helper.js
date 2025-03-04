@@ -68,6 +68,7 @@ export function formatDateForUi(dateString) {
   return new Date(dateString).toLocaleDateString("en-US", options);
 }
 
+
 export const generateLotteryOptions = (
   groupStart,
   groupEnd,
@@ -96,3 +97,22 @@ export const generateLotteryOptions = (
     ),
   };
 };
+
+export function formatDate(dateString) {
+  // Create a new Date object using the input string
+  let date = new Date(dateString);
+  // Extract year, month, and day
+  let year = date.getFullYear();
+  let month = ("0" + (date.getMonth() + 1)).slice(-2); // Adding 1 to month because January is 0
+  let day = ("0" + date.getDate()).slice(-2);
+  // Concatenate the parts with '-' separator
+  return `${year}-${month}-${day}`;
+}
+  
+//   const groupInput = 38;      
+//   const seriesInput = 'L';   
+//   const numberInput = '77777';     
+//   const semInput = 5
+  
+//  export const ticketService = new TicketService(groupInput, seriesInput, numberInput, semInput);
+
