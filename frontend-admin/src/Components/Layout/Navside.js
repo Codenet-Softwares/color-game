@@ -16,8 +16,10 @@ const Navside = () => {
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [isInnerAnnouncement, setIsInnerAnnouncement] = useState(false);
   const [isOuterAnnouncement, setIsOuterAnnouncement] = useState(false);
+  const [isWinningRequest, setIsWinningRequest] = useState(true);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
+  const [inCreateSubadmin, setInCreateSubadmin] = useState(true);
 
   const navigate = useNavigate();
   const toggleMenu = (menuSetter) => {
@@ -29,6 +31,10 @@ const Navside = () => {
 
   const handleInactive = () => {
     setInactive(!inactive);
+  };
+
+  const handleCreateSubadmin = () => {
+    setInCreateSubadmin(!inCreateSubadmin);
   };
 
   const handleGameToggle = () => {
@@ -56,6 +62,10 @@ const Navside = () => {
     setIsInnerAnnouncement(!isInnerAnnouncement);
   };
 
+  const handleWinningrequestToggle = () => {
+    setIsWinningRequest(!isWinningRequest);
+  };
+
   const toggleSubmenu = () => {
     setIsSubmenuOpen(!isSubmenuOpen);
   };
@@ -66,7 +76,7 @@ const Navside = () => {
           <img src="https://static.vecteezy.com/system/resources/previews/019/194/935/non_2x/global-admin-icon-color-outline-vector.jpg" alt="" />
           {/* <h4 className="text-decoration-none fw-bolder" style={{color:"#3E5879"}}>Color Game Admin</h4> */}
         </Link>
-       
+
       </div>
       {/*  List Of the Sidebar Starts */}
       <ul id="sidebar_menu" class="metismenu p-2 ">
@@ -75,7 +85,7 @@ const Navside = () => {
           <li className="m-2" onClick={handleGameToggle}>
             <a className="has-arrow " href="#" aria-expanded="false">
               <div className="nav_icon_small">
-              <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize:"20px" }}></i>
+                <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
 
               </div>
               <div className="nav_title">
@@ -87,7 +97,7 @@ const Navside = () => {
           <li className="" onClick={handleGameToggle}>
             <a className="has-arrow" href="#" aria-expanded="false">
               <div className="nav_icon_small">
-              <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize:"20px" }}></i>
+                <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
               </div>
               <div className="nav_title">
                 <span>Game Management</span>
@@ -97,16 +107,16 @@ const Navside = () => {
               <li>
                 <Link to="/gameMarket">
                   <span>
-                  <i className="fa-solid fa-store" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px" }}></i>
-                  Game Market
+                    <i className="fa-solid fa-store" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+                    Game Market
                   </span>
                 </Link>
               </li>
               <li>
                 <Link to="/deleteMarket">
                   <span>
-                  <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px" }}></i>
-                  delete Market
+                    <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+                    delete Market
                   </span>
                 </Link>
               </li>
@@ -114,10 +124,23 @@ const Navside = () => {
           </li>
         )}
         {/* Game Management Ends */}
+
+        {/* create subadmin start */}
+        {auth.user.roles === "admin" && <li className="m-2" onClick={handleCreateSubadmin}>
+          <Link to="/create-subadmin" className="d-flex align-items-center">
+            <div className="nav_icon_small">
+              <i class="fa-solid fa-user-plus" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
+            </div>
+            <span className="ms-3">Create Sub-Admin</span>
+          </Link>
+        </li>}
+        
+        {/* create subadmin end */}
+
         <li className="m-2" onClick={handleInactive}>
           <Link to="/announcedGame" className="d-flex align-items-center">
             <div className="nav_icon_small">
-            <i class="fa-solid fa-ban" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
+              <i class="fa-solid fa-ban" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
             </div>
             <span className="ms-3">Inactive Games</span>
           </Link>
@@ -125,7 +148,7 @@ const Navside = () => {
         <li className="m-2">
           <Link to="/voidMarket" className="d-flex align-items-center">
             <div className="nav_icon_small" >
-            <i class="fa-solid fa-eraser" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
+              <i class="fa-solid fa-eraser" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
 
             </div>
             <span className="ms-3">Void Games</span>
@@ -134,7 +157,7 @@ const Navside = () => {
         <li className="m-2">
           <Link to="/liveBet" className="d-flex align-items-center">
             <div className="nav_icon_small">
-            <i class="fa-solid fa-broadcast-tower" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
+              <i class="fa-solid fa-broadcast-tower" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
 
             </div>
             <span className="ms-3">Live Bet</span>
@@ -146,7 +169,7 @@ const Navside = () => {
             className="d-flex align-items-center"
           >
             <div className="nav_icon_small">
-            <i class="fa-solid fa-history" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px" }}></i>
+              <i class="fa-solid fa-history" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
 
             </div>
             <span className="ms-3">Bet History</span>
@@ -155,7 +178,7 @@ const Navside = () => {
         <li className="m-2">
           <Link to="/trash" className="d-flex align-items-center">
             <div className="nav_icon_small">
-            <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px"}}></i>
+              <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
 
             </div>
             <span className="ms-3">Trash Bets</span>
@@ -170,7 +193,7 @@ const Navside = () => {
             onClick={handleImageToggle}
           >
             <div className="nav_icon_small">
-            <i class="fa-solid fa-image" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px"}}></i>
+              <i class="fa-solid fa-image" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
             </div>
             <div className="nav_title">
               <span>Add Image</span>
@@ -186,7 +209,7 @@ const Navside = () => {
                   onClick={handleSliderImageToggle}
                 >
                   <div className="nav_icon_small">
-                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+                    <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
 
                   </div>
                   <div className="nav_title">
@@ -197,12 +220,12 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="create-image">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Create Slider
                       </Link>
                     </li>
                     <li>
                       <Link to="slider-image-delete">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Update Slider
                       </Link>
                     </li>
                   </ul>
@@ -215,7 +238,7 @@ const Navside = () => {
                   onClick={handleGameImageSlider}
                 >
                   <div className="nav_icon_small">
-                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+                    <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
 
                   </div>
                   <div className="nav_title">
@@ -226,12 +249,12 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="GameImage-slider">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Create Slider
                       </Link>
                     </li>
                     <li>
                       <Link to="UpdateGameImage-slider">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Slider
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Update Slider
                       </Link>
                     </li>
                   </ul>
@@ -244,7 +267,7 @@ const Navside = () => {
                   onClick={handleGifImageSlider}
                 >
                   <div className="nav_icon_small">
-                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+                    <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
 
                   </div>
                   <div className="nav_title">
@@ -255,12 +278,12 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="create-game-GIF">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create GIF
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Create GIF
                       </Link>
                     </li>
                     <li>
                       <Link to="update-game-GIF">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update GIF
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Update GIF
                       </Link>
                     </li>
                   </ul>
@@ -273,7 +296,7 @@ const Navside = () => {
                   onClick={handleInnerImageSlider}
                 >
                   <div className="nav_icon_small">
-                  <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
+                    <i class="fa-solid fa-camera" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
 
                   </div>
                   <div className="nav_title">
@@ -284,105 +307,151 @@ const Navside = () => {
                   <ul>
                     <li>
                       <Link to="create-inner-image">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Inner
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Create Inner
                         Image
                       </Link>
                     </li>
                     <li>
                       <Link to="update-inner-image">
-                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Inner
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Update Inner
                         Image
                       </Link>
                     </li>
                   </ul>
                 )}
-                
+
               </li>
             </ul>
           )}
         </li>
 
-         {/* Game Announcement */}
-         <li className="game-announcement m-2">
-    <a
-      className={`has-arrow ${isAnnouncement ? "active" : ""}`}
-      href="#"
-      onClick={() => toggleMenu(setIsAnnouncement)}
-    >
-      <div className="nav_icon_small">
-      <i class="fa-solid fa-bullhorn" style={{ color: "#3E5879", marginRight: "1px", fontSize:"20px"}}></i>
-      </div>
-      <div className="nav_title">
-        <span>Game Announcement</span>
-      </div>
-    </a>
-    {isAnnouncement && (
-      <ul>
-        {/* Outer Announcement */}
-        <li className="outer-announcement">
+        {/* Game Announcement */}
+        <li className="game-announcement m-2">
           <a
-            className={`has-arrow ${isOuterAnnouncement ? "active" : ""}`}
+            className={`has-arrow ${isAnnouncement ? "active" : ""}`}
             href="#"
-            onClick={() => toggleMenu(setIsOuterAnnouncement)}
+            onClick={() => toggleMenu(setIsAnnouncement)}
           >
             <div className="nav_icon_small">
-            <i class="fa-solid fa-bell" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
-
+              <i class="fa-solid fa-bullhorn" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
             </div>
             <div className="nav_title">
-              <span>Outer Announcement</span>
+              <span>Game Announcement</span>
             </div>
           </a>
-          {isOuterAnnouncement && (
+          {isAnnouncement && (
             <ul>
-              <li>
-                <Link to="outer-announcement">
-                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Announcement
-                </Link>
+              {/* Outer Announcement */}
+              <li className="outer-announcement">
+                <a
+                  className={`has-arrow ${isOuterAnnouncement ? "active" : ""}`}
+                  href="#"
+                  onClick={() => toggleMenu(setIsOuterAnnouncement)}
+                >
+                  <div className="nav_icon_small">
+                    <i class="fa-solid fa-bell" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+
+                  </div>
+                  <div className="nav_title">
+                    <span>Outer Announcement</span>
+                  </div>
+                </a>
+                {isOuterAnnouncement && (
+                  <ul>
+                    <li>
+                      <Link to="outer-announcement">
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Create Announcement
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="update-outer-announcement">
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Update Announcement
+                      </Link>
+                    </li>
+                  </ul>
+                )}
               </li>
-              <li>
-                <Link to="update-outer-announcement">
-                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Announcement
-                </Link>
+              {/* Inner Announcement */}
+              <li className="inner-announcement">
+                <a
+                  className={`has-arrow ${isInnerAnnouncement ? "active" : ""}`}
+                  href="#"
+                  onClick={() => toggleMenu(setIsInnerAnnouncement)}
+                >
+                  <div className="nav_icon_small">
+                    <i class="fa-solid fa-bell" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+
+                  </div>
+                  <div className="nav_title">
+                    <span>Inner Announcement</span>
+                  </div>
+                </a>
+                {isInnerAnnouncement && (
+                  <ul>
+                    <li>
+                      <Link to="inner-announcement">
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Create Announcement
+                      </Link>
+                    </li>
+                    <li>
+                      <Link to="update-inner-announcement">
+                        <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i> Update Announcement
+                      </Link>
+                    </li>
+                  </ul>
+                )}
               </li>
             </ul>
           )}
         </li>
-        {/* Inner Announcement */}
-        <li className="inner-announcement">
-          <a
-            className={`has-arrow ${isInnerAnnouncement ? "active" : ""}`}
-            href="#"
-            onClick={() => toggleMenu(setIsInnerAnnouncement)}
-          >
-            <div className="nav_icon_small">
-            <i class="fa-solid fa-bell" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i>
-
-            </div>
-            <div className="nav_title">
-              <span>Inner Announcement</span>
-            </div>
-          </a>
-          {isInnerAnnouncement && (
-            <ul>
-              <li>
-                <Link to="inner-announcement">
-                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Create Announcement
-                </Link>
-              </li>
-              <li>
-                <Link to="update-inner-announcement">
-                  <i className="fa-solid fa-circle" style={{ color: "#3E5879", marginRight: "10px", fontSize:"15px"}}></i> Update Announcement
-                </Link>
-              </li>
-            </ul>
-          )}
-        </li>
-      </ul>
-    )}
-  </li>
-
         {/* Announcement Management Ends */}
+
+        {/* Winning Request Starts */}
+        {auth?.user?.roles === "admin" && <>{
+          isWinningRequest ? (
+            <li className="m-2" onClick={handleWinningrequestToggle}>
+              <a className="has-arrow " href="#" aria-expanded="false">
+                <div className="nav_icon_small">
+                  <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
+
+                </div>
+                <div className="nav_title">
+                  <span>Winning Request</span>
+                </div>
+              </a>
+            </li>
+          ) : (
+            <li className="" onClick={handleWinningrequestToggle}>
+              <a className="has-arrow" href="#" aria-expanded="false">
+                <div className="nav_icon_small">
+                  <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
+                </div>
+                <div className="nav_title">
+                  <span>Winning Request</span>
+                </div>
+              </a>
+              <ul>
+                <li>
+                  <Link to="/viewWinningRequest">
+                    <span>
+                      <i className="fa-solid fa-store" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+                      View Request
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/viewWinningHistory">
+                    <span>
+                      <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+                      View History
+                    </span>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+          )}</>}
+
+        {/* Winning Request Ends */}
       </ul>
 
       {/* List Of the Sidebar Ends */}
