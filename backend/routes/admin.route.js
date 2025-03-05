@@ -28,7 +28,7 @@ dotenv.config();
 
 export const AdminRoute = (app) => {
   // done
-  app.post('/api/admin-create', adminCreateValidate, customErrorHandler, authorize([string.Admin]), createAdmin);
+  app.post('/api/admin-create', adminCreateValidate, customErrorHandler, createAdmin);
 
   app.post('/api/create-subAdmin', authorize([string.Admin]),createSubAdmin );
   // done
