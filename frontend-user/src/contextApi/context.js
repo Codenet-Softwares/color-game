@@ -56,8 +56,8 @@ const AppProvider = ({ children }) => {
 
   // Fetch wallet balance after login
   useEffect(() => {
+    const storedState = localStorage.getItem(strings.LOCAL_STORAGE_KEY);
     if (store.user.isLogin && storedState) {
-      const storedState = localStorage.getItem(strings.LOCAL_STORAGE_KEY);
       fetchWalletBalance();
     }
   }, [store.user.isLogin]);
