@@ -6,7 +6,7 @@ import { statusCode } from "../helper/statusCodes.js";
 import BetHistory from "../models/betHistory.model.js";
 import Market from "../models/market.model.js";
 import Runner from "../models/runner.model.js";
-import { Op, Sequelize } from "sequelize";
+import { Op, Sequelize, where } from "sequelize";
 import Game from "../models/game.model.js";
 import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
@@ -1463,3 +1463,61 @@ export const deleteBetAfterWin = async (req, res) => {
       );
   }
 };
+
+
+export const afterWinVoidMarket = async (req, res) => {
+  try {
+    const { marketId, userId } = req.body;
+    if (!Array.isArray(userId) || userId.length === 0) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Invalid userId format"));
+    }
+
+    await WinningAmount.update(
+      { amount: 0 }, 
+      {
+        where: {
+          userId: userId,
+          marketId, 
+          type: 'win',
+        },
+      }
+    );
+
+    await  WinningAmount.update({isVoidAfterWin: true},{where:{marketId}})
+
+    await LotteryProfit_Loss.update(
+      { profitLoss: 0 }, 
+      {
+        where: {
+          userId: userId,
+          marketId, 
+        },
+      }
+    );
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Balance updated successfully!"
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
