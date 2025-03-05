@@ -28,12 +28,12 @@ ResultHistory.init({
       runnerId: {
         type: DataTypes.JSON, 
         allowNull: false,
-        defaultValue: [],
+        defaultValue: JSON.stringify([]),
       },
       runnerNames: {
         type: DataTypes.JSON, 
         allowNull: false,
-        defaultValue: [], 
+        defaultValue:JSON.stringify([]), 
       },  
       isApproved: {
         type: DataTypes.BOOLEAN,
@@ -46,7 +46,7 @@ ResultHistory.init({
       declaredByNames: {
         type: DataTypes.JSON, 
         allowNull: false,
-        defaultValue: [], 
+        defaultValue: JSON.stringify([]) 
       },
       
       createdAt: {
