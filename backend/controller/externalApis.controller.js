@@ -1073,135 +1073,77 @@ export const getRevokeMarket = async (req, res) => {
     if (!marketId) {
       return res
         .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "MarketId is required"
-          )
-        );
+        .send(apiResponseErr(null, false, statusCode.badRequest, "MarketId is required"));
     }
 
-    // Fetch profit/loss data for the market
     let usersFromProfitLoss = await LotteryProfit_Loss.findAll({
       where: { marketId },
-      attributes: ["marketId", "userId", "price", "profitLoss"],
+      attributes: ["userId", "price", "profitLoss"],
       raw: true,
     });
 
-    if (!usersFromProfitLoss || usersFromProfitLoss.length === 0) {
+    if (!usersFromProfitLoss.length) {
       return res
         .status(statusCode.notFound)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.notFound,
-            "No profit/loss data found for the given marketId"
-          )
-        );
+        .send(apiResponseErr(null, false, statusCode.notFound, "No profit/loss data found"));
     }
 
-    usersFromProfitLoss = Array.from(
-      new Map(
-        usersFromProfitLoss.map((entry) =>
-          [
-            `${entry.marketId}-${entry.userId}-${entry.price}-${entry.profitLoss}`,
-            entry
-          ]
-        )
-      ).values()
-    );
-
+    // we are removing duplicate entries based on userId 
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
       if (!userProfitLossMap[userId]) {
         userProfitLossMap[userId] = { totalProfitLoss: 0, totalPrice: 0, exposurePrice: 0 };
       }
-
-      if (profitLoss > 0) {
-        userProfitLossMap[userId].totalProfitLoss += Number(profitLoss);
-        userProfitLossMap[userId].totalPrice += Number(price);
-      }
-
-      userProfitLossMap[userId].exposurePrice += Number(price);
-
+      userProfitLossMap[userId].totalProfitLoss += Number(profitLoss) > 0 ? Number(profitLoss) : 0;
+      userProfitLossMap[userId].totalPrice += Number(price);
+      userProfitLossMap[userId].exposurePrice += Number(price); 
     });
 
     const userIds = Object.keys(userProfitLossMap);
+    const users = await userSchema.findAll({ where: { userId: userIds }, raw: true });
 
-    const users = await userSchema.findAll({
-      where: { userId: userIds },
-    });
-
-    if (!users || users.length === 0) {
+    if (!users.length) {
       return res
         .status(statusCode.notFound)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.notFound,
-            "No matching users found in the database"
-          )
-        );
+        .send(apiResponseErr(null, false, statusCode.notFound, "No matching users found"));
     }
 
     for (const user of users) {
-      const userProfitLoss = userProfitLossMap[user.userId];
-      if (!userProfitLoss) continue;
+      if (!userProfitLossMap[user.userId]) {
+        console.log(`User ${user.userId} not found in profit/loss map.`);
+        continue;
+      }
 
-      const { totalProfitLoss, totalPrice, exposurePrice } = userProfitLoss;
+      const { exposurePrice } = userProfitLossMap[user.userId];
 
-      await WinningAmount.destroy({ where: { marketId } })
+      let marketListExposure = user.marketListExposure || [];
 
-      const marketListExposure = user.marketListExposure || [];
+      let existingMarket = marketListExposure.find(market => market[marketId] !== undefined);
 
-      const existingMarket = marketListExposure.find(
-        (market) => market[marketId] !== undefined
-      );
       if (existingMarket) {
-        existingMarket[marketId] += exposurePrice;
+        existingMarket[marketId] += exposurePrice; 
       } else {
-        const newExposure = { [marketId]: exposurePrice };
-        user.marketListExposure = [...(user.marketListExposure || []), newExposure];
-
+        marketListExposure.push({ [marketId]: exposurePrice });
       }
 
       await userSchema.update(
-        { marketListExposure: user.marketListExposure },
+        { marketListExposure },
         { where: { userId: user.userId } }
       );
-
     }
 
-    await LotteryProfit_Loss.destroy({
-      where: { marketId },
-    });
+    await WinningAmount.destroy({ where: { marketId } });
+
+    await LotteryProfit_Loss.destroy({ where: { marketId } });
 
     return res
       .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          null,
-          true,
-          statusCode.success,
-          "Market exposure updated successfully"
-        )
-      );
+      .send(apiResponseSuccess(null, true, statusCode.success, "Market exposure updated successfully"));
   } catch (error) {
-    console.log("Error in getRevokeMarket:", error);
+    console.error("Error in getRevokeMarket:", error);
     return res
       .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          "An error occurred while revoking the market"
-        )
-      );
+      .send(apiResponseErr(null, false, statusCode.internalServerError, "An error occurred while revoking the market"));
   }
 };
 
@@ -1425,3 +1367,99 @@ export const getExposure = async (req, res) => {
 
   }
 }
+
+export const deleteBetAfterWin = async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const {
+      marketId,
+      userId,
+      sem,
+      prizeAmount,
+      prizeCategory,
+      complementaryPrize,
+    } = req.body;
+
+    let subtractAmount;
+    if (prizeCategory === "First Prize") {
+      subtractAmount = prizeAmount;
+    } else {
+      subtractAmount = sem * prizeAmount;
+    }
+
+    const winningAmount = await WinningAmount.findOne({
+      where: { userId, marketId },
+      transaction: t,
+    });
+
+    if (!winningAmount) {
+      await t.rollback();
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "Winning amount not found"
+          )
+        );
+    }
+
+    // Update the amount by subtracting the calculated amount
+    const updatedAmount = winningAmount.amount - subtractAmount;
+    await WinningAmount.update(
+      { amount: updatedAmount },
+      { where: { userId, marketId, type: "win" }, transaction: t }
+    );
+
+    const profitLossAmount = await LotteryProfit_Loss.findOne({
+      where: { userId, marketId },
+      transaction: t,
+    });
+
+    if (!profitLossAmount) {
+      await t.rollback();
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "profitLossAmount not found"
+          )
+        );
+    }
+
+    const updatedProfitLoss = profitLossAmount.profitLoss - subtractAmount;
+    await LotteryProfit_Loss.update(
+      { profitLoss: updatedProfitLoss },
+      { where: { userId, marketId }, transaction: t }
+    );
+
+    await t.commit();
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Balances updated successfully and bet deleted"
+        )
+      );
+  } catch (error) {
+    await t.rollback();
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
