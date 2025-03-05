@@ -22,21 +22,21 @@ const AppProvider = ({ children }) => {
   });
 
 
-   // Function to fetch and update wallet balance dynamically
-   const fetchWalletBalance = useCallback(async () => {
+  // Function to fetch and update wallet balance dynamically
+  const fetchWalletBalance = useCallback(async () => {
     const userId = store.user.userId;
     if (!userId) return;
-  
+
     const response = await userWallet(userId, false, dispatch);
     if (response?.data) {
       const { balance, walletId, marketListExposure } = response.data;
-  
+
       // Calculate total exposure from marketListExposure
       const totalExposure = marketListExposure?.reduce((acc, market) => {
         const exposureValue = Object.values(market)[0] || 0;
         return acc + exposureValue;
       }, 0);
-  
+
       dispatch({
         type: strings.UserWallet,
         payload: {
@@ -48,7 +48,7 @@ const AppProvider = ({ children }) => {
       });
     }
   }, [store.user.userId, dispatch]);
-  
+
   // Function to update wallet and exposure after any API call
   const updateWalletAndExposure = () => {
     fetchWalletBalance();
@@ -56,7 +56,8 @@ const AppProvider = ({ children }) => {
 
   // Fetch wallet balance after login
   useEffect(() => {
-    if (store.user.isLogin) {
+    if (store.user.isLogin && storedState) {
+      const storedState = localStorage.getItem(strings.LOCAL_STORAGE_KEY);
       fetchWalletBalance();
     }
   }, [store.user.isLogin]);

@@ -447,14 +447,15 @@ const GetMarketDetailByMarketId = () => {
                   </h1>
                 </div>
               )}
-              <div className="col-12 p-2 mt-2 fw-bold d-flex flex-column flex-md-row justify-content-between align-items-center rounded px-3 shadow-sm market-row time_background">
+              <div
+                className="col-12 p-2 mt-2 fw-bold d-flex flex-wrap justify-content-between align-items-center rounded px-3"
+                style={{ backgroundColor: "#2CB3D1" }}
+              >
                 {/* Left side: Market Name and Countdown Timer */}
-                <div className="d-flex align-items-center text-center text-md-start market-info">
-                  <span className="market-name me-3">
-                    {" "}
-                    {user_marketWithRunnerData.marketName}{" "}
-                  </span>
-
+                <div className="d-flex flex-wrap align-items-center ">
+                  <div className="me-3">
+                    {user_marketWithRunnerData.marketName}
+                  </div>
                   {new Date(
                     moment(user_marketWithRunnerData.startTime)
                       .local()
@@ -463,34 +464,26 @@ const GetMarketDetailByMarketId = () => {
                       .subtract(40, "seconds")
                       .toDate()
                   ) < new Date() && (
-                    <div className="countdown-container">
-                      <div className="countdown-timer">
-                        <CountdownTimer
-                          endDate={user_marketWithRunnerData.endTime}
-                          fontSize={"12px"}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* {isSuspend && (
                     <CountdownTimer
                       endDate={user_marketWithRunnerData.endTime}
                       fontSize={"12px"}
                     />
-                  )} */}
+                  )}
+                </div>
 
-                {/* Right side: Start Time and End Time with Headings */}
-                <div className="text-end text-md-right market-times ">
+                {/* Right side: Start Time and End Time */}
+                <div
+                  className="text-end mt-1"
+                  style={{ fontSize: "12px", minWidth: "150px" }}
+                >
                   <div>
-                    <span className="market-name">Start Time:</span>{" "}
+                    <strong>Start Time:</strong>{" "}
                     {moment
                       .utc(user_marketWithRunnerData.startTime)
                       .format("DD MMM YYYY, HH:mm")}
                   </div>
                   <div>
-                    <span className="market-name">End Time:</span>{" "}
+                    <strong>End Time:</strong>{" "}
                     {moment
                       .utc(user_marketWithRunnerData.endTime)
                       .format("DD MMM YYYY, HH:mm")}
@@ -498,16 +491,21 @@ const GetMarketDetailByMarketId = () => {
                 </div>
               </div>
 
-              <div className="row py-1 px-0 m-0 border-bottom">
+              <div className="row py-1 px-0 m-0 border-bottom mt-2">
                 <div className="col-4"></div>
-                <div className="col-4 rounded-top-3 p-1 fw-bold back_bg">
+                <div
+                  className="col-4 rounded-top-3 p-1 fw-bold"
+                  style={{ backgroundColor: "#80C2F1" }}
+                >
                   BACK
                 </div>
-                <div className="col-4 rounded-top-3 p-1 fw-bold lay_bg">
+                <div
+                  className="col-4 rounded-top-3 p-1 fw-bold"
+                  style={{ backgroundColor: "#FAA9BA" }}
+                >
                   LAY
                 </div>
               </div>
-
               {user_marketWithRunnerData &&
                 user_marketWithRunnerData.runners.map((runnerData, index) => {
                   // Determine if current row should display
