@@ -45,7 +45,7 @@ const CreateSubAdmin = () => {
                 <div className="col-lg-8">
                     <div className="card">
                         <div className="card-header text-white p-3 text-center" style={{ backgroundColor: "#1E2761" }}>
-                            <b className="text-uppercase">CREATE Sub</b>
+                            <b className="text-uppercase">CREATE Sub-Admin</b>
                         </div>
 
                         <div className="card-body">

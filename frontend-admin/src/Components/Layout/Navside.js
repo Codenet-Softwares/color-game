@@ -19,6 +19,7 @@ const Navside = () => {
   const [isWinningRequest, setIsWinningRequest] = useState(true);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
+  const [inCreateSubadmin, setInCreateSubadmin] = useState(true);
 
   const navigate = useNavigate();
   const toggleMenu = (menuSetter) => {
@@ -30,6 +31,10 @@ const Navside = () => {
 
   const handleInactive = () => {
     setInactive(!inactive);
+  };
+
+  const handleCreateSubadmin = () => {
+    setInCreateSubadmin(!inCreateSubadmin);
   };
 
   const handleGameToggle = () => {
@@ -119,6 +124,19 @@ const Navside = () => {
           </li>
         )}
         {/* Game Management Ends */}
+
+        {/* create subadmin start */}
+        {auth.user.roles === "admin" && <li className="m-2" onClick={handleCreateSubadmin}>
+          <Link to="/create-subadmin" className="d-flex align-items-center">
+            <div className="nav_icon_small">
+              <i class="fa-solid fa-user-plus" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
+            </div>
+            <span className="ms-3">Create Sub-Admin</span>
+          </Link>
+        </li>}
+        
+        {/* create subadmin end */}
+
         <li className="m-2" onClick={handleInactive}>
           <Link to="/announcedGame" className="d-flex align-items-center">
             <div className="nav_icon_small">
@@ -389,48 +407,50 @@ const Navside = () => {
         {/* Announcement Management Ends */}
 
         {/* Winning Request Starts */}
-        {isWinningRequest ? (
-          <li className="m-2" onClick={handleWinningrequestToggle}>
-            <a className="has-arrow " href="#" aria-expanded="false">
-              <div className="nav_icon_small">
-                <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
+        {auth?.user?.roles === "admin" && <>{
+          isWinningRequest ? (
+            <li className="m-2" onClick={handleWinningrequestToggle}>
+              <a className="has-arrow " href="#" aria-expanded="false">
+                <div className="nav_icon_small">
+                  <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
 
-              </div>
-              <div className="nav_title">
-                <span>Winning Request</span>
-              </div>
-            </a>
-          </li>
-        ) : (
-          <li className="" onClick={handleWinningrequestToggle}>
-            <a className="has-arrow" href="#" aria-expanded="false">
-              <div className="nav_icon_small">
-                <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
-              </div>
-              <div className="nav_title">
-                <span>Winning Request</span>
-              </div>
-            </a>
-            <ul>
-              <li>
-                <Link to="/viewWinningRequest">
-                  <span>
-                    <i className="fa-solid fa-store" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
-                    View Request
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link to="/viewWinningHistory">
-                  <span>
-                    <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
-                    View History
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </li>
-        )}
+                </div>
+                <div className="nav_title">
+                  <span>Winning Request</span>
+                </div>
+              </a>
+            </li>
+          ) : (
+            <li className="" onClick={handleWinningrequestToggle}>
+              <a className="has-arrow" href="#" aria-expanded="false">
+                <div className="nav_icon_small">
+                  <i className="fa-solid fa-gamepad" style={{ color: "#3E5879", marginRight: "10px", fontSize: "20px" }}></i>
+                </div>
+                <div className="nav_title">
+                  <span>Winning Request</span>
+                </div>
+              </a>
+              <ul>
+                <li>
+                  <Link to="/viewWinningRequest">
+                    <span>
+                      <i className="fa-solid fa-store" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+                      View Request
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/viewWinningHistory">
+                    <span>
+                      <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+                      View History
+                    </span>
+                  </Link>
+                </li>
+              </ul>
+            </li>
+          )}</>}
+
         {/* Winning Request Ends */}
       </ul>
 

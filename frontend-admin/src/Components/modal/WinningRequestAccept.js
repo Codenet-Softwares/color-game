@@ -127,8 +127,8 @@ const WinningRequestAccept = ({ isOpen, onClose, data, marketId, setViewWinningR
                 </div>
 
                 <div className="d-flex justify-content-center gap-3 mt-4">
-                  <button className="btn btn-success fw-bold px-4" onClick={() => handleSubmit(marketId)}>Accept</button>
-                  <button className="btn btn-danger fw-bold px-4" onClick={() => handleSubmit(marketId)}>Reject</button>
+                  <button className="btn btn-success fw-bold px-4" disabled={!isMatch} onClick={() => handleSubmit(marketId)}>Approve</button>
+                  <button className="btn btn-danger fw-bold px-4" disabled={isMatch} onClick={() => handleSubmit(marketId)}>Reject</button>
                 </div>
               </>
             )
