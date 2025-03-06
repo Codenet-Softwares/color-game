@@ -1487,15 +1487,9 @@ export const afterWinVoidMarket = async (req, res) => {
 
     await  WinningAmount.update({isVoidAfterWin: true},{where:{marketId}})
 
-    await LotteryProfit_Loss.update(
-      { profitLoss: 0 }, 
-      {
-        where: {
-          userId: userId,
-          marketId, 
-        },
-      }
-    );
+      await LotteryProfit_Loss.destroy({
+        where: { marketId , userId},
+      });
 
     return res
       .status(statusCode.success)
