@@ -29,11 +29,10 @@ const WinningAmount = sequelize.define(
             type: DataTypes.STRING,
             allowNull: true,
         },
-
         isVoidAfterWin: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false
-        }
+            defaultValue: false,
+        },
     },
     {
         timestamps: false,

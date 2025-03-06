@@ -1677,3 +1677,169 @@ export const getSubAdminResultHistory = async (req, res) => {
       );
   }
 };
+
+export const deleteBetAfterWin = async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const { userId, marketId } = req.body;
+
+    const winningAmount = await WinningAmount.findOne({
+      where: { userId, marketId, type: "win" },
+      transaction: t,
+    });
+
+    if (!winningAmount) {
+      await t.rollback();
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.notFound,
+            "Winning amount not found"
+          )
+        );
+    }
+
+    await WinningAmount.update(
+      { amount: 0 },
+      { where: { userId, marketId, type: "win" }, transaction: t }
+    );
+
+    const profitLossAmount = await ProfitLoss.findOne({
+      where: { userId, marketId },
+      transaction: t,
+    });
+
+    if (!profitLossAmount) {
+      await t.rollback();
+      return res
+        .status(statusCode.notFound)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.notFound,
+            "Profit/Loss record not found"
+          )
+        );
+    }
+
+    const updatedProfitLoss = profitLossAmount.profitLoss - winningAmount.amount;
+    await ProfitLoss.update(
+      { profitLoss: updatedProfitLoss },
+      { where: { userId, marketId }, transaction: t }
+    );
+
+    await t.commit();
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "After winning bet delete successfully"
+        )
+      );
+  } catch (error) {
+    await t.rollback();
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+export const afterWinVoidMarket = async (req, res) => {
+  try {
+    const { marketId } = req.body; 
+
+    if (!marketId) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, "marketId is required"));
+    }
+
+    const winningAmountRecords = await WinningAmount.findAll({
+      where: { marketId, type: 'win' },
+      attributes: ['userId'],
+      group: ['userId'], 
+    });
+
+    const userIds = winningAmountRecords.map(record => record.userId);
+
+    if (userIds.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "No users found for this market!"
+          )
+        );
+    }
+
+    await WinningAmount.update(
+      { amount: 0 },
+      {
+        where: {
+          userId: userIds,
+          marketId,
+          type: 'win',
+        },
+      }
+    );
+
+    await WinningAmount.update(
+      { isVoidAfterWin: true },
+      { where: { marketId } }
+    );
+
+    await ProfitLoss.destroy({
+      where: {
+        userId: userIds,
+        marketId,
+      },
+    });
+
+    await BetHistory.destroy({
+      where: {
+        userId: userIds,
+        marketId,
+      },
+    });
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "After winning market void successfully!"
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
