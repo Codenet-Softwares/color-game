@@ -1950,12 +1950,7 @@ export const afterWinVoidMarket = async (req, res) => {
       { where: { marketId } }
     );
 
-    await WinningAmount.destroy({
-      where: {
-        userId: userIds,
-        marketId,
-      },
-    });
+    
 
     await ProfitLoss.destroy({
       where: {
@@ -1968,6 +1963,12 @@ export const afterWinVoidMarket = async (req, res) => {
       where: {
         userId: userIds,
         marketId,
+      },
+    });
+
+    await ResultHistory.destroy({
+      where: {
+        marketId
       },
     });
 
