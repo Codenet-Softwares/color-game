@@ -45,11 +45,26 @@ const ViewWinningHistory = () => {
       });
   };
 
+  const fetchVoidWinningBet = (marketId) => {
+    auth.showLoader();
+    AccountServices.voidWinningBet(auth.user, marketId)
+      .then((res) => {
+        toast.success("Market voided successfully!");
+        fetchviewWinningHistory();
+      })
+      .catch((err) => {
+        toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
+      });
+  };
+
   const handlePageChange = (page) => {
     if (page >= 1 && page <= viewWinningHistory?.totalPages) {
       setViewWinningHistory((prev) => ({
         ...prev,
-        currentPage: page
+        currentPage: page,
       }));
     }
   };
@@ -65,13 +80,13 @@ const ViewWinningHistory = () => {
 
   let startIndex = Math.min(
     (Number(viewWinningHistory?.currentPage) - 1) *
-    Number(viewWinningHistory?.totalEntries) +
-    1,
+      Number(viewWinningHistory?.totalEntries) +
+      1,
     Number(viewWinningHistory?.totalData)
   );
   let endIndex = Math.min(
     Number(viewWinningHistory?.currentPage) *
-    Number(viewWinningHistory?.totalEntries),
+      Number(viewWinningHistory?.totalEntries),
     Number(viewWinningHistory?.totalData)
   );
 
@@ -201,13 +216,17 @@ const ViewWinningHistory = () => {
                           <td>{gameIndex + 1}</td>
                           <td>{game?.gameName}</td>
                           <td>{game?.marketName}</td>
-                          <td className="fw-bold">{game.type === "Matched" ? "Matched" : "Unmatched"}</td>
+                          <td className="fw-bold">
+                            {game.type === "Matched" ? "Matched" : "Unmatched"}
+                          </td>
                           <td>
                             <button
                               className="btn btn-primary"
                               onClick={() => toggleAccordion(gameIndex)}
                             >
-                              {viewWinningHistory?.openRowIndex === gameIndex ? "Hide Details" : "View Details"}
+                              {viewWinningHistory?.openRowIndex === gameIndex
+                                ? "Hide Details"
+                                : "View Details"}
                             </button>
                           </td>
                         </tr>
@@ -225,12 +244,29 @@ const ViewWinningHistory = () => {
                                   </thead>
                                   <tbody>
                                     {game.data.map((runner, runnerIndex) => (
-                                      <tr key={`${game?.gameId}-${runner?.runnerId}-${runnerIndex}`}>
+                                      <tr
+                                        key={`${game?.gameId}-${runner?.runnerId}-${runnerIndex}`}
+                                      >
                                         <td>{runner?.declaredByNames}</td>
                                         <td>{runner?.runnerName}</td>
                                       </tr>
                                     ))}
                                   </tbody>
+                                  <tfoot>
+                                    <tr>
+                                      <td colSpan="2" className="text-center">
+                                        <button
+                                          className="btn btn-danger px-3"
+                                          onClick={() =>
+                                            fetchVoidWinningBet(game.marketId)
+                                          }
+                                        >
+                                          Void
+                                        </button>
+                                        
+                                      </td>
+                                    </tr>
+                                  </tfoot>
                                 </table>
                               </div>
                             </td>
@@ -240,7 +276,10 @@ const ViewWinningHistory = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center text-danger fw-bold">
+                      <td
+                        colSpan="4"
+                        className="text-center text-danger fw-bold"
+                      >
                         No Data Found
                       </td>
                     </tr>

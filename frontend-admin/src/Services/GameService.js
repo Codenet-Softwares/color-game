@@ -523,6 +523,27 @@ class GameService {
       },
     });
   }
+
+  winBetTracker(user, page, pageSize) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/get-bet-markets-afterWin?page=${page}&pageSize=${pageSize}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  getWinBetTracker(user, page, pageSize) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/getDetails-winning-data?page=${page}&pageSize=${pageSize}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  
+
 }
 
 export default new GameService();

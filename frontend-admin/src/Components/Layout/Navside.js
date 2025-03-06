@@ -20,6 +20,7 @@ const Navside = () => {
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
   const [inCreateSubadmin, setInCreateSubadmin] = useState(true);
+  const [isBetTracker, setIsBetTracker] = useState(false);
 
   const navigate = useNavigate();
   const toggleMenu = (menuSetter) => {
@@ -447,6 +448,43 @@ const Navside = () => {
           )}</>}
 
         {/* Winning Request Ends */}
+
+        <li className="game-announcement m-2">
+          <a
+            className={`has-arrow ${isBetTracker ? "active" : ""}`}
+            href="#"
+            onClick={() => toggleMenu(setIsBetTracker)}
+          >
+            <div className="nav_icon_small">
+              <i class="fa-solid fa-bullhorn" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
+            </div>
+            <div className="nav_title">
+              <span>Win Tracker</span>
+            </div>
+          </a>
+          {isBetTracker && (
+            <ul>
+             
+              {/* Inner Announcement */}
+              <li className="inner-announcement">
+                <a
+                  className={`has-arrow ${isInnerAnnouncement ? "active" : ""}`}
+                  href="#"
+                  onClick={() => toggleMenu(setIsInnerAnnouncement)}
+                >
+                  <div className="nav_icon_small">
+                    <i class="fa-solid fa-bell" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
+
+                  </div>
+                  <Link className="nav_title" to="/winTracker">
+                    <span>Bet Win Delete</span>
+                  </Link>
+                </a>
+                
+              </li>
+            </ul>
+          )}
+        </li>
       </ul>
 
       {/* List Of the Sidebar Ends */}
