@@ -83,10 +83,10 @@ const FilterBlock = ({
                 <option value="void" className="fw-bold">
                   Void
                 </option>
-                <option value="Settle" className="fw-bold">
+                <option value="settle" className="fw-bold">
                   Settle
                 </option>
-                <option value="Unsettle" className="fw-bold">
+                <option value="unsettle" className="fw-bold">
                   Unsettle
                 </option>
               </select>
