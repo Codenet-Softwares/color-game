@@ -1678,6 +1678,151 @@ export const getSubAdminResultHistory = async (req, res) => {
   }
 };
 
+export const winningData = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 10; 
+    const offset = (page - 1) * limit;
+
+    const winningAmounts = await WinningAmount.findAll({
+      attributes: ['userId', 'userName', 'marketId']
+    });
+
+    const betHistories = await BetHistory.findAll({
+      attributes: ['gameId', 'gameName', 'marketId', 'marketName']
+    });
+
+    const combinedData = winningAmounts.map(wa => {
+      const betHistory = betHistories.find(bh => bh.marketId === wa.marketId);
+
+      return {
+        gameId: betHistory ? betHistory.gameId : null,
+        gameName: betHistory ? betHistory.gameName : null,
+        marketId: wa.marketId,
+        marketName: betHistory ? betHistory.marketName : null,
+        userName: wa.userName
+      };
+    });
+
+    const filteredData = combinedData.filter(item => item.gameName === "colorGame");
+
+    const paginatedData = filteredData.slice(offset, offset + limit);
+
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const pagination = {
+      page,
+      limit,
+      totalPages,
+      totalItems
+      
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Color-game winning data fetched successfully",
+          pagination 
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+export const getDetailsWinningData = async (req, res) => {
+  try {
+    // Pagination parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    const winningAmounts = await WinningAmount.findAll({
+      attributes: ['userId', 'userName', 'marketId']
+    });
+
+    const betHistories = await BetHistory.findAll({
+      attributes: ['gameId', 'gameName', 'marketId', 'marketName','runnerName','rate','value','type','date','matchDate','placeDate']
+    });
+
+    const combinedData = winningAmounts.map(wa => {
+      const betHistory = betHistories.find(bh => bh.marketId === wa.marketId);
+    
+      return {
+        userId: wa ? wa.userId : null,
+        userName: wa ? wa.userName : null,
+        gameId: betHistory ? betHistory.gameId : null,
+        gameName: betHistory ? betHistory.gameName : null,
+        marketId: wa.marketId,
+        marketName: betHistory ? betHistory.marketName : null,
+        runnerName: betHistory ? betHistory.runnerName : null,
+        rate: betHistory ? betHistory.rate.toString() : null,
+        value: betHistory ? betHistory.value.toString() : null,
+        type: betHistory ? betHistory.type : null,
+        date: betHistory ? betHistory.date : null,
+        matchDate: betHistory ? betHistory.matchDate : null,
+        placeDate: betHistory ? betHistory.placeDate : null,
+      };
+    });
+
+    
+
+    const filteredData = combinedData.filter(item => item.gameName === "colorGame");
+
+    const paginatedData = filteredData.slice(offset, offset + limit);
+
+    const totalItems = filteredData.length;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const pagination = {
+      page,
+      limit,
+      totalPages,
+      totalItems
+      
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Color-game winning data fetched successfully",
+          pagination
+        )
+      );
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+
 export const deleteBetAfterWin = async (req, res) => {
   const t = await sequelize.transaction();
   try {
@@ -1804,6 +1949,13 @@ export const afterWinVoidMarket = async (req, res) => {
       { isVoidAfterWin: true },
       { where: { marketId } }
     );
+
+    await WinningAmount.destroy({
+      where: {
+        userId: userIds,
+        marketId,
+      },
+    });
 
     await ProfitLoss.destroy({
       where: {

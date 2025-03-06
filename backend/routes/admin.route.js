@@ -19,7 +19,9 @@ import {
   getResultRequests,
   getSubAdminResultHistory,
   deleteBetAfterWin,
-  afterWinVoidMarket
+  afterWinVoidMarket,
+  winningData,
+  getDetailsWinningData
   
 
 } from '../controller/admin.controller.js';
@@ -67,6 +69,11 @@ export const AdminRoute = (app) => {
   app.get('/api/get-result-requests',authorize([string.Admin]),getResultRequests);
 
   app.get('/api/subAdmin/result-histories',authorize([string.Admin,string.subAdmin]), getSubAdminResultHistory );
+
+  app.get('/api/get-after-winning-data', winningData);
+
+  app.get('/api/getDetails-winning-data', getDetailsWinningData);
+
 
   app.post('/api/delete-bet-after-win',authorize([string.Admin]), deleteBetAfterWin);
 
