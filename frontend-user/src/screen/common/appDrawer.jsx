@@ -206,7 +206,7 @@ function AppDrawer({
             className="col-md-2 position-fixed d-none d-md-block vertical-navbar p-0"
             style={{
               height: "100vh",
-              marginTop: isHomePage ? "0px" : "48px",
+              marginTop: isHomePage ? "0px" : "93px",
             }}
           >
             {getLeftNavBar()}
