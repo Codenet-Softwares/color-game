@@ -112,14 +112,15 @@ const Navside = () => {
                   </span>
                 </Link>
               </li>
-              <li>
+              {auth.user.roles === "admin" && <li>
                 <Link to="/deleteMarket">
                   <span>
                     <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "10px", fontSize: "15px" }}></i>
                     delete Market
                   </span>
                 </Link>
-              </li>
+              </li>}
+
             </ul>
           </li>
         )}
@@ -134,18 +135,9 @@ const Navside = () => {
             <span className="ms-3">Create Sub-Admin</span>
           </Link>
         </li>}
-        
-        {/* create subadmin end */}
 
-        <li className="m-2" onClick={handleInactive}>
-          <Link to="/announcedGame" className="d-flex align-items-center">
-            <div className="nav_icon_small">
-              <i class="fa-solid fa-ban" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
-            </div>
-            <span className="ms-3">Inactive Games</span>
-          </Link>
-        </li>
-        <li className="m-2">
+        {/* create subadmin end */}
+        {auth.user.roles === "admin" && <li className="m-2">
           <Link to="/voidMarket" className="d-flex align-items-center">
             <div className="nav_icon_small" >
               <i class="fa-solid fa-eraser" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
@@ -153,8 +145,8 @@ const Navside = () => {
             </div>
             <span className="ms-3">Void Games</span>
           </Link>
-        </li>
-        <li className="m-2">
+        </li>}
+        {auth.user.roles === "admin" && <li className="m-2">
           <Link to="/liveBet" className="d-flex align-items-center">
             <div className="nav_icon_small">
               <i class="fa-solid fa-broadcast-tower" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
@@ -162,8 +154,8 @@ const Navside = () => {
             </div>
             <span className="ms-3">Live Bet</span>
           </Link>
-        </li>
-        <li className="m-2">
+        </li>}
+        {auth.user.roles === "admin" && <li className="m-2">
           <Link
             to="/get-bet-markets-afterWin"
             className="d-flex align-items-center"
@@ -174,8 +166,8 @@ const Navside = () => {
             </div>
             <span className="ms-3">Bet History</span>
           </Link>
-        </li>
-        <li className="m-2">
+        </li>}
+        {auth.user.roles === "admin" && <li className="m-2">
           <Link to="/trash" className="d-flex align-items-center">
             <div className="nav_icon_small">
               <i class="fa-solid fa-trash" style={{ color: "#3E5879", marginRight: "1px", fontSize: "20px" }}></i>
@@ -183,10 +175,11 @@ const Navside = () => {
             </div>
             <span className="ms-3">Trash Bets</span>
           </Link>
-        </li>
+        </li>}
+
 
         {/* Image Management */}
-        <li className="m-2">
+        {auth.user.roles === "admin" && <li className="m-2">
           <a
             className={`has-arrow ${isImage ? "active" : ""}`}
             href="#"
@@ -323,10 +316,10 @@ const Navside = () => {
               </li>
             </ul>
           )}
-        </li>
+        </li>}
 
         {/* Game Announcement */}
-        <li className="game-announcement m-2">
+        {auth.user.roles === "admin" && <li className="game-announcement m-2">
           <a
             className={`has-arrow ${isAnnouncement ? "active" : ""}`}
             href="#"
@@ -403,7 +396,9 @@ const Navside = () => {
               </li>
             </ul>
           )}
-        </li>
+        </li>}
+
+
         {/* Announcement Management Ends */}
 
         {/* Winning Request Starts */}
