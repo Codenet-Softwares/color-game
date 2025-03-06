@@ -6,7 +6,7 @@ import { ToastContainer, toast } from "react-toastify";
 // import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../../Utils/Auth";
 import AccountServices from "../../Services/AccountServices";
-import { FaEye, FaEyeSlash,FaRegUserCircle } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaRegUserCircle } from "react-icons/fa";
 
 const NavTop = () => {
   const auth = useAuth();
@@ -155,9 +155,10 @@ const NavTop = () => {
                     </div>
 
                     <div className="profile_info_details">
-                      <a style={{ cursor: "pointer" }} onClick={openModal}>
+                      {auth.user.roles === "admin" && <a style={{ cursor: "pointer" }} onClick={openModal}>
                         <b className="text-primary">Reset Password</b>
-                      </a>
+                      </a>}
+
                       <a style={{ cursor: "pointer" }} onClick={handleLogout}>
                         <b className="text-danger">Logout</b>
                       </a>
@@ -212,9 +213,8 @@ const NavTop = () => {
                     <input
                       type={showPassword ? "text" : "password"}
                       id="oldPassword"
-                      className={`form-control ${
-                        errors.oldPassword ? "border-danger" : ""
-                      }`}
+                      className={`form-control ${errors.oldPassword ? "border-danger" : ""
+                        }`}
                       value={oldPassword}
                       onChange={handleOldPasswordChange}
                       required
@@ -239,9 +239,8 @@ const NavTop = () => {
                     <input
                       type={showNewPassword ? "text" : "password"}
                       id="newPassword"
-                      className={`form-control ${
-                        errors.newPassword ? "border-danger" : ""
-                      }`}
+                      className={`form-control ${errors.newPassword ? "border-danger" : ""
+                        }`}
                       value={newPassword}
                       onChange={handleNewPasswordChange}
                       required
@@ -267,9 +266,8 @@ const NavTop = () => {
                     <input
                       type={showConfirmPassword ? "text" : "password"}
                       id="confirmPassword"
-                      className={`form-control ${
-                        errors.confirmPassword ? "border-danger" : ""
-                      }`}
+                      className={`form-control ${errors.confirmPassword ? "border-danger" : ""
+                        }`}
                       value={confirmPassword}
                       onChange={handleConfirmPasswordChange}
                       required

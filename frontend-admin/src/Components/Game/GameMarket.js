@@ -180,12 +180,15 @@ const GameMarket = ({ marketId }) => {
                   Game Market
                 </h3>
               </div>
-              <button className="btn btn-primary" onClick={handleShow}>
-                <span className="me-2">
-                  <i className="fa fa-plus " aria-hidden="true"></i>
-                </span>
-                Create Game
-              </button>
+              {
+                auth.user.roles === "admin" && <button className="btn btn-primary" onClick={handleShow}>
+                  <span className="me-2">
+                    <i className="fa fa-plus " aria-hidden="true"></i>
+                  </span>
+                  Create Game
+                </button>
+              }
+
             </div>
           </div>
         </div>
@@ -258,7 +261,7 @@ const GameMarket = ({ marketId }) => {
                                       style={{ cursor: "pointer" }}
                                     >
                                       <div className="dropdown">
-                                        <span
+                                        {auth.user.roles === "admin" && <><span
                                           className="dropdown-toggle"
                                           id="dropdownMenuButton"
                                           data-bs-toggle="dropdown"
@@ -266,49 +269,49 @@ const GameMarket = ({ marketId }) => {
                                         >
                                           <i className="ti-more-alt"></i>
                                         </span>
-                                        <div
-                                          className="dropdown-menu dropdown-menu-right"
-                                          aria-labelledby="dropdownMenuButton"
-                                          x-placement="bottom-end"
-                                          // style={{
-                                          //   position: "absolute",
-                                          //   transform:
-                                          //     "translate3d(-148px, 20px, 0px)",
-                                          //   top: "0px",
-                                          //   left: "0px",
-                                          // }}
-                                          style={{
-                                            position: "absolute",
-                                            right: 0, // Align dropdown to the right of its container
-                                            top: "100%", // Position it directly below the button
-                                            zIndex: 1050, // Ensure it is above other elements
-                                            overflow: "visible", // Allow overflow to ensure visibility
-                                          }}
-                                        >
-                                          <a
-                                            className="dropdown-item"
-                                            onClick={(e) =>
-                                              handleDelete(e, game.gameId)
-                                            }
-                                          >
-                                            {" "}
-                                            <i className="ti-trash"></i> Delete
-                                          </a>
-                                          <a
-                                            className="dropdown-item"
-                                            href="#"
-                                            onClick={() => {
-                                              handleShowUpdateModal(
-                                                data.gameId,
-                                                games[index]
-                                              );
+                                          <div
+                                            className="dropdown-menu dropdown-menu-right"
+                                            aria-labelledby="dropdownMenuButton"
+                                            x-placement="bottom-end"
+                                            // style={{
+                                            //   position: "absolute",
+                                            //   transform:
+                                            //     "translate3d(-148px, 20px, 0px)",
+                                            //   top: "0px",
+                                            //   left: "0px",
+                                            // }}
+                                            style={{
+                                              position: "absolute",
+                                              right: 0, // Align dropdown to the right of its container
+                                              top: "100%", // Position it directly below the button
+                                              zIndex: 1050, // Ensure it is above other elements
+                                              overflow: "visible", // Allow overflow to ensure visibility
                                             }}
                                           >
-                                            {" "}
-                                            <i className="fas fa-edit"></i> Edit
-                                          </a>
+                                            <a
+                                              className="dropdown-item"
+                                              onClick={(e) =>
+                                                handleDelete(e, game.gameId)
+                                              }
+                                            >
+                                              {" "}
+                                              <i className="ti-trash"></i> Delete
+                                            </a>
+                                            <a
+                                              className="dropdown-item"
+                                              href="#"
+                                              onClick={() => {
+                                                handleShowUpdateModal(
+                                                  data.gameId,
+                                                  games[index]
+                                                );
+                                              }}
+                                            >
+                                              {" "}
+                                              <i className="fas fa-edit"></i> Edit
+                                            </a>
 
-                                          {/* {!game.announceId ? (
+                                            {/* {!game.announceId ? (
                                             <a
                                               className="dropdown-item"
                                               onClick={(e) =>
@@ -344,7 +347,7 @@ const GameMarket = ({ marketId }) => {
                                             </a>
                                           )} */}
 
-                                          {/* <a
+                                            {/* <a
                                             className="dropdown-item"
                                             onClick={(e) =>
                                               handleShowLatestAnnouncementModal(
@@ -358,7 +361,8 @@ const GameMarket = ({ marketId }) => {
                                             Latest Announcement for{" "}
                                             {game.gameName}
                                           </a> */}
-                                        </div>
+                                          </div></>}
+                                        
                                       </div>
                                     </div>
                                     {/* Side Nav 3 dots Ending here */}
