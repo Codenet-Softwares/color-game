@@ -1219,7 +1219,7 @@ export const user_Balance = async (userId) => {
     const user_transactions = await transactionRecord.findAll({
       where: { userId },
     });
-
+    
     for (const transaction of user_transactions) {
       if (transaction.transactionType === 'credit') {
         balance += parseFloat(transaction.amount);
@@ -1243,14 +1243,18 @@ export const user_Balance = async (userId) => {
       where: { userId },
     });
 
-    for (const trans of winningAmounts) {
-      if (trans.type === 'win') {
-        balance += parseFloat(trans.amount);
+  for (const trans of winningAmounts) {
+        if (trans.type === 'win') {
+          balance += parseFloat(trans.amount);
+        }
+        if (trans.type === 'loss') {
+          balance -= parseFloat(trans.amount);
+        }
+        if (trans.isVoidAfterWin === true && trans.type === 'loss' ) {
+          balance += parseFloat(trans.amount);
+        }
       }
-      if (trans.type === 'loss') {
-        balance -= parseFloat(trans.amount);
-      }
-    }
+    
 
     return balance;
   } catch (error) {

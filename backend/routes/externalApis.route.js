@@ -1,9 +1,9 @@
 import { user_Balance } from "../controller/admin.controller.js";
-import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte, getAllLotteryMarket, getExposure, deleteBetAfterWin } from "../controller/externalApis.controller.js";
+import { calculateExternalProfitLoss, liveMarketBet, getExternalUserBetHistory, marketExternalProfitLoss, runnerExternalProfitLoss, getLiveBetGames, getExternalUserBetList, liveUserBet, getExternalLotteryP_L, getVoidMarket, getRevokeMarket, getDeleteLiveMarket, revokeLiveBet, userLiveBte, getAllLotteryMarket, getExposure, deleteBetAfterWin, afterWinVoidMarket } from "../controller/externalApis.controller.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
 import { authenticateAdmin } from "../middleware/lottery.auth.js";
 import { authenticateSuperAdmin } from "../middleware/whiteLabelAuth.js";
-import { betHistorySchema, calculateProfitLossSchema, marketProfitLossSchema, runnerProfitLossSchema, validateDeleteBetAfterWin, validateDeleteLiveMarket, validateGetLiveUserBet, validateMarketId, validateRevokeLiveMarket, validateRevokeMarket, validateUserLiveBet, validateVoidMarket } from "../schema/commonSchema.js";
+import { betHistorySchema, calculateProfitLossSchema, marketProfitLossSchema, runnerProfitLossSchema, validateDeleteBetAfterWin, validateDeleteLiveMarket, validateGetLiveUserBet, validateMarketId, validateRevokeLiveMarket, validateRevokeMarket, validateUserLiveBet, validateVoidAfterWin, validateVoidMarket } from "../schema/commonSchema.js";
 
 export const externalApisRoute = (app) => {
   app.get('/api/external-user-betHistory/:userName/:gameId', betHistorySchema, customErrorHandler, authenticateSuperAdmin, getExternalUserBetHistory);
@@ -50,6 +50,9 @@ export const externalApisRoute = (app) => {
   app.get('/api/external/get-exposure/:userId', getExposure)
 
   app.post('/api/external/delete-bet-afterWin-lottery',validateDeleteBetAfterWin, customErrorHandler, authenticateAdmin, deleteBetAfterWin)
+
+  app.post('/api/external/void-afterWin-market-lottery',validateVoidAfterWin, customErrorHandler, authenticateAdmin, afterWinVoidMarket)
+
 
 
 }

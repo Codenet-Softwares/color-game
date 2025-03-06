@@ -6,7 +6,7 @@ import { statusCode } from "../helper/statusCodes.js";
 import BetHistory from "../models/betHistory.model.js";
 import Market from "../models/market.model.js";
 import Runner from "../models/runner.model.js";
-import { Op, Sequelize } from "sequelize";
+import { Op, Sequelize, where } from "sequelize";
 import Game from "../models/game.model.js";
 import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
@@ -72,10 +72,11 @@ export const getExternalUserBetHistory = async (req, res) => {
         );
     }
 
+    let model
+
     const whereCondition = {
       userName: userName,
       gameId: gameId,
-      isVoid: false,
       date: {
         [Op.between]: [startDate, endDate],
       },
@@ -83,9 +84,21 @@ export const getExternalUserBetHistory = async (req, res) => {
 
     if (type === "void") {
       whereCondition.isVoid = true;
+      model = BetHistory;
+    }else if(type === "settle")
+    {
+      whereCondition.isWin = true;
+      model = BetHistory;
+    }else if(type === "unsettle")
+    {
+      whereCondition.isWin = false;
+      model = CurrentOrder;
+    }else{
+      whereCondition.isVoid = false;
+      model = BetHistory;
     }
 
-    const { count, rows } = await BetHistory.findAndCountAll({
+    const { count, rows } = await model.findAndCountAll({
       where: whereCondition,
       attributes: [
         "userId",
@@ -97,8 +110,6 @@ export const getExternalUserBetHistory = async (req, res) => {
         "value",
         "type",
         "date",
-        "matchDate",
-        "placeDate",
       ],
       limit,
       offset: (page - 1) * limit,
@@ -117,6 +128,7 @@ export const getExternalUserBetHistory = async (req, res) => {
       })
     );
   } catch (error) {
+    console.log("error",error)
     res
       .status(statusCode.internalServerError)
       .send(
@@ -1463,3 +1475,55 @@ export const deleteBetAfterWin = async (req, res) => {
       );
   }
 };
+
+
+export const afterWinVoidMarket = async (req, res) => {
+  try {
+    const { marketId, userId } = req.body;
+    if (!Array.isArray(userId) || userId.length === 0) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Invalid userId format"));
+    }
+
+    await WinningAmount.update(
+      { amount: 0 }, 
+      {
+        where: {
+          userId: userId,
+          marketId, 
+          type: 'win',
+        },
+      }
+    );
+
+    await  WinningAmount.update({isVoidAfterWin: true},{where:{marketId}})
+
+      await LotteryProfit_Loss.destroy({
+        where: { marketId , userId},
+      });
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Balance updated successfully!"
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
