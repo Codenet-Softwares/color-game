@@ -1747,14 +1747,14 @@ export const getSubAdminResultHistory = async (req, res) => {
 export const winningData = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; 
-    const limit = parseInt(req.query.limit) || 10; 
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || ''; 
     const offset = (page - 1) * limit;
 
-    // Fetch winning amounts where isVoidAfterWin is 0 (false)
     const winningAmounts = await WinningAmount.findAll({
       attributes: ['userId', 'userName', 'marketId'],
       where: {
-        isVoidAfterWin: false, // Filter records where isVoidAfterWin is 0
+        isVoidAfterWin: false, 
       },
     });
 
@@ -1762,7 +1762,6 @@ export const winningData = async (req, res) => {
       attributes: ['gameId', 'gameName', 'marketId', 'marketName']
     });
 
-    // Combine data
     const combinedData = winningAmounts.map(wa => {
       const betHistory = betHistories.find(bh => bh.marketId === wa.marketId);
 
@@ -1774,10 +1773,8 @@ export const winningData = async (req, res) => {
       };
     });
 
-    // Filter data by gameName
     const filteredData = combinedData.filter(item => item.gameName === "colorGame");
 
-    // Remove duplicates based on marketName
     const uniqueMarketData = filteredData.reduce((acc, item) => {
       if (!acc.some(entry => entry.marketName === item.marketName)) {
         acc.push(item);
@@ -1785,14 +1782,17 @@ export const winningData = async (req, res) => {
       return acc;
     }, []);
 
-    // Paginate data
-    const paginatedData = uniqueMarketData.slice(offset, offset + limit);
+    const searchedData = search
+      ? uniqueMarketData.filter(item => 
+          item.marketName.toLowerCase().includes(search.toLowerCase())
+        )
+      : uniqueMarketData;
 
-    // Calculate total items and pages
-    const totalItems = uniqueMarketData.length;
+    const paginatedData = searchedData.slice(offset, offset + limit);
+
+    const totalItems = searchedData.length;
     const totalPages = Math.ceil(totalItems / limit);
 
-    // Pagination object
     const pagination = {
       page,
       limit,
@@ -1800,7 +1800,6 @@ export const winningData = async (req, res) => {
       totalItems
     };
 
-    // Return response
     return res
       .status(statusCode.success)
       .send(
@@ -1830,6 +1829,7 @@ export const getDetailsWinningData = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || ''; 
     const offset = (page - 1) * limit;
 
     const marketId = req.params.marketId;
@@ -1879,9 +1879,16 @@ export const getDetailsWinningData = async (req, res) => {
 
     const filteredData = combinedData.filter(item => item.gameName === "colorGame");
 
-    const paginatedData = filteredData.slice(offset, offset + limit);
+    const searchedData = search
+      ? filteredData.filter(item =>
+          item.userName.toLowerCase().includes(search.toLowerCase())
+        )
+      : filteredData;
 
-    const totalItems = filteredData.length;
+
+    const paginatedData = searchedData.slice(offset, offset + limit);
+
+    const totalItems = searchedData.length;
     const totalPages = Math.ceil(totalItems / limit);
 
     const pagination = {
