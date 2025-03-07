@@ -483,7 +483,7 @@ export const getAllGameData = async (req, res) => {
       gameName: game.gameName,
       description: game.description,
       isBlink: game.isBlink,
-      markets: game.Markets.reverse().filter(
+      markets: game.Markets.sort().filter(
         (market) => !market.hideMarketUser && !market.isVoid
       ).map((market) => ({
           marketId: market.marketId,
@@ -1213,17 +1213,29 @@ export const getUserBetHistory = async (req, res) => {
     const whereCondition = {
       userId: userId,
       gameId: gameId,
-      isVoid: false,
       date: {
         [Op.between]: [startDate, endDate],
       },
     };
 
+    let model
+
     if (type === "void") {
       whereCondition.isVoid = true;
+      model = BetHistory;
+    }else if(type === "settle")
+    {
+      whereCondition.isVoid = false;
+      model = BetHistory;
+    }else if(type === "unsettle")
+    {
+      whereCondition.isWin = false;
+      model = CurrentOrder;
+    }else{
+      whereCondition.isVoid = false;
+      model = BetHistory;
     }
-
-    const { count, rows } = await BetHistory.findAndCountAll({
+    const { count, rows } = await model.findAndCountAll({
       where: whereCondition,
       attributes: [
         "userId",
@@ -1235,8 +1247,6 @@ export const getUserBetHistory = async (req, res) => {
         "value",
         "type",
         "date",
-        "matchDate",
-        "placeDate",
       ],
       limit,
       offset: (page - 1) * limit,
