@@ -160,6 +160,16 @@ class AccountService {
       },
     });
   }
+
+  viewSubAdmin(user, page, pageSize) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/get-sub-admins`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 }
 
 export default new AccountService();

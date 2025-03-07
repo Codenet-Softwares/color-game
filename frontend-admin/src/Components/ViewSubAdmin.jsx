@@ -1,40 +1,60 @@
 import React, { useEffect, useState } from "react";
+import { getViewSubadmin } from "../Utils/intialState";
 import AccountServices from "../Services/AccountServices";
 import { useAuth } from "../Utils/Auth";
-import { getViewWinningHistory } from "../Utils/intialState";
 import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import SingleCard from "./common/singleCard";
-import Pagination from "./Pagination";
 
-const ViewWinningHistory = () => {
+const ViewSubAdmin = () => {
+  const [viewSubadmin, setViewSubadmin] = useState(getViewSubadmin());
+
   const auth = useAuth();
-  const [viewWinningHistory, setViewWinningHistory] = useState(
-    getViewWinningHistory()
-  );
+  console.log("isopen", viewSubadmin);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= viewSubadmin?.totalPages) {
+      setViewSubadmin((prev) => ({
+        ...prev,
+        currentPage: page,
+      }));
+    }
+  };
 
   useEffect(() => {
-    fetchviewWinningHistory();
+    const timer = setTimeout(() => {
+      setViewSubadmin((prev) => ({
+        ...prev,
+        debouncedSearchTerm: prev.searchTerm,
+      }));
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [viewSubadmin?.searchTerm]);
+
+  useEffect(() => {
+    fetchViewWinningRequest();
   }, [
-    viewWinningHistory?.currentPage,
-    viewWinningHistory?.totalEntries,
-    viewWinningHistory?.debouncedSearchTerm,
+    // viewSubadmin?.currentPage,
+    // viewSubadmin?.totalEntries,
+    // viewSubadmin?.debouncedSearchTerm,
+    viewSubadmin?.isRefresh,
   ]);
 
-  const fetchviewWinningHistory = () => {
+  const fetchViewWinningRequest = () => {
     auth.showLoader();
-    AccountServices.viewWinninghistory(
-      auth.user,
-      viewWinningHistory?.currentPage,
-      viewWinningHistory?.totalEntries
-      // viewWinningHistory.debouncedSearchTerm
+    AccountServices.viewSubAdmin(
+      auth.user
+      //   viewSubadmin?.currentPage,
+      //   viewSubadmin?.totalEntries
+      // viewSubadmin.debouncedSearchTerm
     )
       .then((res) => {
-        setViewWinningHistory((prev) => ({
+        setViewSubadmin((prev) => ({
           ...prev,
-          history: res?.data?.data || [],
-          totalPages: res?.data.pagination?.totalPages,
-          totalData: res?.data.pagination?.totalItems,
+          data: res?.data?.data || [],
+          //   totalPages: res?.data.pagination?.totalPages,
+          //   totalData: res?.data.pagination?.totalItems,
         }));
       })
       .catch((err) => {
@@ -44,36 +64,6 @@ const ViewWinningHistory = () => {
         auth.hideLoader();
       });
   };
-
-  const handlePageChange = (page) => {
-    if (page >= 1 && page <= viewWinningHistory?.totalPages) {
-      setViewWinningHistory((prev) => ({
-        ...prev,
-        currentPage: page
-      }));
-    }
-  };
-
-  const toggleAccordion = (index) => {
-    setViewWinningHistory((prevState) => ({
-      ...prevState,
-      openRowIndex: prevState?.openRowIndex === index ? null : index,
-    }));
-  };
-
-  console.log("first", viewWinningHistory);
-
-  let startIndex = Math.min(
-    (Number(viewWinningHistory?.currentPage) - 1) *
-    Number(viewWinningHistory?.totalEntries) +
-    1,
-    Number(viewWinningHistory?.totalData)
-  );
-  let endIndex = Math.min(
-    Number(viewWinningHistory?.currentPage) *
-    Number(viewWinningHistory?.totalEntries),
-    Number(viewWinningHistory?.totalData)
-  );
 
   return (
     <div className="container my-5 p-5">
@@ -86,7 +76,7 @@ const ViewWinningHistory = () => {
           }}
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase">
-            Winning History
+            LIST OF SUB-ADMIN
           </h3>
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
@@ -109,7 +99,7 @@ const ViewWinningHistory = () => {
                                 placeholder="Search By Market Name..."
                                 value={searchTerm}
                                 onChange={(e) =>
-                                    setViewWinningHistory((prev) => ({
+                                    setviewSubadmin((prev) => ({
                                         ...prev,
                                         searchTerm: e.target.value
                                     }))
@@ -122,7 +112,7 @@ const ViewWinningHistory = () => {
                                     border: "2px solid #3E5879",
                                 }}
                             />
-                            {viewWinningHistory.searchTerm && (
+                            {viewSubadmin.searchTerm && (
                                 <FaTimes
                                     onClick={handleClearSearch}
                                     style={{
@@ -141,13 +131,13 @@ const ViewWinningHistory = () => {
                             <label className="me-2 fw-bold">Show</label>
                             <select
                                 className="form-select rounded-pill d-inline-block w-auto"
-                                value={viewWinningHistory.totalEntries}
+                                value={viewSubadmin.totalEntries}
                                 style={{
                                     borderRadius: "50px",
                                     border: "2px solid #3E5879",
                                 }}
                                 onChange={(e) =>
-                                    setViewWinningHistory((prev) => ({
+                                    setViewSubadmin((prev) => ({
                                         ...prev,
                                         totalEntries: parseInt(e.target.value),
                                     }))
@@ -164,7 +154,7 @@ const ViewWinningHistory = () => {
 
           {/* Table */}
           <SingleCard
-            className=" mb-5 text-center"
+            className="mb-5 text-center"
             style={{
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
             }}
@@ -177,6 +167,7 @@ const ViewWinningHistory = () => {
                   borderRadius: "10px",
                 }}
               >
+                {/* Table Header */}
                 <thead
                   className="table-primary text-uppercase"
                   style={{
@@ -187,61 +178,29 @@ const ViewWinningHistory = () => {
                 >
                   <tr>
                     <th>Serial Number</th>
-                    <th>Game Name</th>
-                    <th>Market Name</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                    <th>Name</th>
+                    <th>Permission</th>
                   </tr>
                 </thead>
+
+                {/* Table Body */}
                 <tbody>
-                  {viewWinningHistory?.history?.length > 0 ? (
-                    viewWinningHistory?.history.map((game, gameIndex) => (
-                      <React.Fragment key={game?.gameId}>
-                        <tr>
-                          <td>{gameIndex + 1}</td>
-                          <td>{game?.gameName}</td>
-                          <td>{game?.marketName}</td>
-                          <td className="fw-bold">{game.type === "Matched" ? "Matched" : "Unmatched"}</td>
-                          <td>
-                            <button
-                              className="btn btn-primary"
-                              onClick={() => toggleAccordion(gameIndex)}
-                            >
-                              {viewWinningHistory?.openRowIndex === gameIndex ? "Hide Details" : "View Details"}
-                            </button>
-                          </td>
-                        </tr>
-                        {/* Accordion Content */}
-                        {viewWinningHistory?.openRowIndex === gameIndex && (
-                          <tr>
-                            <td colSpan="5">
-                              <div className="accordion-body">
-                                <table className="table table-bordered">
-                                  <thead className="table-secondary">
-                                    <tr>
-                                      <th>Declared By</th>
-                                      <th>Runner Name</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {game.data.map((runner, runnerIndex) => (
-                                      <tr key={`${game?.gameId}-${runner?.runnerId}-${runnerIndex}`}>
-                                        <td>{runner?.declaredByNames}</td>
-                                        <td>{runner?.runnerName}</td>
-                                      </tr>
-                                    ))}
-                                    
-                                  </tbody>
-                                </table>
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                      </React.Fragment>
+                  {viewSubadmin?.data?.length > 0 ? (
+                    viewSubadmin?.data?.map((subadmin, index) => (
+                      <tr key={index}>
+                        <td className="fw-bold">{index + 1}</td>
+                        <td className="fw-bold text-primary">
+                          {subadmin?.userName}
+                        </td>
+                        <td className="text-muted">{subadmin?.permissions}</td>
+                      </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center text-danger fw-bold">
+                      <td
+                        colSpan="3"
+                        className="text-center text-danger fw-bold p-3"
+                      >
                         No Data Found
                       </td>
                     </tr>
@@ -251,20 +210,20 @@ const ViewWinningHistory = () => {
             </div>
           </SingleCard>
 
-          {viewWinningHistory?.history?.length > 0 && (
+          {/* {viewSubadmin?.request?.length > 0 && (
             <Pagination
-              currentPage={viewWinningHistory?.currentPage}
-              totalPages={viewWinningHistory?.totalPages}
+              currentPage={viewSubadmin?.currentPage}
+              totalPages={viewSubadmin?.totalPages}
               handlePageChange={handlePageChange}
               startIndex={startIndex}
               endIndex={endIndex}
-              totalData={viewWinningHistory?.totalData}
+              totalData={viewSubadmin?.totalData}
             />
-          )}
+          )} */}
         </div>
       </div>
     </div>
   );
 };
 
-export default ViewWinningHistory;
+export default ViewSubAdmin;

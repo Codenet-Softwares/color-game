@@ -73,7 +73,7 @@ const useLotteryData = (MarketId) => {
   useEffect(() => {
     setLotteryData(getInitialLotteryData());
     fetchLotteryData();
-  }, [MarketId]);
+  }, [MarketId, lotteryData.isUpdate]);
 
   // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
   useEffect(() => {
@@ -85,6 +85,7 @@ const useLotteryData = (MarketId) => {
           setLotteryData((prevData) => ({
             ...prevData,
             isSuspend: !market.isActive, // Update isSuspend dynamically
+            isUpdate: market?.updatedAt
           }));
 
           if (market.isActive) {

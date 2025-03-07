@@ -11,9 +11,9 @@ const WinningRequestAccept = ({ isOpen, onClose, data, marketId, setViewWinningR
   const runnerNames = data.map((item) => item.runnerName);
   const isMatch = runnerNames.every((name) => name === runnerNames[0]);
 
-  const handleSubmit = (marketId) => {
+  const handleSubmit = (marketId, action) => {
     AccountServices.viewWinningRequestAccept(
-      { marketId: marketId },
+      { marketId: marketId, action: action },
       auth.user
     ).then((response) => {
       toast.success(response?.data?.message)
@@ -127,8 +127,8 @@ const WinningRequestAccept = ({ isOpen, onClose, data, marketId, setViewWinningR
                 </div>
 
                 <div className="d-flex justify-content-center gap-3 mt-4">
-                  <button className="btn btn-success fw-bold px-4" disabled={!isMatch} onClick={() => handleSubmit(marketId)}>Approve</button>
-                  <button className="btn btn-danger fw-bold px-4" disabled={isMatch} onClick={() => handleSubmit(marketId)}>Reject</button>
+                  <button className="btn btn-success fw-bold px-4" disabled={!isMatch} onClick={() => handleSubmit(marketId, "approve")}>Approve</button>
+                  <button className="btn btn-danger fw-bold px-4"  onClick={() => handleSubmit(marketId, "reject")}>Reject</button>
                 </div>
               </>
             )
