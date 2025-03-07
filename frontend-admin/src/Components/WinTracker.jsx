@@ -6,10 +6,12 @@ import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import GameService from "../Services/GameService";
 import { useNavigate } from "react-router-dom";
+// import BetWinTracker from "./BetWinTracker";
+import Pagination from "./Pagination";
 
 const WinTracker = () => {
   const auth = useAuth();
-  
+
   const [winBetTracker, setWinBetTracker] = useState({
     winBetTracker: [],
     currentPage: 1,
@@ -22,13 +24,14 @@ const WinTracker = () => {
     GameService.winBetTracker(
       auth.user,
       winBetTracker.currentPage,
-      winBetTracker.totalEntries,
+      winBetTracker.totalEntries
     )
       .then((res) => {
         setWinBetTracker((prev) => ({
           ...prev,
           winBetTracker: res.data?.data || [],
-      
+          totalPages: res?.data.pagination?.totalPages,
+          totalData: res?.data.pagination?.totalItems,
         }));
       })
       .catch((err) => {
@@ -39,23 +42,29 @@ const WinTracker = () => {
       });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchBetTracker();
-  }, [])
-let startIndex = Math.min(
-    (Number(winBetTracker.currentPage) - 1) * Number(winBetTracker.totalEntries) + 1,
+  }, [winBetTracker.currentPage, winBetTracker.totalEntries]);
+
+  const handlePageChange = (pageNumber) => {
+    setWinBetTracker((prev) => ({ ...prev, currentPage: pageNumber }));
+  };
+  let startIndex = Math.min(
+    (Number(winBetTracker.currentPage) - 1) *
+      Number(winBetTracker.totalEntries) +
+      1,
     Number(winBetTracker.totalData)
   );
   let endIndex = Math.min(
     Number(winBetTracker.currentPage) * Number(winBetTracker.totalEntries),
     Number(winBetTracker.totalData)
   );
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const handleNavigate = (marketId) => {
     navigate(`/getDetails-winning-data/${marketId}`);
   };
-  
+
   return (
     <div className="container my-5 p-5">
       <div className="card shadow-lg">
@@ -116,17 +125,17 @@ let startIndex = Math.min(
               <label className="me-2 fw-bold">Show</label>
               <select
                 className="form-select rounded-pill d-inline-block w-auto"
-                // value={winBetTracker.totalEntries}
+                value={winBetTracker.totalEntries}
                 style={{
                   borderRadius: "50px",
                   border: "2px solid #3E5879",
                 }}
-                // onChange={(e) =>
-                //   setLiveBets((prev) => ({
-                //     ...prev,
-                //     totalEntries: parseInt(e.target.value),
-                //   }))
-                // }
+                onChange={(e) =>
+                  setWinBetTracker((prev) => ({
+                    ...prev,
+                    totalEntries: parseInt(e.target.value),
+                  }))
+                }
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -169,37 +178,50 @@ let startIndex = Math.min(
                 </thead>
 
                 <tbody>
-                    {winBetTracker.winBetTracker.length > 0 ? (
-                      <>
-                        {winBetTracker.winBetTracker.map((betTracker, index) => (
-                          <tr key={index}>
-                            <td>{startIndex+index }</td>
-                            <td>{betTracker.gameName}</td>
-                            <td>{betTracker.marketName}</td>
-                            <td>
-                              <button
-                                className="btn btn-primary text-center"
-                                onClick={() => handleNavigate(betTracker.marketId)}
-                              >
-                                Bet History
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </>
-                    ) : (
-                      <tr>
-                        <td colSpan="4" className="text-center text-danger fw-bold">
-                          No Data Found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
+                  {winBetTracker.winBetTracker.length > 0 ? (
+                    <>
+                      {winBetTracker.winBetTracker.map((betTracker, index) => (
+                        <tr key={index}>
+                          <td>{startIndex + index}</td>
+                          <td>{betTracker.gameName}</td>
+                          <td>{betTracker.marketName}</td>
+                          <td>
+                            <button
+                              className="btn btn-primary text-center"
+                              onClick={() =>
+                                handleNavigate(betTracker.marketId)
+                              }
+                            >
+                              Bet History
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="text-center text-danger fw-bold"
+                      >
+                        No Data Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
               </table>
             </div>
           </SingleCard>
-
-          
+          {winBetTracker.winBetTracker.length > 0 && (
+            <Pagination
+              currentPage={winBetTracker.currentPage}
+              totalPages={winBetTracker.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={winBetTracker.totalData}
+            />
+          )}
         </div>
       </div>
     </div>

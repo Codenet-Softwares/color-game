@@ -527,7 +527,7 @@ class GameService {
   winBetTracker(user, page, pageSize) {
     return axios({
       method: "GET",
-      url: `${API_HOST}/api/get-bet-markets-afterWin?page=${page}&pageSize=${pageSize}`,
+      url: `${API_HOST}/api/get-after-winning-data?page=${page}&pageSize=${pageSize}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -543,7 +543,19 @@ class GameService {
     });
   }
   
-
+  AfterWinDeleteBet(user, userId, marketId) {
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/delete-bet-after-win`,
+      data: {
+        userId: userId,
+        marketId: marketId,
+      },
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 }
 
 export default new GameService();

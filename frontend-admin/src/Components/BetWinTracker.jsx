@@ -1,11 +1,87 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
 import { FaSearch, FaArrowLeft, FaTrashAlt } from "react-icons/fa";
-import SingleCard from './common/singleCard';
+import { useAuth } from "../Utils/Auth";
+import { useNavigate } from "react-router-dom";
+import SingleCard from "./common/singleCard";
+import { toast } from "react-toastify";
+import { customErrorHandler } from "../Utils/helper";
+import GameService from "../Services/GameService";
+import Pagination from "./Pagination";
 const BetWinTracker = () => {
+  const auth = useAuth();
+  const navigate = useNavigate();
+  const [winBetTrackerDetails, setWinBetTrackerDetails] = useState({
+    winBetTrackerDetails: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 10,
+    name: "",
+    totalData: 0,
+  });
 
-    
+  const fetchWinBetTracker = () => {
+    GameService.getWinBetTracker(
+      auth.user,
+      winBetTrackerDetails.currentPage,
+      winBetTrackerDetails.totalEntries
+    ).then((res) => {
+      console.log("API Response:", res.data);
+      setWinBetTrackerDetails((prev) => ({
+        ...prev,
+        winBetTrackerDetails: res.data?.data || [],
+      }));
+    });
+  };
+  useEffect(() => {
+    fetchWinBetTracker();
+  }, []);
+   const handleBetDelete = async (userId,marketId, ) => {
+      const isConfirmed = window.confirm(
+        "Are you sure you want to delete this market and bet?"
+      );
+  
+      if (!isConfirmed) {
+        return;
+      }
+      auth.showLoader();
+  
+      try {
+        const response = await GameService.AfterWinDeleteBet(
+          auth.user,
+          userId,
+          marketId,
+          
+        );
+  
+        if (response.status === 200) {
+          toast.success("Market and bet deleted successfully!");
+          fetchWinBetTracker();
+        }
+      } catch (error) {
+        toast.error(customErrorHandler(error));
+      }finally {
+        auth.hideLoader();
+      }
+    };
+  let startIndex = Math.min(
+    (Number(winBetTrackerDetails.currentPage) - 1) *
+      Number(winBetTrackerDetails.totalEntries) +
+      1,
+    Number(winBetTrackerDetails.totalData)
+  );
+  let endIndex = Math.min(
+    Number(winBetTrackerDetails.currentPage) *
+      Number(winBetTrackerDetails.totalEntries),
+    Number(winBetTrackerDetails.totalData)
+  );
+  const handlePageChange = (pageNumber) => {
+    setWinBetTrackerDetails((prev) => ({ ...prev, currentPage: pageNumber }));
+  };
+  const handlePageNavigation = () => {
+    navigate("/winTracker");
+  };
   return (
-       <div>
+    <div>
       <div className="container my-5 p-5 ">
         <div className="card shadow-lg" style={{ background: "#E1D1C7" }}>
           <div
@@ -14,7 +90,7 @@ const BetWinTracker = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              background:"#3E5879",
+              background: "#3E5879",
             }}
           >
             <div
@@ -30,7 +106,7 @@ const BetWinTracker = () => {
                 fontSize: "20px",
                 cursor: "pointer",
               }}
-            //   onClick={handleNavigation}
+              onClick={handlePageNavigation}
             >
               <FaArrowLeft />
             </div>
@@ -38,7 +114,7 @@ const BetWinTracker = () => {
               className="mb-0 fw-bold text-uppercase"
               style={{ flexGrow: 1, textAlign: "center" }}
             >
-                Bet History 
+              Bet History
               {/* Bet History For - {marketName} */}
             </h3>
           </div>
@@ -61,8 +137,8 @@ const BetWinTracker = () => {
                   type="text"
                   className="form-control fw-bold"
                   placeholder="Search By User Or Market Name..."
-                //   value={searchTerm} 
-                //   onChange={handleSearchChange}
+                  //   value={searchTerm}
+                  //   onChange={handleSearchChange}
                   style={{
                     paddingLeft: "40px",
                     borderRadius: "30px",
@@ -78,8 +154,8 @@ const BetWinTracker = () => {
                     borderRadius: "50px",
                     border: "2px solid #3E5879",
                   }}
-                //   value={betAfterWin.totalEntries}
-                //   onChange={handleEntriesChange}
+                  //   value={winBetTrackerDetails.totalEntries}
+                  //   onChange={handleEntriesChange}
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -97,41 +173,90 @@ const BetWinTracker = () => {
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
               }}
             >
-            <div className="table-responsive ">
-              <table className="table table-striped table-hover text-center" style={{
-                  borderRadius: "50px",
-                  border: "2px solid #3E5879",
-                }}>
-                <thead className="table-primary text-uppercase">
-                  <tr>
-                    <th>Serial Number</th>
-                    <th>User Name</th>
-                    {/* <th>Market Name</th> */}
-                    <th>Runner Name</th>
-                    <th>Odds</th>
-                    <th>Type</th>
-                    <th>Stake</th>
-                    {/* <th>Action</th> */}
-                  </tr>
-                </thead>
-             
-              </table>
-            </div>
+              <div className="table-responsive ">
+                <table
+                  className="table table-striped table-hover text-center"
+                  style={{
+                    borderRadius: "50px",
+                    border: "2px solid #3E5879",
+                  }}
+                >
+                  <thead className="table-primary text-uppercase">
+                    <tr>
+                      <th>Serial Number</th>
+                      <th>User Name</th>
+                      {/* <th>Market Name</th> */}
+                      <th>Runner Name</th>
+                      <th>Odds</th>
+                      <th>Type</th>
+                      <th>Stake</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {winBetTrackerDetails.winBetTrackerDetails?.length > 0 ? (
+                      winBetTrackerDetails.winBetTrackerDetails.map(
+                        (winBetTracker, index) => {
+                          return (
+                            <tr key={index}>
+                              <td>{startIndex + index}</td>
+                              <td>{winBetTracker.userName}</td>
+                              <td>{winBetTracker.runnerName}</td>
+                              <td>{winBetTracker.rate}</td>
+                              <td
+                                className={`text-uppercase fw-bold ${
+                                  winBetTracker.type === "back"
+                                    ? "text-success"
+                                    : "text-danger"
+                                }`}
+                              >
+                                {winBetTracker.type}
+                              </td>
+                              <td>{winBetTracker.value}</td>
+                              <td>
+                                <button className="btn btn-danger"
+                                onClick={() =>
+                                  handleBetDelete(
+                                    winBetTracker.userId,
+                                    winBetTracker.marketId,
+                                  )
+                                }
+                                >
+                                  <FaTrashAlt />
+                                </button>{" "}
+                              </td>
+                            </tr>
+                          );
+                        }
+                      )
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="6"
+                          className="text-danger text-center fw-bold"
+                        >
+                          No Bets Found For This Market.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </SingleCard>
             {/* Pagination */}
-            {/* <Pagination
-              currentPage={betAfterWin.currentPage}
-              totalPages={betAfterWin.totalPages}
+            <Pagination
+              currentPage={winBetTrackerDetails.currentPage}
+              totalPages={winBetTrackerDetails.totalPages}
               handlePageChange={handlePageChange}
               startIndex={startIndex}
               endIndex={endIndex}
-              totalData={betAfterWin.totalData}
-            /> */}
+              totalData={winBetTrackerDetails.totalData}
+            />
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default BetWinTracker;
