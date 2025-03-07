@@ -72,7 +72,7 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-after-winning-data', winningData);
 
-  app.get('/api/getDetails-winning-data', getDetailsWinningData);
+  app.get('/api/getDetails-winning-data/:marketId', getDetailsWinningData);
 
 
   app.post('/api/delete-bet-after-win',authorize([string.Admin]), deleteBetAfterWin);
