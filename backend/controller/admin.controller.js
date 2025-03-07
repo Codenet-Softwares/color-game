@@ -134,6 +134,41 @@ export const createSubAdmin = async (req, res) => {
   }
 };
 
+export const getSubAdmins=async (req, res) => {
+    try {
+      const subAdmins = await admins.findAll({
+        where: {
+          roles: 'subAdmin', 
+        },
+        attributes: ['adminId', 'userName', 'roles', 'permissions'],
+      });
+
+      return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          subAdmins,
+          true,
+          statusCode.success,
+          "Sub-admins fetched successfully",
+        )
+      );
+  
+      
+    } catch (error) {
+      res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message,
+        )
+      );
+    }
+  }
+
 export const getAllUsers = async (req, res) => {
   try {
     // Destructure with defaults
@@ -1264,7 +1299,7 @@ export const user_Balance = async (userId) => {
 
 export const approveResult = async (req, res) => {
   try {
-    const { marketId } = req.body;
+    const { marketId, action } = req.body; 
 
     const resultRequests = await ResultRequest.findAll({
       where: { marketId },
@@ -1291,7 +1326,6 @@ export const approveResult = async (req, res) => {
       ],
     });
 
-
     if (!market) {
       return res
         .status(statusCode.badRequest)
@@ -1309,6 +1343,35 @@ export const approveResult = async (req, res) => {
     const isApproved = runnerId1 === runnerId2;
     const type = isApproved ? 'Matched' : 'Unmatched';
 
+    if (action === 'reject') {
+      await ResultHistory.create({
+        gameId: gameId,
+        gameName: gameName,
+        marketId: marketId,
+        marketName: marketName,
+        runnerId: [runnerId1, runnerId2], 
+        runnerNames: runnerNames,
+        isApproved: false,
+        type: type,
+        declaredByNames: declaredByNames, 
+        status: 'Rejected',
+        createdAt: new Date(),
+      });
+
+      await ResultRequest.destroy({ where: { marketId } });
+
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Result rejected successfully"
+          )
+        );
+    }
+
     await ResultHistory.create({
       gameId: gameId,
       gameName: gameName,
@@ -1319,9 +1382,9 @@ export const approveResult = async (req, res) => {
       isApproved: isApproved,
       type: type,
       declaredByNames: declaredByNames, 
+      status: 'Approved',
       createdAt: new Date(),
     });
-    
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -1587,6 +1650,9 @@ export const getSubAdminResultHistory = async (req, res) => {
         exclude: ['id', 'deletedAt'],
       },
       order: [['createdAt', 'DESC']],
+      where: {
+        isApproved: true,
+      },
     };
 
     if (type) {

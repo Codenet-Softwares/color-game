@@ -21,7 +21,9 @@ import {
   deleteBetAfterWin,
   afterWinVoidMarket,
   winningData,
-  getDetailsWinningData
+  getDetailsWinningData,
+  getSubAdmins,
+
   
 
 } from '../controller/admin.controller.js';
@@ -35,6 +37,9 @@ export const AdminRoute = (app) => {
   app.post('/api/admin-create', adminCreateValidate, customErrorHandler, createAdmin);
 
   app.post('/api/create-subAdmin', authorize([string.Admin]),createSubAdmin );
+
+  app.get('/api/get-sub-admins',authorize([string.Admin]), getSubAdmins);
+  
   // done
   app.post(
     '/api/update-market-status/:marketId',
