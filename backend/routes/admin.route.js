@@ -75,9 +75,9 @@ export const AdminRoute = (app) => {
 
   app.get('/api/subAdmin/result-histories', authorize([string.Admin, string.subAdmin]), getSubAdminResultHistory);
 
-  app.get('/api/get-after-winning-data', winningData);
+  app.get('/api/get-after-winning-data',authorize([string.Admin]), winningData);
 
-  app.get('/api/getDetails-winning-data/:marketId', getDetailsWinningData);
+  app.get('/api/getDetails-winning-data/:marketId',authorize([string.Admin]), getDetailsWinningData);
 
 
   app.post('/api/delete-bet-after-win', authorize([string.Admin]), deleteBetAfterWin);
