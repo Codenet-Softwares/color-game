@@ -133,8 +133,8 @@ function AppDrawer({
             onClick={handleLotteryNewToggle}
           >
             <div className="lottery-wrapper text-dark mt-2 text-uppercase">
-              <span className="new-tag">New</span>
-              Lottery New
+              {/* <span className="new-tag">New</span> */}
+              Lottery
               <span
                 className={`dropdown-icon ${lotteryNewToggle ? "active" : ""}`}
               >
@@ -144,7 +144,7 @@ function AppDrawer({
 
             {/* Display lottery draw times only when toggled */}
             {lotteryNewToggle && (
-              <ul className="subMenuItems text-info mt-4">
+              <ul className="subMenuItems text-info mt-4 ">
                 {lotteryNewDrawTimes.map((market) => (
                   <li
                     key={market.marketId}
@@ -154,6 +154,7 @@ function AppDrawer({
                       to={`/lottoPurchase/${market.marketId}`}
                       onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
                     >
+                      
                       {market.marketName}
                     </Link>
                   </li>
@@ -171,7 +172,7 @@ function AppDrawer({
               ) : (
                 <>
                   <li
-                    className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
+                    className={toggleStates[index] ? "subMenuHead" : "MenuHead"} 
                     onClick={() => handleToggle(index)}
                   >
                     <Link>{gameObj?.gameName}</Link>
