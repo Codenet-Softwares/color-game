@@ -20,6 +20,7 @@ const Navside = () => {
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
   const [inCreateSubadmin, setInCreateSubadmin] = useState(true);
+  const [inSubadminList, setInSubadminList] = useState(true);
   const [isBetTracker, setIsBetTracker] = useState(false);
 
   const navigate = useNavigate();
@@ -36,6 +37,10 @@ const Navside = () => {
 
   const handleCreateSubadmin = () => {
     setInCreateSubadmin(!inCreateSubadmin);
+  };
+
+  const handleSubadminList = () => {
+    setInSubadminList(!inSubadminList);
   };
 
   const handleGameToggle = () => {
@@ -172,6 +177,24 @@ const Navside = () => {
                 ></i>
               </div>
               <span className="ms-3">Create Sub-Admin</span>
+            </Link>
+          </li>
+        )}
+
+        {auth.user.roles === "admin" && (
+          <li className="m-2" onClick={handleSubadminList}>
+            <Link to="/viewsubadmin" className="d-flex align-items-center">
+              <div className="nav_icon_small">
+                <i
+                  class="fa-solid fa-list"
+                  style={{
+                    color: "#3E5879",
+                    marginRight: "1px",
+                    fontSize: "20px",
+                  }}
+                ></i>
+              </div>
+              <span className="ms-3">View Sub-Admin</span>
             </Link>
           </li>
         )}
@@ -429,9 +452,8 @@ const Navside = () => {
                 </li>
                 <li>
                   <a
-                    className={`has-arrow ${
-                      isInnerSliderImage ? "active" : ""
-                    }`}
+                    className={`has-arrow ${isInnerSliderImage ? "active" : ""
+                      }`}
                     href="#"
                     onClick={handleInnerImageSlider}
                   >
@@ -512,9 +534,8 @@ const Navside = () => {
                 {/* Outer Announcement */}
                 <li className="outer-announcement">
                   <a
-                    className={`has-arrow ${
-                      isOuterAnnouncement ? "active" : ""
-                    }`}
+                    className={`has-arrow ${isOuterAnnouncement ? "active" : ""
+                      }`}
                     href="#"
                     onClick={() => toggleMenu(setIsOuterAnnouncement)}
                   >
@@ -566,9 +587,8 @@ const Navside = () => {
                 {/* Inner Announcement */}
                 <li className="inner-announcement">
                   <a
-                    className={`has-arrow ${
-                      isInnerAnnouncement ? "active" : ""
-                    }`}
+                    className={`has-arrow ${isInnerAnnouncement ? "active" : ""
+                      }`}
                     href="#"
                     onClick={() => toggleMenu(setIsInnerAnnouncement)}
                   >
