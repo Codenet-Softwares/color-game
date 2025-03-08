@@ -35,3 +35,17 @@ export function getViewWinningHistory(body = {}) {
     openRowIndex: null
   };
 }
+
+export function getViewSubadmin(body = {}) {
+  return {
+    data: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 20,
+    name: "",
+    totalData: 0,
+    searchTerm: "",
+    debouncedSearchTerm: "",
+  };
+}
+

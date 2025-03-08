@@ -160,6 +160,17 @@ class AccountService {
       },
     });
   }
+
+  viewSubAdmin(user, page, pageSize) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/get-sub-admins`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
   voidWinningBet(user, marketId) {
     return axios({
       method: "POST",
@@ -173,6 +184,7 @@ class AccountService {
     });
   }
   
+
 }
 
 export default new AccountService();

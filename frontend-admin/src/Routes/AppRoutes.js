@@ -36,6 +36,7 @@ import UpdateInnerAnnouncement from "../Pages/Announcements/UpdateInnerAnnouncem
 import CreateSubAdmin from "../Components/CreateSubAdmin";
 import ViewWinningRequest from "../Components/ViewWinningRequest";
 import ViewWinningHistory from "../Components/ViewWinningHistory";
+import ViewSubAdmin from "../Components/ViewSubAdmin";
 import WinTracker from "../Components/WinTracker";
 import BetWinTracker from "../Components/BetWinTracker";
 
@@ -301,6 +302,12 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <ViewWinningHistory />
+              </RequireAuth>
+            } />
+          <Route path="viewsubadmin"
+            element={
+              <RequireAuth>
+                <ViewSubAdmin />
               </RequireAuth>
             } />
         <Route

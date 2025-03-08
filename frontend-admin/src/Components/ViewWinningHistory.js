@@ -279,6 +279,7 @@ const ViewWinningHistory = () => {
                                         <td>{runner?.runnerName}</td>
                                       </tr>
                                     ))}
+                                    
                                   </tbody>
                                   <tfoot>
                                     <tr>
