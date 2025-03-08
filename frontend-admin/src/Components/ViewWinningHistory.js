@@ -46,6 +46,8 @@ const ViewWinningHistory = () => {
   };
 
   const fetchVoidWinningBet = (marketId) => {
+    const isConfirmed = window.confirm("Are you sure you want to void this market?");
+    if (!isConfirmed) return;
     auth.showLoader();
     AccountServices.voidWinningBet(auth.user, marketId)
       .then((res) => {
@@ -59,7 +61,33 @@ const ViewWinningHistory = () => {
         auth.hideLoader();
       });
   };
+  const handleRevokeAnnouncement = (marketId, runnerId) => {
+    auth.showLoader();
+    const isConfirmed = window.confirm("Are you sure you want to Revoke?");
+    if (!isConfirmed) return;
+    console.log("runnerId=============", runnerId);
+    console.log("marketId=============", marketId);
 
+    AccountServices.revokeAnnounceWin(
+      {
+        marketId: marketId,
+        runnerId: runnerId,
+      },
+      auth.user
+    )
+      .then((response) => {
+        toast.success("Revoke announcement successful", response.data);
+        // fetchInactiveGames();
+        fetchviewWinningHistory();
+      })
+      .catch((err) => {
+        toast.error("Error revoking announcement:", err);
+      })
+      .finally(() => {
+        // Hide the loader after the request is complete (success or error)
+        auth.hideLoader();
+      });
+  };
   const handlePageChange = (page) => {
     if (page >= 1 && page <= viewWinningHistory?.totalPages) {
       setViewWinningHistory((prev) => ({
@@ -204,7 +232,7 @@ const ViewWinningHistory = () => {
                     <th>Serial Number</th>
                     <th>Game Name</th>
                     <th>Market Name</th>
-                    <th>Status</th>
+                    {/* <th>Status</th> */}
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -216,9 +244,9 @@ const ViewWinningHistory = () => {
                           <td>{gameIndex + 1}</td>
                           <td>{game?.gameName}</td>
                           <td>{game?.marketName}</td>
-                          <td className="fw-bold">
+                          {/* <td className="fw-bold">
                             {game.type === "Matched" ? "Matched" : "Unmatched"}
-                          </td>
+                          </td> */}
                           <td>
                             <button
                               className="btn btn-primary"
@@ -256,14 +284,26 @@ const ViewWinningHistory = () => {
                                     <tr>
                                       <td colSpan="2" className="text-center">
                                         <button
-                                          className="btn btn-danger px-3"
+                                          className="btn px-3 me-2 text-white"
+                                          style={{ background: "#3E5879" }}
                                           onClick={() =>
                                             fetchVoidWinningBet(game.marketId)
                                           }
                                         >
                                           Void
                                         </button>
-                                        
+                                        <button
+                                          className="btn btn-danger px-3"
+                                          onClick={() => {
+                                            handleRevokeAnnouncement(
+                                              game.marketId,
+                                              game.data[0].runnerId
+                                            );
+                                          }}
+                                        >
+                                          Revoke
+                                        </button>
+                                        {/* {console.log("object",game.data[0].runnerId)} */}
                                       </td>
                                     </tr>
                                   </tfoot>

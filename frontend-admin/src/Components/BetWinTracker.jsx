@@ -1,15 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { FaSearch, FaArrowLeft, FaTrashAlt } from "react-icons/fa";
+import { FaSearch, FaArrowLeft, FaTrashAlt, FaTimes } from "react-icons/fa";
 import { useAuth } from "../Utils/Auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import SingleCard from "./common/singleCard";
 import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import GameService from "../Services/GameService";
 import Pagination from "./Pagination";
 const BetWinTracker = () => {
+  const { marketId } = useParams();
+  console.log("Market ID============", marketId);
+
   const auth = useAuth();
   const navigate = useNavigate();
+  const [marketName, setMarketName] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [winBetTrackerDetails, setWinBetTrackerDetails] = useState({
     winBetTrackerDetails: [],
     currentPage: 1,
@@ -18,51 +24,83 @@ const BetWinTracker = () => {
     name: "",
     totalData: 0,
   });
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const fetchWinBetTracker = () => {
     GameService.getWinBetTracker(
       auth.user,
+      marketId,
       winBetTrackerDetails.currentPage,
-      winBetTrackerDetails.totalEntries
-    ).then((res) => {
-      console.log("API Response:", res.data);
-      setWinBetTrackerDetails((prev) => ({
-        ...prev,
-        winBetTrackerDetails: res.data?.data || [],
-      }));
-    });
+      winBetTrackerDetails.totalEntries,
+      debouncedSearchTerm
+    )
+      .then((res) => {
+        if (res.data?.data?.length > 0) {
+          setMarketName(res.data.data[0].marketName);
+        }
+        setWinBetTrackerDetails((prev) => ({
+          ...prev,
+          winBetTrackerDetails: res.data?.data || [],
+          totalPages: res?.data.pagination?.totalPages,
+          totalData: res?.data.pagination?.totalItems,
+        }));
+      })
+      .catch((err) => {
+        toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
+      });
   };
   useEffect(() => {
     fetchWinBetTracker();
-  }, []);
-   const handleBetDelete = async (userId,marketId, ) => {
-      const isConfirmed = window.confirm(
-        "Are you sure you want to delete this market and bet?"
-      );
-  
-      if (!isConfirmed) {
-        return;
+  }, [
+    marketId,
+    winBetTrackerDetails.currentPage,
+    winBetTrackerDetails.totalEntries,
+    debouncedSearchTerm,
+  ]);
+
+  const handleBetDelete = async (userId) => {
+    console.log("userId=======,MarketId===================", {
+      userId,
+      marketId,
+    });
+
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this market and bet?"
+    );
+    if (!isConfirmed) return;
+
+    auth.showLoader();
+
+    try {
+      const response = await GameService.AfterWinDeleteBet(auth.user, {
+        userId: userId,
+        marketId: marketId,
+      });
+
+      console.log("Delete Response====================", response);
+
+      if (response.status === 200) {
+        toast.success("Market and bet deleted successfully!");
+        fetchWinBetTracker();
+      } else {
+        toast.error("Failed to delete the bet. Please try again.");
       }
-      auth.showLoader();
-  
-      try {
-        const response = await GameService.AfterWinDeleteBet(
-          auth.user,
-          userId,
-          marketId,
-          
-        );
-  
-        if (response.status === 200) {
-          toast.success("Market and bet deleted successfully!");
-          fetchWinBetTracker();
-        }
-      } catch (error) {
-        toast.error(customErrorHandler(error));
-      }finally {
-        auth.hideLoader();
-      }
-    };
+    } catch (error) {
+      console.error("Delete Error:", error);
+      toast.error(customErrorHandler(error));
+    } finally {
+      auth.hideLoader();
+    }
+  };
+
   let startIndex = Math.min(
     (Number(winBetTrackerDetails.currentPage) - 1) *
       Number(winBetTrackerDetails.totalEntries) +
@@ -79,6 +117,25 @@ const BetWinTracker = () => {
   };
   const handlePageNavigation = () => {
     navigate("/winTracker");
+  };
+  const handleEntriesChange = (e) => {
+    setWinBetTrackerDetails((prev) => ({
+      ...prev,
+      totalEntries: parseInt(e.target.value, 10),
+      currentPage: 1,
+    }));
+  };
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    setWinBetTrackerDetails((prev) => ({
+      ...prev,
+      search: value,
+      currentPage: 1,
+    }));
+  };
+  const handleClearSearch = () => {
+    setSearchTerm("");
   };
   return (
     <div>
@@ -114,8 +171,7 @@ const BetWinTracker = () => {
               className="mb-0 fw-bold text-uppercase"
               style={{ flexGrow: 1, textAlign: "center" }}
             >
-              Bet History
-              {/* Bet History For - {marketName} */}
+              Win Bet History For - {marketName}
             </h3>
           </div>
 
@@ -137,14 +193,27 @@ const BetWinTracker = () => {
                   type="text"
                   className="form-control fw-bold"
                   placeholder="Search By User Or Market Name..."
-                  //   value={searchTerm}
-                  //   onChange={handleSearchChange}
+                  value={searchTerm}
+                  onChange={handleSearchChange}
                   style={{
                     paddingLeft: "40px",
                     borderRadius: "30px",
                     border: "2px solid #3E5879",
                   }}
                 />
+                {searchTerm && (
+                  <FaTimes
+                    onClick={handleClearSearch}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      right: "20px",
+                      transform: "translateY(-50%)",
+                      color: "#6c757d",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
               </div>
               <div className="col-md-6 text-end">
                 <label className="me-2 fw-bold">Show</label>
@@ -154,8 +223,8 @@ const BetWinTracker = () => {
                     borderRadius: "50px",
                     border: "2px solid #3E5879",
                   }}
-                  //   value={winBetTrackerDetails.totalEntries}
-                  //   onChange={handleEntriesChange}
+                  value={winBetTrackerDetails.totalEntries}
+                  onChange={handleEntriesChange}
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>
@@ -185,7 +254,6 @@ const BetWinTracker = () => {
                     <tr>
                       <th>Serial Number</th>
                       <th>User Name</th>
-                      {/* <th>Market Name</th> */}
                       <th>Runner Name</th>
                       <th>Odds</th>
                       <th>Type</th>
@@ -214,16 +282,14 @@ const BetWinTracker = () => {
                               </td>
                               <td>{winBetTracker.value}</td>
                               <td>
-                                <button className="btn btn-danger"
-                                onClick={() =>
-                                  handleBetDelete(
-                                    winBetTracker.userId,
-                                    winBetTracker.marketId,
-                                  )
-                                }
+                                <button
+                                  className="btn btn-danger"
+                                  onClick={() =>
+                                    handleBetDelete(winBetTracker.userId)
+                                  }
                                 >
                                   <FaTrashAlt />
-                                </button>{" "}
+                                </button>
                               </td>
                             </tr>
                           );
