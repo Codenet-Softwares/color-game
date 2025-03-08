@@ -1657,7 +1657,7 @@ export const getSubAdminResultHistory = async (req, res) => {
         {
           model: Market,
           where: {
-            isRevoked: false, 
+            isRevoke: false, 
           },
         },
       ],
@@ -1673,7 +1673,7 @@ export const getSubAdminResultHistory = async (req, res) => {
 
     const marketIds = resultHistories.map(history => history.marketId);
     const markets = await Market.findAll({
-      where: { marketId: marketIds },
+      where: { marketId: marketIds,isRevoke: false,  },
       include: [
         { model: Runner, attributes: ['runnerId', 'runnerName'] },
       ],
