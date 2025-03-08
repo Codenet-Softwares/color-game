@@ -5,6 +5,7 @@ import { useAuth } from "../Utils/Auth";
 import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import SingleCard from "./common/singleCard";
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
 
 const ViewSubAdmin = () => {
   const [viewSubadmin, setViewSubadmin] = useState(getViewSubadmin());
@@ -178,8 +179,9 @@ const ViewSubAdmin = () => {
                 >
                   <tr>
                     <th>Serial Number</th>
-                    <th>Name</th>
-                    <th>Permission</th>
+                    <th className="text-start">Name</th>
+                    <th className="text-start">Permission</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
 
@@ -189,10 +191,33 @@ const ViewSubAdmin = () => {
                     viewSubadmin?.data?.map((subadmin, index) => (
                       <tr key={index}>
                         <td className="fw-bold">{index + 1}</td>
-                        <td className="fw-bold text-primary">
+                        <td
+                          className="fw-bold text-start"
+                          style={{ color: "#DC686E" }}
+                        >
                           {subadmin?.userName}
                         </td>
-                        <td className="text-muted">{subadmin?.permissions}</td>
+                        <td className="text-dark fw-bold text-start">
+                          {subadmin?.permissions}
+                        </td>
+                        <td>
+                          <button
+                            className="btn btn-info me-2"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Edit"
+                          >
+                            <FaEdit className="" />
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Delete"
+                          >
+                            <FaTrashAlt />
+                          </button>
+                        </td>
                       </tr>
                     ))
                   ) : (
