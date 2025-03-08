@@ -786,6 +786,10 @@ export const revokeWinningAnnouncement = async (req, res) => {
       { where: { marketId }, transaction }
     );
 
+    await ResultHistory.update({
+      isRevokeAfterWin :true
+    },{ where: { marketId }, transaction })
+
     await Runner.update(
       { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true, clientMessage: false },
       { where: { runnerId }, transaction }
@@ -1587,10 +1591,15 @@ export const getSubAdminResultHistory = async (req, res) => {
         exclude: ['id', 'deletedAt'],
       },
       order: [['createdAt', 'DESC']],
+      where: {
+        isApproved: true,
+        isRevokeAfterWin: false, // Add this condition
+      },
     };
 
     if (type) {
       queryOptions.where = {
+        ...queryOptions.where, // Preserve existing conditions
         type: type,
       };
     }
