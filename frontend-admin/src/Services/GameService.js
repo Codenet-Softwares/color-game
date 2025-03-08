@@ -523,6 +523,37 @@ class GameService {
       },
     });
   }
+
+  winBetTracker(user, page, pageSize,search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/get-after-winning-data?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+  getWinBetTracker(user,marketId, page, pageSize,search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/getDetails-winning-data/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  AfterWinDeleteBet(user,data) {
+    console.log("data",data)
+    return axios({
+      method: "POST",
+      url: `${API_HOST}/api/delete-bet-after-win`,
+      data:data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 }
 
 export default new GameService();

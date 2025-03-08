@@ -160,6 +160,19 @@ class AccountService {
       },
     });
   }
+  voidWinningBet(user, marketId) {
+    return axios({
+      method: "POST",
+      url: API_HOST + `/api/void-market-after-win`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+      data: {
+        marketId: marketId, 
+      },
+    });
+  }
+  
 }
 
 export default new AccountService();
