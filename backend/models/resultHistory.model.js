@@ -48,6 +48,14 @@ ResultHistory.init({
         allowNull: false,
         defaultValue: [] 
       },
+      status: {
+        type: DataTypes.ENUM('Approved', 'Rejected'),
+        allowNull: false,
+      },
+      isRevokeAfterWin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+    },
       
       createdAt: {
         type: DataTypes.DATE,

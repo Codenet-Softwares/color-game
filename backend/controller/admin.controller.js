@@ -134,6 +134,41 @@ export const createSubAdmin = async (req, res) => {
   }
 };
 
+export const getSubAdmins=async (req, res) => {
+    try {
+      const subAdmins = await admins.findAll({
+        where: {
+          roles: 'subAdmin', 
+        },
+        attributes: ['adminId', 'userName', 'roles', 'permissions'],
+      });
+
+      return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          subAdmins,
+          true,
+          statusCode.success,
+          "Sub-admins fetched successfully",
+        )
+      );
+  
+      
+    } catch (error) {
+      res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message,
+        )
+      );
+    }
+  }
+
 export const getAllUsers = async (req, res) => {
   try {
     // Destructure with defaults
@@ -786,6 +821,10 @@ export const revokeWinningAnnouncement = async (req, res) => {
       { where: { marketId }, transaction }
     );
 
+    await ResultHistory.update({
+      isRevokeAfterWin :true
+    },{ where: { marketId }, transaction })
+
     await Runner.update(
       { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true, clientMessage: false },
       { where: { runnerId }, transaction }
@@ -1264,7 +1303,7 @@ export const user_Balance = async (userId) => {
 
 export const approveResult = async (req, res) => {
   try {
-    const { marketId } = req.body;
+    const { marketId, action } = req.body; 
 
     const resultRequests = await ResultRequest.findAll({
       where: { marketId },
@@ -1291,7 +1330,6 @@ export const approveResult = async (req, res) => {
       ],
     });
 
-
     if (!market) {
       return res
         .status(statusCode.badRequest)
@@ -1309,6 +1347,35 @@ export const approveResult = async (req, res) => {
     const isApproved = runnerId1 === runnerId2;
     const type = isApproved ? 'Matched' : 'Unmatched';
 
+    if (action === 'reject') {
+      await ResultHistory.create({
+        gameId: gameId,
+        gameName: gameName,
+        marketId: marketId,
+        marketName: marketName,
+        runnerId: [runnerId1, runnerId2], 
+        runnerNames: runnerNames,
+        isApproved: false,
+        type: type,
+        declaredByNames: declaredByNames, 
+        status: 'Rejected',
+        createdAt: new Date(),
+      });
+
+      await ResultRequest.destroy({ where: { marketId } });
+
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Result rejected successfully"
+          )
+        );
+    }
+
     await ResultHistory.create({
       gameId: gameId,
       gameName: gameName,
@@ -1319,9 +1386,9 @@ export const approveResult = async (req, res) => {
       isApproved: isApproved,
       type: type,
       declaredByNames: declaredByNames, 
+      status: 'Approved',
       createdAt: new Date(),
     });
-    
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -1587,10 +1654,15 @@ export const getSubAdminResultHistory = async (req, res) => {
         exclude: ['id', 'deletedAt'],
       },
       order: [['createdAt', 'DESC']],
+      where: {
+        isApproved: true,
+        isRevokeAfterWin: false, // Add this condition
+      },
     };
 
     if (type) {
       queryOptions.where = {
+        ...queryOptions.where, // Preserve existing conditions
         type: type,
       };
     }
@@ -1678,6 +1750,188 @@ export const getSubAdminResultHistory = async (req, res) => {
   }
 };
 
+export const winningData = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || ''; 
+    const offset = (page - 1) * limit;
+
+    const winningAmounts = await WinningAmount.findAll({
+      attributes: ['userId', 'userName', 'marketId'],
+      where: {
+        isVoidAfterWin: false, 
+      },
+    });
+
+    const betHistories = await BetHistory.findAll({
+      attributes: ['gameId', 'gameName', 'marketId', 'marketName']
+    });
+
+    const combinedData = winningAmounts.map(wa => {
+      const betHistory = betHistories.find(bh => bh.marketId === wa.marketId);
+
+      return {
+        gameId: betHistory ? betHistory.gameId : null,
+        gameName: betHistory ? betHistory.gameName : null,
+        marketId: wa.marketId,
+        marketName: betHistory ? betHistory.marketName : null,
+      };
+    });
+
+    const filteredData = combinedData.filter(item => item.gameName === "colorGame");
+
+    const uniqueMarketData = filteredData.reduce((acc, item) => {
+      if (!acc.some(entry => entry.marketName === item.marketName)) {
+        acc.push(item);
+      }
+      return acc;
+    }, []);
+
+    const searchedData = search
+      ? uniqueMarketData.filter(item => 
+          item.marketName.toLowerCase().includes(search.toLowerCase())
+        )
+      : uniqueMarketData;
+
+    const paginatedData = searchedData.slice(offset, offset + limit);
+
+    const totalItems = searchedData.length;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const pagination = {
+      page,
+      limit,
+      totalPages,
+      totalItems
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Color-game winning data fetched successfully",
+          pagination 
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+export const getDetailsWinningData = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || ''; 
+    const offset = (page - 1) * limit;
+
+    const marketId = req.params.marketId;
+    if (!marketId) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "marketId is required in URL params"
+          )
+        );
+    }
+
+    const winningAmounts = await WinningAmount.findAll({
+      attributes: ['userId', 'userName', 'marketId'],
+      where: {
+        marketId,
+        isVoidAfterWin: false,
+      },
+    });
+
+    const betHistories = await BetHistory.findAll({
+      attributes: ['gameId', 'gameName', 'marketId', 'marketName', 'runnerName', 'rate', 'value', 'type', 'date', 'matchDate', 'placeDate'],
+      where: { marketId }, 
+    });
+
+    const combinedData = winningAmounts.map(wa => {
+      const betHistory = betHistories.find(bh => bh.marketId === wa.marketId);
+    
+      return {
+        userId: wa ? wa.userId : null,
+        userName: wa ? wa.userName : null,
+        gameName: betHistory ? betHistory.gameName : null,
+        marketName: betHistory ? betHistory.marketName : null,
+        runnerName: betHistory ? betHistory.runnerName : null,
+        rate: betHistory ? betHistory.rate.toString() : null,
+        value: betHistory ? betHistory.value.toString() : null,
+        type: betHistory ? betHistory.type : null,
+        date: betHistory ? betHistory.date : null,
+        matchDate: betHistory ? betHistory.matchDate : null,
+        placeDate: betHistory ? betHistory.placeDate : null,
+      };
+    });
+
+    const filteredData = combinedData.filter(item => item.gameName === "colorGame");
+
+    const searchedData = search
+      ? filteredData.filter(item =>
+          item.userName.toLowerCase().includes(search.toLowerCase())
+        )
+      : filteredData;
+
+
+    const paginatedData = searchedData.slice(offset, offset + limit);
+
+    const totalItems = searchedData.length;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const pagination = {
+      page,
+      limit,
+      totalPages,
+      totalItems
+    };
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Color-game after winning users bet-data fetched successfully",
+          pagination 
+        )
+      );
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+
+
 export const deleteBetAfterWin = async (req, res) => {
   const t = await sequelize.transaction();
   try {
@@ -1702,10 +1956,12 @@ export const deleteBetAfterWin = async (req, res) => {
         );
     }
 
-    await WinningAmount.update(
-      { amount: 0 },
-      { where: { userId, marketId, type: "win" }, transaction: t }
-    );
+    // await WinningAmount.update(
+    //   { amount: 0 },
+    //   { where: { userId, marketId, type: "win" }, transaction: t }
+    // );
+
+    
 
     const profitLossAmount = await ProfitLoss.findOne({
       where: { userId, marketId },
@@ -1731,6 +1987,11 @@ export const deleteBetAfterWin = async (req, res) => {
       { profitLoss: updatedProfitLoss },
       { where: { userId, marketId }, transaction: t }
     );
+
+    await WinningAmount.destroy({
+      where: { userId, marketId, type: "win" },
+      transaction: t,
+    });
 
     await t.commit();
     return res
@@ -1805,6 +2066,8 @@ export const afterWinVoidMarket = async (req, res) => {
       { where: { marketId } }
     );
 
+    
+
     await ProfitLoss.destroy({
       where: {
         userId: userIds,
@@ -1816,6 +2079,12 @@ export const afterWinVoidMarket = async (req, res) => {
       where: {
         userId: userIds,
         marketId,
+      },
+    });
+
+    await ResultHistory.destroy({
+      where: {
+        marketId
       },
     });
 

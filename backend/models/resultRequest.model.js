@@ -37,6 +37,11 @@ ResultRequest.init(
       declaredById: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      status: {
+        type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),
+        defaultValue: 'Pending',
+        allowNull: false,
       }
     },
     {
