@@ -87,15 +87,18 @@ export const getExternalUserBetHistory = async (req, res) => {
       model = BetHistory;
     }else if(type === "settle")
     {
-      whereCondition.isWin = true;
+      whereCondition.isVoid = false;
       model = BetHistory;
     }else if(type === "unsettle")
     {
       whereCondition.isWin = false;
       model = CurrentOrder;
     }else{
-      whereCondition.isVoid = false;
-      model = BetHistory;
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "Data not found.")
+        );
     }
 
     const { count, rows } = await model.findAndCountAll({
