@@ -181,7 +181,7 @@ const ViewSubAdmin = () => {
                     <th>Serial Number</th>
                     <th className="text-start">Name</th>
                     <th className="text-start">Permission</th>
-                    <th>Action</th>
+                    {/* <th>Action</th> */}
                   </tr>
                 </thead>
 
@@ -200,7 +200,7 @@ const ViewSubAdmin = () => {
                         <td className="text-dark fw-bold text-start">
                           {subadmin?.permissions}
                         </td>
-                        <td>
+                        {/* <td>
                           <button
                             className="btn btn-info me-2"
                             data-bs-toggle="tooltip"
@@ -217,7 +217,7 @@ const ViewSubAdmin = () => {
                           >
                             <FaTrashAlt />
                           </button>
-                        </td>
+                        </td> */}
                       </tr>
                     ))
                   ) : (
