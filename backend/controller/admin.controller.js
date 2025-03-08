@@ -1653,6 +1653,14 @@ export const getSubAdminResultHistory = async (req, res) => {
       where: {
         isApproved: true,
       },
+      include: [
+        {
+          model: Market,
+          where: {
+            isRevoked: false, 
+          },
+        },
+      ],
     };
 
     if (type) {
