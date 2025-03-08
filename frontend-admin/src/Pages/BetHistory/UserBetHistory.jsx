@@ -28,10 +28,10 @@ const UserBetHistory = () => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
     }, 500);
-  
-    return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
+
+    return () => clearTimeout(timer);
   }, [searchTerm]);
-    
+
   useEffect(() => {
     auth.showLoader();
     if (marketId) fetchWinBetHistory();
@@ -52,7 +52,6 @@ const UserBetHistory = () => {
         debouncedSearchTerm
       );
 
-
       const { data, pagination } = response.data;
 
       setBetAfterWin((prev) => ({
@@ -68,11 +67,9 @@ const UserBetHistory = () => {
       }
     } catch (error) {
       toast.error(customErrorHandler(error));
-    }
-    finally {
+    } finally {
       auth.hideLoader();
     }
-    
   };
 
   const handlePageChange = (pageNumber) => {
@@ -83,7 +80,6 @@ const UserBetHistory = () => {
     setSearchTerm(e.target.value); // Update the search term
     setBetAfterWin((prev) => ({ ...prev, currentPage: 1 })); // Reset pagination
   };
-  
 
   const handleEntriesChange = (e) => {
     setBetAfterWin((prev) => ({
@@ -115,7 +111,7 @@ const UserBetHistory = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              background:"#3E5879",
+              background: "#3E5879",
             }}
           >
             <div
@@ -197,59 +193,67 @@ const UserBetHistory = () => {
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
               }}
             >
-            <div className="table-responsive ">
-              <table className="table table-striped table-hover text-center" style={{
-                  borderRadius: "50px",
-                  border: "2px solid #3E5879",
-                }}>
-                <thead className="table-primary text-uppercase">
-                  <tr>
-                    <th>Serial Number</th>
-                    <th>User Name</th>
-                    {/* <th>Market Name</th> */}
-                    <th>Runner Name</th>
-                    <th>Odds</th>
-                    <th>Type</th>
-                    <th>Stake</th>
-                    {/* <th>Action</th> */}
-                  </tr>
-                </thead>
-                <tbody>
-                  {betAfterWin.winBetHistory.length > 0 ? (
-                    betAfterWin.winBetHistory.map((winBet, index) => {
-                      return (
-                        <tr key={index}>
-                          <td>{startIndex + index}</td>
-                          <td>{winBet.userName}</td>
-                          {/* <td>{winBet.marketName}</td> */}
-                          <td>{winBet.runnerName}</td>
-                          <td>{winBet.rate}</td>
-                          <td
-                            className={`text-uppercase fw-bold ${
-                              winBet.type === "back"
-                                ? "text-success"
-                                : "text-danger"
-                            }`}
-                          >
-                            {winBet.type}
-                          </td>
-                          <td>{winBet.value}</td>
-                          {/* <td>
+              <div className="table-responsive ">
+                <table
+                  className="table table-striped table-hover text-center"
+                  style={{
+                    borderRadius: "50px",
+                    border: "2px solid #3E5879",
+                  }}
+                >
+                  <thead className="table-primary text-uppercase">
+                    <tr>
+                      <th>Serial Number</th>
+                      <th>User Name</th>
+                      {/* <th>Market Name</th> */}
+                      <th>Runner Name</th>
+                      <th>Odds</th>
+                      <th>Type</th>
+                      <th>Stake</th>
+                      {/* <th>Action</th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {betAfterWin.winBetHistory.length > 0 ? (
+                      betAfterWin.winBetHistory.map((winBet, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>{startIndex + index}</td>
+                            <td>{winBet.userName}</td>
+                            {/* <td>{winBet.marketName}</td> */}
+                            <td>{winBet.runnerName}</td>
+                            <td>{winBet.rate}</td>
+                            <td
+                              className={`text-uppercase fw-bold ${
+                                winBet.type === "back"
+                                  ? "text-success"
+                                  : "text-danger"
+                              }`}
+                            >
+                              {winBet.type}
+                            </td>
+                            <td>{winBet.value}</td>
+                            {/* <td>
                             <button className="btn btn-danger">
                               <FaTrashAlt />
                             </button>
                           </td> */}
-                        </tr>
-                      );
-                    })
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="text-danger text-center fw-bold">No Bets Found For This Market.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                          </tr>
+                        );
+                      })
+                    ) : (
+                      <tr>
+                        <td
+                          colSpan="6"
+                          className="text-danger text-center fw-bold"
+                        >
+                          No Bets Found For This Market.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </SingleCard>
             {/* Pagination */}
             <Pagination

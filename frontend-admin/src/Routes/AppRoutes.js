@@ -37,6 +37,8 @@ import CreateSubAdmin from "../Components/CreateSubAdmin";
 import ViewWinningRequest from "../Components/ViewWinningRequest";
 import ViewWinningHistory from "../Components/ViewWinningHistory";
 import ViewSubAdmin from "../Components/ViewSubAdmin";
+import WinTracker from "../Components/WinTracker";
+import BetWinTracker from "../Components/BetWinTracker";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -308,7 +310,24 @@ const AppRoutes = () => {
                 <ViewSubAdmin />
               </RequireAuth>
             } />
+        <Route
+            path="winTracker"
+            element={
+              <RequireAuth>
+                <WinTracker />
+              </RequireAuth>
+            }
+          />
+           <Route
+            path="/getDetails-winning-data/:marketId"
+            element={
+              <RequireAuth>
+                <BetWinTracker />
+              </RequireAuth>
+            }
+          />
         </Route>
+      
       </Routes>
     </BrowserRouter>
   );

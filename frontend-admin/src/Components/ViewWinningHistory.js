@@ -45,11 +45,54 @@ const ViewWinningHistory = () => {
       });
   };
 
+  const fetchVoidWinningBet = (marketId) => {
+    const isConfirmed = window.confirm("Are you sure you want to void this market?");
+    if (!isConfirmed) return;
+    auth.showLoader();
+    AccountServices.voidWinningBet(auth.user, marketId)
+      .then((res) => {
+        toast.success("Market voided successfully!");
+        fetchviewWinningHistory();
+      })
+      .catch((err) => {
+        toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
+      });
+  };
+  const handleRevokeAnnouncement = (marketId, runnerId) => {
+    auth.showLoader();
+    const isConfirmed = window.confirm("Are you sure you want to Revoke?");
+    if (!isConfirmed) return;
+    console.log("runnerId=============", runnerId);
+    console.log("marketId=============", marketId);
+
+    AccountServices.revokeAnnounceWin(
+      {
+        marketId: marketId,
+        runnerId: runnerId,
+      },
+      auth.user
+    )
+      .then((response) => {
+        toast.success("Revoke announcement successful", response.data);
+        // fetchInactiveGames();
+        fetchviewWinningHistory();
+      })
+      .catch((err) => {
+        toast.error("Error revoking announcement:", err);
+      })
+      .finally(() => {
+        // Hide the loader after the request is complete (success or error)
+        auth.hideLoader();
+      });
+  };
   const handlePageChange = (page) => {
     if (page >= 1 && page <= viewWinningHistory?.totalPages) {
       setViewWinningHistory((prev) => ({
         ...prev,
-        currentPage: page
+        currentPage: page,
       }));
     }
   };
@@ -65,13 +108,13 @@ const ViewWinningHistory = () => {
 
   let startIndex = Math.min(
     (Number(viewWinningHistory?.currentPage) - 1) *
-    Number(viewWinningHistory?.totalEntries) +
-    1,
+      Number(viewWinningHistory?.totalEntries) +
+      1,
     Number(viewWinningHistory?.totalData)
   );
   let endIndex = Math.min(
     Number(viewWinningHistory?.currentPage) *
-    Number(viewWinningHistory?.totalEntries),
+      Number(viewWinningHistory?.totalEntries),
     Number(viewWinningHistory?.totalData)
   );
 
@@ -189,7 +232,7 @@ const ViewWinningHistory = () => {
                     <th>Serial Number</th>
                     <th>Game Name</th>
                     <th>Market Name</th>
-                    <th>Status</th>
+                    {/* <th>Status</th> */}
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -201,13 +244,17 @@ const ViewWinningHistory = () => {
                           <td>{gameIndex + 1}</td>
                           <td>{game?.gameName}</td>
                           <td>{game?.marketName}</td>
-                          <td className="fw-bold">{game.type === "Matched" ? "Matched" : "Unmatched"}</td>
+                          {/* <td className="fw-bold">
+                            {game.type === "Matched" ? "Matched" : "Unmatched"}
+                          </td> */}
                           <td>
                             <button
                               className="btn btn-primary"
                               onClick={() => toggleAccordion(gameIndex)}
                             >
-                              {viewWinningHistory?.openRowIndex === gameIndex ? "Hide Details" : "View Details"}
+                              {viewWinningHistory?.openRowIndex === gameIndex
+                                ? "Hide Details"
+                                : "View Details"}
                             </button>
                           </td>
                         </tr>
@@ -225,13 +272,42 @@ const ViewWinningHistory = () => {
                                   </thead>
                                   <tbody>
                                     {game.data.map((runner, runnerIndex) => (
-                                      <tr key={`${game?.gameId}-${runner?.runnerId}-${runnerIndex}`}>
+                                      <tr
+                                        key={`${game?.gameId}-${runner?.runnerId}-${runnerIndex}`}
+                                      >
                                         <td>{runner?.declaredByNames}</td>
                                         <td>{runner?.runnerName}</td>
                                       </tr>
                                     ))}
                                     
                                   </tbody>
+                                  <tfoot>
+                                    <tr>
+                                      <td colSpan="2" className="text-center">
+                                        <button
+                                          className="btn px-3 me-2 text-white"
+                                          style={{ background: "#3E5879" }}
+                                          onClick={() =>
+                                            fetchVoidWinningBet(game.marketId)
+                                          }
+                                        >
+                                          Void
+                                        </button>
+                                        <button
+                                          className="btn btn-danger px-3"
+                                          onClick={() => {
+                                            handleRevokeAnnouncement(
+                                              game.marketId,
+                                              game.data[0].runnerId
+                                            );
+                                          }}
+                                        >
+                                          Revoke
+                                        </button>
+                                        {/* {console.log("object",game.data[0].runnerId)} */}
+                                      </td>
+                                    </tr>
+                                  </tfoot>
                                 </table>
                               </div>
                             </td>
@@ -241,7 +317,10 @@ const ViewWinningHistory = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="4" className="text-center text-danger fw-bold">
+                      <td
+                        colSpan="4"
+                        className="text-center text-danger fw-bold"
+                      >
                         No Data Found
                       </td>
                     </tr>

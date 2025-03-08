@@ -24,7 +24,7 @@ import {
   getDetailsWinningData,
   getSubAdmins,
 
-  
+
 
 } from '../controller/admin.controller.js';
 import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin } from '../schema/commonSchema.js';
@@ -36,10 +36,10 @@ export const AdminRoute = (app) => {
   // done
   app.post('/api/admin-create', adminCreateValidate, customErrorHandler, createAdmin);
 
-  app.post('/api/create-subAdmin', authorize([string.Admin]),createSubAdmin );
+  app.post('/api/create-subAdmin', authorize([string.Admin]), createSubAdmin);
 
-  app.get('/api/get-sub-admins',authorize([string.Admin]), getSubAdmins);
-  
+  app.get('/api/get-sub-admins', authorize([string.Admin]), getSubAdmins);
+
   // done
   app.post(
     '/api/update-market-status/:marketId',
@@ -69,21 +69,20 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-bet-markets-afterWin', authorize([string.Admin]), getBetMarketsAfterWin);
 
-  app.post("/api/admin/approve-result",authorize([string.Admin]), approveResult);
+  app.post("/api/admin/approve-result", authorize([string.Admin]), approveResult);
 
-  app.get('/api/get-result-requests',authorize([string.Admin]),getResultRequests);
+  app.get('/api/get-result-requests', authorize([string.Admin]), getResultRequests);
 
-  app.get('/api/subAdmin/result-histories',authorize([string.Admin,string.subAdmin]), getSubAdminResultHistory );
+  app.get('/api/subAdmin/result-histories', authorize([string.Admin, string.subAdmin]), getSubAdminResultHistory);
 
   app.get('/api/get-after-winning-data', winningData);
 
   app.get('/api/getDetails-winning-data/:marketId', getDetailsWinningData);
 
 
-  app.post('/api/delete-bet-after-win',authorize([string.Admin]), deleteBetAfterWin);
+  app.post('/api/delete-bet-after-win', authorize([string.Admin]), deleteBetAfterWin);
 
-  app.post('/api/void-market-after-win',authorize([string.Admin]), afterWinVoidMarket);
+  app.post('/api/void-market-after-win', authorize([string.Admin]), afterWinVoidMarket);
 
 };
-
 
