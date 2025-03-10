@@ -1779,7 +1779,9 @@ export const winningData = async (req, res) => {
       };
     });
 
-    const filteredData = combinedData.filter(item => item.gameName === "colorGame");
+
+    const filteredData = combinedData.filter(item => item.gameName && item.gameName.toLowerCase() === "colorgame");
+
 
     const uniqueMarketData = filteredData.reduce((acc, item) => {
       if (!acc.some(entry => entry.marketName === item.marketName)) {
@@ -1865,6 +1867,7 @@ export const getDetailsWinningData = async (req, res) => {
       where: { marketId },
     });
 
+
     const combinedData = winningAmounts.map(wa => {
       const betHistory = betHistories.find(bh => bh.marketId === wa.marketId);
 
@@ -1883,7 +1886,9 @@ export const getDetailsWinningData = async (req, res) => {
       };
     });
 
-    const filteredData = combinedData.filter(item => item.gameName === "colorGame");
+
+    const filteredData = combinedData.filter(item => item.gameName && item.gameName.toLowerCase() === "colorgame");
+
 
     const searchedData = search
       ? filteredData.filter(item =>
@@ -1916,7 +1921,6 @@ export const getDetailsWinningData = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error('Error fetching data:', error);
     return res
       .status(statusCode.internalServerError)
       .send(
