@@ -22,6 +22,10 @@ ResultRequest.init(
       type: DataTypes.CHAR(150),
       allowNull: false,
     },
+    marketName : {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     runnerId: {
       type: DataTypes.CHAR(36),
       allowNull: false,
