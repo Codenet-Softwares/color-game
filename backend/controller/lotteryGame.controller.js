@@ -196,7 +196,7 @@ export const purchaseHistory = async (req, res) => {
 export const getTicketRange = async (req, res) => {
   try {
     const baseURL = process.env.LOTTERY_URL;
-    const response = await axios.get(`${baseURL}/api/update-inactive-market-status`);
+    const response = await axios.get(`${baseURL}/api/get-range-external`);
 
     if (!response.data.success) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Failed to get purchase history"));
