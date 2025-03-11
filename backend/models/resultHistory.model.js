@@ -48,6 +48,15 @@ ResultHistory.init({
         allowNull: false,
         defaultValue: [] 
       },
+      declaredById: {
+        type: DataTypes.JSON, 
+        allowNull: false,
+        defaultValue: [] 
+      },
+      remarks: {
+        type: DataTypes.STRING, 
+        allowNull: false,
+      },
       status: {
         type: DataTypes.ENUM('Approved', 'Rejected'),
         allowNull: false,

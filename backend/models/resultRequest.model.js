@@ -42,7 +42,7 @@ ResultRequest.init(
       type: DataTypes.ENUM('Pending', 'Approved', 'Rejected'),
       defaultValue: 'Pending',
       allowNull: false,
-    }
+    },
   },
   {
     sequelize,
