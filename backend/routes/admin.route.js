@@ -24,8 +24,7 @@ import {
   getDetailsWinningData,
   getSubAdmins,
   getSubAdminHistory,
-
-
+  getSubadminResult,
 } from '../controller/admin.controller.js';
 import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
@@ -87,5 +86,6 @@ export const AdminRoute = (app) => {
 
   //app.get('/api/subAdmin/get-result/:marketId',authorize([string.subAdmin]), getSubadminResult)
 
+  app.get('/api/subAdmin/get-result',authorize([string.subAdmin]), getSubadminResult)
 };
 

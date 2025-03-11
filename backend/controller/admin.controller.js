@@ -565,6 +565,7 @@ export const afterWining = async (req, res) => {
       await ResultRequest.create({
         gameId,
         marketId,
+        marketName : market.marketName,
         runnerId,
         isWin,
         declaredBy,
@@ -1381,7 +1382,7 @@ export const approveResult = async (req, res) => {
         type: type,
         declaredByNames: declaredByNames,
         declaredById: declaredByIds,
-        remarks: type === 'Match' 
+        remarks: type === 'Matched' 
     ? "Your result has been rejected. Kindly reach out to your upline for further guidance." 
     : "Oops! Your submission does not match our records. Please check the data and try again.",
         status: 'Rejected',
@@ -2151,7 +2152,6 @@ export const getSubAdminHistory = async (req, res) => {
     const adminId = req.user?.adminId;
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
-
     const whereRequest = { deletedAt: null };
     const whereHistory = { declaredById: { [Op.contains]: [adminId] } };
 
@@ -2174,6 +2174,34 @@ export const getSubAdminHistory = async (req, res) => {
     // Fetch ResultHistory data (Approved/Rejected)
     const resultHistories = await ResultHistory.findAll({
       attributes: ["marketId", "type", "status", "remarks"],
+
+    // Fix: Use proper where conditions instead of modifying Sequelize.literal
+    const whereRequest = { deletedAt: null, declaredById: adminId };
+    const whereHistory = {
+      [Op.and]: [
+        Sequelize.literal(`JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL`)
+      ]
+    };
+
+    if (status) {
+      whereRequest.status = status;
+      whereHistory[Op.and].push({ status });
+    }
+
+    if (search) {
+      whereRequest.marketName = { [Op.like]: `%${search}%` };
+      whereHistory[Op.and].push({ marketName: { [Op.like]: `%${search}%` } });
+    }
+
+    const resultRequests = await ResultRequest.findAll({
+      attributes: ["marketName", "marketId", "status"],
+      where: whereRequest,
+      group: ["marketId", "status"],
+      raw: true,
+    });
+
+    const resultHistories = await ResultHistory.findAll({
+      attributes: ["marketName", "marketId", "type", "status", "remarks"],
       where: whereHistory,
       raw: true,
     });
@@ -2184,6 +2212,11 @@ export const getSubAdminHistory = async (req, res) => {
     );
 
     // Pagination
+    // Fix: Ensure createdAt exists in both models before sorting
+    const combinedResults = [...resultRequests, ...resultHistories].sort(
+      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+    );
+
     const totalItems = combinedResults.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
     const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
@@ -2273,3 +2306,89 @@ export const getSubAdminHistory = async (req, res) => {
 //     );
 //   }
 // };
+
+export const getSubadminResult = async (req, res) => {
+  try {
+    const adminId = req.user?.adminId;
+    const { page = 1 , pageSize = 10 ,} = req.query;
+    const offset = (page - 1) * pageSize;
+
+    if (!adminId) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Declared By ID is required"));
+    }
+
+    const results = await ResultHistory.findAll({
+      where: {
+        status: "Approved",
+        declaredById: Sequelize.literal(`JSON_CONTAINS(declaredById, '"${adminId}"')`),
+      },
+    });
+
+    const structuredResults = results.map(result => {
+      const dataArray = [];
+
+      if (Array.isArray(result.declaredById) && Array.isArray(result.declaredByNames)) {
+        result.declaredById.forEach((declaredId, index) => {
+          if (declaredId === adminId) {
+            
+            const uniqueRunnerIds = [...new Set(result.runnerId)];
+
+            uniqueRunnerIds.forEach((runnerId, idx) => {
+              dataArray.push({
+                declaredByNames: result.declaredByNames[index],
+                runnerId: runnerId,
+                runnerName: result.runnerNames ? result.runnerNames[idx] || null : null,
+              });
+            });
+          }
+        });
+      }
+
+      return {
+        gameId: result.gameId,
+        gameName: result.gameName,
+        marketId: result.marketId,
+        marketName: result.marketName,
+        isApproved: result.isApproved,
+        type: result.type,
+        data: dataArray,
+      };
+    });
+
+    const totalItems = structuredResults.length;
+    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+    const paginatedData = structuredResults.slice(offset, offset + parseInt(pageSize));
+
+    const pagination = {
+      page: parseInt(page),
+      limit: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
+
+    return res
+    .status(statusCode.success)
+    .send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Subadmin result fetch successfully!",
+        pagination,
+      )
+    );
+
+  } catch (error) {
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
+    );
+  }
+};
+
