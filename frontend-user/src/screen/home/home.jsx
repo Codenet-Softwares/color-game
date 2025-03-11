@@ -61,7 +61,6 @@ const Home = () => {
       }));
     }
   };
-  console.log("openBetData", openBetData);
   useEffect(() => {
     if (store.user.isLogin) openBetsGame();
   }, []);

@@ -35,7 +35,6 @@ function AppDrawer({
   const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
   const { dispatch, store } = useAppContext();
   const location = useLocation();
-  console.log("location", location);
   useEffect(() => {
     user_getAllGames();
 
