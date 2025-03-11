@@ -6,6 +6,7 @@ import { use } from "react";
 
 const Navside = () => {
   const auth = useAuth();
+console.log('line 09 for roles',auth.user.roles === "subAdmin" )
   const [isUser, setIsUser] = useState(true);
   const [isGame, setIsGame] = useState(true);
   const [isImage, setisImage] = useState(false);
@@ -745,7 +746,7 @@ const Navside = () => {
         {/* Winning Bet Tracker End*/}
 
         {/* SubAdmin History Start*/}
-        {auth.user.roles === "admin" && (
+        {auth.user.roles === "subAdmin" && (
           <li className="m-2">
             <Link to="/all-subAdmin-data" className="d-flex align-items-center">
               <div className="nav_icon_small">
@@ -765,7 +766,7 @@ const Navside = () => {
         {/* SubAdmin History End*/}
 
         {/* SubAdmin Win Result Start */}
-        {auth.user.roles === "admin" && (
+        {auth.user.roles === "subAdmin" && (
           <li className="m-2">
             <Link
               to="/subAdmin-win-result"
