@@ -310,14 +310,16 @@ const BetWinTracker = () => {
               </div>
             </SingleCard>
             {/* Pagination */}
-            <Pagination
-              currentPage={winBetTrackerDetails.currentPage}
-              totalPages={winBetTrackerDetails.totalPages}
-              handlePageChange={handlePageChange}
-              startIndex={startIndex}
-              endIndex={endIndex}
-              totalData={winBetTrackerDetails.totalData}
-            />
+            {winBetTrackerDetails.winBetTrackerDetails?.length > 0 && (
+              <Pagination
+                currentPage={winBetTrackerDetails.currentPage}
+                totalPages={winBetTrackerDetails.totalPages}
+                handlePageChange={handlePageChange}
+                startIndex={startIndex}
+                endIndex={endIndex}
+                totalData={winBetTrackerDetails.totalData}
+              />
+            )}
           </div>
         </div>
       </div>
