@@ -2206,72 +2206,88 @@ export const getSubAdminHistory = async (req, res) => {
   }
 };
 
+export const getSubadminResult = async (req, res) => {
+  try {
+    const adminId = req.user?.adminId;
+    const { page = 1 , pageSize = 10 ,} = req.query;
+    const offset = (page - 1) * pageSize;
 
+    if (!adminId) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Declared By ID is required"));
+    }
 
+    const results = await ResultHistory.findAll({
+      where: {
+        status: "Approved",
+        declaredById: Sequelize.literal(`JSON_CONTAINS(declaredById, '"${adminId}"')`),
+      },
+    });
 
-// export const getSubadminResult = async (req, res) => {
-//   try {
-//     const { page = 1 , pageSize = 10 } = req.query;
-//     const offset = (page - 1) * pageSize;
+    const structuredResults = results.map(result => {
+      const dataArray = [];
 
-//     const adminId = req.user?.adminId;
-//     const { marketId } = req.params;
+      if (Array.isArray(result.declaredById) && Array.isArray(result.declaredByNames)) {
+        result.declaredById.forEach((declaredId, index) => {
+          if (declaredId === adminId) {
+            
+            const uniqueRunnerIds = [...new Set(result.runnerId)];
 
-//     const results = await WinResultRequest.findAll({
-//       attributes: [
-//         "ticketNumber",
-//         "prizeCategory",
-//         "prizeAmount",
-//         "complementaryPrize",
-//         "marketName",
-//         "marketId",
-//         "createdAt",
-//         "updatedAt"
-//       ],
-//       where: { adminId, marketId, status : 'Approve' },
-//       group: [
-//         "ticketNumber",
-//         "prizeCategory",
-//         "prizeAmount",
-//         "complementaryPrize",
-//         "marketName",
-//         "marketId",
-//         "createdAt",
-//         "updatedAt"
-//       ],
-//       raw: true,
-//     });
+            uniqueRunnerIds.forEach((runnerId, idx) => {
+              dataArray.push({
+                declaredByNames: result.declaredByNames[index],
+                runnerId: runnerId,
+                runnerName: result.runnerNames ? result.runnerNames[idx] || null : null,
+              });
+            });
+          }
+        });
+      }
 
-//     if (results.length === 0) {
-//       return apiResponseSuccess(
-//         [],
-//         true,
-//         statusCode.success,
-//         `No lottery results found.`,
-//         res
-//       );
-//     }
+      return {
+        gameId: result.gameId,
+        gameName: result.gameName,
+        marketId: result.marketId,
+        marketName: result.marketName,
+        isApproved: result.isApproved,
+        type: result.type,
+        data: dataArray,
+      };
+    });
 
+    const totalItems = structuredResults.length;
+    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+    const paginatedData = structuredResults.slice(offset, offset + parseInt(pageSize));
 
-//     const totalItems = results.length;
-//     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-//     const paginatedData = results.slice(offset, offset + parseInt(pageSize));
+    const pagination = {
+      page: parseInt(page),
+      limit: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
 
-//     const pagination = {
-//       page: parseInt(page),
-//       limit: parseInt(pageSize),
-//       totalPages,
-//       totalItems,
-//     };
+    return res
+    .status(statusCode.success)
+    .send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Subadmin result fetch successfully!",
+        pagination,
+      )
+    );
 
-//     return apiResponsePagination(paginatedData, true, statusCode.success, 'Lottery results fetched successfully.',pagination, res);
-//   } catch (error) {
-//     return apiResponseErr(
-//       null,
-//       false,
-//       statusCode.internalServerError,
-//       error.message,
-//       res
-//     );
-//   }
-// };
+  } catch (error) {
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
+    );
+  }
+};
+

@@ -24,6 +24,7 @@ import {
   getDetailsWinningData,
   getSubAdmins,
   getSubAdminHistory,
+  getSubadminResult,
 
 
 } from '../controller/admin.controller.js';
@@ -85,7 +86,7 @@ export const AdminRoute = (app) => {
 
   app.get('/api/subAdmin/get-subAdmin-history',authorize([string.subAdmin]), getSubAdminHistory)
 
-  //app.get('/api/subAdmin/get-result/:marketId',authorize([string.subAdmin]), getSubadminResult)
+  app.get('/api/subAdmin/get-result',authorize([string.subAdmin]), getSubadminResult)
 
 };
 
