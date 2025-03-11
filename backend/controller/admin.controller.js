@@ -565,6 +565,7 @@ export const afterWining = async (req, res) => {
       await ResultRequest.create({
         gameId,
         marketId,
+        marketName : market.marketName,
         runnerId,
         isWin,
         declaredBy,
@@ -1381,14 +1382,12 @@ export const approveResult = async (req, res) => {
         type: type,
         declaredByNames: declaredByNames,
         declaredById: declaredByIds,
-        remarks: type === 'Match' 
+        remarks: type === 'Matched' 
     ? "Your result has been rejected. Kindly reach out to your upline for further guidance." 
     : "Oops! Your submission does not match our records. Please check the data and try again.",
         status: 'Rejected',
         createdAt: new Date(),
       });
-
-    await ResultRequest.update({ status : "Rejected"}, { where : {marketId, status : "Pending"}})
 
       await ResultRequest.destroy({ where: { marketId } });
 
@@ -1420,8 +1419,6 @@ export const approveResult = async (req, res) => {
       createdAt: new Date(),
     });
     
-  
-    await ResultRequest.update({ status : "Approved"}, { where : {marketId, status : "Pending"}})
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -2152,38 +2149,42 @@ export const getSubAdminHistory = async (req, res) => {
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
 
-    const whereRequest = { deletedAt: null };
-    const whereHistory = { declaredById: { [Op.contains]: [adminId] } };
+    // Fix: Use proper where conditions instead of modifying Sequelize.literal
+    const whereRequest = { deletedAt: null, declaredById: adminId };
+    const whereHistory = {
+      [Op.and]: [
+        Sequelize.literal(`JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL`)
+      ]
+    };
 
     if (status) {
       whereRequest.status = status;
-      whereHistory.status = status;
+      whereHistory[Op.and].push({ status });
     }
 
     if (search) {
-      whereHistory.marketName = { [Op.like]: `%${search}%` };
+      whereRequest.marketName = { [Op.like]: `%${search}%` };
+      whereHistory[Op.and].push({ marketName: { [Op.like]: `%${search}%` } });
     }
 
-    // Fetch ResultRequest data (Pending status)
     const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketId", "status"],
+      attributes: ["marketName", "marketId", "status"],
       where: whereRequest,
+      group: ["marketId", "status"],
       raw: true,
     });
 
-    // Fetch ResultHistory data (Approved/Rejected)
     const resultHistories = await ResultHistory.findAll({
-      attributes: ["marketId", "type", "status", "remarks"],
+      attributes: ["marketName", "marketId", "type", "status", "remarks"],
       where: whereHistory,
       raw: true,
     });
 
-    // Merge and sort combined results
+    // Fix: Ensure createdAt exists in both models before sorting
     const combinedResults = [...resultRequests, ...resultHistories].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
     );
 
-    // Pagination
     const totalItems = combinedResults.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
     const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
@@ -2204,6 +2205,7 @@ export const getSubAdminHistory = async (req, res) => {
     );
   }
 };
+
 
 
 
