@@ -2152,30 +2152,6 @@ export const getSubAdminHistory = async (req, res) => {
     const adminId = req.user?.adminId;
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
-    const whereRequest = { deletedAt: null };
-    const whereHistory = { declaredById: { [Op.contains]: [adminId] } };
-
-    if (status) {
-      whereRequest.status = status;
-      whereHistory.status = status;
-    }
-
-    if (search) {
-      whereHistory.marketName = { [Op.like]: `%${search}%` };
-    }
-
-    // Fetch ResultRequest data (Pending status)
-    const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketId", "status"],
-      where: whereRequest,
-      raw: true,
-    });
-
-    // Fetch ResultHistory data (Approved/Rejected)
-    const resultHistories = await ResultHistory.findAll({
-      attributes: ["marketId", "type", "status", "remarks"],
-
-    // Fix: Use proper where conditions instead of modifying Sequelize.literal
     const whereRequest = { deletedAt: null, declaredById: adminId };
     const whereHistory = {
       [Op.and]: [
@@ -2193,6 +2169,7 @@ export const getSubAdminHistory = async (req, res) => {
       whereHistory[Op.and].push({ marketName: { [Op.like]: `%${search}%` } });
     }
 
+    // Fetch ResultRequest data (Pending status)
     const resultRequests = await ResultRequest.findAll({
       attributes: ["marketName", "marketId", "status"],
       where: whereRequest,
@@ -2200,6 +2177,7 @@ export const getSubAdminHistory = async (req, res) => {
       raw: true,
     });
 
+    // Fetch ResultHistory data (Approved/Rejected)
     const resultHistories = await ResultHistory.findAll({
       attributes: ["marketName", "marketId", "type", "status", "remarks"],
       where: whereHistory,
@@ -2208,15 +2186,10 @@ export const getSubAdminHistory = async (req, res) => {
 
     // Merge and sort combined results
     const combinedResults = [...resultRequests, ...resultHistories].sort(
-      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-    );
-
-    // Pagination
-    // Fix: Ensure createdAt exists in both models before sorting
-    const combinedResults = [...resultRequests, ...resultHistories].sort(
       (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
     );
 
+    // Pagination
     const totalItems = combinedResults.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
     const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
