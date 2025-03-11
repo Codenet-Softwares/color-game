@@ -554,6 +554,16 @@ class GameService {
       },
     });
   }
+
+  getSubAdminHistory(user, page, pageSize,search) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/subAdmin/get-subAdmin-history?page=${page}&pageSize=${pageSize}&search=${search}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 }
 
 export default new GameService();

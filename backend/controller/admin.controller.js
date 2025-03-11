@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 import {
   apiResponseErr,
+  apiResponsePagination,
   apiResponseSuccess,
 } from "../middleware/serverError.js";
 import { statusCode } from "../helper/statusCodes.js";
@@ -16,7 +17,7 @@ import MarketBalance from "../models/marketBalance.js";
 import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import BetHistory from "../models/betHistory.model.js";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
 import sequelize from "../db.js";
@@ -524,8 +525,28 @@ export const afterWining = async (req, res) => {
           .send(
             apiResponseErr(null, false, statusCode.badRequest, "You have already created a result request for this market")
           );
-      }
+      };
 
+      const rejectedSubadmins = await ResultHistory.findAll({
+        attributes: ["declaredById"],
+        where: { 
+          marketId, 
+          isApproved: false,
+          status: 'Rejected',
+        },
+        raw: true,
+      });
+      
+      const rejectedAdminIds = rejectedSubadmins.map(entry => entry.declaredById).flat();
+      
+      if (rejectedAdminIds.length === 2 && !rejectedAdminIds.includes(declaredById)) {
+        return res
+          .status(statusCode.badRequest)
+          .send(
+            apiResponseErr(null, false, statusCode.badRequest, "Only the two sub-admins with rejected entries can submit results for this market!")
+          );
+      };
+      
       const activeResultRequests = await ResultRequest.count({
         where: {
           marketId,
@@ -544,6 +565,7 @@ export const afterWining = async (req, res) => {
       await ResultRequest.create({
         gameId,
         marketId,
+        marketName : market.marketName,
         runnerId,
         isWin,
         declaredBy,
@@ -1321,6 +1343,7 @@ export const approveResult = async (req, res) => {
     const runnerId2 = resultRequests[1].runnerId;
     const gameId = resultRequests[0].gameId;
     const declaredByNames = resultRequests.map((request) => request.declaredBy);
+    const declaredByIds = resultRequests.map((request) => request.declaredById);
 
     const market = await Market.findOne({
       where: { marketId },
@@ -1358,6 +1381,10 @@ export const approveResult = async (req, res) => {
         isApproved: false,
         type: type,
         declaredByNames: declaredByNames,
+        declaredById: declaredByIds,
+        remarks: type === 'Matched' 
+    ? "Your result has been rejected. Kindly reach out to your upline for further guidance." 
+    : "Oops! Your submission does not match our records. Please check the data and try again.",
         status: 'Rejected',
         createdAt: new Date(),
       });
@@ -1386,9 +1413,12 @@ export const approveResult = async (req, res) => {
       isApproved: isApproved,
       type: type,
       declaredByNames: declaredByNames,
+      declaredById: declaredByIds,
+      remarks : "Congratulations! Your result has been approved.",
       status: 'Approved',
       createdAt: new Date(),
     });
+    
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -2109,6 +2139,155 @@ export const afterWinVoidMarket = async (req, res) => {
           error.message
         )
       );
+  }
+};
+
+
+export const getSubAdminHistory = async (req, res) => {
+  try {
+    const adminId = req.user?.adminId;
+    const { status, page = 1, pageSize = 10, search } = req.query;
+    const offset = (page - 1) * pageSize;
+
+    // Fix: Use proper where conditions instead of modifying Sequelize.literal
+    const whereRequest = { deletedAt: null, declaredById: adminId };
+    const whereHistory = {
+      [Op.and]: [
+        Sequelize.literal(`JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL`)
+      ]
+    };
+
+    if (status) {
+      whereRequest.status = status;
+      whereHistory[Op.and].push({ status });
+    }
+
+    if (search) {
+      whereRequest.marketName = { [Op.like]: `%${search}%` };
+      whereHistory[Op.and].push({ marketName: { [Op.like]: `%${search}%` } });
+    }
+
+    const resultRequests = await ResultRequest.findAll({
+      attributes: ["marketName", "marketId", "status"],
+      where: whereRequest,
+      group: ["marketId", "status"],
+      raw: true,
+    });
+
+    const resultHistories = await ResultHistory.findAll({
+      attributes: ["marketName", "marketId", "type", "status", "remarks"],
+      where: whereHistory,
+      raw: true,
+    });
+
+    // Fix: Ensure createdAt exists in both models before sorting
+    const combinedResults = [...resultRequests, ...resultHistories].sort(
+      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+    );
+
+    const totalItems = combinedResults.length;
+    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+    const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
+
+    const pagination = {
+      page: parseInt(page),
+      limit: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
+
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(paginatedData, true, statusCode.success, "Data fetched successfully!", pagination)
+    );
+  } catch (error) {
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
+  }
+};
+
+export const getSubadminResult = async (req, res) => {
+  try {
+    const adminId = req.user?.adminId;
+    const { page = 1 , pageSize = 10 ,} = req.query;
+    const offset = (page - 1) * pageSize;
+
+    if (!adminId) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Declared By ID is required"));
+    }
+
+    const results = await ResultHistory.findAll({
+      where: {
+        status: "Approved",
+        declaredById: Sequelize.literal(`JSON_CONTAINS(declaredById, '"${adminId}"')`),
+      },
+    });
+
+    const structuredResults = results.map(result => {
+      const dataArray = [];
+
+      if (Array.isArray(result.declaredById) && Array.isArray(result.declaredByNames)) {
+        result.declaredById.forEach((declaredId, index) => {
+          if (declaredId === adminId) {
+            
+            const uniqueRunnerIds = [...new Set(result.runnerId)];
+
+            uniqueRunnerIds.forEach((runnerId, idx) => {
+              dataArray.push({
+                declaredByNames: result.declaredByNames[index],
+                runnerId: runnerId,
+                runnerName: result.runnerNames ? result.runnerNames[idx] || null : null,
+              });
+            });
+          }
+        });
+      }
+
+      return {
+        gameId: result.gameId,
+        gameName: result.gameName,
+        marketId: result.marketId,
+        marketName: result.marketName,
+        isApproved: result.isApproved,
+        type: result.type,
+        data: dataArray,
+      };
+    });
+
+    const totalItems = structuredResults.length;
+    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+    const paginatedData = structuredResults.slice(offset, offset + parseInt(pageSize));
+
+    const pagination = {
+      page: parseInt(page),
+      limit: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
+
+    return res
+    .status(statusCode.success)
+    .send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Subadmin result fetch successfully!",
+        pagination,
+      )
+    );
+
+  } catch (error) {
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
+    );
   }
 };
 

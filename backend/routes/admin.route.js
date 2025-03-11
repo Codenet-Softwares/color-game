@@ -23,7 +23,8 @@ import {
   winningData,
   getDetailsWinningData,
   getSubAdmins,
-
+  getSubAdminHistory,
+  getSubadminResult,
 
 
 } from '../controller/admin.controller.js';
@@ -79,10 +80,13 @@ export const AdminRoute = (app) => {
 
   app.get('/api/getDetails-winning-data/:marketId',authorize([string.Admin]), getDetailsWinningData);
 
-
   app.post('/api/delete-bet-after-win', authorize([string.Admin]), deleteBetAfterWin);
 
   app.post('/api/void-market-after-win', authorize([string.Admin]), afterWinVoidMarket);
+
+  app.get('/api/subAdmin/get-subAdmin-history',authorize([string.subAdmin]), getSubAdminHistory)
+
+  app.get('/api/subAdmin/get-result',authorize([string.subAdmin]), getSubadminResult)
 
 };
 

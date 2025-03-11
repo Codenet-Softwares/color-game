@@ -151,7 +151,7 @@ app.get('/events', (req, res) => {
 });
 
 sequelize
-  .sync({ alter: false })
+  .sync({ alter: true })
   .then(() => {
     console.log('Database & tables created!');
     app.listen(process.env.PORT, () => {
