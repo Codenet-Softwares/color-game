@@ -3,7 +3,6 @@ import RenderBackTable from "./components/RenderBackTable";
 import RenderLayTable from "./components/RenderLayTable";
 
 const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
-  console.log("first", betHistoryData);
   return (
     <div className="card" style={{ height: "82vh", overflow: "hidden" }}>
       <div

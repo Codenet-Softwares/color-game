@@ -126,8 +126,8 @@ app.get('/events', (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
- res.setHeader('Access-Control-Allow-Origin', 'https://cg.user.dummydoma.in'); // server URl 
-  // res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Local URL
+  //  res.setHeader('Access-Control-Allow-Origin', 'https://cg.user.dummydoma.in'); // server URl 
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Local URL
 
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -158,12 +158,12 @@ sequelize
       console.log(`App is running on - http://localhost:${process.env.PORT || 7000}`);
     });
 
-    const updatedMarketsCache = new Map(); 
+    const updatedMarketsCache = new Map();
 
     cron.schedule('* * * * * * *', async () => {
       try {
         const currentTime = getISTTime();
-            
+
         const activeMarkets = await Market.findAll({
           where: {
             isActive: false,
@@ -171,7 +171,7 @@ sequelize
             endTime: { [Op.gte]: currentTime },
           },
         });
-    
+
         const suspendMarkets = await Market.findAll({
           where: {
             isActive: true,
@@ -187,8 +187,8 @@ sequelize
             isWin: true,
             clientMessage: false
           },
-          attributes: { 
-            exclude: ['isActive'] 
+          attributes: {
+            exclude: ['isActive']
           }
         });
 
@@ -204,7 +204,7 @@ sequelize
             updatedMarketsCache.set(market.marketId, response.toJSON());
           }
         }
-        
+
         // Update suspend markets
         for (const market of suspendMarkets) {
           if (!updatedMarketsCache.has(market.marketId) || updatedMarketsCache.get(market.marketId).isActive !== false) {
@@ -233,13 +233,13 @@ sequelize
           }
         });
 
-      //  console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
+        //  console.log(`[SSE] Updates broadcasted: ${JSON.stringify(updateMarket)}`);
 
       } catch (error) {
         console.error('Error checking market statuses:', error);
       }
     });
-    
+
   })
   .catch((err) => {
     console.error('Unable to create tables:', err);
