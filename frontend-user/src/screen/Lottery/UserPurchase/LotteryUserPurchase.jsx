@@ -12,6 +12,7 @@ import SearchResultsNew from "./SearchResultsNew";
 const LotteryUserPurchase = ({ MarketId }) => {
   const { lotteryData, handleSubmit, handleBuy, handleBack, DROPDOWN_FIELDS } =
     useLotteryData(MarketId);
+    console.log('line 15',lotteryData)
   return (
     <div className="outer-container">
       {lotteryData?.searchResult &&
@@ -108,7 +109,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   <button
                     type="submit"
                     className="text-uppercase text-white submit-btn"
-                    disabled={isSubmitting || lotteryData?.isSuspend}
+                    // disabled={isSubmitting || lotteryData?.isSuspend}
                   >
                     {isSubmitting ? "Processing..." : "Search"}
                   </button>
