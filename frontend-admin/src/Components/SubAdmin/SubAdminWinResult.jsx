@@ -1,14 +1,71 @@
 import React, { useEffect, useState } from "react";
 import Pagination from "../Pagination";
 import SingleCard from "../common/singleCard";
+import { getSubAdminWinResult } from "../../Utils/intialState";
+import { toast } from "react-toastify";
+import { customErrorHandler } from "../../Utils/helper";
+import { useAuth } from "../../Utils/Auth";
+import AccountServices from "../../Services/AccountServices";
 const SubAdminWinResult = () => {
-    const [subAdminWinResult, setSubAdminWinResult] = useState()
-    const toggleAccordion = (index) => {
-      setSubAdminWinResult((prevState) => ({
-        ...prevState,
-        openRowIndex: prevState?.openRowIndex === index ? null : index,
+  const [subAdminWinResult, setSubAdminWinResult] =
+    useState(getSubAdminWinResult);
+  const auth = useAuth();
+
+  const fetchSubAdminResult = () => {
+    auth.showLoader();
+    AccountServices.subAdminResult(
+      auth.user,
+      subAdminWinResult?.currentPage,
+      subAdminWinResult?.totalEntries
+      // viewWinningHistory.debouncedSearchTerm
+    )
+      .then((res) => {
+        setSubAdminWinResult((prev) => ({
+          ...prev,
+          history: res?.data?.data || [],
+          totalPages: res?.data.pagination?.totalPages,
+          totalData: res?.data.pagination?.totalItems,
+        }));
+      })
+      .catch((err) => {
+        toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
+      });
+  };
+  useEffect(() => {
+    fetchSubAdminResult();
+  }, [
+    subAdminWinResult?.currentPage,
+    subAdminWinResult?.totalEntries,
+    subAdminWinResult?.debouncedSearchTerm,
+  ]);
+  const toggleAccordion = (index) => {
+    setSubAdminWinResult((prevState) => ({
+      ...prevState,
+      openRowIndex: prevState?.openRowIndex === index ? null : index,
+    }));
+  };
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= subAdminWinResult?.totalPages) {
+      setSubAdminWinResult((prev) => ({
+        ...prev,
+        currentPage: page,
       }));
-    };
+    }
+  };
+  let startIndex = Math.min(
+    (Number(subAdminWinResult?.currentPage) - 1) *
+      Number(subAdminWinResult?.totalEntries) +
+      1,
+    Number(subAdminWinResult?.totalData)
+  );
+  let endIndex = Math.min(
+    Number(subAdminWinResult?.currentPage) *
+      Number(subAdminWinResult?.totalEntries),
+    Number(subAdminWinResult?.totalData)
+  );
   return (
     <div>
       <div className="container my-5 p-5 ">
@@ -30,7 +87,6 @@ const SubAdminWinResult = () => {
             </h3>
           </div>
           <div className="card-body" style={{ background: "#E1D1C7" }}>
-           
             {/* Table */}
             <SingleCard
               className=" mb-5 text-center"
@@ -106,7 +162,6 @@ const SubAdminWinResult = () => {
                                         </tr>
                                       ))}
                                     </tbody>
-                                
                                   </table>
                                 </div>
                               </td>
@@ -129,16 +184,16 @@ const SubAdminWinResult = () => {
               </div>
             </SingleCard>
 
-            {/* {viewWinningHistory?.history?.length > 0 && (
+            {subAdminWinResult?.history?.length > 0 && (
               <Pagination
-                currentPage={viewWinningHistory?.currentPage}
-                totalPages={viewWinningHistory?.totalPages}
+                currentPage={subAdminWinResult?.currentPage}
+                totalPages={subAdminWinResult?.totalPages}
                 handlePageChange={handlePageChange}
                 startIndex={startIndex}
                 endIndex={endIndex}
-                totalData={viewWinningHistory?.totalData}
+                totalData={subAdminWinResult?.totalData}
               />
-            )} */}
+            )}
           </div>
         </div>
       </div>
