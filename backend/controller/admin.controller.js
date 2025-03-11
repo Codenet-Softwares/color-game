@@ -1389,6 +1389,8 @@ export const approveResult = async (req, res) => {
         createdAt: new Date(),
       });
 
+    await ResultRequest.update({ status : "Rejected"}, { where : {marketId, status : "Pending"}})
+
       await ResultRequest.destroy({ where: { marketId } });
 
       return res
@@ -1419,6 +1421,8 @@ export const approveResult = async (req, res) => {
       createdAt: new Date(),
     });
     
+  
+    await ResultRequest.update({ status : "Approved"}, { where : {marketId, status : "Pending"}})
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -2148,6 +2152,28 @@ export const getSubAdminHistory = async (req, res) => {
     const adminId = req.user?.adminId;
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
+    const whereRequest = { deletedAt: null };
+    const whereHistory = { declaredById: { [Op.contains]: [adminId] } };
+
+    if (status) {
+      whereRequest.status = status;
+      whereHistory.status = status;
+    }
+
+    if (search) {
+      whereHistory.marketName = { [Op.like]: `%${search}%` };
+    }
+
+    // Fetch ResultRequest data (Pending status)
+    const resultRequests = await ResultRequest.findAll({
+      attributes: ["marketId", "status"],
+      where: whereRequest,
+      raw: true,
+    });
+
+    // Fetch ResultHistory data (Approved/Rejected)
+    const resultHistories = await ResultHistory.findAll({
+      attributes: ["marketId", "type", "status", "remarks"],
 
     // Fix: Use proper where conditions instead of modifying Sequelize.literal
     const whereRequest = { deletedAt: null, declaredById: adminId };
@@ -2180,6 +2206,12 @@ export const getSubAdminHistory = async (req, res) => {
       raw: true,
     });
 
+    // Merge and sort combined results
+    const combinedResults = [...resultRequests, ...resultHistories].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    // Pagination
     // Fix: Ensure createdAt exists in both models before sorting
     const combinedResults = [...resultRequests, ...resultHistories].sort(
       (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
@@ -2205,6 +2237,75 @@ export const getSubAdminHistory = async (req, res) => {
     );
   }
 };
+
+
+
+// export const getSubadminResult = async (req, res) => {
+//   try {
+//     const { page = 1 , pageSize = 10 } = req.query;
+//     const offset = (page - 1) * pageSize;
+
+//     const adminId = req.user?.adminId;
+//     const { marketId } = req.params;
+
+//     const results = await WinResultRequest.findAll({
+//       attributes: [
+//         "ticketNumber",
+//         "prizeCategory",
+//         "prizeAmount",
+//         "complementaryPrize",
+//         "marketName",
+//         "marketId",
+//         "createdAt",
+//         "updatedAt"
+//       ],
+//       where: { adminId, marketId, status : 'Approve' },
+//       group: [
+//         "ticketNumber",
+//         "prizeCategory",
+//         "prizeAmount",
+//         "complementaryPrize",
+//         "marketName",
+//         "marketId",
+//         "createdAt",
+//         "updatedAt"
+//       ],
+//       raw: true,
+//     });
+
+//     if (results.length === 0) {
+//       return apiResponseSuccess(
+//         [],
+//         true,
+//         statusCode.success,
+//         `No lottery results found.`,
+//         res
+//       );
+//     }
+
+
+//     const totalItems = results.length;
+//     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+//     const paginatedData = results.slice(offset, offset + parseInt(pageSize));
+
+//     const pagination = {
+//       page: parseInt(page),
+//       limit: parseInt(pageSize),
+//       totalPages,
+//       totalItems,
+//     };
+
+//     return apiResponsePagination(paginatedData, true, statusCode.success, 'Lottery results fetched successfully.',pagination, res);
+//   } catch (error) {
+//     return apiResponseErr(
+//       null,
+//       false,
+//       statusCode.internalServerError,
+//       error.message,
+//       res
+//     );
+//   }
+// };
 
 export const getSubadminResult = async (req, res) => {
   try {
