@@ -452,8 +452,9 @@ const Navside = () => {
                 </li>
                 <li>
                   <a
-                    className={`has-arrow ${isInnerSliderImage ? "active" : ""
-                      }`}
+                    className={`has-arrow ${
+                      isInnerSliderImage ? "active" : ""
+                    }`}
                     href="#"
                     onClick={handleInnerImageSlider}
                   >
@@ -534,8 +535,9 @@ const Navside = () => {
                 {/* Outer Announcement */}
                 <li className="outer-announcement">
                   <a
-                    className={`has-arrow ${isOuterAnnouncement ? "active" : ""
-                      }`}
+                    className={`has-arrow ${
+                      isOuterAnnouncement ? "active" : ""
+                    }`}
                     href="#"
                     onClick={() => toggleMenu(setIsOuterAnnouncement)}
                   >
@@ -587,8 +589,9 @@ const Navside = () => {
                 {/* Inner Announcement */}
                 <li className="inner-announcement">
                   <a
-                    className={`has-arrow ${isInnerAnnouncement ? "active" : ""
-                      }`}
+                    className={`has-arrow ${
+                      isInnerAnnouncement ? "active" : ""
+                    }`}
                     href="#"
                     onClick={() => toggleMenu(setIsInnerAnnouncement)}
                   >
@@ -740,6 +743,49 @@ const Navside = () => {
           </li>
         )}
         {/* Winning Bet Tracker End*/}
+
+        {/* SubAdmin History Start*/}
+        {auth.user.roles === "admin" && (
+          <li className="m-2">
+            <Link to="/all-subAdmin-data" className="d-flex align-items-center">
+              <div className="nav_icon_small">
+                <i
+                  class="fa-solid fa-clock"
+                  style={{
+                    color: "#3E5879",
+                    marginRight: "1px",
+                    fontSize: "20px",
+                  }}
+                ></i>
+              </div>
+              <span className="ms-3">Sub-Admin History</span>
+            </Link>
+          </li>
+        )}
+        {/* SubAdmin History End*/}
+
+        {/* SubAdmin Win Result Start */}
+        {auth.user.roles === "admin" && (
+          <li className="m-2">
+            <Link
+              to="/subAdmin-win-result"
+              className="d-flex align-items-center"
+            >
+              <div className="nav_icon_small">
+                <i
+                  class="fa-solid fa-trophy"
+                  style={{
+                    color: "#3E5879",
+                    marginRight: "1px",
+                    fontSize: "20px",
+                  }}
+                ></i>
+              </div>
+              <span className="ms-3">Sub-Admin Win Result</span>
+            </Link>
+          </li>
+        )}
+        {/* SubAdmin Win Result End */}
       </ul>
 
       {/* List Of the Sidebar Ends */}

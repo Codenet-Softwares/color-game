@@ -1,4 +1,3 @@
-
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RequireAuth } from "../Utils/RequireAuth";
@@ -39,6 +38,8 @@ import ViewWinningHistory from "../Components/ViewWinningHistory";
 import ViewSubAdmin from "../Components/ViewSubAdmin";
 import WinTracker from "../Components/WinTracker";
 import BetWinTracker from "../Components/BetWinTracker";
+import SubAdminView from "../Components/SubAdmin/SubAdminView";
+import SubAdminWinResult from "../Components/SubAdmin/SubAdminWinResult";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
@@ -292,25 +293,31 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
-          <Route path="viewWinningRequest"
+          <Route
+            path="viewWinningRequest"
             element={
               <RequireAuth>
                 <ViewWinningRequest />
               </RequireAuth>
-            } />
-          <Route path="viewWinningHistory"
+            }
+          />
+          <Route
+            path="viewWinningHistory"
             element={
               <RequireAuth>
                 <ViewWinningHistory />
               </RequireAuth>
-            } />
-          <Route path="viewsubadmin"
+            }
+          />
+          <Route
+            path="viewsubadmin"
             element={
               <RequireAuth>
                 <ViewSubAdmin />
               </RequireAuth>
-            } />
-        <Route
+            }
+          />
+          <Route
             path="winTracker"
             element={
               <RequireAuth>
@@ -318,7 +325,7 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
-           <Route
+          <Route
             path="/getDetails-winning-data/:marketId"
             element={
               <RequireAuth>
@@ -326,8 +333,23 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
+          <Route
+            path="/all-subAdmin-data"
+            element={
+              <RequireAuth>
+                <SubAdminView />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/subAdmin-win-result"
+            element={
+              <RequireAuth>
+                <SubAdminWinResult />
+              </RequireAuth>
+            }
+          />
         </Route>
-      
       </Routes>
     </BrowserRouter>
   );
