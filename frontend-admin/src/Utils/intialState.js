@@ -35,7 +35,18 @@ export function getViewWinningHistory(body = {}) {
     openRowIndex: null
   };
 }
-
+export function getSubAdminWinResult(body = {}) {
+  return {
+    // history: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 20,
+    totalData: 0,
+    searchTerm: "",
+    debouncedSearchTerm: "",
+    openRowIndex: null
+  };
+}
 export function getViewSubadmin(body = {}) {
   return {
     data: [],

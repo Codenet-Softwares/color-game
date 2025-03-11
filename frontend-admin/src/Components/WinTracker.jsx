@@ -31,6 +31,7 @@ const WinTracker = () => {
   useEffect(() => {
     fetchBetTracker();
   }, [winBetTracker.currentPage, winBetTracker.totalEntries, debouncedSearchTerm]);
+  
   const fetchBetTracker = () => {
     GameService.winBetTracker(
       auth.user,

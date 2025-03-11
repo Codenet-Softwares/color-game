@@ -184,6 +184,15 @@ class AccountService {
     });
   }
   
+  subAdminResult(user, page, pageSize) {
+    return axios({
+      method: "GET",
+      url: API_HOST + `/api/subAdmin/get-result?page=${page}&pageSize=${pageSize}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 
 }
 
