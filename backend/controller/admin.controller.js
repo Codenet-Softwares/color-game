@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
 import {
   apiResponseErr,
+  apiResponsePagination,
   apiResponseSuccess,
 } from "../middleware/serverError.js";
 import { statusCode } from "../helper/statusCodes.js";
@@ -16,7 +17,7 @@ import MarketBalance from "../models/marketBalance.js";
 import ProfitLoss from "../models/profitLoss.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import BetHistory from "../models/betHistory.model.js";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
 import sequelize from "../db.js";
@@ -524,8 +525,28 @@ export const afterWining = async (req, res) => {
           .send(
             apiResponseErr(null, false, statusCode.badRequest, "You have already created a result request for this market")
           );
-      }
+      };
 
+      const rejectedSubadmins = await ResultHistory.findAll({
+        attributes: ["declaredById"],
+        where: { 
+          marketId, 
+          isApproved: false,
+          status: 'Rejected',
+        },
+        raw: true,
+      });
+      
+      const rejectedAdminIds = rejectedSubadmins.map(entry => entry.declaredById).flat();
+      
+      if (rejectedAdminIds.length === 2 && !rejectedAdminIds.includes(declaredById)) {
+        return res
+          .status(statusCode.badRequest)
+          .send(
+            apiResponseErr(null, false, statusCode.badRequest, "Only the two sub-admins with rejected entries can submit results for this market!")
+          );
+      };
+      
       const activeResultRequests = await ResultRequest.count({
         where: {
           marketId,
@@ -1321,6 +1342,7 @@ export const approveResult = async (req, res) => {
     const runnerId2 = resultRequests[1].runnerId;
     const gameId = resultRequests[0].gameId;
     const declaredByNames = resultRequests.map((request) => request.declaredBy);
+    const declaredByIds = resultRequests.map((request) => request.declaredById);
 
     const market = await Market.findOne({
       where: { marketId },
@@ -1358,9 +1380,15 @@ export const approveResult = async (req, res) => {
         isApproved: false,
         type: type,
         declaredByNames: declaredByNames,
+        declaredById: declaredByIds,
+        remarks: type === 'Match' 
+    ? "Your result has been rejected. Kindly reach out to your upline for further guidance." 
+    : "Oops! Your submission does not match our records. Please check the data and try again.",
         status: 'Rejected',
         createdAt: new Date(),
       });
+
+    await ResultRequest.update({ status : "Rejected"}, { where : {marketId, status : "Pending"}})
 
       await ResultRequest.destroy({ where: { marketId } });
 
@@ -1386,9 +1414,14 @@ export const approveResult = async (req, res) => {
       isApproved: isApproved,
       type: type,
       declaredByNames: declaredByNames,
+      declaredById: declaredByIds,
+      remarks : "Congratulations! Your result has been approved.",
       status: 'Approved',
       createdAt: new Date(),
     });
+    
+  
+    await ResultRequest.update({ status : "Approved"}, { where : {marketId, status : "Pending"}})
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -2112,3 +2145,131 @@ export const afterWinVoidMarket = async (req, res) => {
   }
 };
 
+
+export const getSubAdminHistory = async (req, res) => {
+  try {
+    const adminId = req.user?.adminId;
+    const { status, page = 1, pageSize = 10, search } = req.query;
+    const offset = (page - 1) * pageSize;
+
+    const whereRequest = { deletedAt: null };
+    const whereHistory = { declaredById: { [Op.contains]: [adminId] } };
+
+    if (status) {
+      whereRequest.status = status;
+      whereHistory.status = status;
+    }
+
+    if (search) {
+      whereHistory.marketName = { [Op.like]: `%${search}%` };
+    }
+
+    // Fetch ResultRequest data (Pending status)
+    const resultRequests = await ResultRequest.findAll({
+      attributes: ["marketId", "status"],
+      where: whereRequest,
+      raw: true,
+    });
+
+    // Fetch ResultHistory data (Approved/Rejected)
+    const resultHistories = await ResultHistory.findAll({
+      attributes: ["marketId", "type", "status", "remarks"],
+      where: whereHistory,
+      raw: true,
+    });
+
+    // Merge and sort combined results
+    const combinedResults = [...resultRequests, ...resultHistories].sort(
+      (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+    );
+
+    // Pagination
+    const totalItems = combinedResults.length;
+    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+    const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
+
+    const pagination = {
+      page: parseInt(page),
+      limit: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
+
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(paginatedData, true, statusCode.success, "Data fetched successfully!", pagination)
+    );
+  } catch (error) {
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
+  }
+};
+
+
+
+// export const getSubadminResult = async (req, res) => {
+//   try {
+//     const { page = 1 , pageSize = 10 } = req.query;
+//     const offset = (page - 1) * pageSize;
+
+//     const adminId = req.user?.adminId;
+//     const { marketId } = req.params;
+
+//     const results = await WinResultRequest.findAll({
+//       attributes: [
+//         "ticketNumber",
+//         "prizeCategory",
+//         "prizeAmount",
+//         "complementaryPrize",
+//         "marketName",
+//         "marketId",
+//         "createdAt",
+//         "updatedAt"
+//       ],
+//       where: { adminId, marketId, status : 'Approve' },
+//       group: [
+//         "ticketNumber",
+//         "prizeCategory",
+//         "prizeAmount",
+//         "complementaryPrize",
+//         "marketName",
+//         "marketId",
+//         "createdAt",
+//         "updatedAt"
+//       ],
+//       raw: true,
+//     });
+
+//     if (results.length === 0) {
+//       return apiResponseSuccess(
+//         [],
+//         true,
+//         statusCode.success,
+//         `No lottery results found.`,
+//         res
+//       );
+//     }
+
+
+//     const totalItems = results.length;
+//     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+//     const paginatedData = results.slice(offset, offset + parseInt(pageSize));
+
+//     const pagination = {
+//       page: parseInt(page),
+//       limit: parseInt(pageSize),
+//       totalPages,
+//       totalItems,
+//     };
+
+//     return apiResponsePagination(paginatedData, true, statusCode.success, 'Lottery results fetched successfully.',pagination, res);
+//   } catch (error) {
+//     return apiResponseErr(
+//       null,
+//       false,
+//       statusCode.internalServerError,
+//       error.message,
+//       res
+//     );
+//   }
+// };
