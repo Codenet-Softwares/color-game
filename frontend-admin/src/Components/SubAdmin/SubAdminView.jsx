@@ -168,7 +168,7 @@ const SubAdminView = () => {
                     value={statusFilter} 
                     onChange={handleStatusChange} 
                   >
-                    <option value="">Status</option>
+                    <option value="">Select Status</option>
                     <option value="Approved">Approved</option>
                     <option value="Rejected">Rejected</option>
                     <option value="Pending">Pending</option>
@@ -222,6 +222,8 @@ const SubAdminView = () => {
                       <th>Market Name</th>
                       {/* <th>Type</th> */}
                       <th>Status</th>
+                      <th>Remark</th>
+                      
                     </tr>
                   </thead>
                   <tbody>
@@ -232,6 +234,7 @@ const SubAdminView = () => {
                           <td>{subHistory.marketName}</td>
                           {/* <td>{subHistory.type}</td> */}
                           <td>{subHistory.status}</td>
+                          <td>{subHistory.remarks}</td>
                         </tr>
                       ))
                     ) : (
