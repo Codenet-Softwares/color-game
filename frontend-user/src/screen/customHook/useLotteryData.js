@@ -77,34 +77,45 @@ const useLotteryData = (MarketId) => {
 
   // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
   useEffect(() => {
-    const eventSource = updateLotteryMarketEventEmitter();
-
-    eventSource.onopen = () => {
-      console.log("✅ SSE Connection Opened");
-    };
-
-    eventSource.onmessage = (event) => {
-      console.log("📩 Raw Event Data:", event);
-      console.log("📩 Event Data Received:", event.data);
-
+    const eventSource = new EventSource('http://localhost:8080/lottery-events');
+    eventSource.onmessage = function (event) {
+      console.log("Raw event received:", event);
+      
       try {
         const updates = JSON.parse(event.data);
-        console.log("✅ Parsed Updates:", updates);
+        console.log("Parsed updates:", updates);
+        
+        if (updates?.length) {
+          updates.forEach((market) => {
+            setLotteryData((prevData) => ({
+              ...prevData,
+              isSuspend: !market.isActive, // Update isSuspend dynamically
+            }));
+  
+            if (market.isActive) {
+              toast.success(`${market.marketName} is now Active`);
+            } else {
+              toast.info(`${market.marketName} has been Suspended`);
+            }
+          });
+        }
       } catch (error) {
-        console.error("❌ JSON Parse Error:", error);
+        console.error("Error parsing SSE data:", error);
       }
     };
-
-    eventSource.onerror = (err) => {
-      console.error("❌ SSE Error:", err);
-      eventSource.close();
+  
+    eventSource.onerror = () => {
+      console.error("SSE connection lost. Trying to reconnect...");
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
     };
-
+  
     return () => {
-      console.log("🔴 SSE Connection Closed");
       eventSource.close();
     };
   }, []);
+  
 
 
 
