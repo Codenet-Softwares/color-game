@@ -64,7 +64,7 @@ const useLotteryData = (MarketId) => {
 
         endTimeForShowCountdown: end_time,
         startTimeForShowCountdown: start_time,
-        isSuspend: isActive,
+        isSuspend: !isActive,
         price: price,
       }));
     }
@@ -77,21 +77,20 @@ const useLotteryData = (MarketId) => {
 
   // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
   useEffect(() => {
-    const eventSource = new EventSource('http://localhost:8080/lottery-events');
+    const eventSource = new EventSource("http://localhost:8080/lottery-events");
     eventSource.onmessage = function (event) {
-      console.log("Raw event received:", event);
-      
       try {
         const updates = JSON.parse(event.data);
         console.log("Parsed updates:", updates);
-        
+
         if (updates?.length) {
           updates.forEach((market) => {
             setLotteryData((prevData) => ({
               ...prevData,
               isSuspend: !market.isActive, // Update isSuspend dynamically
+              isUpdate: market.updatedAt,
             }));
-  
+
             if (market.isActive) {
               toast.success(`${market.marketName} is now Active`);
             } else {
@@ -103,21 +102,18 @@ const useLotteryData = (MarketId) => {
         console.error("Error parsing SSE data:", error);
       }
     };
-  
+
     eventSource.onerror = () => {
       console.error("SSE connection lost. Trying to reconnect...");
       setTimeout(() => {
         window.location.reload();
       }, 5000);
     };
-  
+
     return () => {
       eventSource.close();
     };
   }, []);
-  
-
-
 
   // API FETCHING FOR THE SEARCH BUTTON AFTER WHICH THE SEARCHRESULTSNEW PAGE IS EXECUTED
   const handleSubmit = useCallback(

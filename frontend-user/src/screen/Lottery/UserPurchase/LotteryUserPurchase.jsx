@@ -12,7 +12,7 @@ import SearchResultsNew from "./SearchResultsNew";
 const LotteryUserPurchase = ({ MarketId }) => {
   const { lotteryData, handleSubmit, handleBuy, handleBack, DROPDOWN_FIELDS } =
     useLotteryData(MarketId);
-    console.log('line 15',lotteryData)
+  console.log("line 15---------------", lotteryData.isSuspend);
   return (
     <div className="outer-container">
       {lotteryData?.searchResult &&
@@ -27,7 +27,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
       ) : (
         <div className="form-wrapper position-relative">
           {/*The starting of overlay suspended message coming over the form after market gets suspended*/}
-          {!lotteryData.isSuspend && (
+          {lotteryData.isSuspend && (
             <div className="suspended-overlay">
               <div className="suspended-message">
                 <h3>Lottery Market Suspended</h3>
@@ -39,7 +39,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
 
           <div
             className={`form-container text-uppercase ${
-              !lotteryData.isSuspend ? "blurred" : ""
+              lotteryData.isSuspend ? "blurred" : ""
             }`}
           >
             {/* Price Display - Always Visible  on top left */}
