@@ -77,7 +77,7 @@ const useLotteryData = (MarketId) => {
 
   // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
   useEffect(() => {
-    const eventSource = new EventSource("http://localhost:8080/lottery-events");
+    const eventSource = new EventSource("https://lottery.server.dummydoma.in/lottery-events");
     eventSource.onmessage = function (event) {
       try {
         const updates = JSON.parse(event.data);
