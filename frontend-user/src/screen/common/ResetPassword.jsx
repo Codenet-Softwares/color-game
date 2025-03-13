@@ -40,7 +40,7 @@ const ResetPassword = () => {
     }
   }
   return (
-    <div className="container h-175">
+    <div className="container">
       <div className="logo-container">
         <img
           src={Logo}
@@ -79,7 +79,7 @@ const ResetPassword = () => {
                       className="btn btn-outline-secondary"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <FaEyeSlash /> : <FaEyeSlash />}
+                      {showPassword ? <FaEye/> : <FaEyeSlash />}
                     </button>
                   </div>
                   {formik.touched.newPassword && formik.errors.newPassword && (
