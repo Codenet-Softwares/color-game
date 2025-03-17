@@ -90,10 +90,31 @@ export const adminLogin = async (req, res) => {
     }
 
     // Check if the user is either Admin or subAdmin
-    if (existingUser.roles !== string.Admin && existingUser.roles !== string.subAdmin) {
+    if (existingUser.roles !== 'Admin' && existingUser.roles !== 'subAdmin') {
       return res
         .status(statusCode.unauthorize)
         .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
+    }
+
+    // Check if password reset is required
+    if (existingUser.isReset === true) {
+      if (existingUser.roles === 'subAdmin') {
+        return res.status(statusCode.success).send(
+          apiResponseSuccess(
+            {
+              message: 'Password reset required. Please reset your password.',
+              isReset: existingUser.isReset,
+            },
+            true,
+            statusCode.success,
+            'Password reset required',
+          ),
+        );
+      }
+
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, 'Password reset required'));
     }
 
     // Compare passwords
@@ -133,7 +154,7 @@ export const adminLogin = async (req, res) => {
       ),
     );
   } catch (error) {
-    console.error('Error in adminAndSubAdminLogin:', error.message);
+    console.error('Error in adminLogin:', error.message);
     return res
       .status(statusCode.internalServerError)
       .send(
@@ -146,6 +167,7 @@ export const adminLogin = async (req, res) => {
       );
   }
 };
+
 
 // done
 export const loginUser = async (req, res) => {
