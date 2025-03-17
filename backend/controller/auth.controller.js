@@ -72,31 +72,33 @@ export const adminLogin = async (req, res) => {
   const { userName, password } = req.body;
 
   try {
-    // Validate input
     if (!userName || !password) {
       return res
         .status(statusCode.badRequest)
         .send(apiResponseErr(null, false, statusCode.badRequest, 'Username and password are required'));
     }
 
-    // Find the user by userName
     const existingUser = await admins.findOne({ where: { userName } });
 
-    // If no user is found, return error
     if (!existingUser) {
       return res
         .status(statusCode.badRequest)
         .send(apiResponseErr(null, false, statusCode.badRequest, 'User does not exist'));
     }
 
-    // Check if the user is either Admin or subAdmin
     if (existingUser.roles !== 'admin' && existingUser.roles !== 'subAdmin') {
       return res
         .status(statusCode.unauthorize)
         .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
     }
 
-    // Check if password reset is required
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+    if (!isPasswordValid) {
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid password'));
+    }
+
     if (existingUser.isReset === true) {
       if (existingUser.roles === 'subAdmin') {
         return res.status(statusCode.success).send(
@@ -117,15 +119,8 @@ export const adminLogin = async (req, res) => {
         .send(apiResponseErr(null, false, statusCode.badRequest, 'Password reset required'));
     }
 
-    // Compare passwords
-    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
-    if (!isPasswordValid) {
-      return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid password'));
-    }
+    
 
-    // Generate JWT token
     const accessTokenResponse = {
       id: existingUser.id,
       adminId: existingUser.adminId,
@@ -135,10 +130,9 @@ export const adminLogin = async (req, res) => {
     };
 
     const accessToken = jwt.sign(accessTokenResponse, process.env.JWT_SECRET_KEY, {
-      expiresIn: '1d', // Token expires in 1 day
+      expiresIn: '1d', 
     });
 
-    // Return the token and user details
     return res.status(statusCode.success).send(
       apiResponseSuccess(
         {
@@ -154,7 +148,6 @@ export const adminLogin = async (req, res) => {
       ),
     );
   } catch (error) {
-    console.error('Error in adminLogin:', error.message);
     return res
       .status(statusCode.internalServerError)
       .send(
