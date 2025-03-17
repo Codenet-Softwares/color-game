@@ -26,7 +26,7 @@ import {
   getSubAdminHistory,
   getSubadminResult,
 } from '../controller/admin.controller.js';
-import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin } from '../schema/commonSchema.js';
+import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
 
 dotenv.config();
@@ -35,7 +35,7 @@ export const AdminRoute = (app) => {
   // done
   app.post('/api/admin-create', adminCreateValidate, customErrorHandler, createAdmin);
 
-  app.post('/api/create-subAdmin', authorize([string.Admin]), createSubAdmin);
+  app.post('/api/create-subAdmin',validateSubAdmin,customErrorHandler, authorize([string.Admin]), createSubAdmin);
 
   app.get('/api/get-sub-admins', authorize([string.Admin]), getSubAdmins);
 
@@ -68,7 +68,7 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-bet-markets-afterWin', authorize([string.Admin]), getBetMarketsAfterWin);
 
-  app.post("/api/admin/approve-result", authorize([string.Admin]), approveResult);
+  app.post("/api/admin/approve-result",validateApproveResult,customErrorHandler, authorize([string.Admin]), approveResult);
 
   app.get('/api/get-result-requests', authorize([string.Admin]), getResultRequests);
 
@@ -76,11 +76,11 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-after-winning-data',authorize([string.Admin]), winningData);
 
-  app.get('/api/getDetails-winning-data/:marketId',authorize([string.Admin]), getDetailsWinningData);
+  app.get('/api/getDetails-winning-data/:marketId',validateBetsAfterWin,customErrorHandler,authorize([string.Admin]), getDetailsWinningData);
 
-  app.post('/api/delete-bet-after-win', authorize([string.Admin]), deleteBetAfterWin);
+  app.post('/api/delete-bet-after-win',validatesDeleteBetAfterWin,customErrorHandler, authorize([string.Admin]), deleteBetAfterWin);
 
-  app.post('/api/void-market-after-win', authorize([string.Admin]), afterWinVoidMarket);
+  app.post('/api/void-market-after-win',validateAfterWinVoidMarket,customErrorHandler, authorize([string.Admin]), afterWinVoidMarket);
 
   app.get('/api/subAdmin/get-subAdmin-history',authorize([string.subAdmin]), getSubAdminHistory)
 

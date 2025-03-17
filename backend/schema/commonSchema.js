@@ -152,6 +152,30 @@ export const adminCreateValidate = [
     .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
 ];
 
+export const validateSubAdmin = [
+  body("userName")
+    .trim()
+    .notEmpty()
+    .withMessage("Username is required")
+    .isLength({ min: 3, max: 30 })
+    .withMessage("Username must be between 3 and 30 characters"),
+
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
+
+  body("permissions")
+    .notEmpty()
+    .withMessage("Permissions are required")
+    .isArray({ min: 1 })
+    .withMessage("Permissions must be a non-empty array")
+    .custom((value) => value.every((perm) => typeof perm === "string" && perm.trim() !== ""))
+    .withMessage("Each permission must be a non-empty string"),
+];
+
+
 export const suspendedMarketSchema = [
   param("marketId").notEmpty().withMessage("Market ID is required"),
   body("status").isBoolean().withMessage("Status must be a boolean value"),
@@ -680,7 +704,38 @@ export const validateBetsAfterWin = [
   param("marketId")
     .isUUID(4)
     .withMessage("Market Id is not valid."),
-]
+];
+
+export const validateApproveResult = [
+  body('marketId')
+    .notEmpty()
+    .withMessage('Market ID is required')
+    .isUUID()
+    .withMessage('Market ID must be a valid UUID'),
+  body('action')
+    .notEmpty()
+    .withMessage('Action is required')
+    .isString()
+    .trim()
+    .isIn(['approve', 'reject'])
+    .withMessage("Action must be either 'approve' or 'reject'")
+];
+
+export const validatesDeleteBetAfterWin = [
+  body("userId")
+    .notEmpty().withMessage("User ID is required")
+    .isUUID().withMessage("User ID must be a valid UUID"),
+  body("marketId")
+    .notEmpty().withMessage("Market ID is required")
+    .isUUID().withMessage("Market ID must be a valid UUID"),
+];
+
+export const validateAfterWinVoidMarket = [
+  body("marketId")
+    .notEmpty().withMessage("Market ID is required")
+    .isUUID().withMessage("Market ID must be a valid UUID"),
+];
+
 
 export const validateDeleteLiveBet = [
   body('marketId')

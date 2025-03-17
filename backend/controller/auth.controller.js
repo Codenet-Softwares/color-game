@@ -72,31 +72,26 @@ export const adminLogin = async (req, res) => {
   const { userName, password } = req.body;
 
   try {
-    // Validate input
     if (!userName || !password) {
       return res
         .status(statusCode.badRequest)
         .send(apiResponseErr(null, false, statusCode.badRequest, 'Username and password are required'));
     }
 
-    // Find the user by userName
     const existingUser = await admins.findOne({ where: { userName } });
 
-    // If no user is found, return error
     if (!existingUser) {
       return res
         .status(statusCode.badRequest)
         .send(apiResponseErr(null, false, statusCode.badRequest, 'User does not exist'));
     }
 
-    // Check if the user is either Admin or subAdmin
-    if (existingUser.roles !== string.Admin && existingUser.roles !== string.subAdmin) {
+    if (existingUser.roles !== 'admin' && existingUser.roles !== 'subAdmin') {
       return res
         .status(statusCode.unauthorize)
         .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
     }
 
-    // Compare passwords
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
     if (!isPasswordValid) {
       return res
@@ -104,7 +99,28 @@ export const adminLogin = async (req, res) => {
         .send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid password'));
     }
 
-    // Generate JWT token
+    if (existingUser.isReset === true) {
+      if (existingUser.roles === 'subAdmin') {
+        return res.status(statusCode.success).send(
+          apiResponseSuccess(
+            {
+              message: 'Password reset required. Please reset your password.',
+              isReset: existingUser.isReset,
+            },
+            true,
+            statusCode.success,
+            'Password reset required',
+          ),
+        );
+      }
+
+      return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, 'Password reset required'));
+    }
+
+    
+
     const accessTokenResponse = {
       id: existingUser.id,
       adminId: existingUser.adminId,
@@ -114,10 +130,9 @@ export const adminLogin = async (req, res) => {
     };
 
     const accessToken = jwt.sign(accessTokenResponse, process.env.JWT_SECRET_KEY, {
-      expiresIn: '1d', // Token expires in 1 day
+      expiresIn: '1d', 
     });
 
-    // Return the token and user details
     return res.status(statusCode.success).send(
       apiResponseSuccess(
         {
@@ -133,7 +148,6 @@ export const adminLogin = async (req, res) => {
       ),
     );
   } catch (error) {
-    console.error('Error in adminAndSubAdminLogin:', error.message);
     return res
       .status(statusCode.internalServerError)
       .send(
@@ -146,6 +160,7 @@ export const adminLogin = async (req, res) => {
       );
   }
 };
+
 
 // done
 export const loginUser = async (req, res) => {
@@ -287,6 +302,29 @@ export const resetPassword = async (req, res) => {
     const { userName, oldPassword, newPassword } = req.body;
 
     const existingUser = await userSchema.findOne({ where: { userName } });
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, existingUser.password);
+    if (!isPasswordMatch) {
+      return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid old password.'));
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await existingUser.update({ password: hashedPassword, isReset: false });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, 'Password reset successfully.'));
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(statusCode.internalServerError).send(apiResponseErr(error.data ?? null, false, error.responseCode ?? statusCode.internalServerError, error.errMessage ?? error.message));
+  }
+};
+
+export const subAdminResetPassword = async (req, res) => {
+  try {
+    const { userName, oldPassword, newPassword } = req.body;
+
+    const existingUser = await admins.findOne({ where: { userName } });
 
     const isPasswordMatch = await bcrypt.compare(oldPassword, existingUser.password);
     if (!isPasswordMatch) {

@@ -31,6 +31,10 @@ const admins = sequelize.define(
       type: DataTypes.STRING, 
       allowNull: true,
     },
+    isReset: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
 
   },
   {
