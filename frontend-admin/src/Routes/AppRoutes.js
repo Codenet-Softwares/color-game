@@ -40,12 +40,21 @@ import WinTracker from "../Components/WinTracker";
 import BetWinTracker from "../Components/BetWinTracker";
 import SubAdminView from "../Components/SubAdmin/SubAdminView";
 import SubAdminWinResult from "../Components/SubAdmin/SubAdminWinResult";
+import ResetPassword from "../Pages/Accounts/ResetPassword/ResetPassword";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path="reset-password"
+          element={
+          
+              <ResetPassword/>
+           
+          }
+        />
         <Route index element={<Login />} />
         <Route path="*" element={<ErrorPage />} />
         <Route

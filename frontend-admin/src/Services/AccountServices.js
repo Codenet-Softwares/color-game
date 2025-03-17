@@ -194,6 +194,17 @@ class AccountService {
     });
   }
 
+  SubAdminResetPassword(data, user) {
+    return axios({
+      method: "POST",
+      url: API_HOST + "/api/subAdmin/reset-password",
+      data: data,
+      // headers: {
+      //   Authorization: `Bearer ${user.token}`,
+      // },
+    });
+  }
+
 }
 
 export default new AccountService();
