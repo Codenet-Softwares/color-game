@@ -90,7 +90,7 @@ export const adminLogin = async (req, res) => {
     }
 
     // Check if the user is either Admin or subAdmin
-    if (existingUser.roles !== 'Admin' && existingUser.roles !== 'subAdmin') {
+    if (existingUser.roles !== 'admin' && existingUser.roles !== 'subAdmin') {
       return res
         .status(statusCode.unauthorize)
         .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
