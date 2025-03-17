@@ -1,5 +1,5 @@
 import { string } from '../constructor/string.js';
-import { adminLogin, loginUser, resetPassword, trashUser, restoreTrashUser, logout, externalResetPassword, adminResetPassword } from '../controller/auth.controller.js';
+import { adminLogin, loginUser, resetPassword, trashUser, restoreTrashUser, logout, externalResetPassword, adminResetPassword, subAdminResetPassword } from '../controller/auth.controller.js';
 import { authorize } from '../middleware/auth.js';
 import customErrorHandler from '../middleware/customErrorHandler.js';
 import { authenticateSuperAdmin } from '../middleware/whiteLabelAuth.js';
@@ -12,6 +12,9 @@ export const authRoute = (app) => {
   app.post('/api/user-login', loginSchema, customErrorHandler, loginUser);
   // done
   app.post('/api/reset-password', resetPasswordSchema, customErrorHandler, resetPassword);
+
+  app.post('/api/subAdmin/reset-password', resetPasswordSchema, customErrorHandler, subAdminResetPassword);
+
   // done
   app.post('/api/extrernal/trash-user', trashUserSchema, customErrorHandler, trashUser);
   // done

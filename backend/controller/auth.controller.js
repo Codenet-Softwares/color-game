@@ -327,6 +327,29 @@ export const resetPassword = async (req, res) => {
   }
 };
 
+export const subAdminResetPassword = async (req, res) => {
+  try {
+    const { userName, oldPassword, newPassword } = req.body;
+
+    const existingUser = await admins.findOne({ where: { userName } });
+
+    const isPasswordMatch = await bcrypt.compare(oldPassword, existingUser.password);
+    if (!isPasswordMatch) {
+      return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid old password.'));
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await existingUser.update({ password: hashedPassword, isReset: false });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, 'Password reset successfully.'));
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(statusCode.internalServerError).send(apiResponseErr(error.data ?? null, false, error.responseCode ?? statusCode.internalServerError, error.errMessage ?? error.message));
+  }
+};
+
 export const trashUser = async (req, res) => {
   try {
     const { userId } = req.body;
