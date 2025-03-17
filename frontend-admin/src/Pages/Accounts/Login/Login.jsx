@@ -5,7 +5,7 @@ import { useAuth } from "../../../Utils/Auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { customErrorHandler } from "../../../Utils/helper.js";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
@@ -33,9 +33,16 @@ const Login = () => {
     const data = { userName, password };
     AccountServices.Login(data)
       .then((res) => {
+        if(res?.data?.data?.isReset){
+          navigate("/reset-password", { state:  {password,userName}});
+          return
+        }
+      
         sessionStorage.setItem("user", res.data.data.accessToken);
         toast.success("Login Successful.");
+
         auth.login();
+
         navigate("/welcome");
       })
       .catch((err) => {
