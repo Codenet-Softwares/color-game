@@ -83,32 +83,19 @@ export const createAdmin = async (req, res) => {
 
 export const createSubAdmin = async (req, res) => {
   try {
+
     const { userName, password, permissions } = req.body;
 
-    // Validate input
-    if (!userName || !password || !permissions) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "All fields are required"
-          )
-        );
-    }
+    const formattedPermissions = Array.isArray(permissions) ? permissions.join(",") : "";
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the subAdmin with the subAdmin role
     const subAdmin = await admins.create({
       adminId: uuidv4(),
       userName,
       password: hashedPassword,
-      roles: string.subAdmin, // Assign the subAdmin role
-      permissions: permissions.join(','), // Store permissions as a comma-separated string
+      roles: string.subAdmin,
+      permissions: formattedPermissions,
     });
 
     return res
@@ -126,14 +113,16 @@ export const createSubAdmin = async (req, res) => {
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
-          error.data ?? null,
+          null,
           false,
-          error.responseCode ?? statusCode.internalServerError,
-          error.errMessage ?? error.message
+          statusCode.internalServerError,
+          error.message
         )
       );
   }
 };
+
+
 
 export const getSubAdmins = async (req, res) => {
   try {
@@ -1578,7 +1567,6 @@ export const approveResult = async (req, res) => {
         )
       );
   } catch (error) {
-    console.error("Error approving result:", error);
     return res
       .status(statusCode.internalServerError)
       .send(
@@ -1690,13 +1678,13 @@ export const getSubAdminResultHistory = async (req, res) => {
       order: [['createdAt', 'DESC']],
       where: {
         isApproved: true,
-        isRevokeAfterWin: false, // Add this condition
+        isRevokeAfterWin: false, 
       },
     };
 
     if (type) {
       queryOptions.where = {
-        ...queryOptions.where, // Preserve existing conditions
+        ...queryOptions.where, 
         type: type,
       };
     }
@@ -1873,20 +1861,7 @@ export const getDetailsWinningData = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const search = req.query.search || '';
     const offset = (page - 1) * limit;
-
     const marketId = req.params.marketId;
-    if (!marketId) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            "marketId is required in URL params"
-          )
-        );
-    }
 
     const winningAmounts = await WinningAmount.findAll({
       attributes: ['userId', 'userName', 'marketId'],
@@ -1994,11 +1969,6 @@ export const deleteBetAfterWin = async (req, res) => {
         );
     }
 
-    // await WinningAmount.update(
-    //   { amount: 0 },
-    //   { where: { userId, marketId, type: "win" }, transaction: t }
-    // );
-
 
 
     const profitLossAmount = await ProfitLoss.findOne({
@@ -2060,13 +2030,6 @@ export const deleteBetAfterWin = async (req, res) => {
 export const afterWinVoidMarket = async (req, res) => {
   try {
     const { marketId } = req.body;
-
-    if (!marketId) {
-      return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, "marketId is required"));
-    }
-
     const winningAmountRecords = await WinningAmount.findAll({
       where: { marketId, type: 'win' },
       attributes: ['userId'],
