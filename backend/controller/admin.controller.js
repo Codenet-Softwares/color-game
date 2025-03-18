@@ -498,6 +498,16 @@ export const afterWining = async (req, res) => {
     }
 
     const gameId = market.gameId;
+    const runner = await Runner.findOne({ where: { runnerId } });
+    if (!runner) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Runner not found")
+        );
+    }
+
+    const runnerName = runner.runnerName;
 
     if (userRole === 'subAdmin') {
       const existingResultRequest = await ResultRequest.findOne({
@@ -556,6 +566,7 @@ export const afterWining = async (req, res) => {
         marketId,
         marketName : market.marketName,
         runnerId,
+        runnerName,
         isWin,
         declaredBy,
         declaredById,
@@ -2116,44 +2127,59 @@ export const afterWinVoidMarket = async (req, res) => {
 
 export const getSubAdminHistory = async (req, res) => {
   try {
-    const adminId = req.user?.adminId;
+    const adminId = req.user?.adminId; // Get the logged-in subAdmin's ID
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
-    const whereRequest = { deletedAt: null, declaredById: adminId };
-    const whereHistory = {
-      [Op.and]: [
-        Sequelize.literal(`JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL`)
-      ]
+
+    // Define the where clause for ResultRequest
+    const whereRequest = {
+      declaredById: adminId, // Only fetch data for the logged-in subAdmin
     };
 
+    // Add status filter if provided
     if (status) {
       whereRequest.status = status;
-      whereHistory[Op.and].push({ status });
     }
 
+    // Add search filter if provided
     if (search) {
       whereRequest.marketName = { [Op.like]: `%${search}%` };
-      whereHistory[Op.and].push({ marketName: { [Op.like]: `%${search}%` } });
     }
 
-    // Fetch ResultRequest data (Pending status)
+    // Fetch ResultRequest data for the logged-in subAdmin (both deleted and non-deleted)
     const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketName", "marketId", "status"],
+      attributes: ["marketName", "marketId", "status", "runnerName", "deletedAt"],
       where: whereRequest,
-      group: ["marketId", "status"],
+      paranoid: false, // Include soft-deleted records
       raw: true,
     });
 
-    // Fetch ResultHistory data (Approved/Rejected)
-    const resultHistories = await ResultHistory.findAll({
-      attributes: ["marketName", "marketId", "type", "status", "remarks"],
-      where: whereHistory,
-      raw: true,
-    });
+    // Fetch remarks from ResultHistories for each ResultRequest
+    const combinedResults = await Promise.all(
+      resultRequests.map(async (request) => {
+        // Fetch remarks from ResultHistory for the current marketId and adminId
+        const history = await ResultHistory.findOne({
+          attributes: ["remarks"],
+          where: {
+            marketId: request.marketId,
+            [Op.and]: sequelize.literal(
+              `(JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL)`
+            ),
+          },
+          raw: true,
+        });
+        
+        
+        
 
-    // Merge and sort combined results
-    const combinedResults = [...resultRequests, ...resultHistories].sort(
-      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
+        // Set remarks based on deletedAt
+        let remarks = request.deletedAt === null ? "Pending" : history?.remarks || "";
+
+        return {
+          ...request,
+          remarks, // Add remarks to the response
+        };
+      })
     );
 
     // Pagination
@@ -2168,10 +2194,18 @@ export const getSubAdminHistory = async (req, res) => {
       totalItems,
     };
 
-    return res.status(statusCode.success).send(
-      apiResponseSuccess(paginatedData, true, statusCode.success, "Data fetched successfully!", pagination)
-    );
+    const response = {
+      data: paginatedData,
+      success: true,
+      successCode: 200,
+      panelStatusCode: 0,
+      message: "Data fetched successfully!",
+      pagination,
+    };
+
+    return res.status(statusCode.success).send(response);
   } catch (error) {
+    console.error("Error in getSubAdminHistory:", error); // Log the error for debugging
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
