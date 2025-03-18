@@ -200,12 +200,12 @@ const WinTracker = () => {
                           <td>{betTracker.marketName}</td>
                           <td>
                             <button
-                              className="btn btn-primary text-center"
+                              className="btn btn-primary text-center fw-bold text-uppercase "
                               onClick={() =>
                                 handleNavigate(betTracker.marketId)
                               }
                             >
-                              Bet History
+                              Bet stats
                             </button>
                           </td>
                         </tr>
