@@ -2170,9 +2170,8 @@ export const getSubAdminHistory = async (req, res) => {
       },
     };
 
-   
     if (status) {
-      whereRequest.status = status;
+      whereRequest.status = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
     }
 
     if (search) {
@@ -2196,8 +2195,6 @@ export const getSubAdminHistory = async (req, res) => {
       raw: true,
     });
 
-
-
     const processedHistories = resultHistories.map(history => {
       try {
         const declaredByIds = history.declaredById || [];
@@ -2207,7 +2204,7 @@ export const getSubAdminHistory = async (req, res) => {
           marketName: history.marketName,
           runnerName: runnerNames,
           declaredById: adminId, 
-          status: history.status,
+          status: history.status.charAt(0).toUpperCase() + history.status.slice(1).toLowerCase(), // Normalize status
           remarks: history.remarks, 
         };
       } catch (error) {
@@ -2219,13 +2216,19 @@ export const getSubAdminHistory = async (req, res) => {
       marketName: request.marketName,
       runnerName: request.runnerName,
       declaredById: adminId, 
-      status: request.status,
+      status: request.status.charAt(0).toUpperCase() + request.status.slice(1).toLowerCase(), 
       remarks: "Pending", 
     })).concat(processedHistories);
 
-    const totalItems = combinedResults.length;
+    let filteredResults = combinedResults;
+    if (status) {
+      const normalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+      filteredResults = combinedResults.filter(result => result.status === normalizedStatus);
+    }
+
+    const totalItems = filteredResults.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-    const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
+    const paginatedData = filteredResults.slice(offset, offset + parseInt(pageSize));
 
     const pagination = {
       page: parseInt(page),
@@ -2234,21 +2237,32 @@ export const getSubAdminHistory = async (req, res) => {
       totalItems,
     };
 
-    const response = {
-      data: paginatedData,
-      success: true,
-      successCode: 200,
-      panelStatusCode: 0,
-      message: "Data fetched successfully!",
-      pagination,
-    };
 
-    return res.status(statusCode.success).send(response);
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Data fetched successfully!",
+          pagination
+
+        )
+      );
+
   } catch (error) {
-    return res.status(statusCode.internalServerError).send(
-      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    return res
+    .status(statusCode.internalServerError)
+    .send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
     );
-  }
+}
 };
 
 
