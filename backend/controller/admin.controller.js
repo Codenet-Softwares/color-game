@@ -1948,14 +1948,17 @@ export const getDetailsWinningData = async (req, res) => {
     const offset = (page - 1) * limit;
     const marketId = req.params.marketId;
 
+    // Fetch winning bets
     const winningAmounts = await WinningAmount.findAll({
-      attributes: ["userId", "userName", "marketId"],
+      attributes: ["userId", "userName", "marketId", "type", "runnerId"],
       where: {
         marketId,
         isVoidAfterWin: false,
+        type: "win",
       },
     });
 
+    // Fetch all bets for the given market
     const betHistories = await BetHistory.findAll({
       attributes: [
         "gameId",
@@ -1963,19 +1966,24 @@ export const getDetailsWinningData = async (req, res) => {
         "marketId",
         "marketName",
         "runnerName",
+        "runnerId",
         "rate",
         "value",
         "type",
         "date",
         "matchDate",
         "placeDate",
+        "userId",
+        "userName",
       ],
       where: { marketId },
     });
 
-    const combinedData = winningAmounts.map((result) => {
+    // Combine data
+    const combinedData = winningAmounts.map((winner) => {
+      // Filter bets where runnerId matches the winning runnerId
       const relatedBets = betHistories.filter(
-        (bet) => bet.marketId === result.marketId
+        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
       );
 
       const bets = relatedBets.map((bet) => ({
@@ -1991,26 +1999,30 @@ export const getDetailsWinningData = async (req, res) => {
       const firstBet = relatedBets[0];
 
       return {
-        userId: result.userId || null,
-        userName: result.userName || null,
+        userId: winner.userId || null,
+        userName: winner.userName || null,
         gameName: firstBet?.gameName || null,
         marketId: firstBet?.marketId || null,
         marketName: firstBet?.marketName || null,
-        bets: bets,
+        runnerName: firstBet?.runnerName || null, // Show winning runner
+        bets: bets, // Show only bets for the winning runner
       };
     });
 
+    // Filter results for "Colorgame"
     const filteredData = combinedData.filter(
       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
     );
+
+    // Search functionality for userName
     const searchedData = search
       ? filteredData.filter((item) =>
           item.userName.toLowerCase().includes(search.toLowerCase())
         )
       : filteredData;
 
+    // Paginate data
     const paginatedData = searchedData.slice(offset, offset + limit);
-
     const totalItems = searchedData.length;
     const totalPages = Math.ceil(totalItems / limit);
 
@@ -2021,30 +2033,23 @@ export const getDetailsWinningData = async (req, res) => {
       totalItems,
     };
 
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          paginatedData,
-          true,
-          statusCode.success,
-          "Color-game after winning users bet-data fetched successfully",
-          pagination
-        )
-      );
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Color-game winning users' bets fetched successfully",
+        pagination
+      )
+    );
   } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
 };
+
+
 
 
 
