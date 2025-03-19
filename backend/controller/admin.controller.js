@@ -143,10 +143,19 @@ export const getSubAdmins = async (req, res) => {
     const page = parseInt(req.query.page) || 1; 
     const limit = parseInt(req.query.limit) || 10; 
     const offset = (page - 1) * limit; 
+    const search = req.query.search || ""; 
+    const whereCondition = {
+      roles: "subAdmin",
+    };
+
+    if (search) {
+      whereCondition.userName = {
+        [Op.like]: `%${search}%`, 
+      };
+    }
+
     const { count, rows: subAdmins } = await admins.findAndCountAll({
-      where: {
-        roles: 'subAdmin',
-      },
+      where: whereCondition,
       attributes: ['adminId', 'userName', 'roles', 'permissions'],
       limit: limit,
       offset: offset,
