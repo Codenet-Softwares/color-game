@@ -1182,13 +1182,23 @@ export const getBetsAfterWin = async (req, res) => {
           apiResponseSuccess([], true, statusCode.success, "Data not found!")
         );
     }
-
+    const totalBets = await Promise.all(existingUser.map(async (user) => {
+      const userBetCount = await BetHistory.count({
+        where: {
+          marketId,
+          userId: user.userId,
+        }
+      });
+      return userBetCount;
+    }));
+    
     const formatData = {
       marketId: existingUser[0].marketId,
       marketName: existingUser[0].marketName,
-      data: existingUser.map((user) => ({
+      data: existingUser.map((user, index) => ({
         userId: user.userId,
         userName: user.userName,
+        totalBets: totalBets[index],
       })),
     };
 
