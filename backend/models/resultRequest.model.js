@@ -30,6 +30,10 @@ ResultRequest.init(
       type: DataTypes.CHAR(36),
       allowNull: false,
     },
+    runnerName: { 
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     isWin: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

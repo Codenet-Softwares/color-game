@@ -136,8 +136,6 @@ export const createSubAdmin = async (req, res) => {
   }
 };
 
-
-
 export const getSubAdmins = async (req, res) => {
   try {
     const { page = 1, pageSize = 10, search = "" } = req.query;
@@ -531,6 +529,16 @@ export const afterWining = async (req, res) => {
     }
 
     const gameId = market.gameId;
+    const runner = await Runner.findOne({ where: { runnerId } });
+    if (!runner) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Runner not found")
+        );
+    }
+
+    const runnerName = runner.runnerName;
 
     if (userRole === 'subAdmin') {
       const existingResultRequest = await ResultRequest.findOne({
@@ -589,6 +597,7 @@ export const afterWining = async (req, res) => {
         marketId,
         marketName : market.marketName,
         runnerId,
+        runnerName,
         isWin,
         declaredBy,
         declaredById,
@@ -1939,14 +1948,17 @@ export const getDetailsWinningData = async (req, res) => {
     const offset = (page - 1) * limit;
     const marketId = req.params.marketId;
 
+    // Fetch winning bets
     const winningAmounts = await WinningAmount.findAll({
-      attributes: ["userId", "userName", "marketId"],
+      attributes: ["userId", "userName", "marketId", "type", "runnerId"],
       where: {
         marketId,
         isVoidAfterWin: false,
+        type: "win",
       },
     });
 
+    // Fetch all bets for the given market
     const betHistories = await BetHistory.findAll({
       attributes: [
         "gameId",
@@ -1954,19 +1966,24 @@ export const getDetailsWinningData = async (req, res) => {
         "marketId",
         "marketName",
         "runnerName",
+        "runnerId",
         "rate",
         "value",
         "type",
         "date",
         "matchDate",
         "placeDate",
+        "userId",
+        "userName",
       ],
       where: { marketId },
     });
 
-    const combinedData = winningAmounts.map((result) => {
+    // Combine data
+    const combinedData = winningAmounts.map((winner) => {
+      // Filter bets where runnerId matches the winning runnerId
       const relatedBets = betHistories.filter(
-        (bet) => bet.marketId === result.marketId
+        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
       );
 
       const bets = relatedBets.map((bet) => ({
@@ -1982,26 +1999,30 @@ export const getDetailsWinningData = async (req, res) => {
       const firstBet = relatedBets[0];
 
       return {
-        userId: result.userId || null,
-        userName: result.userName || null,
+        userId: winner.userId || null,
+        userName: winner.userName || null,
         gameName: firstBet?.gameName || null,
         marketId: firstBet?.marketId || null,
         marketName: firstBet?.marketName || null,
-        bets: bets,
+        runnerName: firstBet?.runnerName || null, // Show winning runner
+        bets: bets, // Show only bets for the winning runner
       };
     });
 
+    // Filter results for "Colorgame"
     const filteredData = combinedData.filter(
       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
     );
+
+    // Search functionality for userName
     const searchedData = search
       ? filteredData.filter((item) =>
           item.userName.toLowerCase().includes(search.toLowerCase())
         )
       : filteredData;
 
+    // Paginate data
     const paginatedData = searchedData.slice(offset, offset + limit);
-
     const totalItems = searchedData.length;
     const totalPages = Math.ceil(totalItems / limit);
 
@@ -2012,30 +2033,23 @@ export const getDetailsWinningData = async (req, res) => {
       totalItems,
     };
 
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          paginatedData,
-          true,
-          statusCode.success,
-          "Color-game after winning users bet-data fetched successfully",
-          pagination
-        )
-      );
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Color-game winning users' bets fetched successfully",
+        pagination
+      )
+    );
   } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
 };
+
+
 
 
 
@@ -2210,50 +2224,80 @@ export const afterWinVoidMarket = async (req, res) => {
 
 export const getSubAdminHistory = async (req, res) => {
   try {
-    const adminId = req.user?.adminId;
+    const adminId = req.user?.adminId; 
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
-    const whereRequest = { deletedAt: null, declaredById: adminId };
-    const whereHistory = {
-      [Op.and]: [
-        Sequelize.literal(`JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL`)
-      ]
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const whereRequest = {
+      declaredById: adminId, 
+      deletedAt: null, 
+      createdAt: {
+        [Op.gte]: sevenDaysAgo, 
+      },
     };
 
     if (status) {
-      whereRequest.status = status;
-      whereHistory[Op.and].push({ status });
+      whereRequest.status = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
     }
 
     if (search) {
       whereRequest.marketName = { [Op.like]: `%${search}%` };
-      whereHistory[Op.and].push({ marketName: { [Op.like]: `%${search}%` } });
     }
 
-    // Fetch ResultRequest data (Pending status)
     const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketName", "marketId", "status"],
+      attributes: ["marketName", "marketId", "status", "runnerName"],
       where: whereRequest,
-      group: ["marketId", "status"],
       raw: true,
     });
 
-    // Fetch ResultHistory data (Approved/Rejected)
     const resultHistories = await ResultHistory.findAll({
-      attributes: ["marketName", "marketId", "type", "status", "remarks"],
-      where: whereHistory,
+      attributes: ["marketName", "marketId", "status", "runnerNames", "remarks", "declaredById", "createdAt"],
+      where: {
+        [Op.and]: [
+          sequelize.literal(`(JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL)`),
+          { createdAt: { [Op.gte]: sevenDaysAgo } }, 
+        ],
+      },
       raw: true,
     });
 
-    // Merge and sort combined results
-    const combinedResults = [...resultRequests, ...resultHistories].sort(
-      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-    );
+    const processedHistories = resultHistories.map(history => {
+      try {
+        const declaredByIds = history.declaredById || [];
+        const runnerNames = history.runnerNames || [];
+        const adminIndex = declaredByIds.indexOf(adminId);
+        return {
+          marketName: history.marketName,
+          runnerName: runnerNames,
+          declaredById: adminId, 
+          status: history.status.charAt(0).toUpperCase() + history.status.slice(1).toLowerCase(), // Normalize status
+          remarks: history.remarks, 
+        };
+      } catch (error) {
+        return null;
+      }
+    }).filter(history => history !== null);
 
-    // Pagination
-    const totalItems = combinedResults.length;
+    const combinedResults = resultRequests.map(request => ({
+      marketName: request.marketName,
+      runnerName: request.runnerName,
+      declaredById: adminId, 
+      status: request.status.charAt(0).toUpperCase() + request.status.slice(1).toLowerCase(), 
+      remarks: "Pending", 
+    })).concat(processedHistories);
+
+    let filteredResults = combinedResults;
+    if (status) {
+      const normalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+      filteredResults = combinedResults.filter(result => result.status === normalizedStatus);
+    }
+
+    const totalItems = filteredResults.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-    const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
+    const paginatedData = filteredResults.slice(offset, offset + parseInt(pageSize));
 
     const pagination = {
       page: parseInt(page),
@@ -2262,15 +2306,41 @@ export const getSubAdminHistory = async (req, res) => {
       totalItems,
     };
 
-    return res.status(statusCode.success).send(
-      apiResponseSuccess(paginatedData, true, statusCode.success, "Data fetched successfully!", pagination)
-    );
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Data fetched successfully!",
+          pagination
+
+        )
+      );
+
   } catch (error) {
-    return res.status(statusCode.internalServerError).send(
-      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    return res
+    .status(statusCode.internalServerError)
+    .send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
     );
-  }
+}
 };
+
+
+
+
+
+
+
+
 
 
 
