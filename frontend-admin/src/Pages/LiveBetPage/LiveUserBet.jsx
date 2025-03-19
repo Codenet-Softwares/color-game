@@ -25,9 +25,9 @@ const LiveUserBet = () => {
   });
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [selectedUserBets, setSelectedUserBets] = useState(null); // Store selected user's bets
-  const [showReusableTable, setShowReusableTable] = useState(false); // State to toggle ReusableTable view
+  const [selectedUserId, setSelectedUserId] = useState(""); // State to store selected user ID
   const [selectedUsername, setSelectedUsername] = useState(""); // State to store selected username
+  const [showReusableTable, setShowReusableTable] = useState(false); // State to toggle ReusableTable view
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,18 +56,16 @@ const LiveUserBet = () => {
         debouncedSearchTerm
       );
       const bets = response.data?.data || [];
+      console.log("line for bets", bets.marketName );
 
       setUserBets((prev) => ({
         ...prev,
-        bets: response.data?.data || [],
+        bets: response.data?.data.data || [],
         totalPages: response?.data.pagination?.totalPages || 1,
         totalData: response?.data.pagination?.totalItems || 0,
       }));
-      if (bets.length > 0) {
-        setMarketName(bets[0].marketName || "Unknown Market");
-      } else {
-        setMarketName("Unknown Market");
-      }
+      setMarketName(bets.marketName || "Unknown Market");
+  
     } catch (error) {
       toast.error(customErrorHandler(error));
     } finally {
@@ -127,19 +125,33 @@ const LiveUserBet = () => {
     userBets.totalData
   );
 
-  const handleShowAllBets = (username) => {
-    const userSpecificBets = userBets.bets.filter(
-      (bet) => bet.userName === username
-    );
-    setSelectedUserBets(userSpecificBets);
+  const handleShowAllBets = (userId, username) => {
+    setSelectedUserId(userId); // Set the selected user ID
     setSelectedUsername(username); // Set the selected username
     setShowReusableTable(true); // Show ReusableTable
   };
 
   const handleBackToLiveBets = () => {
     setShowReusableTable(false); // Hide ReusableTable
-    setSelectedUserBets(null); // Clear selected user bets
+    setSelectedUserId(""); // Clear selected user ID
     setSelectedUsername(""); // Clear selected username
+  };
+
+  // Function to fetch user-specific bets for ReusableTable
+  const fetchUserSpecificBets = async (page, pageSize) => {
+    try {
+      const response = await GameService.userLiveBetGameList(
+        auth.user,
+        marketId,
+        selectedUserId, // Use selectedUserId instead of selectedUsername
+        page,
+        pageSize
+      );
+      return response.data; // Return the API response
+    } catch (error) {
+      toast.error(customErrorHandler(error));
+      return { data: [], pagination: { totalPages: 1, totalItems: 0 } }; // Return empty data on error
+    }
   };
 
   const columns = [
@@ -220,11 +232,11 @@ const LiveUserBet = () => {
 
               {/* Reusable Table */}
               <ReusableTable
-                data={selectedUserBets}
                 columns={columns}
-                itemsPerPage={userBets.totalEntries}
+                itemsPerPage={10}
                 showSearch={false}
-                paginationVisible={false}
+                paginationVisible={true}
+                fetchData={fetchUserSpecificBets} // Pass the fetch function
               />
             </>
           ) : (
@@ -310,6 +322,8 @@ const LiveUserBet = () => {
                       <tr>
                         <th>Serial Number</th>
                         <th>User Name</th>
+                        <th>Total Bets</th>
+                        {/* <th>Total Amount</th> */}
                         <th>Action</th>
                       </tr>
                     </thead>
@@ -319,10 +333,14 @@ const LiveUserBet = () => {
                           <tr key={index}>
                             <td>{startIndex + index}</td>
                             <td>{bet.userName}</td>
+                            <td>{bet.totalBets}</td>
+                            {/* <td>NDS</td> */}
                             <td>
                               <button
                                 className="btn btn-info text-uppercase fw-bold text-white"
-                                onClick={() => handleShowAllBets(bet.userName)}
+                                onClick={() =>
+                                  handleShowAllBets(bet.userId, bet.userName)
+                                }
                               >
                                 show all bets
                               </button>

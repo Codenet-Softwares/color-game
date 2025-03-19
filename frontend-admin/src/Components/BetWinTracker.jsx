@@ -25,6 +25,7 @@ const BetWinTracker = () => {
     name: "",
     totalData: 0,
   });
+  const [selectedUserId, setSelectedUserId] = useState(""); // State to store selected user ID
   const [selectedUserBets, setSelectedUserBets] = useState(null); // Store selected user's bets
   const [showReusableTable, setShowReusableTable] = useState(false); // State to toggle ReusableTable view
   const [selectedUsername, setSelectedUsername] = useState(""); // State to store selected username
@@ -61,6 +62,7 @@ const BetWinTracker = () => {
         auth.hideLoader();
       });
   };
+
   useEffect(() => {
     fetchWinBetTracker();
   }, [
@@ -143,10 +145,8 @@ const BetWinTracker = () => {
   };
 
   const handleShowAllBets = (username) => {
-    const userSpecificBets = winBetTrackerDetails.winBetTrackerDetails.filter(
-      (bet) => bet.userName === username
-    );
-    setSelectedUserBets(userSpecificBets);
+    // Set the selected user ID (to be implemented once the api is provided)
+    // setSelectedUserId(userId);
     setSelectedUsername(username); // Set the selected username
     setShowReusableTable(true); // Show ReusableTable
   };
@@ -155,6 +155,23 @@ const BetWinTracker = () => {
     setShowReusableTable(false); // Hide ReusableTable
     setSelectedUserBets(null); // Clear selected user bets
     setSelectedUsername(""); // Clear selected username
+  };
+
+  // Function to fetch user-specific bets for ReusableTable
+  const fetchUserSpecificBets = async (page, pageSize) => {
+    try {
+      const response = await GameService.getWinBetTrackerList(
+        auth.user,
+        marketId,
+        selectedUserId, // Use selectedUserId instead of selectedUsername
+        page,
+        pageSize
+      );
+      return response.data; // Return the API response
+    } catch (error) {
+      toast.error(customErrorHandler(error));
+      return { data: [], pagination: { totalPages: 1, totalItems: 0 } }; // Return empty data on error
+    }
   };
   const columns = [
     {
@@ -234,11 +251,11 @@ const BetWinTracker = () => {
 
                 {/* Reusable Table */}
                 <ReusableTable
-                  data={selectedUserBets}
                   columns={columns}
                   itemsPerPage={winBetTrackerDetails.totalEntries}
                   showSearch={false}
-                  paginationVisible={false}
+                  paginationVisible={true}
+                  fetchData={fetchUserSpecificBets} // Pass the fetch function
                 />
               </>
             ) : (
@@ -321,6 +338,8 @@ const BetWinTracker = () => {
                         <tr>
                           <th>Serial Number</th>
                           <th>User Name</th>
+                          <th>Total Bets</th>
+                          {/* <th>Total Amount</th> */}
                           <th>Action</th>
                         </tr>
                       </thead>
@@ -333,11 +352,14 @@ const BetWinTracker = () => {
                                 <tr key={index}>
                                   <td>{startIndex + index}</td>
                                   <td>{winBetTracker.userName}</td>
+                                  <td>NDS</td>
+                                  {/* <td>NDS</td> */}
                                   <td>
                                     <button
                                       className="btn btn-primary text-uppercase fw-bold text-white"
                                       onClick={() =>
                                         handleShowAllBets(
+                                          winBetTracker.userId,
                                           winBetTracker.userName
                                         )
                                       }
