@@ -1014,12 +1014,24 @@ export const liveUsersBet = async (req, res) => {
         );
     }
 
+
+    const totalBets = await Promise.all(existingUser.map(async (user) => {
+      const userBetCount = await CurrentOrder.count({
+        where: {
+          marketId,
+          userId: user.userId,
+        }
+      });
+      return userBetCount;
+    }));
+    
     const formatData = {
       marketId: existingUser[0].marketId,
       marketName: existingUser[0].marketName,
-      data: existingUser.map((user) => ({
+      data: existingUser.map((user, index) => ({
         userId: user.userId,
         userName: user.userName,
+        totalBets: totalBets[index],
       })),
     };
 
