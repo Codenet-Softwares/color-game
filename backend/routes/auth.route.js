@@ -13,7 +13,7 @@ export const authRoute = (app) => {
   // done
   app.post('/api/reset-password', resetPasswordSchema, customErrorHandler, resetPassword);
 
-  app.post('/api/subAdmin/reset-password', resetPasswordSchema, customErrorHandler, subAdminResetPassword);
+  app.post('/api/subAdmin/reset-password', resetPasswordSchema, customErrorHandler,authorize([string.Admin]), subAdminResetPassword);
 
   // done
   app.post('/api/extrernal/trash-user', trashUserSchema, customErrorHandler, trashUser);
@@ -25,4 +25,5 @@ export const authRoute = (app) => {
   app.post('/api/external-reset-password', externalResetPasswordSchema, customErrorHandler, authenticateSuperAdmin, externalResetPassword);
 
   app.post('/api/supAdmin-reset-password',validateResetPassword, customErrorHandler, authorize([string.Admin]), adminResetPassword);
+
 };

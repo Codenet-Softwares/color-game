@@ -72,12 +72,6 @@ export const adminLogin = async (req, res) => {
   const { userName, password } = req.body;
 
   try {
-    if (!userName || !password) {
-      return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, 'Username and password are required'));
-    }
-
     const existingUser = await admins.findOne({ where: { userName } });
 
     if (!existingUser) {
@@ -90,6 +84,10 @@ export const adminLogin = async (req, res) => {
       return res
         .status(statusCode.unauthorize)
         .send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized access'));
+    }
+
+    if (existingUser.roles === 'admin' && existingUser.isReset === true) {
+      await existingUser.update({ isReset: false });
     }
 
     const isPasswordValid = await bcrypt.compare(password, existingUser.password);
@@ -503,3 +501,4 @@ export const adminResetPassword = async (req, res) => {
     res.status(statusCode.internalServerError).send(apiResponseErr(error.data ?? null, false, error.responseCode ?? statusCode.internalServerError, error.errMessage ?? error.message));
   }
 };
+

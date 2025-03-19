@@ -85,6 +85,20 @@ export const createSubAdmin = async (req, res) => {
   try {
 
     const { userName, password, permissions } = req.body;
+    const existingSubAdmin = await admins.findOne({ where: { userName } });
+    if (existingSubAdmin) {
+      return res
+        .status(statusCode.conflict) 
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.conflict,
+            "Username is already exit"
+          )
+        );
+    }
+
 
     const formattedPermissions = Array.isArray(permissions) ? permissions.join(",") : "";
 
@@ -126,13 +140,26 @@ export const createSubAdmin = async (req, res) => {
 
 export const getSubAdmins = async (req, res) => {
   try {
-    const subAdmins = await admins.findAll({
+    const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 10; 
+    const offset = (page - 1) * limit; 
+    const { count, rows: subAdmins } = await admins.findAndCountAll({
       where: {
         roles: 'subAdmin',
       },
       attributes: ['adminId', 'userName', 'roles', 'permissions'],
+      limit: limit,
+      offset: offset,
     });
 
+
+    const totalPages = Math.ceil(count / limit);
+    const pagination = {
+      page: page,
+      limit: limit,
+      totalPages: totalPages,
+      totalItems: count,
+    };
     return res
       .status(statusCode.success)
       .send(
@@ -141,6 +168,7 @@ export const getSubAdmins = async (req, res) => {
           true,
           statusCode.success,
           "Sub-admins fetched successfully",
+          pagination
         )
       );
 
@@ -2127,62 +2155,74 @@ export const afterWinVoidMarket = async (req, res) => {
 
 export const getSubAdminHistory = async (req, res) => {
   try {
-    const adminId = req.user?.adminId; // Get the logged-in subAdmin's ID
+    const adminId = req.user?.adminId; 
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
 
-    // Define the where clause for ResultRequest
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
     const whereRequest = {
-      declaredById: adminId, // Only fetch data for the logged-in subAdmin
+      declaredById: adminId, 
+      deletedAt: null, 
+      createdAt: {
+        [Op.gte]: sevenDaysAgo, 
+      },
     };
 
-    // Add status filter if provided
+   
     if (status) {
       whereRequest.status = status;
     }
 
-    // Add search filter if provided
     if (search) {
       whereRequest.marketName = { [Op.like]: `%${search}%` };
     }
 
-    // Fetch ResultRequest data for the logged-in subAdmin (both deleted and non-deleted)
     const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketName", "marketId", "status", "runnerName", "deletedAt"],
+      attributes: ["marketName", "marketId", "status", "runnerName"],
       where: whereRequest,
-      paranoid: false, // Include soft-deleted records
       raw: true,
     });
 
-    // Fetch remarks from ResultHistories for each ResultRequest
-    const combinedResults = await Promise.all(
-      resultRequests.map(async (request) => {
-        // Fetch remarks from ResultHistory for the current marketId and adminId
-        const history = await ResultHistory.findOne({
-          attributes: ["remarks"],
-          where: {
-            marketId: request.marketId,
-            [Op.and]: sequelize.literal(
-              `(JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL)`
-            ),
-          },
-          raw: true,
-        });
-        
-        
-        
+    const resultHistories = await ResultHistory.findAll({
+      attributes: ["marketName", "marketId", "status", "runnerNames", "remarks", "declaredById", "createdAt"],
+      where: {
+        [Op.and]: [
+          sequelize.literal(`(JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL)`),
+          { createdAt: { [Op.gte]: sevenDaysAgo } }, 
+        ],
+      },
+      raw: true,
+    });
 
-        // Set remarks based on deletedAt
-        let remarks = request.deletedAt === null ? "Pending" : history?.remarks || "";
 
+
+    const processedHistories = resultHistories.map(history => {
+      try {
+        const declaredByIds = history.declaredById || [];
+        const runnerNames = history.runnerNames || [];
+        const adminIndex = declaredByIds.indexOf(adminId);
         return {
-          ...request,
-          remarks, // Add remarks to the response
+          marketName: history.marketName,
+          runnerName: runnerNames,
+          declaredById: adminId, 
+          status: history.status,
+          remarks: history.remarks, 
         };
-      })
-    );
+      } catch (error) {
+        return null;
+      }
+    }).filter(history => history !== null);
 
-    // Pagination
+    const combinedResults = resultRequests.map(request => ({
+      marketName: request.marketName,
+      runnerName: request.runnerName,
+      declaredById: adminId, 
+      status: request.status,
+      remarks: "Pending", 
+    })).concat(processedHistories);
+
     const totalItems = combinedResults.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
     const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
@@ -2205,12 +2245,19 @@ export const getSubAdminHistory = async (req, res) => {
 
     return res.status(statusCode.success).send(response);
   } catch (error) {
-    console.error("Error in getSubAdminHistory:", error); // Log the error for debugging
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
   }
 };
+
+
+
+
+
+
+
+
 
 
 
