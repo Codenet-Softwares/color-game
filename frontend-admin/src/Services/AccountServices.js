@@ -161,10 +161,10 @@ class AccountService {
     });
   }
 
-  viewSubAdmin(user, page, pageSize) {
+  viewSubAdmin(user, page, pageSize,search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/get-sub-admins`,
+      url: API_HOST + `/api/get-sub-admins?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
