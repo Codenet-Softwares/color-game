@@ -19,6 +19,7 @@ import Update from "../modal/Update";
 import GameMarket from "./GameMarket";
 import AccountServices from "../../Services/AccountServices";
 import { customErrorHandler } from "../../Utils/helper";
+import MarketDetailsModal from "../modal/MarketDetailsModal";
 
 const MarketPlace = () => {
   const auth = useAuth();
@@ -42,6 +43,25 @@ const MarketPlace = () => {
   const [data, setData] = useState([]);
   const [marketDeleteRes, setMarketDeleteRes] = useState("");
   const [refresh, setRefresh] = useState(false);
+
+  const [showMarketDetailsModal, setShowMarketDetailsModal] = useState(false);
+  const [showMarketName, setShowMarketName] = useState(null);
+  const [selectedMarketDetails, setSelectedMarketDetails] = useState(null);
+  const [participants, setParticipants] = useState(null);
+  const [isActive, setIsActive] = useState(false);
+  const [startTime, setStartTime] = useState(null); // State for startTime
+const [endTime, setEndTime] = useState(null); // State for endTime
+
+  const handleMarketDetailsModalOpen = (market, participants,isActive, startTime,endTime,marketName ) => {
+    console.log('line 51',market,  participants)
+    setShowMarketName(marketName)
+    setIsActive(isActive)
+    setSelectedMarketDetails(market );
+    setParticipants( participants);
+    setStartTime(startTime); 
+    setEndTime(endTime); 
+    setShowMarketDetailsModal(true);
+  };
 
   const ClearPath = () => {
     GameService.getToPathname("clearAll", auth.user, pathdata[0]?.id)
@@ -70,7 +90,6 @@ const MarketPlace = () => {
     fetchData();
   }, []);
 
-
   const handleRunnerModalOpen = (Id, participant) => {
     setShowRunnerModal(true);
     setMarketId(Id);
@@ -79,16 +98,17 @@ const MarketPlace = () => {
 
   const handleSuspensedMarket = (e, data, marketPlace) => {
     // e.preventDefault();
-    auth.showLoader(); 
+    auth.showLoader();
     GameService.suspensedMarket({ status: data }, marketPlace, auth.user)
-    
+
       .then((res) => {
         toast.success(res.data.message);
         setRefresh((prev) => !prev);
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
-      }).finally(() => {
+      })
+      .finally(() => {
         auth.hideLoader();
       });
   };
@@ -121,13 +141,12 @@ const MarketPlace = () => {
     showUpdateModal,
     refresh,
   ]);
-
+  console.log("line 7 game data", gameMarketData);
 
   let startIndex = Math.min((currentPage - 1) * totalEntries + 1);
   let endIndex = Math.min(currentPage * totalEntries, totalData);
 
   const handlePageChange = (page) => {
-
     setCurrentPage(page);
     //  setIsLoading(false);
   };
@@ -138,7 +157,7 @@ const MarketPlace = () => {
   };
 
   const handleDelete = (e, marketId) => {
-    auth.showLoader(); 
+    auth.showLoader();
     e.preventDefault();
     const flag = true;
 
@@ -152,13 +171,14 @@ const MarketPlace = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
-      }).finally(() => {
+      })
+      .finally(() => {
         auth.hideLoader();
       });
   };
 
   const handleVoidMarket = (e, marketId) => {
-    auth.showLoader(); 
+    auth.showLoader();
     e.preventDefault();
     const flag = true;
 
@@ -173,7 +193,8 @@ const MarketPlace = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
-      }).finally(() => {
+      })
+      .finally(() => {
         auth.hideLoader();
       });
   };
@@ -260,7 +281,7 @@ const MarketPlace = () => {
                     <div className="main_board_card">
                       <div className="main-title">
                         <h4 className="m-0 text-center text-decoration-underline fw-bold mb-3">
-                           {pathdata[0]?.name} 
+                          {pathdata[0]?.name}
                         </h4>
                       </div>
                       {gameMarketData.length > 0 ? (
@@ -285,10 +306,11 @@ const MarketPlace = () => {
 
                                     <div className="col-md-4">
                                       <span
-                                        className={`status-text fw-bold fs-5 position-relative ${market.isActive
-                                          ? "text-success"
-                                          : "text-danger"
-                                          }`}
+                                        className={`status-text fw-bold fs-5 position-relative ${
+                                          market.isActive
+                                            ? "text-success"
+                                            : "text-danger"
+                                        }`}
                                         style={{ top: "1px", right: "10px" }}
                                       >
                                         {market.isActive
@@ -353,19 +375,29 @@ const MarketPlace = () => {
                                                   <a
                                                     className="dropdown-item"
                                                     onClick={(e) =>
-                                                      handleSuspensedMarket(e, false, market.marketId)
+                                                      handleSuspensedMarket(
+                                                        e,
+                                                        false,
+                                                        market.marketId
+                                                      )
                                                     }
                                                   >
-                                                    <i className="fa-solid fa-lock"></i> Suspensed
+                                                    <i className="fa-solid fa-lock"></i>{" "}
+                                                    Suspensed
                                                   </a>
                                                 ) : (
                                                   <>
                                                     <a
                                                       className="dropdown-item"
                                                       href="#"
-                                                      onClick={() => handleShowUpdateModal(gameMarketData[index])}
+                                                      onClick={() =>
+                                                        handleShowUpdateModal(
+                                                          gameMarketData[index]
+                                                        )
+                                                      }
                                                     >
-                                                      <i className="fas fa-edit"></i> Edit
+                                                      <i className="fas fa-edit"></i>{" "}
+                                                      Edit
                                                     </a>
                                                     <a
                                                       className="dropdown-item"
@@ -405,6 +437,24 @@ const MarketPlace = () => {
                                                 >
                                                   <i className="fas fa-edit"></i>{" "}
                                                   Void
+                                                </a>
+
+                                                <a
+                                                  className="dropdown-item"
+                                                  href="#"
+                                                  onClick={() =>
+                                                    handleMarketDetailsModalOpen(
+                                                      market.marketId,
+                                                      market.participants,
+                                                      market.isActive,
+                                                      market.startTime,
+                                                      market.endTime,
+                                                      market.marketName
+                                                    )
+                                                  }
+                                                >
+                                                  <i className="ti-eye"></i>{" "}
+                                                  View Market Details
                                                 </a>
                                               </>
                                             )}
@@ -457,7 +507,16 @@ const MarketPlace = () => {
         data={data}
         Update={"Market"}
       />
-
+      <MarketDetailsModal
+        show={showMarketDetailsModal}
+        setShow={setShowMarketDetailsModal}
+        marketDetails={selectedMarketDetails}
+        participants = {participants}
+        isActive = {isActive}
+        startTime={startTime}
+        endTime={endTime}
+        marketName = {showMarketName}
+      />
       <RunnerModal
         show={showRunnerModal}
         setShow={setShowRunnerModal}

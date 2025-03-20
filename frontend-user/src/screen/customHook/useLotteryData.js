@@ -107,6 +107,9 @@ const useLotteryData = (MarketId) => {
 
     eventSource.onerror = () => {
       console.error("SSE connection lost. Trying to reconnect...");
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 5000);
     };
 
     return () => {
