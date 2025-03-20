@@ -12,12 +12,14 @@ import SubAdminResetPassword from "./SubAdminResetPassword/SubAdminResetPassword
 const ViewSubAdmin = () => {
   const [viewSubadmin, setViewSubadmin] = useState({
     ...getViewSubadmin(),
-    totalEntries: 10, 
+    totalEntries: 10,
   });
-    const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const handleOpenModal = () => {
+  const [selectedSubadmin, setSelectedSubadmin] = useState(null);
+  const handleOpenModal = (name) => {
     setShowModal(true);
+    setSelectedSubadmin(name);
   };
 
   const handleCloseModal = () => {
@@ -213,7 +215,7 @@ const ViewSubAdmin = () => {
                   {viewSubadmin?.data?.length > 0 ? (
                     viewSubadmin?.data?.map((subadmin, index) => (
                       <tr key={index}>
-                        <td className="fw-bold">{startIndex+index}</td>
+                        <td className="fw-bold">{startIndex + index}</td>
                         <td
                           className="fw-bold text-start"
                           style={{ color: "#DC686E" }}
@@ -247,20 +249,21 @@ const ViewSubAdmin = () => {
                             data-bs-toggle="tooltip"
                             data-bs-placement="bottom"
                             title="Reset Password"
-                            onClick={handleOpenModal}
+                            onClick={() => handleOpenModal(subadmin?.userName)}
                           >
                             <FaKey />
                           </button>
                         </td>
                         <Modal
-
                           show={showModal}
                           handleClose={handleCloseModal}
                           title="Reset Sub-Admin Password"
                           body={
-                            <SubAdminResetPassword/>
+                            <SubAdminResetPassword
+                              handleClose={handleCloseModal}
+                              userName={selectedSubadmin}
+                            />
                           }
-                       
                         />
                       </tr>
                     ))

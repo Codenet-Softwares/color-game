@@ -3,7 +3,7 @@ import { useAuth } from "../../Utils/Auth";
 import AccountServices from "../../Services/AccountServices";
 import { FaEye, FaEyeSlash, FaRegUserCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
-const SubAdminResetPassword = () => {
+const SubAdminResetPassword = ({ handleClose, userName }) => {
   const auth = useAuth();
 
   const [newPassword, setNewPassword] = useState("");
@@ -13,7 +13,7 @@ const SubAdminResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const validateForm = () => {
     let validationErrors = {};
 
@@ -37,20 +37,22 @@ const SubAdminResetPassword = () => {
     setErrors(validationErrors);
     return Object.keys(validationErrors).length === 0;
   };
+  const handleReset = () => {
+    setOldPassword("");
+    setNewPassword("");
+  };
   const handleResetPassword = async () => {
     if (!validateForm()) return;
     const data = {
-      userName: auth.user.userName,
+      userName: userName,
       oldPassword: oldPassword,
       newPassword: newPassword,
     };
     try {
       const response = await AccountServices.ResetPassword(data, auth.user);
+      handleReset();
+      handleClose();
       toast.success("Password reset successful");
-      auth.logout();
-      toast.info(
-        "You have been logged out for security reasons. Please log in again."
-      );
     } catch (error) {
       toast.error("Failed to reset password. Please try again.");
     }
