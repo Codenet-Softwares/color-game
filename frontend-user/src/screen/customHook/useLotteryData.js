@@ -77,7 +77,9 @@ const useLotteryData = (MarketId) => {
 
   // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
   useEffect(() => {
-    const eventSource = new EventSource("https://lottery.server.dummydoma.in/lottery-events");
+    const eventSource = new EventSource(
+      "https://lottery.server.dummydoma.in/lottery-events"
+    );
     eventSource.onmessage = function (event) {
       try {
         const updates = JSON.parse(event.data);
@@ -105,9 +107,6 @@ const useLotteryData = (MarketId) => {
 
     eventSource.onerror = () => {
       console.error("SSE connection lost. Trying to reconnect...");
-      setTimeout(() => {
-        window.location.reload();
-      }, 5000);
     };
 
     return () => {

@@ -153,7 +153,6 @@ function AppDrawer({
                       to={`/lottoPurchase/${market.marketId}`}
                       onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
                     >
-                      
                       {market.marketName}
                     </Link>
                   </li>
@@ -171,7 +170,7 @@ function AppDrawer({
               ) : (
                 <>
                   <li
-                    className={toggleStates[index] ? "subMenuHead" : "MenuHead"} 
+                    className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
                     onClick={() => handleToggle(index)}
                   >
                     <Link>{gameObj?.gameName}</Link>
@@ -234,7 +233,7 @@ function AppDrawer({
             style={{
               overflowY: "auto",
 
-              height: "calc(100vh - 150px)",
+              height: "calc(100vh - 40px)",
             }}
           >
             <div className="col-md-12">{showCarousel && <InnerCarousel />}</div>
