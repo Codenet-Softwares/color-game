@@ -11,7 +11,7 @@ const SubAdminView = () => {
   const auth = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState(""); 
+  const [statusFilter, setStatusFilter] = useState(""); // Added state for status filter
   const [subAdminHistory, setSubAdminHistory] = useState({
     subAdminHistory: [],
     currentPage: 1,
@@ -20,13 +20,24 @@ const SubAdminView = () => {
     name: "",
     totalData: 0,
   });
+  const toggleAccordion = (index, status) => {
+    if (status === "Pending") {
+      toast.warning("Your submission is not yet approved.");
+      return;
+    }
+    setSubAdminHistory((prevState) => ({
+      ...prevState,
+      openRowIndex: prevState?.openRowIndex === index ? null : index,
+    }));
+  };
 
   const fetchSubAdminHistory = () => {
     GameService.getSubAdminHistory(
       auth.user,
       subAdminHistory.currentPage,
       subAdminHistory.totalEntries,
-      debouncedSearchTerm
+      debouncedSearchTerm,
+      statusFilter
     )
       .then((res) => {
         setSubAdminHistory((prev) => ({
@@ -57,6 +68,7 @@ const SubAdminView = () => {
     subAdminHistory.currentPage,
     subAdminHistory.totalEntries,
     debouncedSearchTerm,
+    statusFilter,
   ]);
 
   const handleClearSearch = () => {
@@ -71,17 +83,10 @@ const SubAdminView = () => {
     setStatusFilter(event.target.value);
   };
 
-  let filteredSubAdminHistory = subAdminHistory.subAdminHistory;
-
-  // **Apply Status Filter**
-  if (statusFilter) {
-    filteredSubAdminHistory = filteredSubAdminHistory.filter(
-      (item) => item.status.toLowerCase() === statusFilter.toLowerCase()
-    );
-  }
-
   let startIndex = Math.min(
-    (Number(subAdminHistory.currentPage) - 1) * Number(subAdminHistory.totalEntries) + 1,
+    (Number(subAdminHistory.currentPage) - 1) *
+      Number(subAdminHistory.totalEntries) +
+      1,
     Number(subAdminHistory.totalData)
   );
 
@@ -103,7 +108,10 @@ const SubAdminView = () => {
               background: "#3E5879",
             }}
           >
-            <h3 className="mb-0 fw-bold text-uppercase" style={{ flexGrow: 1, textAlign: "center" }}>
+            <h3
+              className="mb-0 fw-bold text-uppercase"
+              style={{ flexGrow: 1, textAlign: "center" }}
+            >
               Sub-Admin History
             </h3>
           </div>
@@ -112,7 +120,10 @@ const SubAdminView = () => {
             {/* Search and Entries Selection */}
             <div className="row mb-4">
               <div className="col-md-6 position-relative">
-                <div className="d-flex align-items-center" style={{ position: "relative" }}>
+                <div
+                  className="d-flex align-items-center"
+                  style={{ position: "relative" }}
+                >
                   {/* Search Icon */}
                   <FaSearch
                     style={{
@@ -129,7 +140,7 @@ const SubAdminView = () => {
                   <input
                     type="text"
                     className="form-control fw-bold"
-                    placeholder="Search By User Or Market Name..."
+                    placeholder="Search By Market Name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
@@ -157,7 +168,7 @@ const SubAdminView = () => {
                     />
                   )}
 
-                  {/* Dropdown beside search bar */}
+                  {/* Dropdown for status selection */}
                   <select
                     className="form-select ms-3 fw-bold"
                     style={{
@@ -165,8 +176,8 @@ const SubAdminView = () => {
                       borderRadius: "30px",
                       border: "2px solid #3E5879",
                     }}
-                    value={statusFilter} 
-                    onChange={handleStatusChange} 
+                    value={statusFilter}
+                    onChange={handleStatusChange}
                   >
                     <option value="">Select Status</option>
                     <option value="Approved">Approved</option>
@@ -220,27 +231,96 @@ const SubAdminView = () => {
                     <tr>
                       <th>Serial No.</th>
                       <th>Market Name</th>
-                      {/* <th>Type</th> */}
                       <th>Status</th>
-                      <th>Remark</th>
-                      
+                      {/* <th>Remark</th> */}
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredSubAdminHistory.length > 0 ? (
-                      filteredSubAdminHistory.map((subHistory, index) => (
-                        <tr key={index}>
-                          <td>{startIndex + index}</td>
-                          <td>{subHistory.marketName}</td>
-                          {/* <td>{subHistory.type}</td> */}
-                          <td>{subHistory.status}</td>
-                          <td>{subHistory.remarks}</td>
-                        </tr>
-                      ))
+                    {subAdminHistory.subAdminHistory?.length > 0 ? (
+                      subAdminHistory.subAdminHistory.map(
+                        (subHistory, index) => (
+                          <React.Fragment key={index}>
+                            <tr>
+                              <td>{startIndex + index}</td>
+                              <td>{subHistory.marketName}</td>
+                              <td>{subHistory.status}</td>
+                              {/* <td>{subHistory.remarks}</td> */}
+                              <td>
+                                <button
+                                  className={`btn fw-bold ${
+                                    subHistory.status === "Pending"
+                                      ? "btn-danger opacity-50"
+                                      : "btn-primary"
+                                  }`}
+                                  onClick={() =>
+                                    toggleAccordion(index, subHistory.status)
+                                  }
+                                >
+                                  {subAdminHistory.openRowIndex === index
+                                    ? "Hide Details"
+                                    : "View Details"}
+                                </button>
+                              </td>
+                            </tr>
+                            {subAdminHistory.openRowIndex === index && (
+                              <tr>
+                                <td colSpan="5">
+                                  <div key={index} className="accordion-body">
+                                    {/* <h5 className="fw-bold">{subHistory.marketName}</h5>  */}
+                                    <table className="table table-bordered">
+                                      <thead className="table-secondary">
+                                        <tr>
+                                          <th>Runner Name</th>
+                                          <th>Remark</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {subHistory.runnerName?.length === 2 ? (
+                                          <tr>
+                                            <td>
+                                              {subHistory.runnerName.join(", ")}
+                                            </td>
+                                            <td>{subHistory.remarks}</td>
+                                          </tr>
+                                        ) : Array.isArray(
+                                            subHistory.runnerName
+                                          ) &&
+                                          subHistory.runnerName.length > 0 ? (
+                                          subHistory.runnerName.map(
+                                            (runner, runnerIndex) => (
+                                              <tr key={runnerIndex}>
+                                                <td>{runner}</td>
+                                                <td>{subHistory.remarks}</td>
+                                              </tr>
+                                            )
+                                          )
+                                        ) : (
+                                          <tr>
+                                            <td
+                                              colSpan="2"
+                                              className="text-danger fw-bold"
+                                            >
+                                              No Runners Available
+                                            </td>
+                                          </tr>
+                                        )}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </td>
+                              </tr>
+                            )}
+                          </React.Fragment>
+                        )
+                      )
                     ) : (
                       <tr>
-                        <td colSpan="4" className="text-center text-danger fw-bold">
-                          No Data Found for Selected Status
+                        <td
+                          colSpan="5"
+                          className="text-center text-danger fw-bold"
+                        >
+                          No Data Found
                         </td>
                       </tr>
                     )}
@@ -249,16 +329,14 @@ const SubAdminView = () => {
               </div>
             </SingleCard>
 
-            {filteredSubAdminHistory.filteredSubAdminHistory?.length > 0 && (
-              <Pagination
-                currentPage={subAdminHistory.currentPage}
-                totalPages={subAdminHistory.totalPages}
-                handlePageChange={handlePageChange}
-                startIndex={startIndex}
-                endIndex={endIndex}
-                totalData={subAdminHistory.totalData}
-              />
-            )}
+            <Pagination
+              currentPage={subAdminHistory.currentPage}
+              totalPages={subAdminHistory.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={subAdminHistory.totalData}
+            />
           </div>
         </div>
       </div>

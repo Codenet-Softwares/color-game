@@ -580,10 +580,10 @@ class GameService {
     });
   }
 
-  getSubAdminHistory(user, page, pageSize,search) {
+  getSubAdminHistory(user, page, pageSize,search,status) {
     return axios({
       method: "GET",
-      url: `${API_HOST}/api/subAdmin/get-subAdmin-history?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url: `${API_HOST}/api/subAdmin/get-subAdmin-history?page=${page}&pageSize=${pageSize}&search=${search}&status=${status || ""}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

@@ -2219,97 +2219,82 @@ export const afterWinVoidMarket = async (req, res) => {
 
 export const getSubAdminHistory = async (req, res) => {
   try {
-    const adminId = req.user?.adminId; // Ensure adminId is extracted correctly
-    const { status, page = 1, pageSize = 10, search } = req.query;
-    const offset = (page - 1) * pageSize;
+    const adminId = req.user?.adminId;
+    const page = parseInt(req.query.page, 10) || 1; 
+    const limit = parseInt(req.query.limit, 10) || 10; 
+    const status = req.query.status; 
+    const offset = (page - 1) * limit;
 
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const whereRequest = {
-      declaredById: adminId, // Filter by adminId //
-      createdAt: {
-        [Op.gte]: sevenDaysAgo, // Filter records created in the last 7 days
-      },
-    };
+    let baseQuery = `
+      SELECT 
+        marketName, 
+        marketId, 
+        runnerName, 
+        declaredBy, 
+        status, 
+        type, 
+        remarks, 
+        deletedAt 
+      FROM ResultRequests 
+      WHERE declaredById = :adminId
+      AND createdAt >= :sevenDaysAgo
+    `;
 
     if (status) {
-      whereRequest.status = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+      baseQuery += ` AND status = :status`;
     }
 
-    if (search) {
-      whereRequest.marketName = { [Op.like]: `%${search}%` };
-    }
+    baseQuery += ` LIMIT :limit OFFSET :offset`;
 
-    const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketName", "marketId", "status", "runnerName", "declaredBy", "type", "remarks"],
-      where: whereRequest,
-      raw: true,
+    const resultRequests = await sequelize.query(baseQuery, {
+      replacements: { adminId, status, limit, offset, sevenDaysAgo },
+      type: sequelize.QueryTypes.SELECT,
     });
 
-    // Add remarks based on status and type
-    const processedRequests = resultRequests.map(request => {
-      let remarks = request.remarks || "";
+    let countQuery = `
+      SELECT COUNT(*) as count 
+      FROM ResultRequests 
+      WHERE declaredById = :adminId
+      AND createdAt >= :sevenDaysAgo
+    `;
 
-      if (request.status === 'Pending') {
-        remarks = "Your data is pending.";
-      } else if (request.status === 'Approved') {
-        remarks = "Congratulations! Your result has been approved.";
-      } else if (request.status === 'Rejected') {
-        remarks = request.type === 'Matched'
-          ? "Your result has been rejected. Kindly reach out to your upline for further guidance."
-          : "Oops! Your submission does not match our records. Please check the data and try again.";
-      }
-
-      return {
-        marketName: request.marketName,
-        runnerName: request.runnerName,
-        declaredBy: request.declaredBy,
-        status: request.status,
-        type: request.type,
-        remarks: remarks,
-      };
-    });
-
-    let filteredResults = processedRequests;
     if (status) {
-      const normalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-      filteredResults = processedRequests.filter(result => result.status === normalizedStatus);
+      countQuery += ` AND status = :status`;
     }
 
-    const totalItems = filteredResults.length;
-    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-    const paginatedData = filteredResults.slice(offset, offset + parseInt(pageSize));
+    const totalCount = await sequelize.query(countQuery, {
+      replacements: { adminId, status, sevenDaysAgo },
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    const totalPages = Math.ceil(totalCount[0].count / limit);
+
 
     const pagination = {
-      page: parseInt(page),
-      limit: parseInt(pageSize),
-      totalPages,
-      totalItems,
+      page: page,
+      limit: limit,
+      totalPages: totalPages,
+      totalLimits: totalCount[0].count,
+      
+      
     };
 
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          paginatedData,
-          true,
-          statusCode.success,
-          "Data fetched successfully!",
-          pagination
-        )
-      );
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(
+        resultRequests,
+        true,
+        statusCode.success,
+        "Data fetched successfully!",
+        pagination
+      )
+    );
   } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
 };
 
