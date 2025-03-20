@@ -1000,52 +1000,59 @@ export const liveUsersBet = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
 
-    const whereCondition = { marketId };
+    const where_clause = {
+      marketId: marketId,
+    };
 
     if (search) {
-      whereCondition.userName = { [Op.like]: `%${search}%` };
+      where_clause[Op.or] = [
+        { userName: { [Op.like]: `%${search}%` } },
+        { marketName: { [Op.like]: `%${search}%` } },
+        { runnerName: { [Op.like]: `%${search}%` } },
+      ];
     }
 
-    const { count, rows: existingUser } = await CurrentOrder.findAndCountAll({
-      attributes: ["marketId", "marketName", "userId", "userName"],
-      where: whereCondition,
-      group: ["marketId", "marketName", "userId", "userName"],
-      limit: parseInt(pageSize),
-      offset,
+    const existingBets = await CurrentOrder.findAll({
+      where: where_clause,
       order: [["date", "DESC"]],
     });
 
-    if (!existingUser || existingUser.length == 0) {
-      res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "Data not found!")
-        );
+    const uniqueUsers = [];
+
+    for (const bet of existingBets) {
+      const exists = uniqueUsers.find((user) => user.userId === bet.userId);
+      if (!exists) {
+        uniqueUsers.push({
+          marketId: bet.marketId,
+          marketName: bet.marketName,
+          userId: bet.userId,
+          userName: bet.userName,
+          bets: [],
+        });
+      }
     }
 
-
-    const totalBets = await Promise.all(existingUser.map(async (user) => {
-      const userBetCount = await CurrentOrder.count({
-        where: {
-          marketId,
-          userId: user.userId,
-        }
-      });
-      return userBetCount;
-    }));
-    
-    const formatData = {
-      marketId: existingUser[0].marketId,
-      marketName: existingUser[0].marketName,
-      data: existingUser.map((user, index) => ({
-        userId: user.userId,
-        userName: user.userName,
-        totalBets: totalBets[index],
-      })),
-    };
-
-    const totalItems = count.length;
+    for (const bet of existingBets) {
+      const user = uniqueUsers.find((user) => user.userId === bet.userId);
+      if (user) {
+        user.bets.push({
+          betId: bet.betId,
+          runnerId: bet.runnerId,
+          runnerName: bet.runnerName,
+          rate: bet.rate,
+          value: bet.value,
+          type: bet.type,
+          bidAmount: bet.bidAmount,
+          date: bet.date,
+        });
+      }
+    }
+    const totalItems = existingBets.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize, 10));
+    const paginatedData = uniqueUsers.slice(
+      offset,
+      offset + parseInt(pageSize, 10)
+    );
 
     const pagination = {
       page: parseInt(page),
@@ -1058,10 +1065,10 @@ export const liveUsersBet = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          formatData,
+          paginatedData,
           true,
           statusCode.success,
-          "Data fatch successfully!",
+          "Success",
           pagination
         )
       );
@@ -1170,49 +1177,59 @@ export const getBetsAfterWin = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
 
-    const whereCondition = { marketId };
-
-        if (search) {
-          whereCondition.userName ={ [Op.like]: `%${search}%` };
-        }
-
-    const { count, rows: existingUser } = await BetHistory.findAndCountAll({
-      attributes: ["marketId", "marketName", "userId", "userName"],
-      where: whereCondition,
-      group: ["marketId", "marketName", "userId", "userName"],
-      limit: parseInt(pageSize),
-      offset,
-    });
-
-    if (!existingUser || existingUser.length == 0) {
-      res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "Data not found!")
-        );
-    }
-    const totalBets = await Promise.all(existingUser.map(async (user) => {
-      const userBetCount = await BetHistory.count({
-        where: {
-          marketId,
-          userId: user.userId,
-        }
-      });
-      return userBetCount;
-    }));
-    
-    const formatData = {
-      marketId: existingUser[0].marketId,
-      marketName: existingUser[0].marketName,
-      data: existingUser.map((user, index) => ({
-        userId: user.userId,
-        userName: user.userName,
-        totalBets: totalBets[index],
-      })),
+    const where_clause = {
+      marketId: marketId,
     };
 
-    const totalItems = count.length;
+    if (search) {
+      where_clause[Op.or] = [
+        { userName: { [Op.like]: `%${search}%` } },
+        { marketName: { [Op.like]: `%${search}%` } },
+        { runnerName: { [Op.like]: `%${search}%` } },
+      ];
+    }
+
+    const existingBets = await BetHistory.findAll({
+      where: where_clause,
+      order: [["date", "DESC"]],
+    });
+
+    const uniqueUsers = [];
+
+    for (const bet of existingBets) {
+      const exists = uniqueUsers.find((user) => user.userId === bet.userId);
+      if (!exists) {
+        uniqueUsers.push({
+          marketId: bet.marketId,
+          marketName: bet.marketName,
+          userId: bet.userId,
+          userName: bet.userName,
+          bets: [],
+        });
+      }
+    }
+
+    for (const bet of existingBets) {
+      const user = uniqueUsers.find((user) => user.userId === bet.userId);
+      if (user) {
+        user.bets.push({
+          betId: bet.betId,
+          runnerId: bet.runnerId,
+          runnerName: bet.runnerName,
+          rate: bet.rate,
+          value: bet.value,
+          type: bet.type,
+          bidAmount: bet.bidAmount,
+          date: bet.date,
+        });
+      }
+    }
+    const totalItems = existingBets.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize, 10));
+    const paginatedData = uniqueUsers.slice(
+      offset,
+      offset + parseInt(pageSize, 10)
+    );
 
     const pagination = {
       page: parseInt(page),
@@ -1225,10 +1242,10 @@ export const getBetsAfterWin = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          formatData,
+          paginatedData,
           true,
           statusCode.success,
-          "Data fetch successfully! ",
+          "Success",
           pagination
         )
       );
@@ -1935,6 +1952,116 @@ export const winningData = async (req, res) => {
   }
 };
 
+// export const getDetailsWinningData = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const search = req.query.search || "";
+//     const offset = (page - 1) * limit;
+//     const marketId = req.params.marketId;
+
+//     // Fetch winning bets
+//     const winningAmounts = await WinningAmount.findAll({
+//       attributes: ["userId", "userName", "marketId", "type", "runnerId"],
+//       where: {
+//         marketId,
+//         isVoidAfterWin: false,
+//         type: "win",
+//       },
+//     });
+
+//     // Fetch all bets for the given market
+//     const betHistories = await BetHistory.findAll({
+//       attributes: [
+//         "gameId",
+//         "gameName",
+//         "marketId",
+//         "marketName",
+//         "runnerName",
+//         "runnerId",
+//         "rate",
+//         "value",
+//         "type",
+//         "date",
+//         "matchDate",
+//         "placeDate",
+//         "userId",
+//         "userName",
+//       ],
+//       where: { marketId },
+//     });
+
+//     // Combine data
+//     const combinedData = winningAmounts.map((winner) => {
+//       // Filter bets where runnerId matches the winning runnerId
+//       const relatedBets = betHistories.filter(
+//         (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
+//       );
+
+//       const bets = relatedBets.map((bet) => ({
+//         runnerName: bet.runnerName || null,
+//         rate: bet.rate?.toString() || null,
+//         value: bet.value?.toString() || null,
+//         type: bet.type || null,
+//         date: bet.date || null,
+//         matchDate: bet.matchDate || null,
+//         placeDate: bet.placeDate || null,
+//       }));
+
+//       const firstBet = relatedBets[0];
+
+//       return {
+//         userId: winner.userId || null,
+//         userName: winner.userName || null,
+//         gameName: firstBet?.gameName || null,
+//         marketId: firstBet?.marketId || null,
+//         marketName: firstBet?.marketName || null,
+//         runnerName: firstBet?.runnerName || null, // Show winning runner
+//         bets: bets, // Show only bets for the winning runner
+//       };
+//     });
+
+//     // Filter results for "Colorgame"
+//     const filteredData = combinedData.filter(
+//       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
+//     );
+
+//     // Search functionality for userName
+//     const searchedData = search
+//       ? filteredData.filter((item) =>
+//           item.userName.toLowerCase().includes(search.toLowerCase())
+//         )
+//       : filteredData;
+
+//     // Paginate data
+//     const paginatedData = searchedData.slice(offset, offset + limit);
+//     const totalItems = searchedData.length;
+//     const totalPages = Math.ceil(totalItems / limit);
+
+//     const pagination = {
+//       page,
+//       limit,
+//       totalPages,
+//       totalItems,
+//     };
+
+//     return res.status(statusCode.success).send(
+//       apiResponseSuccess(
+//         paginatedData,
+//         true,
+//         statusCode.success,
+//         "Color-game winning users' bets fetched successfully",
+//         pagination
+//       )
+//     );
+//   } catch (error) {
+//     return res.status(statusCode.internalServerError).send(
+//       apiResponseErr(null, false, statusCode.internalServerError, error.message)
+//     );
+//   }
+// };
+
+
 export const getDetailsWinningData = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -1943,7 +2070,6 @@ export const getDetailsWinningData = async (req, res) => {
     const offset = (page - 1) * limit;
     const marketId = req.params.marketId;
 
-    // Fetch winning bets
     const winningAmounts = await WinningAmount.findAll({
       attributes: ["userId", "userName", "marketId", "type", "runnerId"],
       where: {
@@ -1953,7 +2079,6 @@ export const getDetailsWinningData = async (req, res) => {
       },
     });
 
-    // Fetch all bets for the given market
     const betHistories = await BetHistory.findAll({
       attributes: [
         "gameId",
@@ -1974,49 +2099,32 @@ export const getDetailsWinningData = async (req, res) => {
       where: { marketId },
     });
 
-    // Combine data
-    const combinedData = winningAmounts.map((winner) => {
-      // Filter bets where runnerId matches the winning runnerId
-      const relatedBets = betHistories.filter(
-        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
-      );
+const combinedData = winningAmounts.map((winner) => {
+  const relatedBets = betHistories.filter(
+    (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
+  );
 
-      const bets = relatedBets.map((bet) => ({
-        runnerName: bet.runnerName || null,
-        rate: bet.rate?.toString() || null,
-        value: bet.value?.toString() || null,
-        type: bet.type || null,
-        date: bet.date || null,
-        matchDate: bet.matchDate || null,
-        placeDate: bet.placeDate || null,
-      }));
+  const firstBet = relatedBets[0];
 
-      const firstBet = relatedBets[0];
+  return {
+    userId: winner.userId || null,
+    userName: winner.userName || null,
+    marketId: firstBet?.marketId || null,
+    marketName: firstBet?.marketName || null,
+    gameName: firstBet?.gameName || null,
+  };
+});
 
-      return {
-        userId: winner.userId || null,
-        userName: winner.userName || null,
-        gameName: firstBet?.gameName || null,
-        marketId: firstBet?.marketId || null,
-        marketName: firstBet?.marketName || null,
-        runnerName: firstBet?.runnerName || null, // Show winning runner
-        bets: bets, // Show only bets for the winning runner
-      };
-    });
-
-    // Filter results for "Colorgame"
     const filteredData = combinedData.filter(
       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
     );
 
-    // Search functionality for userName
     const searchedData = search
       ? filteredData.filter((item) =>
           item.userName.toLowerCase().includes(search.toLowerCase())
         )
       : filteredData;
 
-    // Paginate data
     const paginatedData = searchedData.slice(offset, offset + limit);
     const totalItems = searchedData.length;
     const totalPages = Math.ceil(totalItems / limit);
@@ -2043,10 +2151,6 @@ export const getDetailsWinningData = async (req, res) => {
     );
   }
 };
-
-
-
-
 
 export const deleteBetAfterWin = async (req, res) => {
   const t = await sequelize.transaction();
@@ -2298,83 +2402,6 @@ export const getSubAdminHistory = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-
-// export const getSubadminResult = async (req, res) => {
-//   try {
-//     const { page = 1 , pageSize = 10 } = req.query;
-//     const offset = (page - 1) * pageSize;
-
-//     const adminId = req.user?.adminId;
-//     const { marketId } = req.params;
-
-//     const results = await WinResultRequest.findAll({
-//       attributes: [
-//         "ticketNumber",
-//         "prizeCategory",
-//         "prizeAmount",
-//         "complementaryPrize",
-//         "marketName",
-//         "marketId",
-//         "createdAt",
-//         "updatedAt"
-//       ],
-//       where: { adminId, marketId, status : 'Approve' },
-//       group: [
-//         "ticketNumber",
-//         "prizeCategory",
-//         "prizeAmount",
-//         "complementaryPrize",
-//         "marketName",
-//         "marketId",
-//         "createdAt",
-//         "updatedAt"
-//       ],
-//       raw: true,
-//     });
-
-//     if (results.length === 0) {
-//       return apiResponseSuccess(
-//         [],
-//         true,
-//         statusCode.success,
-//         `No lottery results found.`,
-//         res
-//       );
-//     }
-
-
-//     const totalItems = results.length;
-//     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-//     const paginatedData = results.slice(offset, offset + parseInt(pageSize));
-
-//     const pagination = {
-//       page: parseInt(page),
-//       limit: parseInt(pageSize),
-//       totalPages,
-//       totalItems,
-//     };
-
-//     return apiResponsePagination(paginatedData, true, statusCode.success, 'Lottery results fetched successfully.',pagination, res);
-//   } catch (error) {
-//     return apiResponseErr(
-//       null,
-//       false,
-//       statusCode.internalServerError,
-//       error.message,
-//       res
-//     );
-//   }
-// };
-
 export const getSubadminResult = async (req, res) => {
   try {
     const adminId = req.user?.adminId;
@@ -2460,155 +2487,109 @@ export const getSubadminResult = async (req, res) => {
   }
 };
 
-export const liveUsersBetHistory = async (req, res) => {
+
+export const getDetailsWinningBet = async(req,res) => {
   try {
-    const { marketId, userId } = req.params;
-    const { page = 1, pageSize = 10, search } = req.query;
-    const offset = (page - 1) * pageSize;
 
-    const whereCondition = { marketId, userId };
+    const { marketId, userId }= req.params;
 
-    if (search) {
-      whereCondition.runnerName =  { [Op.like]: `%${search}%` };
-    }
+    const { page = 1, limit = 10, search } = req.query;
+    const offset = (page - 1) * limit;
 
-    const existingBets = await CurrentOrder.findAll({
-      where: whereCondition,
+    const winningAmounts = await WinningAmount.findAll({
+      attributes: ["userId", "userName", "marketId", "type", "runnerId"],
+      where: {
+        marketId,
+        userId,
+        isVoidAfterWin: false,
+        type: "win",
+      },
+    });
+
+    const betHistories = await BetHistory.findAll({
       attributes: [
-        "betId",
-        "userId",
-        "userName",
-        "runnerId",
+        "gameId",
+        "gameName",
+        "marketId",
+        "marketName",
         "runnerName",
+        "runnerId",
         "rate",
         "value",
         "type",
-        "bidAmount",
         "date",
-      ],
-      order: [["date", "DESC"]],
-    });
-
-    if (!existingBets || existingBets.length == 0) {
-      res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "Data not found!")
-        );
-    }
-
-    const totalItems = existingBets.length;
-    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-    const paginatedData = existingBets.slice(
-      offset,
-      offset + parseInt(pageSize)
-    );
-
-    const pagination = {
-      page: parseInt(page),
-      pageSize: parseInt(pageSize),
-      totalPages,
-      totalItems,
-    };
-    res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          paginatedData,
-          true,
-          statusCode.success,
-          "Data featch successfully!",
-          pagination
-        )
-      );
-  } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
-  }
-};
-
-
-export const getBetsAfterWinHistory = async (req, res) => {
-  try {
-    const { marketId, userId } = req.params;
-    const { page = 1, pageSize = 10, search } = req.query;
-    const offset = (page - 1) * pageSize;
-
-    const whereCondition = { marketId, userId };
-
-    if (search) {
-      whereCondition.runnerName = { [Op.like]: `%${search}%` }; 
-    }
-
-    const existingBets = await BetHistory.findAll({
-      where: whereCondition,
-      attributes: [
-        "betId",
+        "matchDate",
+        "placeDate",
         "userId",
         "userName",
-        "runnerId",
-        "runnerName",
-        "rate",
-        "value",
-        "type",
         "bidAmount",
-        "date",
+        "betId",
       ],
-      order: [["date", "DESC"]],
+      where: { marketId, userId },
     });
 
-    if (!existingBets || existingBets.length == 0) {
-      res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "Data not found!")
-        );
-    }
+    const combinedData = winningAmounts.map((winner) => {
+      const relatedBets = betHistories.filter(
+        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
+      );
 
-    const totalItems = existingBets.length;
-    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-    const paginatedData = existingBets.slice(
-      offset,
-      offset + parseInt(pageSize)
+      const firstBet = relatedBets[0];
+      return {
+        betId:  firstBet.betId || null,
+        userId: winner.userId || null,
+        userName: winner.userName || null,
+        gameName: firstBet?.gameName || null,
+        marketId: firstBet?.marketId || null,
+        marketName: firstBet?.marketName || null,
+        runnerId : firstBet?.runnerId || null,
+        runnerName: firstBet?.runnerName || null,
+        rate: firstBet.rate?.toString() || null,
+        value: firstBet.value?.toString() || null,
+        type: firstBet?.type || null,
+        bidAmount : firstBet?.bidAmount || null,
+        date: firstBet?.date || null,
+      };
+    });
+
+    const filteredData = combinedData.filter(
+      (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
     );
 
+    const searchedData = search
+      ? filteredData.filter((item) =>
+          item.userName.toLowerCase().includes(search.toLowerCase())
+        )
+      : filteredData;
+
+    const paginatedData = searchedData.slice(offset, offset + limit);
+    const totalItems = searchedData.length;
+    const totalPages = Math.ceil(totalItems / limit);
+
     const pagination = {
-      page: parseInt(page),
-      pageSize: parseInt(pageSize),
+      page,
+      limit,
       totalPages,
       totalItems,
     };
 
-    res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          paginatedData,
-          true,
-          statusCode.success,
-          "Data featch successfully!",
-          pagination
-        )
-      );
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Color-game winning users' bets fetched successfully",
+        pagination,
+      )
+    );
+
   } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
+    );
   }
 };
-
