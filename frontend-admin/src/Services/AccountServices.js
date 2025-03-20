@@ -13,7 +13,7 @@ class AccountService {
   ResetPassword(data, user) {
     return axios({
       method: "POST",
-      url: API_HOST + "/api/supAdmin-reset-password",
+      url: API_HOST + "/api/subAdmin-reset-password",
       data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -161,10 +161,10 @@ class AccountService {
     });
   }
 
-  viewSubAdmin(user, page, pageSize) {
+  viewSubAdmin(user, page, pageSize,search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/get-sub-admins`,
+      url: API_HOST + `/api/get-sub-admins?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -197,7 +197,7 @@ class AccountService {
   SubAdminResetPassword(data, user) {
     return axios({
       method: "POST",
-      url: API_HOST + "/api/subAdmin/reset-password",
+      url: API_HOST + "/api/login-reset-password",
       data: data,
       // headers: {
       //   Authorization: `Bearer ${user.token}`,
