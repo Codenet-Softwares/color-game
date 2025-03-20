@@ -86,7 +86,7 @@ export const AdminRoute = (app) => {
 
   app.post('/api/void-market-after-win',validateAfterWinVoidMarket,customErrorHandler, authorize([string.Admin]), afterWinVoidMarket);
 
-  app.get('/api/subAdmin/get-subAdmin-history',authorize([string.subAdmin]), getSubAdminHistory)
+  app.get('/api/subAdmin/get-subAdmin-history',authorize([string.subAdmin]), getSubAdminHistory) // see all(approve,reject,pending) subAdmin req data
 
   //app.get('/api/subAdmin/get-result/:marketId',authorize([string.subAdmin]), getSubadminResult)
 
