@@ -1952,6 +1952,116 @@ export const winningData = async (req, res) => {
   }
 };
 
+// export const getDetailsWinningData = async (req, res) => {
+//   try {
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const search = req.query.search || "";
+//     const offset = (page - 1) * limit;
+//     const marketId = req.params.marketId;
+
+//     // Fetch winning bets
+//     const winningAmounts = await WinningAmount.findAll({
+//       attributes: ["userId", "userName", "marketId", "type", "runnerId"],
+//       where: {
+//         marketId,
+//         isVoidAfterWin: false,
+//         type: "win",
+//       },
+//     });
+
+//     // Fetch all bets for the given market
+//     const betHistories = await BetHistory.findAll({
+//       attributes: [
+//         "gameId",
+//         "gameName",
+//         "marketId",
+//         "marketName",
+//         "runnerName",
+//         "runnerId",
+//         "rate",
+//         "value",
+//         "type",
+//         "date",
+//         "matchDate",
+//         "placeDate",
+//         "userId",
+//         "userName",
+//       ],
+//       where: { marketId },
+//     });
+
+//     // Combine data
+//     const combinedData = winningAmounts.map((winner) => {
+//       // Filter bets where runnerId matches the winning runnerId
+//       const relatedBets = betHistories.filter(
+//         (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
+//       );
+
+//       const bets = relatedBets.map((bet) => ({
+//         runnerName: bet.runnerName || null,
+//         rate: bet.rate?.toString() || null,
+//         value: bet.value?.toString() || null,
+//         type: bet.type || null,
+//         date: bet.date || null,
+//         matchDate: bet.matchDate || null,
+//         placeDate: bet.placeDate || null,
+//       }));
+
+//       const firstBet = relatedBets[0];
+
+//       return {
+//         userId: winner.userId || null,
+//         userName: winner.userName || null,
+//         gameName: firstBet?.gameName || null,
+//         marketId: firstBet?.marketId || null,
+//         marketName: firstBet?.marketName || null,
+//         runnerName: firstBet?.runnerName || null, // Show winning runner
+//         bets: bets, // Show only bets for the winning runner
+//       };
+//     });
+
+//     // Filter results for "Colorgame"
+//     const filteredData = combinedData.filter(
+//       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
+//     );
+
+//     // Search functionality for userName
+//     const searchedData = search
+//       ? filteredData.filter((item) =>
+//           item.userName.toLowerCase().includes(search.toLowerCase())
+//         )
+//       : filteredData;
+
+//     // Paginate data
+//     const paginatedData = searchedData.slice(offset, offset + limit);
+//     const totalItems = searchedData.length;
+//     const totalPages = Math.ceil(totalItems / limit);
+
+//     const pagination = {
+//       page,
+//       limit,
+//       totalPages,
+//       totalItems,
+//     };
+
+//     return res.status(statusCode.success).send(
+//       apiResponseSuccess(
+//         paginatedData,
+//         true,
+//         statusCode.success,
+//         "Color-game winning users' bets fetched successfully",
+//         pagination
+//       )
+//     );
+//   } catch (error) {
+//     return res.status(statusCode.internalServerError).send(
+//       apiResponseErr(null, false, statusCode.internalServerError, error.message)
+//     );
+//   }
+// };
+
+
 export const getDetailsWinningData = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -1960,7 +2070,6 @@ export const getDetailsWinningData = async (req, res) => {
     const offset = (page - 1) * limit;
     const marketId = req.params.marketId;
 
-    // Fetch winning bets
     const winningAmounts = await WinningAmount.findAll({
       attributes: ["userId", "userName", "marketId", "type", "runnerId"],
       where: {
@@ -1970,7 +2079,6 @@ export const getDetailsWinningData = async (req, res) => {
       },
     });
 
-    // Fetch all bets for the given market
     const betHistories = await BetHistory.findAll({
       attributes: [
         "gameId",
@@ -1991,49 +2099,32 @@ export const getDetailsWinningData = async (req, res) => {
       where: { marketId },
     });
 
-    // Combine data
-    const combinedData = winningAmounts.map((winner) => {
-      // Filter bets where runnerId matches the winning runnerId
-      const relatedBets = betHistories.filter(
-        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
-      );
+const combinedData = winningAmounts.map((winner) => {
+  const relatedBets = betHistories.filter(
+    (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
+  );
 
-      const bets = relatedBets.map((bet) => ({
-        runnerName: bet.runnerName || null,
-        rate: bet.rate?.toString() || null,
-        value: bet.value?.toString() || null,
-        type: bet.type || null,
-        date: bet.date || null,
-        matchDate: bet.matchDate || null,
-        placeDate: bet.placeDate || null,
-      }));
+  const firstBet = relatedBets[0];
 
-      const firstBet = relatedBets[0];
+  return {
+    userId: winner.userId || null,
+    userName: winner.userName || null,
+    marketId: firstBet?.marketId || null,
+    marketName: firstBet?.marketName || null,
+    gameName: firstBet?.gameName || null,
+  };
+});
 
-      return {
-        userId: winner.userId || null,
-        userName: winner.userName || null,
-        gameName: firstBet?.gameName || null,
-        marketId: firstBet?.marketId || null,
-        marketName: firstBet?.marketName || null,
-        runnerName: firstBet?.runnerName || null, // Show winning runner
-        bets: bets, // Show only bets for the winning runner
-      };
-    });
-
-    // Filter results for "Colorgame"
     const filteredData = combinedData.filter(
       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
     );
 
-    // Search functionality for userName
     const searchedData = search
       ? filteredData.filter((item) =>
           item.userName.toLowerCase().includes(search.toLowerCase())
         )
       : filteredData;
 
-    // Paginate data
     const paginatedData = searchedData.slice(offset, offset + limit);
     const totalItems = searchedData.length;
     const totalPages = Math.ceil(totalItems / limit);
@@ -2060,10 +2151,6 @@ export const getDetailsWinningData = async (req, res) => {
     );
   }
 };
-
-
-
-
 
 export const deleteBetAfterWin = async (req, res) => {
   const t = await sequelize.transaction();
@@ -2315,83 +2402,6 @@ export const getSubAdminHistory = async (req, res) => {
   }
 };
 
-
-
-
-
-
-
-
-
-
-
-// export const getSubadminResult = async (req, res) => {
-//   try {
-//     const { page = 1 , pageSize = 10 } = req.query;
-//     const offset = (page - 1) * pageSize;
-
-//     const adminId = req.user?.adminId;
-//     const { marketId } = req.params;
-
-//     const results = await WinResultRequest.findAll({
-//       attributes: [
-//         "ticketNumber",
-//         "prizeCategory",
-//         "prizeAmount",
-//         "complementaryPrize",
-//         "marketName",
-//         "marketId",
-//         "createdAt",
-//         "updatedAt"
-//       ],
-//       where: { adminId, marketId, status : 'Approve' },
-//       group: [
-//         "ticketNumber",
-//         "prizeCategory",
-//         "prizeAmount",
-//         "complementaryPrize",
-//         "marketName",
-//         "marketId",
-//         "createdAt",
-//         "updatedAt"
-//       ],
-//       raw: true,
-//     });
-
-//     if (results.length === 0) {
-//       return apiResponseSuccess(
-//         [],
-//         true,
-//         statusCode.success,
-//         `No lottery results found.`,
-//         res
-//       );
-//     }
-
-
-//     const totalItems = results.length;
-//     const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-//     const paginatedData = results.slice(offset, offset + parseInt(pageSize));
-
-//     const pagination = {
-//       page: parseInt(page),
-//       limit: parseInt(pageSize),
-//       totalPages,
-//       totalItems,
-//     };
-
-//     return apiResponsePagination(paginatedData, true, statusCode.success, 'Lottery results fetched successfully.',pagination, res);
-//   } catch (error) {
-//     return apiResponseErr(
-//       null,
-//       false,
-//       statusCode.internalServerError,
-//       error.message,
-//       res
-//     );
-//   }
-// };
-
 export const getSubadminResult = async (req, res) => {
   try {
     const adminId = req.user?.adminId;
@@ -2477,3 +2487,109 @@ export const getSubadminResult = async (req, res) => {
   }
 };
 
+
+export const getDetailsWinningBet = async(req,res) => {
+  try {
+
+    const { marketId, userId }= req.params;
+
+    const { page = 1, limit = 10, search } = req.query;
+    const offset = (page - 1) * limit;
+
+    const winningAmounts = await WinningAmount.findAll({
+      attributes: ["userId", "userName", "marketId", "type", "runnerId"],
+      where: {
+        marketId,
+        userId,
+        isVoidAfterWin: false,
+        type: "win",
+      },
+    });
+
+    const betHistories = await BetHistory.findAll({
+      attributes: [
+        "gameId",
+        "gameName",
+        "marketId",
+        "marketName",
+        "runnerName",
+        "runnerId",
+        "rate",
+        "value",
+        "type",
+        "date",
+        "matchDate",
+        "placeDate",
+        "userId",
+        "userName",
+        "bidAmount",
+        "betId",
+      ],
+      where: { marketId, userId },
+    });
+
+    const combinedData = winningAmounts.map((winner) => {
+      const relatedBets = betHistories.filter(
+        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
+      );
+
+      const firstBet = relatedBets[0];
+      return {
+        betId:  firstBet.betId || null,
+        userId: winner.userId || null,
+        userName: winner.userName || null,
+        gameName: firstBet?.gameName || null,
+        marketId: firstBet?.marketId || null,
+        marketName: firstBet?.marketName || null,
+        runnerId : firstBet?.runnerId || null,
+        runnerName: firstBet?.runnerName || null,
+        rate: firstBet.rate?.toString() || null,
+        value: firstBet.value?.toString() || null,
+        type: firstBet?.type || null,
+        bidAmount : firstBet?.bidAmount || null,
+        date: firstBet?.date || null,
+      };
+    });
+
+    const filteredData = combinedData.filter(
+      (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
+    );
+
+    const searchedData = search
+      ? filteredData.filter((item) =>
+          item.userName.toLowerCase().includes(search.toLowerCase())
+        )
+      : filteredData;
+
+    const paginatedData = searchedData.slice(offset, offset + limit);
+    const totalItems = searchedData.length;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    const pagination = {
+      page,
+      limit,
+      totalPages,
+      totalItems,
+    };
+
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Color-game winning users' bets fetched successfully",
+        pagination,
+      )
+    );
+
+  } catch (error) {
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
+    );
+  }
+};

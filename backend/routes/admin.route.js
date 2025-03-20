@@ -25,6 +25,7 @@ import {
   getSubAdmins,
   getSubAdminHistory,
   getSubadminResult,
+  getDetailsWinningBet,
 } from '../controller/admin.controller.js';
 import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
@@ -76,6 +77,8 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-after-winning-data',authorize([string.Admin]), winningData);
 
+  // app.get('/api/getDetails-winning-data/:marketId',validateBetsAfterWin,customErrorHandler,authorize([string.Admin]), getDetailsWinningData);
+
   app.get('/api/getDetails-winning-data/:marketId',validateBetsAfterWin,customErrorHandler,authorize([string.Admin]), getDetailsWinningData);
 
   app.post('/api/delete-bet-after-win',validatesDeleteBetAfterWin,customErrorHandler, authorize([string.Admin]), deleteBetAfterWin);
@@ -87,5 +90,7 @@ export const AdminRoute = (app) => {
   //app.get('/api/subAdmin/get-result/:marketId',authorize([string.subAdmin]), getSubadminResult)
 
   app.get('/api/subAdmin/get-result',authorize([string.subAdmin]), getSubadminResult) // see only subAdmin Approve req data
+  
+  app.get('/api/get-Details-winning-bet/:marketId/:userId', getDetailsWinningBet);
 };
 
