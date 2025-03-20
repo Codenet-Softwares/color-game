@@ -483,9 +483,8 @@ export const getAllGameData = async (req, res) => {
       gameName: game.gameName,
       description: game.description,
       isBlink: game.isBlink,
-      markets: game.Markets.sort().filter(
-        (market) => !market.hideMarketUser && !market.isVoid
-      ).map((market) => ({
+      markets: game.Markets.sort()
+        .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false).map((market) => ({
           marketId: market.marketId,
           marketName: market.marketName,
           participants: market.participants,
