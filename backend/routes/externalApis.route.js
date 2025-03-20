@@ -49,7 +49,7 @@ export const externalApisRoute = (app) => {
 
   app.get('/api/external/get-exposure/:userId', getExposure)
 
-  app.post('/api/external/delete-bet-afterWin-lottery',validateDeleteBetAfterWin, customErrorHandler, authenticateAdmin, deleteBetAfterWin)
+  app.post('/api/external/delete-bet-afterWin-lottery',/*validateDeleteBetAfterWin,*/ customErrorHandler, authenticateAdmin, deleteBetAfterWin)
 
   app.post('/api/external/void-afterWin-market-lottery',validateVoidAfterWin, customErrorHandler, authenticateAdmin, afterWinVoidMarket)
 

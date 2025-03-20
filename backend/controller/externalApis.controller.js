@@ -1395,10 +1395,16 @@ export const deleteBetAfterWin = async (req, res) => {
       complementaryPrize,
     } = req.body;
 
+    console.log("prizeAmount........................",prizeAmount)
+    console.log("complementaryPrize....................", complementaryPrize)
+
     let subtractAmount;
     if (prizeCategory === "First Prize") {
       subtractAmount = prizeAmount;
-    } else {
+    } else if(complementaryPrize > 0){
+      subtractAmount = complementaryPrize;
+    }
+    else {
       subtractAmount = sem * prizeAmount;
     }
 
