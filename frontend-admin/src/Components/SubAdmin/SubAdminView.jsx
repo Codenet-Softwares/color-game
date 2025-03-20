@@ -19,8 +19,11 @@ const SubAdminView = () => {
     totalEntries: 10,
     name: "",
     totalData: 0,
+    runnerName: "",
+    remarks: "",
   });
-  const toggleAccordion = (index, status) => {
+  const toggleAccordion = (index, status, runnerName, remarks) => {
+    console.log("first====",runnerName,remarks)
     if (status === "Pending") {
       toast.warning("Your submission is not yet approved.");
       return;
@@ -28,6 +31,8 @@ const SubAdminView = () => {
     setSubAdminHistory((prevState) => ({
       ...prevState,
       openRowIndex: prevState?.openRowIndex === index ? null : index,
+      runnerName: runnerName,
+      remarks: remarks,
     }));
   };
 
@@ -58,6 +63,10 @@ const SubAdminView = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setSubAdminHistory((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
     }, 500);
     return () => clearTimeout(timer);
   }, [searchTerm]);
@@ -254,9 +263,15 @@ const SubAdminView = () => {
                                       : "btn-primary"
                                   }`}
                                   onClick={() =>
-                                    toggleAccordion(index, subHistory.status)
+                                    toggleAccordion(
+                                      index,
+                                      subHistory.status,
+                                      subHistory.runnerName,
+                                      subHistory.remarks
+                                    )
                                   }
                                 >
+                                  {console.log("first", subHistory.runnerName)}
                                   {subAdminHistory.openRowIndex === index
                                     ? "Hide Details"
                                     : "View Details"}
@@ -276,7 +291,11 @@ const SubAdminView = () => {
                                         </tr>
                                       </thead>
                                       <tbody>
-                                        {subHistory.runnerName?.length === 2 ? (
+                                        <tr>
+                                          <td>{subAdminHistory.runnerName}</td>
+                                          <td>{subAdminHistory.remarks}</td>
+                                        </tr>
+                                        {/* {subHistory.runnerName?.length === 2 ? (
                                           <tr>
                                             <td>
                                               {subHistory.runnerName.join(", ")}
@@ -304,7 +323,7 @@ const SubAdminView = () => {
                                               No Runners Available
                                             </td>
                                           </tr>
-                                        )}
+                                        )} */}
                                       </tbody>
                                     </table>
                                   </div>

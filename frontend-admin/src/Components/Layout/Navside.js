@@ -6,9 +6,11 @@ import { use } from "react";
 
 const Navside = () => {
   const auth = useAuth();
-console.log('line 09 for roles',auth.user.roles === "subAdmin" )
+  console.log("line 09 for roles", auth.user.roles === "subAdmin");
   const [isUser, setIsUser] = useState(true);
   const [isGame, setIsGame] = useState(true);
+  const [isSubAdmin, setIsSubAdmin] = useState(true);
+  const [isAccouncedMarket, setIsAccouncedMarket] = useState(true);
   const [isImage, setisImage] = useState(false);
   const [isSliderImage, setisSliderImage] = useState(false);
   const [isGameSliderImage, setisGameSliderImage] = useState(false);
@@ -20,8 +22,6 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
   const [isWinningRequest, setIsWinningRequest] = useState(true);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
-  const [inCreateSubadmin, setInCreateSubadmin] = useState(true);
-  const [inSubadminList, setInSubadminList] = useState(true);
   const [isBetTracker, setIsBetTracker] = useState(false);
 
   const navigate = useNavigate();
@@ -34,14 +34,6 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
 
   const handleInactive = () => {
     setInactive(!inactive);
-  };
-
-  const handleCreateSubadmin = () => {
-    setInCreateSubadmin(!inCreateSubadmin);
-  };
-
-  const handleSubadminList = () => {
-    setInSubadminList(!inSubadminList);
   };
 
   const handleGameToggle = () => {
@@ -62,20 +54,19 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
   const handleInnerImageSlider = () => {
     setIsInnerSliderImage(!isInnerSliderImage);
   };
-  const handleAnnouncementToggle = () => {
-    setIsAnnouncement(!isAnnouncement);
-  };
-  const handleInnerAnnouncementToggle = () => {
-    setIsInnerAnnouncement(!isInnerAnnouncement);
-  };
 
   const handleWinningrequestToggle = () => {
     setIsWinningRequest(!isWinningRequest);
   };
 
-  const toggleSubmenu = () => {
-    setIsSubmenuOpen(!isSubmenuOpen);
+  const handleSubAdminToggle = () => {
+    setIsSubAdmin(!isSubAdmin);
   };
+
+  const handleAccouncedMarketToggle = () => {
+    setIsAccouncedMarket(!isAccouncedMarket);
+  };
+
   return (
     <nav className="sidebar">
       <div className="logo d-flex justify-content-between">
@@ -162,44 +153,80 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
           </li>
         )}
         {/* Game Management Ends */}
-
         {/* create subadmin start */}
-        {auth.user.roles === "admin" && (
-          <li className="m-2" onClick={handleCreateSubadmin}>
-            <Link to="/create-subadmin" className="d-flex align-items-center">
-              <div className="nav_icon_small">
-                <i
-                  class="fa-solid fa-user-plus"
-                  style={{
-                    color: "#3E5879",
-                    marginRight: "1px",
-                    fontSize: "20px",
-                  }}
-                ></i>
-              </div>
-              <span className="ms-3">Create Sub-Admin</span>
-            </Link>
-          </li>
-        )}
-
-        {auth.user.roles === "admin" && (
-          <li className="m-2" onClick={handleSubadminList}>
-            <Link to="/viewsubadmin" className="d-flex align-items-center">
-              <div className="nav_icon_small">
-                <i
-                  class="fa-solid fa-list"
-                  style={{
-                    color: "#3E5879",
-                    marginRight: "1px",
-                    fontSize: "20px",
-                  }}
-                ></i>
-              </div>
-              <span className="ms-3">View Sub-Admin</span>
-            </Link>
-          </li>
-        )}
-
+        {isSubAdmin
+          ? auth.user.roles === "admin" && (
+              <li className="m-2" onClick={handleSubAdminToggle}>
+                <a className="has-arrow " href="#" aria-expanded="false">
+                  <div className="nav_icon_small">
+                    <i
+                      className="fa-solid fa-gamepad"
+                      style={{
+                        color: "#3E5879",
+                        marginRight: "10px",
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                  </div>
+                  <div className="nav_title">
+                    <span>Sub Admin Management</span>
+                  </div>
+                </a>
+              </li>
+            )
+          : auth.user.roles === "admin" && (
+              <li className="" onClick={handleSubAdminToggle}>
+                <a className="has-arrow" href="#" aria-expanded="false">
+                  <div className="nav_icon_small">
+                    <i
+                      className="fa-solid fa-gamepad"
+                      style={{
+                        color: "#3E5879",
+                        marginRight: "10px",
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                  </div>
+                  <div className="nav_title">
+                    <span>Sub Admin Management</span>
+                  </div>
+                </a>
+                <ul>
+                  <li>
+                    <Link to="/create-subadmin">
+                      <span>
+                        <i
+                          className="fa-solid fa-user-plus"
+                          style={{
+                            color: "#3E5879",
+                            marginRight: "10px",
+                            fontSize: "15px",
+                          }}
+                        ></i>
+                        Create
+                      </span>
+                    </Link>
+                  </li>
+                  {auth.user.roles === "admin" && (
+                    <li>
+                      <Link to="/viewsubadmin">
+                        <span>
+                          <i
+                            class="fa-solid fa-list"
+                            style={{
+                              color: "#3E5879",
+                              marginRight: "10px",
+                              fontSize: "15px",
+                            }}
+                          ></i>
+                          view
+                        </span>
+                      </Link>
+                    </li>
+                  )}
+                </ul>
+              </li>
+            )}
         {/* create subadmin end */}
         {auth.user.roles === "admin" && (
           <li className="m-2">
@@ -214,7 +241,7 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
                   }}
                 ></i>
               </div>
-              <span className="ms-3">Void Games</span>
+              <span className="ms-3">Void Market</span>
             </Link>
           </li>
         )}
@@ -235,26 +262,7 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
             </Link>
           </li>
         )}
-        {auth.user.roles === "admin" && (
-          <li className="m-2">
-            <Link
-              to="/get-bet-markets-afterWin"
-              className="d-flex align-items-center"
-            >
-              <div className="nav_icon_small">
-                <i
-                  class="fa-solid fa-history"
-                  style={{
-                    color: "#3E5879",
-                    marginRight: "1px",
-                    fontSize: "20px",
-                  }}
-                ></i>
-              </div>
-              <span className="ms-3">Bet History</span>
-            </Link>
-          </li>
-        )}
+
         {auth.user.roles === "admin" && (
           <li className="m-2">
             <Link to="/trash" className="d-flex align-items-center">
@@ -272,7 +280,6 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
             </Link>
           </li>
         )}
-
         {/* Image Management */}
         {auth.user.roles === "admin" && (
           <li className="m-2">
@@ -508,7 +515,6 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
             )}
           </li>
         )}
-
         {/* Game Announcement */}
         {auth.user.roles === "admin" && (
           <li className="game-announcement m-2">
@@ -645,9 +651,7 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
             )}
           </li>
         )}
-
         {/* Announcement Management Ends */}
-
         {/* Winning Request Starts */}
         {auth?.user?.roles === "admin" && (
           <>
@@ -722,28 +726,7 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
             )}
           </>
         )}
-
         {/* Winning Request Ends */}
-
-        {/* Winning Bet Tracker Start*/}
-        {auth.user.roles === "admin" && (
-          <li className="m-2">
-            <Link to="/winTracker" className="d-flex align-items-center">
-              <div className="nav_icon_small">
-                <i
-                  class="fa-solid fa-satellite-dish"
-                  style={{
-                    color: "#3E5879",
-                    marginRight: "1px",
-                    fontSize: "20px",
-                  }}
-                ></i>
-              </div>
-              <span className="ms-3">Win Tracker</span>
-            </Link>
-          </li>
-        )}
-        {/* Winning Bet Tracker End*/}
 
         {/* SubAdmin History Start*/}
         {auth.user.roles === "subAdmin" && (
@@ -764,7 +747,6 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
           </li>
         )}
         {/* SubAdmin History End*/}
-
         {/* SubAdmin Win Result Start */}
         {auth.user.roles === "subAdmin" && (
           <li className="m-2">
@@ -787,6 +769,81 @@ console.log('line 09 for roles',auth.user.roles === "subAdmin" )
           </li>
         )}
         {/* SubAdmin Win Result End */}
+        {/* Announced Market end */}
+        {isAccouncedMarket
+          ? auth.user.roles === "admin" && (
+              <li className="m-2" onClick={handleAccouncedMarketToggle}>
+                <a className="has-arrow " href="#" aria-expanded="false">
+                  <div className="nav_icon_small">
+                    <i
+                      className="fa-solid fa-gamepad"
+                      style={{
+                        color: "#3E5879",
+                        marginRight: "10px",
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                  </div>
+                  <div className="nav_title">
+                    <span>Announced Market</span>
+                  </div>
+                </a>
+              </li>
+            )
+          : auth.user.roles === "admin" && (
+              <li className="" onClick={handleAccouncedMarketToggle}>
+                <a className="has-arrow" href="#" aria-expanded="false">
+                  <div className="nav_icon_small">
+                    <i
+                      className="fa-solid fa-gamepad"
+                      style={{
+                        color: "#3E5879",
+                        marginRight: "10px",
+                        fontSize: "20px",
+                      }}
+                    ></i>
+                  </div>
+                  <div className="nav_title">
+                    <span>Announced Market</span>
+                  </div>
+                </a>
+                <ul>
+                  <li>
+                    <Link to="/winTracker">
+                      <span>
+                        <i
+                          className="fa-solid fa-satellite-dish"
+                          style={{
+                            color: "#3E5879",
+                            marginRight: "10px",
+                            fontSize: "15px",
+                          }}
+                        ></i>
+                        Winning Bets
+                      </span>
+                    </Link>
+                  </li>
+                  {auth.user.roles === "admin" && (
+                    <li>
+                      <Link to="/get-bet-markets-afterWin">
+                        <span>
+                          <i
+                            class="fa-solid fa-history"
+                            style={{
+                              color: "#3E5879",
+                              marginRight: "10px",
+                              fontSize: "15px",
+                            }}
+                          ></i>
+                          Bet History
+                        </span>
+                      </Link>
+                    </li>
+                  )}
+                </ul>
+              </li>
+            )}
+        {/* Announced Market end */}
       </ul>
 
       {/* List Of the Sidebar Ends */}

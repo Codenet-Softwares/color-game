@@ -10,19 +10,21 @@ import Pagination from "./Pagination";
 import Modal from "../Components/ReusableModal/Modal";
 import SubAdminResetPassword from "./SubAdminResetPassword/SubAdminResetPassword";
 const ViewSubAdmin = () => {
-  const [viewSubadmin, setViewSubadmin] = useState({
-    ...getViewSubadmin(),
-    totalEntries: 10,
-  });
+  const [viewSubadmin, setViewSubadmin] = useState(getViewSubadmin());
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+
   useEffect(() => {
-      const timer = setTimeout(() => {
-        setDebouncedSearchTerm(searchTerm);
-      }, 500);
-  
-      return () => clearTimeout(timer);
-    }, [searchTerm]);
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setViewSubadmin((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
   const [showModal, setShowModal] = useState(false);
   const [selectedSubadmin, setSelectedSubadmin] = useState(null);
   const handleOpenModal = (name) => {
@@ -51,7 +53,7 @@ const ViewSubAdmin = () => {
   }, [
     viewSubadmin?.currentPage,
     viewSubadmin?.totalEntries,
-   debouncedSearchTerm,
+    debouncedSearchTerm,
   ]);
 
   // useEffect(() => {
@@ -89,7 +91,6 @@ const ViewSubAdmin = () => {
       });
   };
 
- 
   const handleClearSearch = () => {
     setSearchTerm(""); // Reset the search term
     setViewSubadmin({ ...viewSubadmin, name: "" });
@@ -134,10 +135,9 @@ const ViewSubAdmin = () => {
               <input
                 type="text"
                 className="form-control fw-bold"
-                placeholder="Search By Market Name..."
+                placeholder="Search By Sub Admin Name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
@@ -158,7 +158,7 @@ const ViewSubAdmin = () => {
                 />
               )}
             </div>
-       
+
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
               <select
