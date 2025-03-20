@@ -193,6 +193,17 @@ class GameService {
   }
 
 
+  // from here the api that i am fetching is to show the each users bet for live bet that is unsettled bets
+  userLiveBetGameListhistory(user,marketId,userName,   page, pageSize) {
+    return axios({
+      method: "GET",
+      url: `${API_HOST}/api/get-bets-afterWin-history/${marketId}/${userName}?page=${page}&pageSize=${pageSize}`,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
 
 
   DeleteMarket(user, userId, marketId, runnerId, betId) {
@@ -557,10 +568,10 @@ class GameService {
     });
   }
 // showing the list of bets userwise afterWin
-  getWinBetTrackerList(user,marketId,userName,   page, pageSize) {
+  getWinBetTrackerList(user,marketId,userName,page, pageSize) {
     return axios({
       method: "GET",
-      url: `${API_HOST}/api/ApiToGet/${marketId}/${userName}?page=${page}&pageSize=${pageSize}`,
+      url: `${API_HOST}/api/get-Details-winning-bet/${marketId}/${userName}?page=${page}&pageSize=${pageSize}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
