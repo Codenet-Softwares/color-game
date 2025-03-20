@@ -72,12 +72,7 @@ const BetWinTracker = () => {
     debouncedSearchTerm,
   ]);
 
-  const handleBetDelete = async (userId) => {
-    console.log("userId=======,MarketId===================", {
-      userId,
-      marketId,
-    });
-
+  const handleBetDelete = async (marketId, userId) => {
     const isConfirmed = window.confirm(
       "Are you sure you want to delete this market and bet?"
     );
@@ -144,9 +139,10 @@ const BetWinTracker = () => {
     setSearchTerm("");
   };
 
-  const handleShowAllBets = (username) => {
+  const handleShowAllBets = (username, userId) => {
+    console.log("line 148", userId);
     // Set the selected user ID (to be implemented once the api is provided)
-    // setSelectedUserId(userId);
+    setSelectedUserId(userId);
     setSelectedUsername(username); // Set the selected username
     setShowReusableTable(true); // Show ReusableTable
   };
@@ -189,9 +185,7 @@ const BetWinTracker = () => {
       render: (row) => (
         <button
           className="btn btn-danger"
-          onClick={() =>
-            handleBetDelete(row.marketId, row.runnerId, row.userId, row.betId)
-          }
+          onClick={() => handleBetDelete(row.marketId, row.userId)}
         >
           <FaTrashAlt />
         </button>
@@ -338,7 +332,7 @@ const BetWinTracker = () => {
                         <tr>
                           <th>Serial Number</th>
                           <th>User Name</th>
-                          <th>Total Bets</th>
+                          {/* <th>Total Bets</th> */}
                           {/* <th>Total Amount</th> */}
                           <th>Action</th>
                         </tr>
@@ -352,15 +346,14 @@ const BetWinTracker = () => {
                                 <tr key={index}>
                                   <td>{startIndex + index}</td>
                                   <td>{winBetTracker.userName}</td>
-                                  <td>NDS</td>
-                                  {/* <td>NDS</td> */}
+
                                   <td>
                                     <button
                                       className="btn btn-primary text-uppercase fw-bold text-white"
                                       onClick={() =>
                                         handleShowAllBets(
-                                          winBetTracker.userId,
-                                          winBetTracker.userName
+                                          winBetTracker.userName,
+                                          winBetTracker.userId
                                         )
                                       }
                                     >
