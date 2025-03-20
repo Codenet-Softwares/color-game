@@ -52,7 +52,7 @@ export function getViewSubadmin(body = {}) {
     data: [],
     currentPage: 1,
     totalPages: 1,
-    totalEntries: 20,
+    totalEntries: 10,
     name: "",
     totalData: 0,
     searchTerm: "",
