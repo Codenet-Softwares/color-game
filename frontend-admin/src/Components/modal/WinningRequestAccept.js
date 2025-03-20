@@ -12,20 +12,27 @@ const WinningRequestAccept = ({ isOpen, onClose, data, marketId, setViewWinningR
   const isMatch = runnerNames.every((name) => name === runnerNames[0]);
 
   const handleSubmit = (marketId, action) => {
+    auth.showLoader();
     AccountServices.viewWinningRequestAccept(
       { marketId: marketId, action: action },
       auth.user
-    ).then((response) => {
-      toast.success(response?.data?.message)
-      setViewWinningRequest((prev) => ({
-        ...prev,
-        isRefresh: !viewWinningRequest.isRefresh
-      }));
-      onClose();
-    }).catch((error) => {
-      toast.error(customErrorHandler(error));
-    });
+    )
+      .then((response) => {
+        toast.success(response?.data?.message);
+        setViewWinningRequest((prev) => ({
+          ...prev,
+          isRefresh: !viewWinningRequest.isRefresh
+        }));
+        onClose();
+      })
+      .catch((error) => {
+        toast.error(customErrorHandler(error));
+      })
+      .finally(() => {
+        auth.hideLoader();
+      });
   };
+  
 
 
   return (
