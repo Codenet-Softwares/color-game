@@ -25,7 +25,6 @@ import {
   getSubAdmins,
   getSubAdminHistory,
   getSubadminResult,
-  getDetailsWinningBet,
   liveUsersBetHistory,
   getBetsAfterWinHistory,
 } from '../controller/admin.controller.js';
@@ -81,27 +80,18 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-after-winning-data',authorize([string.Admin]), winningData);
 
-  // app.get('/api/getDetails-winning-data/:marketId',validateBetsAfterWin,customErrorHandler,authorize([string.Admin]), getDetailsWinningData);
-
   app.get('/api/getDetails-winning-data/:marketId',validateBetsAfterWin,customErrorHandler,authorize([string.Admin]), getDetailsWinningData);
 
   app.post('/api/delete-bet-after-win',validatesDeleteBetAfterWin,customErrorHandler, authorize([string.Admin]), deleteBetAfterWin);
 
   app.post('/api/void-market-after-win',validateAfterWinVoidMarket,customErrorHandler, authorize([string.Admin]), afterWinVoidMarket);
 
-  app.get('/api/subAdmin/get-subAdmin-history',authorize([string.subAdmin]), getSubAdminHistory) // see all(approve,reject,pending) subAdmin req data
-
-  //app.get('/api/subAdmin/get-result/:marketId',authorize([string.subAdmin]), getSubadminResult)
-
-  app.get('/api/subAdmin/get-result',authorize([string.subAdmin]), getSubadminResult) // see only subAdmin Approve req data
-  
-  app.get('/api/get-Details-winning-bet/:marketId/:userId',validateBetsAfterWin, customErrorHandler, authorize([string.Admin]),  getDetailsWinningBet);
+  app.get('/api/subAdmin/get-subAdmin-history',authorize([string.subAdmin]), getSubAdminHistory)
 
   app.get('/api/subAdmin/get-result',authorize([string.subAdmin]), getSubadminResult)
 
   app.get('/api/live-users-bet-history/:marketId/:userId',  validateLiveUsersBet, customErrorHandler, authorize([string.Admin]), liveUsersBetHistory);
 
   app.get('/api/get-bets-afterWin-history/:marketId/:userId', validateBetsAfterWin, customErrorHandler, authorize([string.Admin]), getBetsAfterWinHistory);
-
 };
 
