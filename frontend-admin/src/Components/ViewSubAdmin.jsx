@@ -10,8 +10,11 @@ import Pagination from "./Pagination";
 import Modal from "../Components/ReusableModal/Modal";
 import SubAdminResetPassword from "./SubAdminResetPassword/SubAdminResetPassword";
 const ViewSubAdmin = () => {
-  const [viewSubadmin, setViewSubadmin] = useState(getViewSubadmin());
-  const [searchTerm, setSearchTerm] = useState("");
+  const [viewSubadmin, setViewSubadmin] = useState({
+    ...getViewSubadmin(),
+    totalEntries: 10, 
+  });
+    const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const handleOpenModal = () => {
     setShowModal(true);
@@ -210,7 +213,7 @@ const ViewSubAdmin = () => {
                   {viewSubadmin?.data?.length > 0 ? (
                     viewSubadmin?.data?.map((subadmin, index) => (
                       <tr key={index}>
-                        <td className="fw-bold">{index + 1}</td>
+                        <td className="fw-bold">{startIndex+index}</td>
                         <td
                           className="fw-bold text-start"
                           style={{ color: "#DC686E" }}
