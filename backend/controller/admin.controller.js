@@ -1444,7 +1444,14 @@ export const approveResult = async (req, res) => {
     const isApproved = runnerId1 === runnerId2;
     const type = isApproved ? 'Matched' : 'Unmatched';
 
+    let remarks = '';
     if (action === 'reject') {
+      if (type === 'Matched') {
+        remarks = "Your result has been rejected. Kindly reach out to your upline for further guidance.";
+      } else {
+        remarks = "Oops! Your submission does not match our records. Please check the data and try again.";
+      }
+
       await ResultHistory.create({
         gameId: gameId,
         gameName: gameName,
@@ -1456,14 +1463,15 @@ export const approveResult = async (req, res) => {
         type: type,
         declaredByNames: declaredByNames,
         declaredById: declaredByIds,
-        remarks: type === 'Matched' 
-    ? "Your result has been rejected. Kindly reach out to your upline for further guidance." 
-    : "Oops! Your submission does not match our records. Please check the data and try again.",
+        remarks: remarks,
         status: 'Rejected',
         createdAt: new Date(),
       });
 
-    await ResultRequest.update({ status : "Rejected"}, { where : {marketId, status : "Pending"}})
+      await ResultRequest.update(
+        { status: "Rejected", type: type, remarks: remarks },
+        { where: { marketId, status: "Pending" } }
+      );
 
       await ResultRequest.destroy({ where: { marketId } });
 
@@ -1479,6 +1487,8 @@ export const approveResult = async (req, res) => {
         );
     }
 
+    remarks = "Congratulations! Your result has been approved.";
+
     await ResultHistory.create({
       gameId: gameId,
       gameName: gameName,
@@ -1490,13 +1500,15 @@ export const approveResult = async (req, res) => {
       type: type,
       declaredByNames: declaredByNames,
       declaredById: declaredByIds,
-      remarks : "Congratulations! Your result has been approved.",
+      remarks: remarks,
       status: 'Approved',
       createdAt: new Date(),
     });
-    
-  
-    await ResultRequest.update({ status : "Approved"}, { where : {marketId, status : "Pending"}})
+
+    await ResultRequest.update(
+      { status: "Approved", type: type, remarks: remarks },
+      { where: { marketId, status: "Pending" } }
+    );
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -1948,14 +1960,17 @@ export const getDetailsWinningData = async (req, res) => {
     const offset = (page - 1) * limit;
     const marketId = req.params.marketId;
 
+    // Fetch winning bets
     const winningAmounts = await WinningAmount.findAll({
-      attributes: ["userId", "userName", "marketId"],
+      attributes: ["userId", "userName", "marketId", "type", "runnerId"],
       where: {
         marketId,
         isVoidAfterWin: false,
+        type: "win",
       },
     });
 
+    // Fetch all bets for the given market
     const betHistories = await BetHistory.findAll({
       attributes: [
         "gameId",
@@ -1963,19 +1978,24 @@ export const getDetailsWinningData = async (req, res) => {
         "marketId",
         "marketName",
         "runnerName",
+        "runnerId",
         "rate",
         "value",
         "type",
         "date",
         "matchDate",
         "placeDate",
+        "userId",
+        "userName",
       ],
       where: { marketId },
     });
 
-    const combinedData = winningAmounts.map((result) => {
+    // Combine data
+    const combinedData = winningAmounts.map((winner) => {
+      // Filter bets where runnerId matches the winning runnerId
       const relatedBets = betHistories.filter(
-        (bet) => bet.marketId === result.marketId
+        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
       );
 
       const bets = relatedBets.map((bet) => ({
@@ -1991,26 +2011,30 @@ export const getDetailsWinningData = async (req, res) => {
       const firstBet = relatedBets[0];
 
       return {
-        userId: result.userId || null,
-        userName: result.userName || null,
+        userId: winner.userId || null,
+        userName: winner.userName || null,
         gameName: firstBet?.gameName || null,
         marketId: firstBet?.marketId || null,
         marketName: firstBet?.marketName || null,
-        bets: bets,
+        runnerName: firstBet?.runnerName || null, // Show winning runner
+        bets: bets, // Show only bets for the winning runner
       };
     });
 
+    // Filter results for "Colorgame"
     const filteredData = combinedData.filter(
       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
     );
+
+    // Search functionality for userName
     const searchedData = search
       ? filteredData.filter((item) =>
           item.userName.toLowerCase().includes(search.toLowerCase())
         )
       : filteredData;
 
+    // Paginate data
     const paginatedData = searchedData.slice(offset, offset + limit);
-
     const totalItems = searchedData.length;
     const totalPages = Math.ceil(totalItems / limit);
 
@@ -2021,30 +2045,23 @@ export const getDetailsWinningData = async (req, res) => {
       totalItems,
     };
 
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          paginatedData,
-          true,
-          statusCode.success,
-          "Color-game after winning users bet-data fetched successfully",
-          pagination
-        )
-      );
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(
+        paginatedData,
+        true,
+        statusCode.success,
+        "Color-game winning users' bets fetched successfully",
+        pagination
+      )
+    );
   } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
 };
+
+
 
 
 
@@ -2219,7 +2236,7 @@ export const afterWinVoidMarket = async (req, res) => {
 
 export const getSubAdminHistory = async (req, res) => {
   try {
-    const adminId = req.user?.adminId; 
+    const adminId = req.user?.adminId; // Ensure adminId is extracted correctly
     const { status, page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
 
@@ -2227,10 +2244,9 @@ export const getSubAdminHistory = async (req, res) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     const whereRequest = {
-      declaredById: adminId, 
-      deletedAt: null, 
+      declaredById: adminId, // Filter by adminId //
       createdAt: {
-        [Op.gte]: sevenDaysAgo, 
+        [Op.gte]: sevenDaysAgo, // Filter records created in the last 7 days
       },
     };
 
@@ -2243,51 +2259,39 @@ export const getSubAdminHistory = async (req, res) => {
     }
 
     const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketName", "marketId", "status", "runnerName"],
+      attributes: ["marketName", "marketId", "status", "runnerName", "declaredBy", "type", "remarks"],
       where: whereRequest,
       raw: true,
     });
 
-    const resultHistories = await ResultHistory.findAll({
-      attributes: ["marketName", "marketId", "status", "runnerNames", "remarks", "declaredById", "createdAt"],
-      where: {
-        [Op.and]: [
-          sequelize.literal(`(JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL)`),
-          { createdAt: { [Op.gte]: sevenDaysAgo } }, 
-        ],
-      },
-      raw: true,
+    // Add remarks based on status and type
+    const processedRequests = resultRequests.map(request => {
+      let remarks = request.remarks || "";
+
+      if (request.status === 'Pending') {
+        remarks = "Your data is pending.";
+      } else if (request.status === 'Approved') {
+        remarks = "Congratulations! Your result has been approved.";
+      } else if (request.status === 'Rejected') {
+        remarks = request.type === 'Matched'
+          ? "Your result has been rejected. Kindly reach out to your upline for further guidance."
+          : "Oops! Your submission does not match our records. Please check the data and try again.";
+      }
+
+      return {
+        marketName: request.marketName,
+        runnerName: request.runnerName,
+        declaredBy: request.declaredBy,
+        status: request.status,
+        type: request.type,
+        remarks: remarks,
+      };
     });
 
-    const processedHistories = resultHistories.map(history => {
-      try {
-        const declaredByIds = history.declaredById || [];
-        const runnerNames = history.runnerNames || [];
-        const adminIndex = declaredByIds.indexOf(adminId);
-        return {
-          marketName: history.marketName,
-          runnerName: runnerNames,
-          declaredById: adminId, 
-          status: history.status.charAt(0).toUpperCase() + history.status.slice(1).toLowerCase(), // Normalize status
-          remarks: history.remarks, 
-        };
-      } catch (error) {
-        return null;
-      }
-    }).filter(history => history !== null);
-
-    const combinedResults = resultRequests.map(request => ({
-      marketName: request.marketName,
-      runnerName: request.runnerName,
-      declaredById: adminId, 
-      status: request.status.charAt(0).toUpperCase() + request.status.slice(1).toLowerCase(), 
-      remarks: "Pending", 
-    })).concat(processedHistories);
-
-    let filteredResults = combinedResults;
+    let filteredResults = processedRequests;
     if (status) {
       const normalizedStatus = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
-      filteredResults = combinedResults.filter(result => result.status === normalizedStatus);
+      filteredResults = processedRequests.filter(result => result.status === normalizedStatus);
     }
 
     const totalItems = filteredResults.length;
@@ -2301,7 +2305,6 @@ export const getSubAdminHistory = async (req, res) => {
       totalItems,
     };
 
-
     return res
       .status(statusCode.success)
       .send(
@@ -2311,22 +2314,20 @@ export const getSubAdminHistory = async (req, res) => {
           statusCode.success,
           "Data fetched successfully!",
           pagination
-
         )
       );
-
   } catch (error) {
     return res
-    .status(statusCode.internalServerError)
-    .send(
-      apiResponseErr(
-        null,
-        false,
-        statusCode.internalServerError,
-        error.message
-      )
-    );
-}
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
 };
 
 

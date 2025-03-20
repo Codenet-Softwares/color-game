@@ -17,12 +17,11 @@ ResultRequest.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     marketId: {
       type: DataTypes.CHAR(150),
       allowNull: false,
     },
-    marketName : {
+    marketName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -51,6 +50,14 @@ ResultRequest.init(
       defaultValue: 'Pending',
       allowNull: false,
     },
+    type: {
+      type: DataTypes.ENUM('Matched', 'Unmatched'),
+      allowNull: true,
+    },
+    remarks: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
   },
   {
     sequelize,
@@ -65,6 +72,5 @@ ResultRequest.init(
 ResultRequest.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
 ResultRequest.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
 ResultRequest.belongsTo(Runner, { foreignKey: 'runnerId', targetKey: 'runnerId' });
-
 
 export default ResultRequest;
