@@ -20,19 +20,24 @@ const SubAdminView = () => {
     name: "",
     totalData: 0,
   });
-  const toggleAccordion = (index) => {
+  const toggleAccordion = (index, status) => {
+    if (status === "Pending") {
+      toast.warning("Your submission is not yet approved.");
+      return;
+    }
     setSubAdminHistory((prevState) => ({
       ...prevState,
       openRowIndex: prevState?.openRowIndex === index ? null : index,
     }));
   };
+
   const fetchSubAdminHistory = () => {
     GameService.getSubAdminHistory(
       auth.user,
       subAdminHistory.currentPage,
       subAdminHistory.totalEntries,
       debouncedSearchTerm,
-      statusFilter // Pass status filter to API call
+      statusFilter
     )
       .then((res) => {
         setSubAdminHistory((prev) => ({
@@ -63,7 +68,7 @@ const SubAdminView = () => {
     subAdminHistory.currentPage,
     subAdminHistory.totalEntries,
     debouncedSearchTerm,
-    statusFilter, // Fetch data when status changes
+    statusFilter,
   ]);
 
   const handleClearSearch = () => {
@@ -75,7 +80,7 @@ const SubAdminView = () => {
   };
 
   const handleStatusChange = (event) => {
-    setStatusFilter(event.target.value); // Update status and trigger API call
+    setStatusFilter(event.target.value);
   };
 
   let startIndex = Math.min(
@@ -135,7 +140,7 @@ const SubAdminView = () => {
                   <input
                     type="text"
                     className="form-control fw-bold"
-                    placeholder="Search By User Or Market Name..."
+                    placeholder="Search By Market Name..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     style={{
@@ -243,8 +248,14 @@ const SubAdminView = () => {
                               {/* <td>{subHistory.remarks}</td> */}
                               <td>
                                 <button
-                                  className="btn btn-primary"
-                                  onClick={() => toggleAccordion(index)}
+                                  className={`btn fw-bold ${
+                                    subHistory.status === "Pending"
+                                      ? "btn-danger opacity-50"
+                                      : "btn-primary"
+                                  }`}
+                                  onClick={() =>
+                                    toggleAccordion(index, subHistory.status)
+                                  }
                                 >
                                   {subAdminHistory.openRowIndex === index
                                     ? "Hide Details"

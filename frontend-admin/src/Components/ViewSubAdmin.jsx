@@ -15,6 +15,14 @@ const ViewSubAdmin = () => {
     totalEntries: 10,
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  useEffect(() => {
+      const timer = setTimeout(() => {
+        setDebouncedSearchTerm(searchTerm);
+      }, 500);
+  
+      return () => clearTimeout(timer);
+    }, [searchTerm]);
   const [showModal, setShowModal] = useState(false);
   const [selectedSubadmin, setSelectedSubadmin] = useState(null);
   const handleOpenModal = (name) => {
@@ -43,24 +51,25 @@ const ViewSubAdmin = () => {
   }, [
     viewSubadmin?.currentPage,
     viewSubadmin?.totalEntries,
-    viewSubadmin?.debouncedSearchTerm,
+   debouncedSearchTerm,
   ]);
 
-  useEffect(() => {
-    fetchViewWinningRequest();
-  }, [
-    viewSubadmin?.currentPage,
-    viewSubadmin?.totalEntries,
-    viewSubadmin?.debouncedSearchTerm,
-    viewSubadmin?.isRefresh,
-  ]);
+  // useEffect(() => {
+  //   fetchViewWinningRequest();
+  // }, [
+  //   viewSubadmin?.currentPage,
+  //   viewSubadmin?.totalEntries,
+  //   viewSubadmin?.debouncedSearchTerm,
+  //   viewSubadmin?.isRefresh,
+  // ]);
 
   const fetchViewWinningRequest = () => {
     auth.showLoader();
     AccountServices.viewSubAdmin(
       auth.user,
       viewSubadmin?.currentPage,
-      viewSubadmin?.totalEntries
+      viewSubadmin?.totalEntries,
+      debouncedSearchTerm
     )
       .then((res) => {
         console.log("API Response:", res.data); // Debugging
@@ -80,9 +89,10 @@ const ViewSubAdmin = () => {
       });
   };
 
+ 
   const handleClearSearch = () => {
-    setSearchTerm("");
-    setViewSubadmin((prev) => ({ ...prev, name: "" }));
+    setSearchTerm(""); // Reset the search term
+    setViewSubadmin({ ...viewSubadmin, name: "" });
   };
   let startIndex = Math.min(
     (Number(viewSubadmin.currentPage) - 1) * Number(viewSubadmin.totalEntries) +
@@ -126,19 +136,15 @@ const ViewSubAdmin = () => {
                 className="form-control fw-bold"
                 placeholder="Search By Market Name..."
                 value={searchTerm}
-                onChange={(e) =>
-                  setViewSubadmin((prev) => ({
-                    ...prev,
-                    searchTerm: e.target.value,
-                  }))
-                }
+                onChange={(e) => setSearchTerm(e.target.value)}
+
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
                   border: "2px solid #3E5879",
                 }}
               />
-              {viewSubadmin.searchTerm && (
+              {searchTerm && (
                 <FaTimes
                   onClick={handleClearSearch}
                   style={{
@@ -152,7 +158,7 @@ const ViewSubAdmin = () => {
                 />
               )}
             </div>
-
+       
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
               <select
