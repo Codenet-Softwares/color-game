@@ -1482,6 +1482,7 @@ export const approveResult = async (req, res) => {
           hideRunnerUser: true,
           hideMarket: true,
           hideRunner: true,
+          announcementResult: true,
         },
         { where: { marketId } }
       );
