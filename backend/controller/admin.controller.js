@@ -1000,59 +1000,52 @@ export const liveUsersBet = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
 
-    const where_clause = {
-      marketId: marketId,
-    };
+    const whereCondition = { marketId };
 
     if (search) {
-      where_clause[Op.or] = [
-        { userName: { [Op.like]: `%${search}%` } },
-        { marketName: { [Op.like]: `%${search}%` } },
-        { runnerName: { [Op.like]: `%${search}%` } },
-      ];
+      whereCondition.userName = { [Op.like]: `%${search}%` };
     }
 
-    const existingBets = await CurrentOrder.findAll({
-      where: where_clause,
+    const { count, rows: existingUser } = await CurrentOrder.findAndCountAll({
+      attributes: ["marketId", "marketName", "userId", "userName"],
+      where: whereCondition,
+      group: ["marketId", "marketName", "userId", "userName"],
+      limit: parseInt(pageSize),
+      offset,
       order: [["date", "DESC"]],
     });
 
-    const uniqueUsers = [];
-
-    for (const bet of existingBets) {
-      const exists = uniqueUsers.find((user) => user.userId === bet.userId);
-      if (!exists) {
-        uniqueUsers.push({
-          marketId: bet.marketId,
-          marketName: bet.marketName,
-          userId: bet.userId,
-          userName: bet.userName,
-          bets: [],
-        });
-      }
+    if (!existingUser || existingUser.length == 0) {
+      res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "Data not found!")
+        );
     }
 
-    for (const bet of existingBets) {
-      const user = uniqueUsers.find((user) => user.userId === bet.userId);
-      if (user) {
-        user.bets.push({
-          betId: bet.betId,
-          runnerId: bet.runnerId,
-          runnerName: bet.runnerName,
-          rate: bet.rate,
-          value: bet.value,
-          type: bet.type,
-          bidAmount: bet.bidAmount,
-          date: bet.date,
-        });
-      }
-    }
-    const totalItems = existingBets.length;
+
+    const totalBets = await Promise.all(existingUser.map(async (user) => {
+      const userBetCount = await CurrentOrder.count({
+        where: {
+          marketId,
+          userId: user.userId,
+        }
+      });
+      return userBetCount;
+    }));
+    
+    const formatData = {
+      marketId: existingUser[0].marketId,
+      marketName: existingUser[0].marketName,
+      data: existingUser.map((user, index) => ({
+        userId: user.userId,
+        userName: user.userName,
+        totalBets: totalBets[index],
+      })),
+    };
+
+    const totalItems = count.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize, 10));
-    const paginatedData = uniqueUsers.slice(
-      offset,
-      offset + parseInt(pageSize, 10)
-    );
 
     const pagination = {
       page: parseInt(page),
@@ -1065,10 +1058,10 @@ export const liveUsersBet = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          paginatedData,
+          formatData,
           true,
           statusCode.success,
-          "Success",
+          "Data fatch successfully!",
           pagination
         )
       );
@@ -1177,59 +1170,49 @@ export const getBetsAfterWin = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
 
-    const where_clause = {
-      marketId: marketId,
-    };
+    const whereCondition = { marketId };
 
-    if (search) {
-      where_clause[Op.or] = [
-        { userName: { [Op.like]: `%${search}%` } },
-        { marketName: { [Op.like]: `%${search}%` } },
-        { runnerName: { [Op.like]: `%${search}%` } },
-      ];
-    }
+        if (search) {
+          whereCondition.userName ={ [Op.like]: `%${search}%` };
+        }
 
-    const existingBets = await BetHistory.findAll({
-      where: where_clause,
-      order: [["date", "DESC"]],
+    const { count, rows: existingUser } = await BetHistory.findAndCountAll({
+      attributes: ["marketId", "marketName", "userId", "userName"],
+      where: whereCondition,
+      group: ["marketId", "marketName", "userId", "userName"],
+      limit: parseInt(pageSize),
+      offset,
     });
 
-    const uniqueUsers = [];
-
-    for (const bet of existingBets) {
-      const exists = uniqueUsers.find((user) => user.userId === bet.userId);
-      if (!exists) {
-        uniqueUsers.push({
-          marketId: bet.marketId,
-          marketName: bet.marketName,
-          userId: bet.userId,
-          userName: bet.userName,
-          bets: [],
-        });
-      }
+    if (!existingUser || existingUser.length == 0) {
+      res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "Data not found!")
+        );
     }
+    const totalBets = await Promise.all(existingUser.map(async (user) => {
+      const userBetCount = await BetHistory.count({
+        where: {
+          marketId,
+          userId: user.userId,
+        }
+      });
+      return userBetCount;
+    }));
+    
+    const formatData = {
+      marketId: existingUser[0].marketId,
+      marketName: existingUser[0].marketName,
+      data: existingUser.map((user, index) => ({
+        userId: user.userId,
+        userName: user.userName,
+        totalBets: totalBets[index],
+      })),
+    };
 
-    for (const bet of existingBets) {
-      const user = uniqueUsers.find((user) => user.userId === bet.userId);
-      if (user) {
-        user.bets.push({
-          betId: bet.betId,
-          runnerId: bet.runnerId,
-          runnerName: bet.runnerName,
-          rate: bet.rate,
-          value: bet.value,
-          type: bet.type,
-          bidAmount: bet.bidAmount,
-          date: bet.date,
-        });
-      }
-    }
-    const totalItems = existingBets.length;
+    const totalItems = count.length;
     const totalPages = Math.ceil(totalItems / parseInt(pageSize, 10));
-    const paginatedData = uniqueUsers.slice(
-      offset,
-      offset + parseInt(pageSize, 10)
-    );
 
     const pagination = {
       page: parseInt(page),
@@ -1242,10 +1225,10 @@ export const getBetsAfterWin = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          paginatedData,
+          formatData,
           true,
           statusCode.success,
-          "Success",
+          "Data fetch successfully! ",
           pagination
         )
       );
@@ -2474,6 +2457,158 @@ export const getSubadminResult = async (req, res) => {
         error.message
       )
     );
+  }
+};
+
+export const liveUsersBetHistory = async (req, res) => {
+  try {
+    const { marketId, userId } = req.params;
+    const { page = 1, pageSize = 10, search } = req.query;
+    const offset = (page - 1) * pageSize;
+
+    const whereCondition = { marketId, userId };
+
+    if (search) {
+      whereCondition.runnerName =  { [Op.like]: `%${search}%` };
+    }
+
+    const existingBets = await CurrentOrder.findAll({
+      where: whereCondition,
+      attributes: [
+        "betId",
+        "userId",
+        "userName",
+        "runnerId",
+        "runnerName",
+        "rate",
+        "value",
+        "type",
+        "bidAmount",
+        "date",
+      ],
+      order: [["date", "DESC"]],
+    });
+
+    if (!existingBets || existingBets.length == 0) {
+      res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "Data not found!")
+        );
+    }
+
+    const totalItems = existingBets.length;
+    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+    const paginatedData = existingBets.slice(
+      offset,
+      offset + parseInt(pageSize)
+    );
+
+    const pagination = {
+      page: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
+    res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Data featch successfully!",
+          pagination
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
+
+export const getBetsAfterWinHistory = async (req, res) => {
+  try {
+    const { marketId, userId } = req.params;
+    const { page = 1, pageSize = 10, search } = req.query;
+    const offset = (page - 1) * pageSize;
+
+    const whereCondition = { marketId, userId };
+
+    if (search) {
+      whereCondition.runnerName = { [Op.like]: `%${search}%` }; 
+    }
+
+    const existingBets = await BetHistory.findAll({
+      where: whereCondition,
+      attributes: [
+        "betId",
+        "userId",
+        "userName",
+        "runnerId",
+        "runnerName",
+        "rate",
+        "value",
+        "type",
+        "bidAmount",
+        "date",
+      ],
+      order: [["date", "DESC"]],
+    });
+
+    if (!existingBets || existingBets.length == 0) {
+      res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "Data not found!")
+        );
+    }
+
+    const totalItems = existingBets.length;
+    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
+    const paginatedData = existingBets.slice(
+      offset,
+      offset + parseInt(pageSize)
+    );
+
+    const pagination = {
+      page: parseInt(page),
+      pageSize: parseInt(pageSize),
+      totalPages,
+      totalItems,
+    };
+
+    res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Data featch successfully!",
+          pagination
+        )
+      );
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
   }
 };
 

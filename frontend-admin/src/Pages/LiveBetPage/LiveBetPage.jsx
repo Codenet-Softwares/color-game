@@ -196,10 +196,10 @@ const LiveBetPage = () => {
                             <td>{bet.marketName}</td>
                             <td>
                               <button
-                                className="btn btn-primary "
+                                className="btn btn-primary text-uppercase fw-bold "
                                 onClick={() => handleNavigate(bet.marketId)}
                               >
-                                Live Game
+                                live stats
                               </button>
                             </td>
                           </tr>

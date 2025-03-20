@@ -30,15 +30,18 @@ const WinTracker = () => {
 
   useEffect(() => {
     fetchBetTracker();
-  }, [winBetTracker.currentPage, winBetTracker.totalEntries, debouncedSearchTerm]);
-  
+  }, [
+    winBetTracker.currentPage,
+    winBetTracker.totalEntries,
+    debouncedSearchTerm,
+  ]);
+
   const fetchBetTracker = () => {
     GameService.winBetTracker(
       auth.user,
       winBetTracker.currentPage,
       winBetTracker.totalEntries,
       debouncedSearchTerm
-
     )
       .then((res) => {
         setWinBetTracker((prev) => ({
@@ -96,43 +99,42 @@ const WinTracker = () => {
           {/* Search and Entries Selection */}
           <div className="row mb-4">
             <div className="col-md-6 position-relative">
-                        <FaSearch
-                          style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: "20px",
-                            transform: "translateY(-50%)",
-                            color: "#6c757d",
-                            fontSize: "18px",
-                          }}
-                        />
-                        <input
-                          type="text"
-                          className="form-control fw-bold"
-                          placeholder="Search By Market Name..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-          
-                          style={{
-                            paddingLeft: "40px",
-                            borderRadius: "30px",
-                            border: "2px solid #3E5879",
-                          }}
-                        />
-                        {searchTerm && (
-                          <FaTimes
-                            onClick={handleClearSearch}
-                            style={{
-                              position: "absolute",
-                              top: "50%",
-                              right: "20px",
-                              transform: "translateY(-50%)",
-                              color: "#6c757d",
-                              cursor: "pointer",
-                            }}
-                          />
-                        )}
-                      </div>
+              <FaSearch
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "20px",
+                  transform: "translateY(-50%)",
+                  color: "#6c757d",
+                  fontSize: "18px",
+                }}
+              />
+              <input
+                type="text"
+                className="form-control fw-bold"
+                placeholder="Search By Market Name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                style={{
+                  paddingLeft: "40px",
+                  borderRadius: "30px",
+                  border: "2px solid #3E5879",
+                }}
+              />
+              {searchTerm && (
+                <FaTimes
+                  onClick={handleClearSearch}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: "20px",
+                    transform: "translateY(-50%)",
+                    color: "#6c757d",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </div>
 
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
@@ -200,12 +202,12 @@ const WinTracker = () => {
                           <td>{betTracker.marketName}</td>
                           <td>
                             <button
-                              className="btn btn-primary text-center"
+                              className="btn btn-primary text-center fw-bold text-uppercase "
                               onClick={() =>
                                 handleNavigate(betTracker.marketId)
                               }
                             >
-                              Bet History
+                              Bet stats
                             </button>
                           </td>
                         </tr>
