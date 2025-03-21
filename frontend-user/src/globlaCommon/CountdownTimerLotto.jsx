@@ -12,24 +12,24 @@ const CountdownTimerLotto = ({ endDate }) => {
       
         const { days, hours, minutes, seconds } = timeLeft;
   return (
-    <div className="countdown-container bg-dark mb-3 ">
+    <div className="countdown-container bg- mb-3 ">
     <span className="countdown-timer-lotto-cuxtomx__time  ">{days}</span>
-    <span className="countdown-timer-lotto-cuxtomx__label fw-semibold text-danger">Days</span>
+    <span className="countdown-timer-lotto-cuxtomx__label fw-bold text-dark">Days</span>
 
     <span className="countdown-timer-lotto-cuxtomx__colon  ">:</span>
 
     <span className="countdown-timer-lotto-cuxtomx__time">{hours}</span>
-    <span className="countdown-timer-lotto-cuxtomx__label fw-semibold text-danger">Hrs</span>
+    <span className="countdown-timer-lotto-cuxtomx__label fw-bold text-dark">Hrs</span>
 
     <span className="countdown-timer-lotto-cuxtomx__colon">:</span>
 
     <span className="countdown-timer-lotto-cuxtomx__time">{minutes}</span>
-    <span className="countdown-timer-lotto-cuxtomx__label fw-semibold text-danger">Mins</span>
+    <span className="countdown-timer-lotto-cuxtomx__label fw-bold text-dark">Mins</span>
 
     <span className="countdown-timer-lotto-cuxtomx__colon">:</span>
 
     <span className="countdown-timer-lotto-cuxtomx__time">{seconds}</span>
-    <span className="countdown-timer-lotto-cuxtomx__label fw-semibold text-danger">Secs</span>
+    <span className="countdown-timer-lotto-cuxtomx__label fw-bold text-dark">Secs</span>
   </div>
   )
 }

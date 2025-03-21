@@ -56,7 +56,7 @@ const LiveUserBet = () => {
         debouncedSearchTerm
       );
       const bets = response.data?.data || [];
-      console.log("line for bets", bets.marketName );
+      console.log("line for bets", bets.marketName);
 
       setUserBets((prev) => ({
         ...prev,
@@ -65,7 +65,6 @@ const LiveUserBet = () => {
         totalData: response?.data.pagination?.totalItems || 0,
       }));
       setMarketName(bets.marketName || "Unknown Market");
-  
     } catch (error) {
       toast.error(customErrorHandler(error));
     } finally {
@@ -94,7 +93,7 @@ const LiveUserBet = () => {
 
       if (response.status === 200) {
         toast.success("Market and bet deleted successfully!");
-        fetchLiveUserBet();
+
       }
     } catch (error) {
       toast.error(customErrorHandler(error));
@@ -171,7 +170,7 @@ const LiveUserBet = () => {
         <button
           className="btn btn-danger"
           onClick={() =>
-            handleDelete(row.marketId, row.runnerId, row.userId, row.betId)
+            handleDelete(marketId, row.runnerId, row.userId, row.betId)
           }
         >
           <FaTrashAlt />

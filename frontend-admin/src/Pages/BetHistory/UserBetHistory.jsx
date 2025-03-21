@@ -190,7 +190,7 @@ const UserBetHistory = () => {
                   className="btn btn-secondary mb-3"
                   onClick={handleBackToLiveBets}
                 >
-                  <FaArrowLeft /> Back to Live Bets - {marketName}
+                  <FaArrowLeft /> Back to Bets History - {marketName}
                 </button>
 
                 {/* Reusable Table */}
