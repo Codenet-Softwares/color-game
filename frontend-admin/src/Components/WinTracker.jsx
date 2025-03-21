@@ -92,7 +92,7 @@ const WinTracker = () => {
           }}
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase">
-            Win Bet Tracker
+            Winning Bets
           </h3>
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>

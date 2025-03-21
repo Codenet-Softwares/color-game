@@ -23,7 +23,7 @@ const SubAdminView = () => {
     remarks: "",
   });
   const toggleAccordion = (index, status, runnerName, remarks) => {
-    console.log("first====",runnerName,remarks)
+    console.log("first====", runnerName, remarks);
     if (status === "Pending") {
       toast.warning("Your submission is not yet approved.");
       return;
@@ -49,7 +49,7 @@ const SubAdminView = () => {
           ...prev,
           subAdminHistory: res.data?.data || [],
           totalPages: res?.data.pagination?.totalPages,
-          totalData: res?.data.pagination?.totalItems,
+          totalData: res?.data.pagination?.totalLimits,
         }));
       })
       .catch((err) => {
@@ -84,10 +84,17 @@ const SubAdminView = () => {
     setSearchTerm("");
   };
 
-  const handlePageChange = (pageNumber) => {
-    setSubAdminHistory((prev) => ({ ...prev, currentPage: pageNumber }));
+  // const handlePageChange = (pageNumber) => {
+  //   setSubAdminHistory((prev) => ({ ...prev, currentPage: pageNumber }));
+  // };
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= subAdminHistory?.totalPages) {
+      setSubAdminHistory((prev) => ({
+        ...prev,
+        currentPage: page,
+      }));
+    }
   };
-
   const handleStatusChange = (event) => {
     setStatusFilter(event.target.value);
   };
@@ -133,50 +140,52 @@ const SubAdminView = () => {
                   className="d-flex align-items-center"
                   style={{ position: "relative" }}
                 >
-                  {/* Search Icon */}
-                  <FaSearch
-                    style={{
-                      position: "absolute",
-                      top: "50%",
-                      left: "15px",
-                      transform: "translateY(-50%)",
-                      color: "#3E5879",
-                      fontSize: "18px",
-                    }}
-                  />
+                  <div style={{ position: "relative", flexGrow: 1 }}>
+                    {/* Search Icon */}
 
-                  {/* Search Input */}
-                  <input
-                    type="text"
-                    className="form-control fw-bold"
-                    placeholder="Search By Market Name..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                      paddingLeft: "40px",
-                      paddingRight: searchTerm ? "35px" : "15px",
-                      borderRadius: "30px",
-                      border: "2px solid #3E5879",
-                      width: "100%",
-                    }}
-                  />
-
-                  {/* Clear Search Icon */}
-                  {searchTerm && (
-                    <FaTimes
-                      onClick={handleClearSearch}
+                    <FaSearch
                       style={{
                         position: "absolute",
                         top: "50%",
-                        right: "15px",
+                        left: "15px",
                         transform: "translateY(-50%)",
-                        color: "#6c757d",
-                        cursor: "pointer",
-                        fontSize: "16px",
+                        color: "#3E5879",
+                        fontSize: "18px",
                       }}
                     />
-                  )}
 
+                    {/* Search Input */}
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="Search By Market Name..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      style={{
+                        paddingLeft: "40px",
+                        paddingRight: searchTerm ? "35px" : "15px",
+                        borderRadius: "30px",
+                        border: "2px solid #3E5879",
+                        width: "100%",
+                      }}
+                    />
+
+                    {/* Clear Search Icon */}
+                    {searchTerm && (
+                      <FaTimes
+                        onClick={handleClearSearch}
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          right: "15px",
+                          transform: "translateY(-50%)",
+                          color: "#6c757d",
+                          cursor: "pointer",
+                          fontSize: "16px",
+                        }}
+                      />
+                    )}
+                  </div>
                   {/* Dropdown for status selection */}
                   <select
                     className="form-select ms-3 fw-bold"
@@ -347,15 +356,16 @@ const SubAdminView = () => {
                 </table>
               </div>
             </SingleCard>
-
-            <Pagination
-              currentPage={subAdminHistory.currentPage}
-              totalPages={subAdminHistory.totalPages}
-              handlePageChange={handlePageChange}
-              startIndex={startIndex}
-              endIndex={endIndex}
-              totalData={subAdminHistory.totalData}
-            />
+            {subAdminHistory?.subAdminHistory?.length > 0 && (
+              <Pagination
+                currentPage={subAdminHistory.currentPage}
+                totalPages={subAdminHistory.totalPages}
+                handlePageChange={handlePageChange}
+                startIndex={startIndex}
+                endIndex={endIndex}
+                totalData={subAdminHistory.totalData}
+              />
+            )}
           </div>
         </div>
       </div>

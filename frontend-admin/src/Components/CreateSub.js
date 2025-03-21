@@ -93,7 +93,7 @@ const CreateSub = () => {
               className="card-header text-white p-1"
               style={{ backgroundColor: "#26416e", textAlign: "center" }}
             >
-              <b className="mb-0">CREATE USER ROLE</b>
+              <b className="mb-0 ">CREATE USER ROLE</b>
             </div>
 
             <div className="card-body">
@@ -101,7 +101,7 @@ const CreateSub = () => {
                 <div className="mb-3">
                   <label
                     htmlFor="username"
-                    className="form-label"
+                    className="form-label "
                     style={{ fontWeight: "bold" }}
                   >
                     Username
