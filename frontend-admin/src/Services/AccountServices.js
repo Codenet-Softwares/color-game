@@ -184,10 +184,10 @@ class AccountService {
     });
   }
   
-  subAdminResult(user, page, pageSize) {
+  subAdminResult(user, page, pageSize,search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/subAdmin/get-result?page=${page}&pageSize=${pageSize}`,
+      url: API_HOST + `/api/subAdmin/get-result?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

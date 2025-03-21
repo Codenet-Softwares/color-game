@@ -6,18 +6,32 @@ import { toast } from "react-toastify";
 import { customErrorHandler } from "../../Utils/helper";
 import { useAuth } from "../../Utils/Auth";
 import AccountServices from "../../Services/AccountServices";
+import { FaSearch, FaTimes } from "react-icons/fa";
+
 const SubAdminWinResult = () => {
   const [subAdminWinResult, setSubAdminWinResult] =
     useState(getSubAdminWinResult);
-  const auth = useAuth();
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
+  const auth = useAuth();
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setSubAdminWinResult((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
   const fetchSubAdminResult = () => {
     auth.showLoader();
     AccountServices.subAdminResult(
       auth.user,
       subAdminWinResult?.currentPage,
-      subAdminWinResult?.totalEntries
-      // viewWinningHistory.debouncedSearchTerm
+      subAdminWinResult?.totalEntries,
+      debouncedSearchTerm
     )
       .then((res) => {
         setSubAdminWinResult((prev) => ({
@@ -39,8 +53,11 @@ const SubAdminWinResult = () => {
   }, [
     subAdminWinResult?.currentPage,
     subAdminWinResult?.totalEntries,
-    subAdminWinResult?.debouncedSearchTerm,
+    debouncedSearchTerm,
   ]);
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
   const toggleAccordion = (index) => {
     setSubAdminWinResult((prevState) => ({
       ...prevState,
@@ -87,9 +104,73 @@ const SubAdminWinResult = () => {
             </h3>
           </div>
           <div className="card-body" style={{ background: "#E1D1C7" }}>
+            <div className="row mb-4">
+              <div className="col-md-6 position-relative">
+                <FaSearch
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "20px",
+                    transform: "translateY(-50%)",
+                    color: "#3E5879",
+                    fontSize: "18px",
+                  }}
+                />
+                <input
+                  type="text"
+                  className="form-control fw-bold"
+                  placeholder="Search By Market Name..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  style={{
+                    paddingLeft: "40px",
+                    borderRadius: "30px",
+                    border: "2px solid #3E5879",
+                  }}
+                />
+                {searchTerm && (
+                  <FaTimes
+                    onClick={handleClearSearch}
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      right: "20px",
+                      transform: "translateY(-50%)",
+                      color: "#6c757d",
+                      cursor: "pointer",
+                    }}
+                  />
+                )}
+              </div>
+
+              <div className="col-md-6 text-end">
+                <label className="me-2 fw-bold">Show</label>
+                <select
+                  className="form-select rounded-pill d-inline-block w-auto"
+                  value={subAdminWinResult.totalEntries}
+                  style={{
+                    borderRadius: "50px",
+                    border: "2px solid #3E5879",
+                  }}
+                  onChange={(e) =>
+                    setSubAdminWinResult((prev) => ({
+                      ...prev,
+                      totalEntries: parseInt(e.target.value),
+                    }))
+                  }
+                >
+                  <option value={10}>10</option>
+                  <option value={25}>25</option>
+                  <option value={50}>50</option>
+                  <option value={100}>100</option>
+                </select>
+                <label className="ms-2 fw-bold">Entries</label>
+              </div>
+            </div>
+
             {/* Table */}
             <SingleCard
-              className=" mb-5 text-center"
+              className=" mb-5 text-center mt-3"
               style={{
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
               }}

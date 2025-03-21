@@ -14,6 +14,13 @@ const ViewSubAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
+ 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSubadmin, setSelectedSubadmin] = useState(null);
+  const handleOpenModal = (name) => {
+    setShowModal(true);
+    setSelectedSubadmin(name);
+  };
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -25,13 +32,6 @@ const ViewSubAdmin = () => {
 
     return () => clearTimeout(timer);
   }, [searchTerm]);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedSubadmin, setSelectedSubadmin] = useState(null);
-  const handleOpenModal = (name) => {
-    setShowModal(true);
-    setSelectedSubadmin(name);
-  };
-
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -56,14 +56,7 @@ const ViewSubAdmin = () => {
     debouncedSearchTerm,
   ]);
 
-  // useEffect(() => {
-  //   fetchViewWinningRequest();
-  // }, [
-  //   viewSubadmin?.currentPage,
-  //   viewSubadmin?.totalEntries,
-  //   viewSubadmin?.debouncedSearchTerm,
-  //   viewSubadmin?.isRefresh,
-  // ]);
+
 
   const fetchViewWinningRequest = () => {
     auth.showLoader();
@@ -276,7 +269,7 @@ const ViewSubAdmin = () => {
                   ) : (
                     <tr>
                       <td
-                        colSpan="3"
+                        colSpan="4"
                         className="text-center text-danger fw-bold p-3"
                       >
                         No Data Found
@@ -288,7 +281,7 @@ const ViewSubAdmin = () => {
             </div>
           </SingleCard>
 
-          {viewSubadmin?.totalPages > 0 && (
+          {viewSubadmin?.viewSubadmin > 0 && (
             <Pagination
               currentPage={viewSubadmin?.currentPage}
               totalPages={viewSubadmin?.totalPages}

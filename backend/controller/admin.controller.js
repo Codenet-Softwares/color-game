@@ -152,6 +152,7 @@ export const getSubAdmins = async (req, res) => {
     const subAdmins = await admins.findAll({
       where: searchCondition,
       attributes: ["adminId", "userName", "roles", "permissions"],
+      order: [["id","DESC"]],
     });
 
     const totalItems = subAdmins.length;
@@ -176,7 +177,6 @@ export const getSubAdmins = async (req, res) => {
           pagination
         )
       );
-
 
   } catch (error) {
     res
@@ -531,6 +531,16 @@ export const afterWining = async (req, res) => {
     }
 
     const gameId = market.gameId;
+    const runner = await Runner.findOne({ where: { runnerId } });
+    if (!runner) {
+      return res
+        .status(statusCode.badRequest)
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Runner not found")
+        );
+    }
+
+    const runnerName = runner.runnerName;
 
     if (userRole === 'subAdmin') {
       const existingResultRequest = await ResultRequest.findOne({
@@ -589,6 +599,7 @@ export const afterWining = async (req, res) => {
         marketId,
         marketName : market.marketName,
         runnerId,
+        runnerName,
         isWin,
         declaredBy,
         declaredById,
@@ -1418,7 +1429,14 @@ export const approveResult = async (req, res) => {
     const isApproved = runnerId1 === runnerId2;
     const type = isApproved ? 'Matched' : 'Unmatched';
 
+    let remarks = '';
     if (action === 'reject') {
+      if (type === 'Matched') {
+        remarks = "Your result has been rejected. Kindly reach out to your upline for further guidance.";
+      } else {
+        remarks = "Oops! Your submission does not match our records. Please check the data and try again.";
+      }
+
       await ResultHistory.create({
         gameId: gameId,
         gameName: gameName,
@@ -1430,14 +1448,15 @@ export const approveResult = async (req, res) => {
         type: type,
         declaredByNames: declaredByNames,
         declaredById: declaredByIds,
-        remarks: type === 'Matched' 
-    ? "Your result has been rejected. Kindly reach out to your upline for further guidance." 
-    : "Oops! Your submission does not match our records. Please check the data and try again.",
+        remarks: remarks,
         status: 'Rejected',
         createdAt: new Date(),
       });
 
-    await ResultRequest.update({ status : "Rejected"}, { where : {marketId, status : "Pending"}})
+      await ResultRequest.update(
+        { status: "Rejected", type: type, remarks: remarks },
+        { where: { marketId, status: "Pending" } }
+      );
 
       await ResultRequest.destroy({ where: { marketId } });
 
@@ -1453,6 +1472,8 @@ export const approveResult = async (req, res) => {
         );
     }
 
+    remarks = "Congratulations! Your result has been approved.";
+
     await ResultHistory.create({
       gameId: gameId,
       gameName: gameName,
@@ -1464,13 +1485,15 @@ export const approveResult = async (req, res) => {
       type: type,
       declaredByNames: declaredByNames,
       declaredById: declaredByIds,
-      remarks : "Congratulations! Your result has been approved.",
+      remarks: remarks,
       status: 'Approved',
       createdAt: new Date(),
     });
-    
-  
-    await ResultRequest.update({ status : "Approved"}, { where : {marketId, status : "Pending"}})
+
+    await ResultRequest.update(
+      { status: "Approved", type: type, remarks: remarks },
+      { where: { marketId, status: "Pending" } }
+    );
 
     await ResultRequest.destroy({ where: { marketId } });
 
@@ -2177,59 +2200,73 @@ export const afterWinVoidMarket = async (req, res) => {
 export const getSubAdminHistory = async (req, res) => {
   try {
     const adminId = req.user?.adminId;
-    const { status, page = 1, pageSize = 10, search } = req.query;
-    const offset = (page - 1) * pageSize;
-    const whereRequest = { deletedAt: null, declaredById: adminId };
-    const whereHistory = {
-      [Op.and]: [
-        Sequelize.literal(`JSON_SEARCH(declaredById, 'one', '${adminId}') IS NOT NULL`)
-      ]
-    };
+    const page = parseInt(req.query.page, 10) || 1; 
+    const limit = parseInt(req.query.limit, 10) || 10; 
+    const status = req.query.status; 
+    const offset = (page - 1) * limit;
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    let baseQuery = `
+      SELECT 
+        marketName, 
+        marketId, 
+        runnerName, 
+        declaredBy, 
+        status, 
+        type, 
+        remarks, 
+        deletedAt 
+      FROM ResultRequests 
+      WHERE declaredById = :adminId
+      AND createdAt >= :sevenDaysAgo
+    `;
 
     if (status) {
-      whereRequest.status = status;
-      whereHistory[Op.and].push({ status });
+      baseQuery += ` AND status = :status`;
     }
 
-    if (search) {
-      whereRequest.marketName = { [Op.like]: `%${search}%` };
-      whereHistory[Op.and].push({ marketName: { [Op.like]: `%${search}%` } });
+    baseQuery += ` LIMIT :limit OFFSET :offset`;
+
+    const resultRequests = await sequelize.query(baseQuery, {
+      replacements: { adminId, status, limit, offset, sevenDaysAgo },
+      type: sequelize.QueryTypes.SELECT,
+    });
+
+    let countQuery = `
+      SELECT COUNT(*) as count 
+      FROM ResultRequests 
+      WHERE declaredById = :adminId
+      AND createdAt >= :sevenDaysAgo
+    `;
+
+    if (status) {
+      countQuery += ` AND status = :status`;
     }
 
-    // Fetch ResultRequest data (Pending status)
-    const resultRequests = await ResultRequest.findAll({
-      attributes: ["marketName", "marketId", "status"],
-      where: whereRequest,
-      group: ["marketId", "status"],
-      raw: true,
+    const totalCount = await sequelize.query(countQuery, {
+      replacements: { adminId, status, sevenDaysAgo },
+      type: sequelize.QueryTypes.SELECT,
     });
 
-    // Fetch ResultHistory data (Approved/Rejected)
-    const resultHistories = await ResultHistory.findAll({
-      attributes: ["marketName", "marketId", "type", "status", "remarks"],
-      where: whereHistory,
-      raw: true,
-    });
-
-    // Merge and sort combined results
-    const combinedResults = [...resultRequests, ...resultHistories].sort(
-      (a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)
-    );
-
-    // Pagination
-    const totalItems = combinedResults.length;
-    const totalPages = Math.ceil(totalItems / parseInt(pageSize));
-    const paginatedData = combinedResults.slice(offset, offset + parseInt(pageSize));
+    const totalPages = Math.ceil(totalCount[0].count / limit);
 
     const pagination = {
-      page: parseInt(page),
-      limit: parseInt(pageSize),
-      totalPages,
-      totalItems,
+      page: page,
+      limit: limit,
+      totalPages: totalPages,
+      totalLimits: totalCount[0].count,
     };
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(paginatedData, true, statusCode.success, "Data fetched successfully!", pagination)
+      apiResponseSuccess(
+        resultRequests,
+        true,
+        statusCode.success,
+        "Data fetched successfully!",
+        pagination
+      )
     );
   } catch (error) {
     return res.status(statusCode.internalServerError).send(
