@@ -2200,9 +2200,7 @@ export const afterWinVoidMarket = async (req, res) => {
 export const getSubAdminHistory = async (req, res) => {
   try {
     const adminId = req.user?.adminId;
-    const page = parseInt(req.query.page, 10) || 1; 
-    const limit = parseInt(req.query.limit, 10) || 10; 
-    const status = req.query.status; 
+    const { page = 1, limit = 10, status, search = "" } = req.query;
     const offset = (page - 1) * limit;
 
     const sevenDaysAgo = new Date();
@@ -2224,13 +2222,17 @@ export const getSubAdminHistory = async (req, res) => {
     `;
 
     if (status) {
-      baseQuery += ` AND status = :status`;
+      baseQuery += ` AND status = :status ORDER BY createdAt DESC LIMIT :limit OFFSET :offset`;
     }
 
-    baseQuery += ` LIMIT :limit OFFSET :offset`;
+    if (search) {
+      baseQuery += " AND marketName LIKE :search";
+    }
+
+    baseQuery += ` ORDER BY createdAt DESC LIMIT :limit OFFSET :offset`;
 
     const resultRequests = await sequelize.query(baseQuery, {
-      replacements: { adminId, status, limit, offset, sevenDaysAgo },
+      replacements: { adminId, status, limit, offset, sevenDaysAgo, search: search ? `%${search}%` : null,  },
       type: sequelize.QueryTypes.SELECT,
     });
 
@@ -2245,8 +2247,12 @@ export const getSubAdminHistory = async (req, res) => {
       countQuery += ` AND status = :status`;
     }
 
+    if (search) {
+      countQuery += " AND marketName LIKE :search";
+    }
+
     const totalCount = await sequelize.query(countQuery, {
-      replacements: { adminId, status, sevenDaysAgo },
+      replacements: { adminId, status, sevenDaysAgo, search: search ? `%${search}%` : null },
       type: sequelize.QueryTypes.SELECT,
     });
 
@@ -2278,7 +2284,7 @@ export const getSubAdminHistory = async (req, res) => {
 export const getSubadminResult = async (req, res) => {
   try {
     const adminId = req.user?.adminId;
-    const { page = 1 , pageSize = 10 ,} = req.query;
+    const { page = 1 , pageSize = 10 , search = ""} = req.query;
     const offset = (page - 1) * pageSize;
 
     if (!adminId) {
@@ -2287,11 +2293,16 @@ export const getSubadminResult = async (req, res) => {
         .send(apiResponseErr(null, false, statusCode.badRequest, "Declared By ID is required"));
     }
 
+    const whereCondition = { status : "Approved", declaredById: Sequelize.literal(`JSON_CONTAINS(declaredById, '"${adminId}"')`)}
+
+    if(search)
+    {
+      whereCondition.marketName = { [Op.like]: `%${search}%` };
+    }
+
     const results = await ResultHistory.findAll({
-      where: {
-        status: "Approved",
-        declaredById: Sequelize.literal(`JSON_CONTAINS(declaredById, '"${adminId}"')`),
-      },
+      where: whereCondition,
+      order : [["createdAt", "DESC"]]
     });
 
     const structuredResults = results.map(result => {
