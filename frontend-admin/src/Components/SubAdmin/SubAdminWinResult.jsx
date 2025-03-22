@@ -9,8 +9,14 @@ import AccountServices from "../../Services/AccountServices";
 import { FaSearch, FaTimes } from "react-icons/fa";
 
 const SubAdminWinResult = () => {
-  const [subAdminWinResult, setSubAdminWinResult] =
-    useState(getSubAdminWinResult);
+  const [subAdminWinResult, setSubAdminWinResult] = useState({
+    getSubAdminWinResult,
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 10,
+    name: "",
+    totalData: 0,
+  });
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
