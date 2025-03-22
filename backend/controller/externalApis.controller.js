@@ -641,7 +641,16 @@ export const runnerExternalProfitLoss = async (req, res) => {
 
 export const liveMarketBet = async (req, res) => {
   try {
-    const { marketId } = req.params;
+    const { marketId, userName } = req.params;
+
+    const baseURL = process.env.WHITE_LABEL_URL;
+    const response = await axios.get(
+      `${baseURL}/api/users-hierarchy/${userName}`
+    );
+
+
+    const { users } = response.data.data; 
+    const userIds = users.map((user) => user.userId);
 
     const marketDataRows = await Market.findAll({
       where: { marketId, hideMarketUser: false },
@@ -682,8 +691,11 @@ export const liveMarketBet = async (req, res) => {
         where: {
           marketId: marketDataRows[0].marketId,
           runnerId: runner.runnerId,
+          userId: userIds, 
         },
       });
+
+      
 
       marketDataObj.runners.push({
         id: runner.id,
