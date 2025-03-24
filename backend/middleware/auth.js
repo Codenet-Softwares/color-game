@@ -37,6 +37,8 @@ export const authorize = (roles, permissions) => {
         existingUser = await userSchema.findOne({
           where: {
             id: user.id,
+            isActive : true,
+            locked : true,
           },
         });
       }

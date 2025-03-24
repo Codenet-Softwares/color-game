@@ -53,7 +53,15 @@ userSchema.init(
     loginStatus: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
+    isActive: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
+    locked: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    },
   },
   {
     sequelize,
