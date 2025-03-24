@@ -154,7 +154,7 @@ class AccountService {
   viewWinninghistory(user, page, pageSize,search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/subAdmin/result-histories?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url: API_HOST + `/api/subAdmin/result-histories?page=${page}&pageSize=${pageSize}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
