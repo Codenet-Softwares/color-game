@@ -2094,3 +2094,55 @@ export const activityLog = async (req, res) => {
       );
   }
 };
+
+export const userActiveInactive = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { isActive, locked } = req.body;
+    
+    const existingUser = await userSchema.findOne({ where: { userId } });
+
+    if (!existingUser || existingUser.length == 0) {
+      res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "No user found!.")
+        );
+    }
+
+    if (isActive === true) {
+
+      existingUser.isActive = true;
+      existingUser.locked = true;
+
+    } else if (isActive === false) {
+
+      if (locked === false) {
+        existingUser.locked = false;
+        existingUser.isActive = false;
+      } else {
+        existingUser.isActive = false;
+        existingUser.locked = true;
+      }
+    }
+
+    existingUser.save();
+
+    res
+    .status(statusCode.success)
+    .send(
+      apiResponseSuccess(existingUser, true, statusCode.success, "User update successfully.")
+    );
+  } catch (error) {
+    res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          error.data ?? null,
+          false,
+          error.responseCode ?? statusCode.internalServerError,
+          error.errMessage ?? error.message
+        )
+      );
+  }
+};

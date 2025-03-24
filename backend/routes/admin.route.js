@@ -96,5 +96,6 @@ export const AdminRoute = (app) => {
   app.get('/api/get-bets-afterWin-history/:marketId/:userId', validateBetsAfterWin, customErrorHandler, authorize([string.Admin]), getBetsAfterWinHistory);
 
   app.get('/api/get-Details-winning-bet/:marketId/:userId',validateBetsAfterWin,customErrorHandler,authorize([string.Admin]), getDetailsWinningBet);
+
 };
 

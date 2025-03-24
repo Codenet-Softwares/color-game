@@ -24,9 +24,11 @@ import {
   getUserBetList,
   getUserCurrentOrderGames,
   activityLog,
+  userActiveInactive,
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
 import {
+  activeInactive,
   bidHistorySchema,
   bidTypeSchema,
   calculateProfitLossValidate,
@@ -128,5 +130,7 @@ export const UserRoute = (app) => {
   app.get('/api/user-currentOrder-games', authorize([string.User]), getUserCurrentOrderGames)
 
   app.get('/api/user-activitylog', authorize([string.User]), activityLog)
+
+  app.put('/api/user/active-inactive/:userId',activeInactive,customErrorHandler,  userActiveInactive);
 
 };

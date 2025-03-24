@@ -830,3 +830,17 @@ export const validateVoidAfterWin = [
     .notEmpty().withMessage('userId is required')
     .isUUID().withMessage('userId must be a valid UUID'),
 ]
+
+export const activeInactive = [
+  param('userId').trim().notEmpty().withMessage('User id is required'),
+  body('isActive')
+    .notEmpty()
+    .withMessage('isActive is required')
+    .isBoolean()
+    .withMessage('isActive must be a boolean'),
+  body('locked')
+    .notEmpty()
+    .withMessage('locked is required')
+    .isBoolean()
+    .withMessage('locked must be a boolean'),
+];
