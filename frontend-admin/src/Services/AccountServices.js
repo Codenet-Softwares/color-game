@@ -133,7 +133,7 @@ class AccountService {
   viewWinningRequest(user, page, pageSize,search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/get-result-requests?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url: API_HOST + `/api/get-result-requests?page=${page}&pageSize=${pageSize}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
