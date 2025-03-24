@@ -5,7 +5,7 @@ import { useAuth } from "../Utils/Auth";
 import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import SingleCard from "./common/singleCard";
-import { FaEdit, FaTrashAlt, FaKey, FaSearch, FaTimes } from "react-icons/fa";
+import { FaKey, FaSearch, FaTimes } from "react-icons/fa";
 import Pagination from "./Pagination";
 import Modal from "../Components/ReusableModal/Modal";
 import SubAdminResetPassword from "./SubAdminResetPassword/SubAdminResetPassword";
@@ -14,7 +14,6 @@ const ViewSubAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
- 
   const [showModal, setShowModal] = useState(false);
   const [selectedSubadmin, setSelectedSubadmin] = useState(null);
   const handleOpenModal = (name) => {
@@ -56,8 +55,6 @@ const ViewSubAdmin = () => {
     debouncedSearchTerm,
   ]);
 
-
-
   const fetchViewWinningRequest = () => {
     auth.showLoader();
     AccountServices.viewSubAdmin(
@@ -75,7 +72,6 @@ const ViewSubAdmin = () => {
           totalPages: res?.data?.pagination?.totalPages || 1,
           totalData: res?.data?.pagination?.totalItems || 0,
         }));
-        
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
@@ -283,16 +279,15 @@ const ViewSubAdmin = () => {
           </SingleCard>
 
           {viewSubadmin?.totalData > 0 && (
-  <Pagination
-    currentPage={viewSubadmin?.currentPage}
-    totalPages={viewSubadmin?.totalPages}
-    handlePageChange={handlePageChange}
-    startIndex={startIndex}
-    endIndex={endIndex}
-    totalData={viewSubadmin?.totalData}
-  />
-)}
-
+            <Pagination
+              currentPage={viewSubadmin?.currentPage}
+              totalPages={viewSubadmin?.totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={viewSubadmin?.totalData}
+            />
+          )}
         </div>
       </div>
     </div>
