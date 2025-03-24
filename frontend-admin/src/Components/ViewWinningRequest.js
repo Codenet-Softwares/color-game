@@ -10,8 +10,8 @@ import Pagination from "./Pagination";
 import { FaSearch, FaTimes } from "react-icons/fa";
 
 const ViewWinningRequest = () => {
-  // const [searchTerm, setSearchTerm] = useState("");
-  // const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [viewWinningRequest, setViewWinningRequest] = useState(
     getViewWinningRequest()
   );
@@ -35,24 +35,24 @@ const ViewWinningRequest = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setDebouncedSearchTerm(searchTerm);
-  //     setViewWinningRequest((prev) => ({
-  //       ...prev,
-  //       currentPage: 1, 
-  //     }));
-  //   }, 500);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setViewWinningRequest((prev) => ({
+        ...prev,
+        currentPage: 1, 
+      }));
+    }, 500);
 
-  //   return () => clearTimeout(timer);
-  // }, [searchTerm]);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   useEffect(() => {
     fetchViewWinningRequest();
   }, [
     viewWinningRequest?.currentPage,
     viewWinningRequest?.totalEntries,
-    // debouncedSearchTerm,
+    debouncedSearchTerm,
     viewWinningRequest?.isRefresh,
   ]);
 
@@ -62,7 +62,7 @@ const ViewWinningRequest = () => {
       auth.user,
       viewWinningRequest?.currentPage,
       viewWinningRequest?.totalEntries,
-      // debouncedSearchTerm
+      debouncedSearchTerm
     )
       .then((res) => {
         setViewWinningRequest((prev) => ({
@@ -81,9 +81,9 @@ const ViewWinningRequest = () => {
   };
 
   console.log("first", viewWinningRequest);
-  // const handleClearSearch = () => {
-  //   setSearchTerm("");
-  // };
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
   let startIndex = Math.min(
     (Number(viewWinningRequest?.currentPage) - 1) *
       Number(viewWinningRequest?.totalEntries) +
@@ -112,7 +112,7 @@ const ViewWinningRequest = () => {
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
           {/* Search and Entries Selection */}
-          {/* <div className="row mb-4">
+          <div className="row mb-4">
             <div className="col-md-6 position-relative">
               <FaSearch
                 style={{
@@ -174,7 +174,7 @@ const ViewWinningRequest = () => {
               </select>
               <label className="ms-2 fw-bold">Entries</label>
             </div>
-          </div> */}
+          </div>
 
           {/* Table */}
           <SingleCard

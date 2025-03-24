@@ -15,23 +15,23 @@ const ViewWinningHistory = () => {
   const [viewWinningHistory, setViewWinningHistory] = useState(
     getViewWinningHistory()
   );
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setDebouncedSearchTerm(searchTerm);
-  //     setViewWinningHistory((prev) => ({
-  //       ...prev,
-  //       currentPage: 1, 
-  //     }));
-  //   }, 500);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setViewWinningHistory((prev) => ({
+        ...prev,
+        currentPage: 1, 
+      }));
+    }, 500);
 
-  //   return () => clearTimeout(timer);
-  // }, [searchTerm]);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
   useEffect(() => {
     fetchviewWinningHistory();
   }, [
     viewWinningHistory?.currentPage,
     viewWinningHistory?.totalEntries,
-    // debouncedSearchTerm,
+    debouncedSearchTerm,
   ]);
 
   const fetchviewWinningHistory = () => {
@@ -40,7 +40,7 @@ const ViewWinningHistory = () => {
       auth.user,
       viewWinningHistory?.currentPage,
       viewWinningHistory?.totalEntries,
-      // debouncedSearchTerm
+      debouncedSearchTerm
     )
       .then((res) => {
         setViewWinningHistory((prev) => ({
@@ -111,9 +111,9 @@ const ViewWinningHistory = () => {
       }));
     }
   };
-  // const handleClearSearch = () => {
-  //   setSearchTerm("");
-  // };
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
   const toggleAccordion = (index) => {
     setViewWinningHistory((prevState) => ({
       ...prevState,
@@ -151,7 +151,7 @@ const ViewWinningHistory = () => {
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
           {/* Search and Entries Selection */}
-          {/* <div className="row mb-4">
+         <div className="row mb-4">
             <div className="col-md-6 position-relative">
               <FaSearch
                 style={{
@@ -189,7 +189,7 @@ const ViewWinningHistory = () => {
                 />
               )}
             </div>
-
+{/* 
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
               <select
@@ -212,8 +212,8 @@ const ViewWinningHistory = () => {
                 <option value={100}>100</option>
               </select>
               <label className="ms-2 fw-bold">Entries</label>
-            </div>
-          </div> */}
+            </div> */}
+          </div>
 
           {/* Table */}
           <SingleCard
