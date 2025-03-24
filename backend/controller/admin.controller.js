@@ -1665,11 +1665,10 @@ export const approveResult = async (req, res) => {
 
 export const getResultRequests = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const { page = 1, limit = 10, search } = req.query;
     const offset = (page - 1) * limit;
 
-    const { count, rows: resultRequests } = await ResultRequest.findAndCountAll({
+    const resultRequests  = await ResultRequest.findAll({
       where: {
         deletedAt: null,
       },
@@ -1711,7 +1710,17 @@ export const getResultRequests = async (req, res) => {
 
     const formattedResultRequests = Object.values(groupedData);
 
-    const totalItems = formattedResultRequests.length;
+    console.log("formattedResultRequests..",formattedResultRequests)
+
+    let filteredResults = formattedResultRequests;
+    
+    if (search) {
+        filteredResults = formattedResultRequests.filter(item => 
+            item.marketName.toLowerCase().includes(search.toLowerCase())
+        );
+    }
+
+    const totalItems = filteredResults.length;
     const totalPages = Math.ceil(totalItems / limit);
 
     const pagination = {
@@ -1725,7 +1734,7 @@ export const getResultRequests = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          formattedResultRequests,
+          filteredResults,
           true,
           statusCode.success,
           "Result requests fetched successfully",
@@ -1749,10 +1758,8 @@ export const getResultRequests = async (req, res) => {
 
 export const getSubAdminResultHistory = async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const { page = 1, limit = 10, search = "", type } = req.query;
     const offset = (page - 1) * limit;
-    const type = req.query.type;
 
     const queryOptions = {
       attributes: {
@@ -1772,7 +1779,7 @@ export const getSubAdminResultHistory = async (req, res) => {
       };
     }
 
-    const { count, rows: resultHistories } = await ResultHistory.findAndCountAll(queryOptions);
+    const resultHistories  = await ResultHistory.findAll(queryOptions);
 
     const marketIds = resultHistories.map(history => history.marketId);
     const markets = await Market.findAll({
@@ -1819,10 +1826,22 @@ export const getSubAdminResultHistory = async (req, res) => {
 
     const formattedResultHistories = Object.values(groupedData);
 
-    const paginatedData = formattedResultHistories.slice(offset, offset + limit);
+    let filteredResults = formattedResultHistories;
 
-    const totalItems = formattedResultHistories.length;
+    if (search) {
+      filteredResults = formattedResultHistories.filter((item) =>
+        item.marketName.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    const totalItems = filteredResults.length;
     const totalPages = Math.ceil(totalItems / limit);
+
+    const validPage = page > totalPages ? 1 : page;
+    const validOffset = (validPage - 1) * limit;
+    
+    const paginatedData = filteredResults.slice(validOffset, validOffset + limit);
+
     const pagination = {
       page: page,
       limit: limit,
