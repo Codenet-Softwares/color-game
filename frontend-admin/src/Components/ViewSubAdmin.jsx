@@ -5,7 +5,7 @@ import { useAuth } from "../Utils/Auth";
 import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import SingleCard from "./common/singleCard";
-import { FaEdit, FaTrashAlt, FaKey, FaSearch, FaTimes } from "react-icons/fa";
+import { FaKey, FaSearch, FaTimes } from "react-icons/fa";
 import Pagination from "./Pagination";
 import Modal from "../Components/ReusableModal/Modal";
 import SubAdminResetPassword from "./SubAdminResetPassword/SubAdminResetPassword";
@@ -14,7 +14,6 @@ const ViewSubAdmin = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
- 
   const [showModal, setShowModal] = useState(false);
   const [selectedSubadmin, setSelectedSubadmin] = useState(null);
   const handleOpenModal = (name) => {
@@ -55,8 +54,6 @@ const ViewSubAdmin = () => {
     viewSubadmin?.totalEntries,
     debouncedSearchTerm,
   ]);
-
-
 
   const fetchViewWinningRequest = () => {
     auth.showLoader();
@@ -281,7 +278,7 @@ const ViewSubAdmin = () => {
             </div>
           </SingleCard>
 
-          {viewSubadmin?.viewSubadmin > 0 && (
+          {viewSubadmin?.totalData > 0 && (
             <Pagination
               currentPage={viewSubadmin?.currentPage}
               totalPages={viewSubadmin?.totalPages}

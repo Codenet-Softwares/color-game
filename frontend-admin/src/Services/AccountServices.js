@@ -130,10 +130,10 @@ class AccountService {
     });
   }
 
-  viewWinningRequest(user, page, pageSize) {
+  viewWinningRequest(user, page, pageSize,search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/get-result-requests?page=${page}&pageSize=${pageSize}`,
+      url: API_HOST + `/api/get-result-requests?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -151,10 +151,10 @@ class AccountService {
     });
   }
 
-  viewWinninghistory(user, page, pageSize) {
+  viewWinninghistory(user, page, pageSize,search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/subAdmin/result-histories?page=${page}&pageSize=${pageSize}`,
+      url: API_HOST + `/api/subAdmin/result-histories?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
