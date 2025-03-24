@@ -75,6 +75,7 @@ const ViewSubAdmin = () => {
           totalPages: res?.data?.pagination?.totalPages || 1,
           totalData: res?.data?.pagination?.totalItems || 0,
         }));
+        
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
@@ -281,16 +282,17 @@ const ViewSubAdmin = () => {
             </div>
           </SingleCard>
 
-          {viewSubadmin?.viewSubadmin > 0 && (
-            <Pagination
-              currentPage={viewSubadmin?.currentPage}
-              totalPages={viewSubadmin?.totalPages}
-              handlePageChange={handlePageChange}
-              startIndex={startIndex}
-              endIndex={endIndex}
-              totalData={viewSubadmin?.totalData}
-            />
-          )}
+          {viewSubadmin?.totalData > 0 && (
+  <Pagination
+    currentPage={viewSubadmin?.currentPage}
+    totalPages={viewSubadmin?.totalPages}
+    handlePageChange={handlePageChange}
+    startIndex={startIndex}
+    endIndex={endIndex}
+    totalData={viewSubadmin?.totalData}
+  />
+)}
+
         </div>
       </div>
     </div>
