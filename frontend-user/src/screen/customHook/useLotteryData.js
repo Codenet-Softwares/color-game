@@ -9,6 +9,8 @@ import {
   PurhaseLotteryTicketUser,
 } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
+import { collection, doc, onSnapshot } from "firebase/firestore";
+import { db } from "../Lottery/firebaseStore/lotteryFirebase";
 
 const useLotteryData = (MarketId) => {
   const { updateWalletAndExposure } = useAppContext(); // Get update function from context for wallet and exposure
@@ -75,47 +77,22 @@ const useLotteryData = (MarketId) => {
     fetchLotteryData();
   }, [MarketId, lotteryData.isUpdate]);
 
-  // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
+
+  // Firebase work happening here 
   useEffect(() => {
-    const eventSource = new EventSource(
-      "https://lottery.server.dummydoma.in/lottery-events"
-    );
-    eventSource.onmessage = function (event) {
-      try {
-        const updates = JSON.parse(event.data);
-        console.log("Parsed updates:", updates);
+    const unsubscribe = onSnapshot(collection(db, "lottery"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-        if (updates?.length) {
-          updates.forEach((market) => {
-            setLotteryData((prevData) => ({
-              ...prevData,
-              isSuspend: !market.isActive, // Update isSuspend dynamically
-              isUpdate: market.updatedAt,
-            }));
+      console.log("Messages Data:", messagesData);
+    });
 
-            if (market.isActive) {
-              toast.success(`${market.marketName} is now Active`);
-            } else {
-              toast.info(`${market.marketName} has been Suspended`);
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Error parsing SSE data:", error);
-      }
-    };
-
-    eventSource.onerror = () => {
-      console.error("SSE connection lost. Trying to reconnect...");
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 5000);
-    };
-
-    return () => {
-      eventSource.close();
-    };
+    return () => unsubscribe();
   }, []);
+
+
 
   // API FETCHING FOR THE SEARCH BUTTON AFTER WHICH THE SEARCHRESULTSNEW PAGE IS EXECUTED
   const handleSubmit = useCallback(
