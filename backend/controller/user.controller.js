@@ -798,7 +798,7 @@ export const filterMarketData = async (req, res) => {
 
     // Fetch market data
     const marketDataRows = await Market.findAll({
-      where: { marketId, hideMarketUser: false, isVoid: false },
+      where: { marketId, hideMarketUser: false, isVoid: false,announcementResult: false  },
       include: [
         {
           model: Runner,
@@ -1067,6 +1067,14 @@ export const createBid = async (req, res) => {
         false,
         statusCode.badRequest,
         "Market Not Found"
+      );
+    }
+    if (market.isRevoke) {
+      throw apiResponseErr(
+        null,
+        false,
+        statusCode.badRequest,
+        "Bid cannot be placed!Market is Suspended."
       );
     }
 
