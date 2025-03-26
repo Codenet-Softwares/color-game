@@ -18,6 +18,8 @@ import moment from "moment";
 import updateMarketEventEmitter from "../updateMarketEvent";
 import updateLotteryMarketEventEmitter from "../updateLotteryMarketEventEmitter";
 import ShimmerEffect from "../../../globlaCommon/ShimmerEffect";
+import { db } from "../../../utils/config/firebaseConfig";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const GetMarketDetailByMarketId = () => {
   const navigate = useNavigate();
@@ -97,37 +99,50 @@ const GetMarketDetailByMarketId = () => {
   // };
 
   // color game cron ......
+  // useEffect(() => {
+  //   const eventSource = updateMarketEventEmitter();
+
+  //   eventSource.onmessage = function (event) {
+  //     const updates = JSON.parse(event.data);
+
+  //     if (updates?.length) {
+  //       updates.forEach((market) => {
+  //         if (market.clientMessage) {
+  //           handleNaviagteHome();
+  //         }
+  //         if (market.isActive) {
+  //           setIsActive(true);
+  //           setIsSuspend(true);
+  //           toast.success(`${market.marketName} is now Active`);
+  //         } else {
+  //           setIsActive(false);
+  //           toast.info(`${market.marketName} has been Suspended`);
+  //         }
+  //       });
+  //     }
+  //   };
+
+  //   eventSource.onerror = (err) => {
+  //     console.error("[SSE] Connection error:", err);
+  //     eventSource.close();
+  //   };
+
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // }, []);
+
   useEffect(() => {
-    const eventSource = updateMarketEventEmitter();
+    const unsubscribe = onSnapshot(collection(db, "color-game"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    eventSource.onmessage = function (event) {
-      const updates = JSON.parse(event.data);
+      console.log("Messages Data:", messagesData);
+    });
 
-      if (updates?.length) {
-        updates.forEach((market) => {
-          if (market.clientMessage) {
-            handleNaviagteHome();
-          }
-          if (market.isActive) {
-            setIsActive(true);
-            setIsSuspend(true);
-            toast.success(`${market.marketName} is now Active`);
-          } else {
-            setIsActive(false);
-            toast.info(`${market.marketName} has been Suspended`);
-          }
-        });
-      }
-    };
-
-    eventSource.onerror = (err) => {
-      console.error("[SSE] Connection error:", err);
-      eventSource.close();
-    };
-
-    return () => {
-      eventSource.close();
-    };
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
