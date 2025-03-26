@@ -872,6 +872,7 @@ export const revokeWinningAnnouncement = async (req, res) => {
         isActive: false,
         hideMarketUser: false,
         hideMarket: false,
+        announcementResult:false
       },
       { where: { marketId }, transaction }
     );
