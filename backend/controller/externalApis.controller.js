@@ -284,18 +284,18 @@ export const calculateExternalProfitLoss = async (req, res) => {
       group: ["userId"],
     });
 
-    if (lotteryProfitLossData.length === 0 ) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            [],
-            true,
-            statusCode.success,
-            "No profit/loss data found for the given date range."
-          )
-        );
-    }
+    // if (lotteryProfitLossData.length === 0 ) {
+    //   return res
+    //     .status(statusCode.success)
+    //     .send(
+    //       apiResponseSuccess(
+    //         [],
+    //         true,
+    //         statusCode.success,
+    //         "No profit/loss data found for the given date range."
+    //       )
+    //     );
+    // }
 
     const combinedProfitLossData = [
       ...profitLossData.map((item) => ({

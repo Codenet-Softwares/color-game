@@ -56,6 +56,23 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.4.3/dist/js/bootstrap.min.js"></script>
+    <script>
+      document.addEventListener("click", (event) => {
+        const sidebar = document.getElementById("offcanvasDarkNavbar");
+        const isOpen = sidebar.classList.contains("show");
+        const clickedInsideSidebar = sidebar.contains(event.target);
+        const clickedToggleButton = event.target.closest(
+          "[data-bs-toggle='offcanvas']"
+        );
+
+        if (isOpen && !clickedInsideSidebar && !clickedToggleButton) {
+          const offcanvasInstance = bootstrap.Offcanvas.getInstance(sidebar);
+          if (offcanvasInstance) {
+            offcanvasInstance.hide();
+          }
+        }
+      });
+    </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
