@@ -87,10 +87,21 @@ const useLotteryData = (MarketId) => {
       }));
 
       console.log("Messages Data:", messagesData);
+
+      messagesData.map((message) => {
+        if (MarketId === message.id) {
+          console.log("Filtered Message ID:", message.id);
+          setLotteryData((prevData) => ({
+            ...prevData,
+            isSuspend: !message.isActive,
+          }));
+        }
+      });
     });
 
     return () => unsubscribe();
   }, []);
+
 
 
 
