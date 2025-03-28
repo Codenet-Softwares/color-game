@@ -452,6 +452,21 @@ export const createRunner = async (req, res) => {
     const marketId = req.params.marketId;
     const { runners } = req.body;
 
+    const requestRunnerNames = new Set();
+    for (const runner of runners) {
+      const lowerCaseName = runner.runnerName.toLowerCase();
+      if (requestRunnerNames.has(lowerCaseName)) {
+        return res.status(statusCode.badRequest).send(apiResponseErr(
+          null,
+          false,
+          statusCode.badRequest,
+          `Runner name must be unique ${runner.runnerName}!`
+        )
+      );
+      }
+      requestRunnerNames.add(lowerCaseName);
+    }
+
     const market = await Market.findOne({
       where: {
         marketId: marketId,
@@ -459,12 +474,13 @@ export const createRunner = async (req, res) => {
     });
 
     if (!market) {
-      throw apiResponseErr(
+      return res.status(statusCode.badRequest).send(apiResponseErr(
         null,
         false,
         statusCode.badRequest,
         "Market Not Found"
-      );
+      )
+    );
     }
 
     const existingRunners = await Runner.findAll({
@@ -481,23 +497,25 @@ export const createRunner = async (req, res) => {
     for (const runner of runners) {
       const lowerCaseRunnerName = runner.runnerName.toLowerCase();
       if (existingRunnerNames.has(lowerCaseRunnerName)) {
-        throw apiResponseErr(
+        return res.status(statusCode.badRequest).send(apiResponseErr(
           null,
           false,
           statusCode.badRequest,
           `Runner "${runner.runnerName}" already exists for this market`
-        );
+        )
+      );
       }
     }
 
     const maxParticipants = market.participants;
     if (runners.length !== maxParticipants) {
-      throw apiResponseErr(
+      return res.status(statusCode.badRequest).send(apiResponseErr(
         null,
         false,
         statusCode.badRequest,
         "Number of runners does not match the maximum allowed participants"
-      );
+      )
+    );
     }
 
     const runnersToInsert = runners.map((runner) => ({
@@ -543,11 +561,12 @@ export const createRunner = async (req, res) => {
     }));
 
     await firestoreRef.set({ runners: firebaseRunners }, { merge: true });
+
     return res
       .status(statusCode.create)
       .send(
         apiResponseSuccess(
-          null,
+          firebaseRunners,
           true,
           statusCode.create,
           "Runners created successfully"
