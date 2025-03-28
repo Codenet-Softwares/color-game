@@ -1,4 +1,5 @@
 import { db } from "../firebase-db.js";
+import Market from "../models/market.model.js";
 import { getISTTime } from "./commonMethods.js";
 
 export async function updateColorGame() {
@@ -36,6 +37,16 @@ export async function updateColorGame() {
 
             if (Object.keys(updates).length > 0) {
                 await db.collection("color-game").doc(doc.id).update(updates);
+                
+                await Market.update(
+                    {
+                        isActive: updates.isActive ?? data.isActive,
+                        hideMarketUser: updates.hideMarketUser ?? data.hideMarketUser,
+                    },
+                    {
+                        where: { marketId: doc.id },
+                    }
+                );
             }
         });
 
