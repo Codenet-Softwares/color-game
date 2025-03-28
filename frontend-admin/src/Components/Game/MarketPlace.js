@@ -50,16 +50,38 @@ const MarketPlace = () => {
   const [participants, setParticipants] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const [startTime, setStartTime] = useState(null); // State for startTime
-const [endTime, setEndTime] = useState(null); // State for endTime
+  const [endTime, setEndTime] = useState(null); // State for endTime
 
-  const handleMarketDetailsModalOpen = (market, participants,isActive, startTime,endTime,marketName ) => {
-    console.log('line 51',market,  participants)
-    setShowMarketName(marketName)
-    setIsActive(isActive)
-    setSelectedMarketDetails(market );
-    setParticipants( participants);
-    setStartTime(startTime); 
-    setEndTime(endTime); 
+  const formatTime = (isoString) => {
+    if (!isoString) return "N/A";
+
+    const date = new Date(isoString);
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "P.M" : "A.M";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    const strMinutes = minutes < 10 ? "0" + minutes : minutes;
+
+    return `${hours}:${strMinutes} ${ampm}`;
+  };
+
+  const handleMarketDetailsModalOpen = (
+    market,
+    participants,
+    isActive,
+    startTime,
+    endTime,
+    marketName
+  ) => {
+    console.log("line 51", market, participants);
+    setShowMarketName(marketName);
+    setIsActive(isActive);
+    setSelectedMarketDetails(market);
+    setParticipants(participants);
+    setStartTime(startTime);
+    setEndTime(endTime);
     setShowMarketDetailsModal(true);
   };
 
@@ -285,41 +307,42 @@ const [endTime, setEndTime] = useState(null); // State for endTime
                         </h4>
                       </div>
                       {gameMarketData.length > 0 ? (
-                        <div className="board_card_list mt-3">
+                        <div className="board_card_list ">
                           {gameMarketData.map((market, index) => {
                             return (
-                              <div className="card border-0" key={index}>
-                                <div className="card-body">
+                              <div className="card border-0 " key={index}>
+                                <div className="card-body align-items-center">
                                   <div className="row align-items-center">
-                                    <div
-                                      className="col-md-6 d-flex gap-2"
-                                      style={{
-                                        minWidth: "15%",
-                                        alignItems: "center",
-                                      }}
-                                    >
+                                    <div className="col-md-4 d-flex gap-2 align-items-center">
                                       <i className="far fa-circle f_s_14 text_color_4"></i>
                                       <h5 className="f_s_16 f_w_500 mb-0 text-start">
                                         {market.marketName}
                                       </h5>
                                     </div>
 
-                                    <div className="col-md-4">
-                                      <span
-                                        className={`status-text fw-bold fs-5 position-relative ${
-                                          market.isActive
-                                            ? "text-success"
-                                            : "text-danger"
-                                        }`}
-                                        style={{ top: "1px", right: "10px" }}
-                                      >
-                                        {market.isActive
-                                          ? "Active"
-                                          : "Inactive"}
-                                      </span>
+                                    <div className=" col-md-4 ">
+                                      <div className="d-flex justify-content-between align-items-center w-100">
+                                        <span className="text-dark fw-bold ml-5">
+                                          Start time :
+                                          {formatTime(market.startTime)}
+                                        </span>
+                                        <span
+                                          className={`badge rounded-pill fw-bold text-uppercase ${
+                                            market.isActive
+                                              ? "bg-success"
+                                              : "bg-danger"
+                                          }`}
+                                        >
+                                          {market.isActive
+                                            ? "Active"
+                                            : "Inactive"}
+                                        </span>
+                                        <span className="text-dark fw-bold">
+                                          End time :{formatTime(market.endTime)}
+                                        </span>
+                                      </div>
                                     </div>
-
-                                    <div className="col-md-2">
+                                    <div className="col-md-4">
                                       <div className="header_more_tool d-flex justify-content-end">
                                         <div className="dropdown">
                                           <span
@@ -511,11 +534,11 @@ const [endTime, setEndTime] = useState(null); // State for endTime
         show={showMarketDetailsModal}
         setShow={setShowMarketDetailsModal}
         marketDetails={selectedMarketDetails}
-        participants = {participants}
-        isActive = {isActive}
+        participants={participants}
+        isActive={isActive}
         startTime={startTime}
         endTime={endTime}
-        marketName = {showMarketName}
+        marketName={showMarketName}
       />
       <RunnerModal
         show={showRunnerModal}
