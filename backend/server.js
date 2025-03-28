@@ -32,6 +32,7 @@ import { voidGameRoute } from './routes/voidGame.route.js';
 import { DeleteRoutes } from './routes/delete.route.js';
 import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
 import { getISTTime } from './helper/commonMethods.js';
+import { updateColorGame } from './helper/cgCron.js';
 
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
@@ -239,7 +240,9 @@ sequelize
     //     console.error('Error checking market statuses:', error);
     //   }
     // });
-
+    
+    setInterval(updateColorGame, 1000);
+    
   })
   .catch((err) => {
     console.error('Unable to create tables:', err);
