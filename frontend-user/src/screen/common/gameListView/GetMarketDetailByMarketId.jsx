@@ -140,6 +140,12 @@ const GetMarketDetailByMarketId = () => {
       }));
 
       console.log("Messages Data:", messagesData);
+      messagesData.map((message) => {
+        if (store?.placeBidding?.marketId === message?.id) {
+          console.log("Filtered Message ID:", message.id);
+          setIsActive(message.isActive);
+        }
+      });
     });
 
     return () => unsubscribe();
