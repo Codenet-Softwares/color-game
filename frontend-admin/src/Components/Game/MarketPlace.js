@@ -56,8 +56,8 @@ const MarketPlace = () => {
     if (!isoString) return "N/A";
 
     const date = new Date(isoString);
-    let hours = date.getHours();
-    const minutes = date.getMinutes();
+    let hours = date.getUTCHours();  // Use getUTCHours instead of getHours
+    const minutes = date.getUTCMinutes();  // Use getUTCMinutes instead of getMinutes
     const ampm = hours >= 12 ? "P.M" : "A.M";
 
     hours = hours % 12;
@@ -65,7 +65,7 @@ const MarketPlace = () => {
     const strMinutes = minutes < 10 ? "0" + minutes : minutes;
 
     return `${hours}:${strMinutes} ${ampm}`;
-  };
+};
 
   const handleMarketDetailsModalOpen = (
     market,
