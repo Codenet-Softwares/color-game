@@ -142,7 +142,11 @@ const GetMarketDetailByMarketId = () => {
       console.log("Messages Data:", messagesData);
       messagesData.map((message) => {
         if (store?.placeBidding?.marketId === message?.id) {
-          console.log("Filtered Message ID:", message.id);
+          console.log(
+            "Filtered Message ID:",
+            message.id,
+            store?.placeBidding?.marketId
+          );
           setIsActive(message.isActive);
         }
       });
@@ -153,7 +157,7 @@ const GetMarketDetailByMarketId = () => {
 
   useEffect(() => {
     user_getMarketsWithRunnerData();
-  }, [marketIdFromUrl]);
+  }, [marketIdFromUrl, isActive]);
 
   const winBalance =
     bidding.amount *
@@ -457,7 +461,7 @@ const GetMarketDetailByMarketId = () => {
           {/* Background: Market Data and UI */}
           {user_marketWithRunnerData.marketName.length > 0 ? (
             <div
-              className={`row p-0 m-0 position-relative ${!isActive ? "" : ""}`}
+              className={`row p-0 m-0 position-relative ${isActive ? "" : ""}`}
               style={{ zIndex: 1 }} // Lower z-index for background content
             >
               {/* Foreground: SUSPENDED message */}
