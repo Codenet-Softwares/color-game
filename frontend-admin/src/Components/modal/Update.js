@@ -213,8 +213,8 @@ const Update = ({ show, setShow, data, Update }) => {
         const marketApiData = {
           marketId: data.marketId,
           ...editedData,
-          startTime: startTime.utcOffset(330).toISOString(),
-          endTime: endTime.utcOffset(330).toISOString(),
+          startTime: startTime.add(330, 'minutes').toISOString(),
+          endTime: endTime.add(330, 'minutes').toISOString(),
         };
 
         GameService.marketUpdate(marketApiData, auth.user)
