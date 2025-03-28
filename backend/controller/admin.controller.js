@@ -24,6 +24,7 @@ import sequelize from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import ResultRequest from "../models/resultRequest.model.js";
 import ResultHistory from "../models/resultHistory.model.js";
+import { db } from "../firebase-db.js";
 
 
 dotenv.config();
@@ -951,6 +952,8 @@ export const checkMarketStatus = async (req, res) => {
   try {
     const market = await Market.findOne({ where: { marketId } });
 
+    const gameId = market.gameId;
+
     if (!market) {
       return res
         .status(statusCode.badRequest)
@@ -971,19 +974,25 @@ export const checkMarketStatus = async (req, res) => {
     market.isActive = status;
     await market.save();
 
+    const marketRef = db.collection("color-game").doc(gameId);
+
+    await marketRef.set(
+         {
+          isActive: status,
+          hideMarketUser: false,
+          isRevoke: false,
+        },
+      { merge: true }
+    );
+
     const statusMessage = status ? "Market is active" : "Market is suspended";
-    res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          null,
-          true,
-          statusCode.success,
-          statusMessage
-        )
-      );
+    res.status(200).send({
+      success: true,
+      message: statusMessage,
+    });
 
   } catch (error) {
+    console.log("Error updating market status:", error);
     res
       .status(statusCode.internalServerError)
       .send(
