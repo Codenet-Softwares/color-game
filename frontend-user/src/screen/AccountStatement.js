@@ -54,7 +54,7 @@ const AccountStatement = () => {
   const startIndex = Math.min((getAccountstatement.currentPage - 1) * 10 + 1);
   const endIndex = Math.min(
     getAccountstatement.currentPage * 10,
-    getAccountstatement.totalEntries
+    getAccountstatement.totalData
   );
 
   // UseEffect to trigger fetchAccountStatement whenever the dependencies change
@@ -178,8 +178,8 @@ const AccountStatement = () => {
                     <div className="col-12 col-sm-2 col-md-2">
                     <label className="fw-bold d-block">To</label>
                     <DatePicker
-                        selected={backupDate.startDate}
-                        onChange={setStartDate}
+                        selected={backupDate.endDate}
+                        onChange={setEndDate}
                         disabled={getAccountstatement.dataSource === "live"} // Disable if live data
                         placeholderText="Select Start Date"
                         className="form-control form-control-sm w-100"

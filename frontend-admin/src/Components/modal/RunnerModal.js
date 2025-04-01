@@ -22,7 +22,7 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
     );
   }, [numberOfParticipants]);
 
-  // const {  marketId } = useParams();
+  
 
   const handleClose = () => {
     setShow(false);
@@ -60,6 +60,24 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
 
 
   const handleRunnerNameChange = (index, field, value) => {
+        // For runner name changes, check for duplicates
+        if (field === "runnerName") {
+          const lowercaseNames = runnername.map(runner => 
+            runner.runnerName.toLowerCase().trim()
+          );
+          const currentLowercase = value.toLowerCase().trim();
+          
+          // Check if the new value already exists (case-insensitive)
+          const duplicateIndex = lowercaseNames.findIndex((name, i) => 
+            i !== index && name === currentLowercase && currentLowercase !== ""
+          );
+          
+          if (duplicateIndex !== -1) {
+            toast.error(`Runner name "${value}" already exists!`);
+            // Clear the duplicate value
+            value = "";
+          }
+        }
     setRunnerName((prevRunnerNames) =>
       prevRunnerNames.map((runner, i) =>
         i === index ? { ...runner, [field]: value } : runner

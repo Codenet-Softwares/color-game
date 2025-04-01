@@ -124,12 +124,6 @@ const clients = new Set();
 // app.get('/events', (req, res) => {
 //   console.log("[SSE] Client connected to events");
 
-//   res.setHeader('Content-Type', 'text/event-stream');
-//   res.setHeader('Cache-Control', 'no-cache');
-//   res.setHeader('Connection', 'keep-alive');
-//   //  res.setHeader('Access-Control-Allow-Origin', 'https://cg.user.dummydoma.in'); // server URl 
-//   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000'); // Local URL
-
 //   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
 //   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 //   res.flushHeaders();
