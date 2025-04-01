@@ -104,19 +104,6 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     navigate("/accountStatement");
   };
 
-  // const handleLogout = () => {
-  //   dispatch({
-  //     type: strings.LOG_OUT,
-  //     payload: { isLogin: false },
-  //   });
-  //   const closeButton = document.querySelector(".btn-close");
-  //   if (closeButton) {
-  //     closeButton.click();
-  //   }
-  //   navigate("/home");
-  //   toast.info("Logout successfully");
-  // };
-
   const handleLogout = async () => {
     try {
       // Call the logout API
@@ -134,7 +121,11 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
         }
 
         navigate("/home");
-        // toast.info("Logout successfully");
+
+        // Proper window.location.reload() with a slight delay
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       } else {
         toast.error(response.message || "Logout failed");
       }
