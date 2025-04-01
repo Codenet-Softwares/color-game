@@ -1098,58 +1098,43 @@ export const getUsersLiveBetGames = async (req, res) => {
     const limit = parseInt(pageSize, 10);
     const offset = (parseInt(page, 10) - 1) * limit;
 
-    const where_clause = search
+    const whereClause = search
       ? {
-        [Op.or]: [
-          { userName: { [Op.like]: `%${search}%` } },
-          { marketName: { [Op.like]: `%${search}%` } },
-        ],
-      }
+          [Op.or]: [
+            { userName: { [Op.like]: `%${search}%` } },
+            { marketName: { [Op.like]: `%${search}%` } },
+          ],
+        }
       : {};
 
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
-      attributes: [
-        "gameId",
-        "gameName",
-        "marketId",
-        "marketName",
-        "userName",
-        "createdAt",
-      ],
-      where: where_clause,
+      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "createdAt"],
+      where: whereClause,
       order: [["createdAt", "DESC"]],
       raw: true,
     });
 
-    if (!currentOrders || currentOrders.length === 0) {
+    if (currentOrders.length === 0) {
       return res
         .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "No data found.")
-        );
+        .send(apiResponseSuccess([], true, statusCode.success, "No data found."));
     }
 
-    // Remove duplicates by creating a Map with unique keys based on gameId and marketId
+    // Remove duplicates
     const uniqueOrders = Array.from(
-      new Map(
-        currentOrders.map((order) => [
-          `${order.gameId}-${order.marketId}`,
-          order,
-        ])
-      ).values()
+      new Map(currentOrders.map(order => [`${order.gameId}-${order.marketId}`, order])).values()
     );
 
-    const paginatedUniqueOrders = uniqueOrders.slice(offset, offset + limit);
-
-    const liveGames = paginatedUniqueOrders.map((order) => ({
+    const liveGames = uniqueOrders.map(order => ({
       gameId: order.gameId,
       gameName: order.gameName,
       marketId: order.marketId,
       marketName: order.marketName,
-      userName: order.userName
+      userName: order.userName,
     }));
 
-    const totalPages = Math.ceil(uniqueOrders.length / limit);
+    const paginatedOrders = liveGames.slice(offset, offset + limit);
+    const totalPages = Math.ceil(liveGames.length / limit);
 
     const pagination = {
       page: parseInt(page, 10),
@@ -1160,22 +1145,14 @@ export const getUsersLiveBetGames = async (req, res) => {
 
     return res
       .status(statusCode.success)
-      .send(
-        apiResponseSuccess(liveGames, true, statusCode.success, "Success", pagination)
-      );
+      .send(apiResponseSuccess(paginatedOrders, true, statusCode.success, "Success", pagination));
   } catch (error) {
     return res
       .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+      .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
+
 
 export const getBetsAfterWin = async (req, res) => {
   try {
@@ -2410,7 +2387,7 @@ export const liveUsersBetHistory = async (req, res) => {
     const whereCondition = { marketId, userId };
 
     if (search) {
-      whereCondition.runnerName =  { [Op.like]: `%${search}%` };
+      whereCondition.runnerName = { [Op.like]: `%${search}%` };
     }
 
     const existingBets = await CurrentOrder.findAll({
@@ -2430,8 +2407,8 @@ export const liveUsersBetHistory = async (req, res) => {
       order: [["date", "DESC"]],
     });
 
-    if (!existingBets || existingBets.length == 0) {
-      res
+    if (!existingBets || existingBets.length === 0) {
+      return res
         .status(statusCode.success)
         .send(
           apiResponseSuccess([], true, statusCode.success, "Data not found!")
@@ -2451,14 +2428,15 @@ export const liveUsersBetHistory = async (req, res) => {
       totalPages,
       totalItems,
     };
-    res
+
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
           paginatedData,
           true,
           statusCode.success,
-          "Data featch successfully!",
+          "Data fetched successfully!",
           pagination
         )
       );
@@ -2475,6 +2453,7 @@ export const liveUsersBetHistory = async (req, res) => {
       );
   }
 };
+
 
 
 export const getBetsAfterWinHistory = async (req, res) => {
@@ -2507,7 +2486,7 @@ export const getBetsAfterWinHistory = async (req, res) => {
     });
 
     if (!existingBets || existingBets.length == 0) {
-      res
+      return res
         .status(statusCode.success)
         .send(
           apiResponseSuccess([], true, statusCode.success, "Data not found!")
@@ -2528,7 +2507,7 @@ export const getBetsAfterWinHistory = async (req, res) => {
       totalItems,
     };
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
