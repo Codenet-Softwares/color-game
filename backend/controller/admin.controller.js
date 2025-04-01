@@ -974,15 +974,16 @@ export const checkMarketStatus = async (req, res) => {
     market.isActive = status;
     await market.save();
 
-    const marketRef = db.collection("color-game").doc(gameId);
+    const marketRef = db.collection("color-game").doc(marketId);
 
     await marketRef.set(
          {
           isActive: status,
           hideMarketUser: false,
           isRevoke: false,
+          updatedAt: new Date()
         },
-      { merge: true }
+      { merge: true },
     );
 
     const statusMessage = status ? "Market is active" : "Market is suspended";
