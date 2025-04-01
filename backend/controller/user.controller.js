@@ -445,7 +445,7 @@ export const userRunners = async (req, res) => {
 export const getAllGameData = async (req, res) => {
   try {
     const gameData = await Game.findAll({
-      attributes: ["gameId", "gameName", "description", "isBlink"],
+      attributes: ["gameId", "gameName", "description", "isBlink", "createdAt"],
       include: [
         {
           model: Market,
@@ -459,6 +459,7 @@ export const getAllGameData = async (req, res) => {
             "isActive",
             "hideMarketUser",
             "isVoid",
+            "createdAt",
           ],
           include: [
             {
@@ -471,30 +472,41 @@ export const getAllGameData = async (req, res) => {
                 "back",
                 "lay",
                 "hideRunnerUser",
+                "createdAt",
               ],
+              order: [["createdAt", "DESC"]], // Sort Runners in DESC order
             },
           ],
+          order: [["createdAt", "DESC"]], // Sort Markets in DESC order
         },
       ],
+      order: [["createdAt", "DESC"]], // Sort Games in DESC order
     });
+    
 
-    const formattedGameData = gameData.map((game) => ({
-      gameId: game.gameId,
-      gameName: game.gameName,
-      description: game.description,
-      isBlink: game.isBlink,
-      markets: game.Markets.sort()
-        .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false).map((market) => ({
-          marketId: market.marketId,
-          marketName: market.marketName,
-          participants: market.participants,
-          startTime: market.startTime,
-          endTime: market.endTime,
-          announcementResult: market.announcementResult,
-          isActive: market.isActive,
-          isVoid: market.isVoid,
-        runners: market.Runners.filter((runner) => !runner.hideRunnerUser).map(
-          (runner) => ({
+    const formattedGameData = gameData
+  .map((game) => ({
+    gameId: game.gameId,
+    gameName: game.gameName,
+    description: game.description,
+    isBlink: game.isBlink,
+    createdAt: game.createdAt, // Ensure createdAt is included
+    markets: game.Markets
+      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
+      .map((market) => ({
+        marketId: market.marketId,
+        marketName: market.marketName,
+        participants: market.participants,
+        startTime: market.startTime,
+        endTime: market.endTime,
+        announcementResult: market.announcementResult,
+        isActive: market.isActive,
+        isVoid: market.isVoid,
+        runners: market.Runners
+          .filter((runner) => !runner.hideRunnerUser)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Runners
+          .map((runner) => ({
             runnerId: runner.runnerId,
             runnerName: runner.runnerName,
             isWin: runner.isWin,
@@ -505,10 +517,11 @@ export const getAllGameData = async (req, res) => {
                 lay: runner.lay,
               },
             ],
-          })
-        ),
-        })),
-    }));
+          })),
+      })),
+  }))
+  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // DESC order for Games
+
 
     const baseURL = process.env.LOTTERY_URL;
 
@@ -518,14 +531,14 @@ export const getAllGameData = async (req, res) => {
     const data = response.data.data
     const foramtedData = [{
         gameName    : data[0]?.gameName === "Lottery" ?data[0]?.gameName : "Lottery",
-        markets     : data.reverse().map((game)=>({
+        markets     : data.map((game)=>({
         marketId    : game.marketId,
         marketName  : game.marketName,
         group_start : game.group_start,
         group_end   : game.group_end,
-          series_start: game.series_start,
+        series_start: game.series_start,
         series_end  : game.series_end,
-          number_start: game.number_start,
+        number_start: game.number_start,
         number_end  : game.number_end,
         start_time  : game.start_time,
         end_time    : game.end_time,
@@ -540,7 +553,7 @@ export const getAllGameData = async (req, res) => {
         }))
     }]
 
-    const combinedData = [...formattedGameData.reverse(), ...foramtedData];
+    const combinedData = [...formattedGameData, ...foramtedData];
 
     res
       .status(statusCode.success)
