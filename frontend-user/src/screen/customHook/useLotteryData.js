@@ -94,6 +94,7 @@ const useLotteryData = (MarketId) => {
           setLotteryData((prevData) => ({
             ...prevData,
             isSuspend: !message.isActive,
+            isUpdate: message.updatedAt
           }));
         }
       });
