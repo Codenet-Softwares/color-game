@@ -96,6 +96,9 @@ const useLotteryData = (MarketId) => {
             isSuspend: !message.isActive,
             isUpdate: message.updatedAt
           }));
+          if (!message.inactiveGame) {
+            window.location.href("/home")
+          }
         }
       });
     });
