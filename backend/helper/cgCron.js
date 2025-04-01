@@ -3,7 +3,7 @@ import Market from "../models/market.model.js";
 import { getISTTime } from "./commonMethods.js";
 
 export async function updateColorGame() {
-    const currentTime = getISTTime(); 
+    const currentTime = getISTTime();
 
     try {
         const snapshot = await db.collection("color-game").get();
@@ -16,7 +16,7 @@ export async function updateColorGame() {
 
             if (!startTime || !endTime) {
                 console.warn(`Missing start_time or end_time for document: ${doc.id}`);
-                return; 
+                return;
             }
 
             startTime = parseDate(startTime);
@@ -27,18 +27,26 @@ export async function updateColorGame() {
             }
 
             let updates = {};
-            if (currentTime >= startTime && currentTime <= endTime && !data.isActive) {
-                updates.isActive = true;
-                updates.hideMarketUser = true;
-                updates.updatedAt =  new Date()
-            } else if (currentTime > endTime && data.isActive) {
-                updates.isActive = false;
-                updates.updatedAt =  new Date()
+            let shouldUpdate = false;
+            if (currentTime >= startTime && currentTime <= endTime) {
+                if (!data.isActive) {
+                    updates.isActive = true;
+                    updates.hideMarketUser = true;
+                    updates.updatedAt = new Date();
+                    shouldUpdate = true;
+                }
+            } else if (currentTime >= endTime) {
+                if (data.isActive) {
+                    updates.isActive = false;
+                    updates.updatedAt = new Date()
+                    shouldUpdate = true;
+                    clearInterval(lotteryUpdater);
+                }
             }
 
-            if (Object.keys(updates).length > 0) {
+            if (shouldUpdate) {
                 await db.collection("color-game").doc(doc.id).update(updates);
-                
+
                 await Market.update(
                     {
                         isActive: updates.isActive ?? data.isActive,
@@ -51,7 +59,7 @@ export async function updateColorGame() {
             }
         });
 
-        await Promise.all(updatePromises); 
+        await Promise.all(updatePromises);
     } catch (error) {
         console.error("Error updating Colorgame:", error);
     }
@@ -71,3 +79,5 @@ function parseDate(dateInput) {
         return null;
     }
 }
+
+const lotteryUpdater = setInterval(updateColorGame, 1000);
