@@ -30,8 +30,10 @@ export async function updateColorGame() {
             if (currentTime >= startTime && currentTime <= endTime && !data.isActive) {
                 updates.isActive = true;
                 updates.hideMarketUser = true;
+                updates.updatedAt =  new Date()
             } else if (currentTime > endTime && data.isActive) {
                 updates.isActive = false;
+                updates.updatedAt =  new Date()
             }
 
             if (Object.keys(updates).length > 0) {
