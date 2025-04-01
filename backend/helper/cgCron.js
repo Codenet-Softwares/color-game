@@ -23,7 +23,6 @@ export async function updateColorGame() {
             endTime = parseDate(endTime);
 
             if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) {
-                console.error(`Invalid date format for document: ${doc.id}`);
                 return;
             }
 
@@ -67,7 +66,6 @@ function parseDate(dateInput) {
     } else if (dateInput instanceof Date) {
         return dateInput;
     } else {
-        console.error("Unknown date format:", dateInput);
         return null;
     }
 }
