@@ -12,7 +12,8 @@ import strings from "../../utils/constant/stringConstant";
 import InnerCarousel from "./InnerCarousel";
 import Footer from "./Footer";
 import OpenBets from "../../betHistory/components/openBets/OpenBets";
-import updateLotteryMarketEventEmitter from "./updateLotteryMarketEventEmitter";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../Lottery/firebaseStore/lotteryFirebase";
 
 function AppDrawer({
   children,
@@ -33,13 +34,14 @@ function AppDrawer({
   const [lotteryNewDrawTimes, setLotteryNewDrawTimes] = useState([]);
   const [lotteryNewToggle, setLotteryNewToggle] = useState(false); // New state for toggling draw times
   const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
+  const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
   const { dispatch, store } = useAppContext();
   const location = useLocation();
   useEffect(() => {
     user_getAllGames();
 
     fetchLotteryNewMarkets();
-  }, [lotteryNewToggle, isLotteryUpdate]);
+  }, [lotteryNewToggle, isLotteryUpdate, isColorgameUpdate]);
 
   // function for new page fetch
   async function fetchLotteryNewMarkets() {
@@ -79,25 +81,32 @@ function AppDrawer({
     }
   };
 
-  // THE EVENT MESSAGE FOR SSE(SERVER SIDE EVENT)
   useEffect(() => {
-    const eventSource = updateLotteryMarketEventEmitter();
-    eventSource.onmessage = function (event) {
-      const updates = JSON.parse(event.data);
-      if (updates?.length) {
-        updates.forEach((market) => {
-          setIsLotteryUpdate(market?.updatedAt);
-        });
-      }
-    };
+    const unsubscribe = onSnapshot(collection(db, "lottery"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-    eventSource.onerror = (err) => {
-      eventSource.close();
-    };
+      console.log("Messages Data:", messagesData);
+      setIsLotteryUpdate(messagesData);
+    });
 
-    return () => {
-      eventSource.close();
-    };
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "color-game"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log("Messages Data:", messagesData);
+      setIsColorgameUpdate(messagesData);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   function getLeftNavBar() {

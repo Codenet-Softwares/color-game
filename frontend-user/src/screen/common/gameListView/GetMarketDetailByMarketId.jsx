@@ -50,8 +50,9 @@ const GetMarketDetailByMarketId = () => {
   });
   const arr = [];
   const arr1 = [];
-  const [isActive, setIsActive] = useState(true);
-  const [isSuspend, setIsSuspend] = useState();
+  const [isActive, setIsActive] = useState(null);
+  const [isSuspend, setIsSuspend] = useState(null);
+  const [isUpdate, setIsUpdate] = useState(null);
   const marketIdFromUrl = useLocation().pathname.split("/")[4];
 
   useEffect(() => {
@@ -148,6 +149,7 @@ const GetMarketDetailByMarketId = () => {
             store?.placeBidding?.marketId
           );
           setIsActive(message.isActive);
+          setIsUpdate(message.updatedAt);
         }
       });
     });
@@ -157,7 +159,7 @@ const GetMarketDetailByMarketId = () => {
 
   useEffect(() => {
     user_getMarketsWithRunnerData();
-  }, [marketIdFromUrl, isActive]);
+  }, [marketIdFromUrl, isActive, isUpdate]);
 
   const winBalance =
     bidding.amount *

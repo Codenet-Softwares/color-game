@@ -9,7 +9,7 @@ import {
   PurhaseLotteryTicketUser,
 } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../Lottery/firebaseStore/lotteryFirebase";
 
 const useLotteryData = (MarketId) => {
@@ -77,7 +77,7 @@ const useLotteryData = (MarketId) => {
     fetchLotteryData();
   }, [MarketId, lotteryData.isUpdate]);
 
-
+  console.log("isupdate.........", lotteryData.isUpdate)
   // Firebase work happening here 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "lottery"), (snapshot) => {
@@ -102,9 +102,6 @@ const useLotteryData = (MarketId) => {
 
     return () => unsubscribe();
   }, []);
-
-
-
 
   // API FETCHING FOR THE SEARCH BUTTON AFTER WHICH THE SEARCHRESULTSNEW PAGE IS EXECUTED
   const handleSubmit = useCallback(
