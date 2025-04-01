@@ -14,6 +14,7 @@ import BetHistory from "../models/betHistory.model.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import MarketDeleteApproval from "../models/marketApproval.model.js";
 import sequelize from "../db.js";
+import { db } from "../firebase-db.js";
 
 
 // done
@@ -250,11 +251,19 @@ export const createMarket = async (req, res) => {
       hideMarketUser: true
     });
 
-    // Fetch all markets for the game
-    const marketList = await Market.findAll({
-      where: {
-        gameId: gameId,
-      },
+     // Save data to Firestore
+    const formatDateTime = (date) =>date.toISOString().slice(0, 19).replace("T", " ");
+
+    await db.collection('color-game').doc(newMarket.marketId).set({
+      gameId : newMarket.gameId,
+      marketName : newMarket.marketName,
+      participants : newMarket.participants,
+      startTime : formatDateTime(newMarket.startTime),
+      endTime : formatDateTime(newMarket.endTime),
+      announcementResult : newMarket.announcementResult,
+      isActive : newMarket.isActive,
+      isDisplay : newMarket.isDisplay,
+      hideMarketUser : newMarket.hideMarketUser,
     });
 
     return res
@@ -347,7 +356,7 @@ export const updateMarket = async (req, res) => {
         marketId: marketId,
       },
     });
-
+    const gameId = market.gameId
     if (!market) {
       return res
         .status(statusCode.notFound)
@@ -402,6 +411,16 @@ export const updateMarket = async (req, res) => {
         marketId: marketId,
       },
     });
+
+    const firestoreRef = db.collection("color-game").doc(marketId);
+    await firestoreRef.set({
+      // marketName: updatedMarket.marketName,
+      // participants: updatedMarket.participants,
+      // startTime: updatedMarket.startTime,
+      // endTime: updatedMarket.endTime,
+      // isDisplay: updatedMarket.isDisplay,
+      updatedAt: new Date()
+    }, { merge: true });
 
     return res
       .status(statusCode.success)
@@ -546,6 +565,7 @@ export const updateRunner = async (req, res) => {
     if (back !== undefined) updateData.back = back;
     if (lay !== undefined) updateData.lay = lay;
 
+    const marketData = await Runner.findOne({ where: { runnerId } });
     const [rowsAffected] = await Runner.update(updateData, {
       where: { runnerId: runnerId }
     });
@@ -558,6 +578,36 @@ export const updateRunner = async (req, res) => {
         );
     }
 
+    // Fetch the market document from Firestore
+    const marketId = marketData.marketId;
+    const marketRef = db.collection("color-game").doc(marketId);
+    // const marketSnapshot = await marketRef.get();
+
+    // if (!marketSnapshot.exists) {
+    //   return res
+    //     .status(404)
+    //     .json({ success: false, message: "Market not found in Firestore." });
+    // }
+
+    // let marketDataFirestore = marketSnapshot.data();
+    // let runners = marketDataFirestore.runners || [];
+
+    // // Find the runner inside Firestore document
+    // const runnerIndex = runners.findIndex((r) => r.runnerId === runnerId);
+
+    // if (runnerIndex === -1) {
+    //   return res
+    //     .status(404)
+    //     .json({ success: false, message: "Runner not found in Firestore." });
+    // }
+
+    // // Modify the specific runner's fields
+    // if (runnerName !== undefined) runners[runnerIndex].runnerName = runnerName;
+    // if (back !== undefined) runners[runnerIndex].back = back;
+    // if (lay !== undefined) runners[runnerIndex].lay = lay;
+
+    // Update Firestore document with modified runners array
+    await marketRef.update({ updatedAt: new Date() });
     return res
       .status(statusCode.success)
       .json(
@@ -703,7 +753,36 @@ export const updateRate = async (req, res) => {
       );
     }
 
-    const runnerAfterUpdate = await Runner.findOne({ where: { runnerId } });
+    // Fetch the market document from Firestore
+    const marketData = await Runner.findOne({ where: { runnerId } });
+    const marketId = marketData.marketId;
+    const marketRef = db.collection("color-game").doc(marketId);
+    // const marketSnapshot = await marketRef.get();
+
+    // if (!marketSnapshot.exists) {
+    //   return res
+    //     .status(statusCode.notFound)
+    //     .json(apiResponseErr(null, false, statusCode.notFound, "Market not found in Firestore."));
+    // }
+
+    // let marketDataFirestore = marketSnapshot.data();
+    // let runners = marketDataFirestore.runners || [];
+
+    // // Find the runner inside Firestore
+    // const runnerIndex = runners.findIndex((r) => r.runnerId === runnerId);
+
+    // if (runnerIndex === -1) {
+    //   return res
+    //     .status(statusCode.notFound)
+    //     .json(apiResponseErr(null, false, statusCode.notFound, "Runner not found in Firestore."));
+    // }
+
+    // // Modify only the back and lay fields
+    // if (back !== undefined) runners[runnerIndex].back = back;
+    // if (lay !== undefined) runners[runnerIndex].lay = lay;
+
+    // Update Firestore document
+    await marketRef.update({ updatedAt: new Date() });
 
     return res
       .status(statusCode.success)
