@@ -144,6 +144,7 @@ const clients = new Set();
 //     res.write(':\n\n'); // Keep the connection alive
 //   }, 2000);
 
+
 //   req.on('close', () => {
 //     console.log('[SSE] Client disconnected');
 //     clearInterval(heartbeatInterval);
