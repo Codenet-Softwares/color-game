@@ -15,8 +15,6 @@ import CountdownTimer from "../../../globlaCommon/CountdownTimer";
 import AppDrawer from "../appDrawer";
 import Layout from "../../layout/layout";
 import moment from "moment";
-import updateMarketEventEmitter from "../updateMarketEvent";
-import updateLotteryMarketEventEmitter from "../updateLotteryMarketEventEmitter";
 import ShimmerEffect from "../../../globlaCommon/ShimmerEffect";
 import { db } from "../../../utils/config/firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";

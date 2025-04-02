@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "react-toastify";
-import updateLotteryMarketEventEmitter from "../common/updateLotteryMarketEventEmitter";
 import { getInitialLotteryData } from "../../utils/getInitiateState";
 import { generateLotteryOptions } from "../../utils/helper";
 import {

@@ -1,10 +1,10 @@
-const originalUrl = process.env.REACT_APP_API_LOTTERY_URL;
-const newUrl = originalUrl.replace("/api", "");
-const lotteryEventSource = new EventSource(`${newUrl}/lottery-events`);
+// const originalUrl = process.env.REACT_APP_API_LOTTERY_URL;
+// const newUrl = originalUrl.replace("/api", "");
+// const lotteryEventSource = new EventSource(`${newUrl}/lottery-events`);
 
-const updateLotteryMarketEventEmitter = () => {
-    return lotteryEventSource;
+// const updateLotteryMarketEventEmitter = () => {
+//     return lotteryEventSource;
    
-};
+// };
 
-export default updateLotteryMarketEventEmitter;
+// export default updateLotteryMarketEventEmitter;
