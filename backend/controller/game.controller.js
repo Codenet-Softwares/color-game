@@ -370,6 +370,19 @@ export const updateMarket = async (req, res) => {
         );
     }
 
+    const formatDateTime = (date) => {
+      // Handle case where date is already in SQL format
+      if (typeof date === 'string' && /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(date)) {
+        return date;
+      }
+      // Handle Date object or ISO string
+      const dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) {
+        throw new Error('Invalid date value');
+      }
+      return dateObj.toISOString().slice(0, 19).replace("T", " ");
+    };
+
     if (marketName !== undefined) {
       market.marketName = marketName;
     }
@@ -417,8 +430,8 @@ export const updateMarket = async (req, res) => {
     await firestoreRef.set({
       // marketName: updatedMarket.marketName,
       // participants: updatedMarket.participants,
-      startTime: updatedMarket.startTime,
-      endTime: updatedMarket.endTime,
+      startTime: formatDateTime(updatedMarket.startTime),
+      endTime: formatDateTime(updatedMarket.endTime),
       // isDisplay: updatedMarket.isDisplay,
       updatedAt: new Date().toISOString(), 
     }, { merge: true });
