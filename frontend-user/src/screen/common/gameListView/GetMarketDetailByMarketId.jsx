@@ -134,25 +134,31 @@ const GetMarketDetailByMarketId = () => {
   // }, []);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "color-game-db"), (snapshot) => {
-      const messagesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const unsubscribe = onSnapshot(
+      collection(db, "color-game-db"),
+      (snapshot) => {
+        const messagesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      console.log("Messages Data:", messagesData);
-      messagesData.map((message) => {
-        if (store?.placeBidding?.marketId === message?.id) {
-          console.log(
-            "Filtered Message ID:",
-            message.id,
-            store?.placeBidding?.marketId
-          );
-          setIsActive(message.isActive);
-          setIsUpdate(message.updatedAt);
-        }
-      });
-    });
+        console.log("Messages Data:", messagesData);
+        messagesData.map((message) => {
+          if (store?.placeBidding?.marketId === message?.id) {
+            console.log(
+              "Filtered Message ID:",
+              message.id,
+              store?.placeBidding?.marketId
+            );
+            setIsActive(message.isActive);
+            setIsUpdate(message.updatedAt);
+            if (!message.inactiveGame) {
+              window.location.href = "/home";
+            }
+          }
+        });
+      }
+    );
 
     return () => unsubscribe();
   }, []);
