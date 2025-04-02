@@ -112,8 +112,8 @@ class GameService {
 
   suspensedMarket(data, id, user) {
     return axios({
-      method: "POST",
-      url: API_HOST + `/api/update-market-status/${id}`,
+      method: "PUT",
+      url: API_HOST + `/api/update-inActive-market-status/${id}`,
       data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,

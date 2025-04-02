@@ -65,7 +65,7 @@ const MarketPlace = () => {
     const strMinutes = minutes < 10 ? "0" + minutes : minutes;
 
     return `${hours}:${strMinutes} ${ampm}`;
-};
+  };
 
   const handleMarketDetailsModalOpen = (
     market,
@@ -327,13 +327,12 @@ const MarketPlace = () => {
                                           {formatTime(market.startTime)}
                                         </span>
                                         <span
-                                          className={`badge rounded-pill fw-bold text-uppercase ${
-                                            market.isActive
-                                              ? "bg-success"
-                                              : "bg-danger"
-                                          }`}
+                                          className={`badge rounded-pill fw-bold text-uppercase ${!market.hideMarketUser
+                                            ? "bg-success"
+                                            : "bg-danger"
+                                            }`}
                                         >
-                                          {market.isActive
+                                          {!market.hideMarketUser
                                             ? "Active"
                                             : "Inactive"}
                                         </span>
@@ -394,7 +393,7 @@ const MarketPlace = () => {
 
                                             {!market.isDisplay && (
                                               <>
-                                                {market.isActive ? (
+                                                {!market.hideMarketUser ? (
                                                   <a
                                                     className="dropdown-item"
                                                     onClick={(e) =>
