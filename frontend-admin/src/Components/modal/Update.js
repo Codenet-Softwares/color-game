@@ -29,18 +29,12 @@ const Update = ({ show, setShow, data, Update }) => {
   const [editedData, setEditedData] = useState({}); // Store edited data
 
   useEffect(() => {
-    const adjustTime = (date) => {
-      const adjustedDate = new Date(date);
-      adjustedDate.setMinutes(adjustedDate.getMinutes() - 330); // Subtract 330 minutes (5 hours 30 minutes)
-      return adjustedDate;
-    };
-
     setNewValue((prev) => ({
       ...prev,
       marketName: data.marketName,
       participants: data.participants,
-      startTime: adjustTime(data.startTime),
-      endTime: adjustTime(data.endTime),
+      startTime: moment(data.startTime).subtract(330, "minutes"), // Adjust time correctly
+      endTime: moment(data.endTime).subtract(330, "minutes"),
     }));
   }, [data]);
 
@@ -54,24 +48,13 @@ const Update = ({ show, setShow, data, Update }) => {
       marketName: "",
       participants: "",
       timeSpan: "",
-      startTime: "", // Reset start time
-      endTime: "", // Reset end time
+      startTime: moment(data.startTime).subtract(330, "minutes"), // Reset to previous value
+      endTime: moment(data.endTime).subtract(330, "minutes"),
       runnerName: "",
       back: "",
       lay: "",
     }));
     setShow(false);
-  };
-
-  const handleStartDateTimeChange = (date) => {
-    setNewValue((prevState) => ({
-      ...prevState,
-      startTime: date,
-    }));
-    setEditedData((prev) => ({
-      ...prev,
-      startTime: date,
-    }));
   };
 
   const handleStartDatevalue = (date) => {
@@ -96,9 +79,6 @@ const Update = ({ show, setShow, data, Update }) => {
     }));
   };
 
-  const disablePastDates = (current) => {
-    return current.isAfter(today);
-  };
 
   const disablePastTimes = (current) => {
     const now = moment();
@@ -187,23 +167,20 @@ const Update = ({ show, setShow, data, Update }) => {
 
       case "market":
 
-      if (Object.keys(editedData).length === 0) {
-        toast.error("No changes detected.");
-        return;
-      }
-        const startTime = editedData.startTime
-          ? moment(editedData.startTime)
-          : moment(data.startTime);
-        const endTime = editedData.endTime
-          ? moment(editedData.endTime)
-          : moment(data.endTime);
+        if (Object.keys(editedData).length === 0) {
+          toast.error("No changes detected.");
+          return;
+        }
 
-        if (!startTime.isValid() || !endTime.isValid()) {
+        const startTime = editedData.startTime || newValue.startTime;
+        const endTime = editedData.endTime || newValue.endTime;
+
+        if (!startTime || !endTime) {
           toast.error("Start time and End time are required.");
           return;
         }
 
-        if (endTime.isSameOrBefore(startTime)) {
+        if (moment(endTime).isSameOrBefore(moment(startTime))) {
           toast.error("End time must be after the start time.", {
             autoClose: 2000,
           });
@@ -213,8 +190,8 @@ const Update = ({ show, setShow, data, Update }) => {
         const marketApiData = {
           marketId: data.marketId,
           ...editedData,
-          startTime: startTime.add(330, 'minutes').toISOString(),
-          endTime: endTime.add(330, 'minutes').toISOString(),
+          startTime: moment(startTime).add(330, "minutes").toISOString(),
+          endTime: moment(endTime).add(330, "minutes").toISOString(),
         };
 
         GameService.marketUpdate(marketApiData, auth.user)
@@ -392,7 +369,6 @@ const Update = ({ show, setShow, data, Update }) => {
                 onChange={handleStartDatevalue} // Update startTime
                 dateFormat="DD-MM-YYYY"
                 timeFormat="HH:mm"
-                isValidDate={disablePastDates}
                 isValidTime={disablePastTimes}
               />
             </div>
@@ -406,7 +382,6 @@ const Update = ({ show, setShow, data, Update }) => {
                 onChange={handleEndDatevalue} // Update endTime
                 dateFormat="DD-MM-YYYY"
                 timeFormat="HH:mm"
-                isValidDate={disablePastDates}
                 isValidTime={disablePastTimes}
               />
             </div>
