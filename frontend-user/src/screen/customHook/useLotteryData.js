@@ -80,7 +80,7 @@ const useLotteryData = (MarketId) => {
   console.log("isupdate.........", lotteryData.isUpdate)
   // Firebase work happening here 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "lottery"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, "lottery-db"), (snapshot) => {
       const messagesData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -97,7 +97,7 @@ const useLotteryData = (MarketId) => {
             isUpdate: message.updatedAt
           }));
           if (!message.inactiveGame) {
-            window.location.href("/home")
+            window.location.href = "/home";
           }
         }
       });

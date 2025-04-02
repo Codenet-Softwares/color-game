@@ -82,7 +82,7 @@ function AppDrawer({
   };
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "lottery"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, "lottery-db"), (snapshot) => {
       const messagesData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
