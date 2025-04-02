@@ -945,55 +945,121 @@ export const revokeWinningAnnouncement = async (req, res) => {
   }
 };
 // done
-export const checkMarketStatus = async (req, res) => {
-  const marketId = req.params.marketId;
-  const { status } = req.body;
+// export const checkMarketStatus = async (req, res) => {
+//   const marketId = req.params.marketId;
+//   const { status } = req.body;
+
+//   try {
+//     const market = await Market.findOne({ where: { marketId } });
+
+//     const gameId = market.gameId;
+
+//     if (!market) {
+//       return res
+//         .status(statusCode.badRequest)
+//         .send(
+//           apiResponseErr(null, false, statusCode.badRequest, "Market not found")
+//         );
+//     }
+
+//     await Market.update(
+//       { hideMarketUser: false, isRevoke: false },
+//       { where: { marketId } }
+//     );
+
+//     await PreviousState.destroy({
+//       where: { marketId },
+//     });
+
+//     market.isActive = status;
+//     await market.save();
+
+//     const marketRef = db.collection("color-game").doc(marketId);
+
+//     await marketRef.set(
+//          {
+//           isActive: status,
+//           hideMarketUser: false,
+//           isRevoke: false,
+//           updatedAt: new Date()
+//         },
+//       { merge: true },
+//     );
+
+//     const statusMessage = status ? "Market is active" : "Market is suspended";
+//     res.status(200).send({
+//       success: true,
+//       message: statusMessage,
+//     });
+
+//   } catch (error) {
+//     console.log("Error updating market status:", error);
+//     res
+//       .status(statusCode.internalServerError)
+//       .send(
+//         apiResponseErr(
+//           error.data ?? null,
+//           false,
+//           error.responseCode ?? statusCode.internalServerError,
+//           error.errMessage ?? error.message
+//         )
+//       );
+//   }
+// };
+
+
+export const inActiveMarketStatus = async (req, res) => {
+  const { marketId } = req.params;
+  const {status} = req.body
+
+  console.log("marketId", marketId);
 
   try {
     const market = await Market.findOne({ where: { marketId } });
 
-    const gameId = market.gameId;
-
     if (!market) {
       return res
         .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
-        );
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Market not found"));
     }
 
-    await Market.update(
-      { hideMarketUser: false, isRevoke: false },
-      { where: { marketId } }
-    );
+    if(status){
+      await Market.update(
+        { hideMarketUser: false},
+        { where: { marketId } }
+      );
+      }
+      else{
+        await Market.update(
+          { hideMarketUser: true},
+          { where: { marketId } }
+        );
+      }
 
-    await PreviousState.destroy({
-      where: { marketId },
-    });
+    await PreviousState.destroy({ where: { marketId } });
 
-    market.isActive = status;
-    await market.save();
+    // Ensure `db` is initialized properly before using Firestore
+    if (!db) {
+      throw new Error("Database connection not initialized");
+    }
 
     const marketRef = db.collection("color-game").doc(marketId);
 
     await marketRef.set(
-         {
-          isActive: status,
-          hideMarketUser: false,
-          isRevoke: false,
-          updatedAt: new Date()
-        },
-      { merge: true },
+      {
+        isActive: market.isActive ,
+        hideMarketUser: market.hideMarketUser, // Changed to match SQL DB update
+        isRevoke: market.isRevoke,
+        updatedAt: new Date(),
+      },
+      { merge: true }
     );
 
-    const statusMessage = status ? "Market is active" : "Market is suspended";
-    res.status(200).send({
-      success: true,
-      message: statusMessage,
-    });
-
+    return res
+      .status(statusCode.success) // Corrected the response status code
+      .send(apiResponseSuccess([], true, statusCode.success, "Market updated successfully"));
   } catch (error) {
-    console.log("Error updating market status:", error);
+    console.error("Error updating market status:", error);
     res
       .status(statusCode.internalServerError)
       .send(

@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import customErrorHandler from '../middleware/customErrorHandler.js';
 import {
   createAdmin,
-  checkMarketStatus,
+  //checkMarketStatus,
   deposit,
   getAllUsers,
   afterWining,
@@ -28,6 +28,7 @@ import {
   liveUsersBetHistory,
   getBetsAfterWinHistory,
   getDetailsWinningBet,
+  inActiveMarketStatus,
 } from '../controller/admin.controller.js';
 import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
@@ -43,12 +44,20 @@ export const AdminRoute = (app) => {
   app.get('/api/get-sub-admins', authorize([string.Admin]), getSubAdmins);
 
   // done
-  app.post(
-    '/api/update-market-status/:marketId',
+  // app.post(
+  //   '/api/update-market-status/:marketId',
+  //   suspendedMarketSchema,
+  //   customErrorHandler,
+  //   authorize([string.Admin]),
+  //   checkMarketStatus,
+  // );
+
+  app.put(
+    '/api/update-inActive-market-status/:marketId',
     suspendedMarketSchema,
     customErrorHandler,
     authorize([string.Admin]),
-    checkMarketStatus,
+    inActiveMarketStatus,
   );
   // done
   app.get('/api/all-user', getAllUsers);
