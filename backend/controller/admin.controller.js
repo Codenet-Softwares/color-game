@@ -1043,14 +1043,14 @@ export const inActiveMarketStatus = async (req, res) => {
       throw new Error("Database connection not initialized");
     }
 
-    const marketRef = db.collection("color-game").doc(marketId);
+    const marketRef = db.collection("color-game-db").doc(marketId);
 
     await marketRef.set(
       {
-        isActive: market.isActive ,
-        hideMarketUser: market.hideMarketUser, // Changed to match SQL DB update
-        isRevoke: market.isRevoke,
-        updatedAt: new Date(),
+        // isActive: market.isActive ,
+        // hideMarketUser: market.hideMarketUser, // Changed to match SQL DB update
+        // isRevoke: market.isRevoke,
+        updatedAt: new Date().toISOString()
       },
       { merge: true }
     );

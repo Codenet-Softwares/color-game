@@ -134,7 +134,7 @@ const GetMarketDetailByMarketId = () => {
   // }, []);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "color-game"), (snapshot) => {
+    const unsubscribe = onSnapshot(collection(db, "color-game-db"), (snapshot) => {
       const messagesData = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),

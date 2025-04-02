@@ -254,7 +254,7 @@ export const createMarket = async (req, res) => {
      // Save data to Firestore
     const formatDateTime = (date) =>date.toISOString().slice(0, 19).replace("T", " ");
 
-    await db.collection('color-game').doc(newMarket.marketId).set({
+    await db.collection('color-game-db').doc(newMarket.marketId).set({
       gameId : newMarket.gameId,
       marketName : newMarket.marketName,
       participants : newMarket.participants,
@@ -412,14 +412,15 @@ export const updateMarket = async (req, res) => {
       },
     });
 
-    const firestoreRef = db.collection("color-game").doc(marketId);
+
+    const firestoreRef = db.collection("color-game-db").doc(marketId);
     await firestoreRef.set({
       // marketName: updatedMarket.marketName,
       // participants: updatedMarket.participants,
-      // startTime: updatedMarket.startTime,
-      // endTime: updatedMarket.endTime,
+      startTime: updatedMarket.startTime,
+      endTime: updatedMarket.endTime,
       // isDisplay: updatedMarket.isDisplay,
-      updatedAt: new Date()
+      updatedAt: new Date().toISOString(), 
     }, { merge: true });
 
     return res
@@ -580,7 +581,7 @@ export const updateRunner = async (req, res) => {
 
     // Fetch the market document from Firestore
     const marketId = marketData.marketId;
-    const marketRef = db.collection("color-game").doc(marketId);
+    const marketRef = db.collection("color-game-db").doc(marketId);
     // const marketSnapshot = await marketRef.get();
 
     // if (!marketSnapshot.exists) {
@@ -607,7 +608,7 @@ export const updateRunner = async (req, res) => {
     // if (lay !== undefined) runners[runnerIndex].lay = lay;
 
     // Update Firestore document with modified runners array
-    await marketRef.update({ updatedAt: new Date() });
+    await marketRef.update({ updatedAt: new Date().toISOString(), });
     return res
       .status(statusCode.success)
       .json(
@@ -756,7 +757,7 @@ export const updateRate = async (req, res) => {
     // Fetch the market document from Firestore
     const marketData = await Runner.findOne({ where: { runnerId } });
     const marketId = marketData.marketId;
-    const marketRef = db.collection("color-game").doc(marketId);
+    const marketRef = db.collection("color-game-db").doc(marketId);
     // const marketSnapshot = await marketRef.get();
 
     // if (!marketSnapshot.exists) {
@@ -782,7 +783,7 @@ export const updateRate = async (req, res) => {
     // if (lay !== undefined) runners[runnerIndex].lay = lay;
 
     // Update Firestore document
-    await marketRef.update({ updatedAt: new Date() });
+    await marketRef.update({ updatedAt: new Date().toISOString(),  });
 
     return res
       .status(statusCode.success)

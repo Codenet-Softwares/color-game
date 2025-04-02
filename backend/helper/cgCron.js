@@ -6,7 +6,7 @@ export async function updateColorGame() {
     const currentTime = getISTTime();
 
     try {
-        const snapshot = await db.collection("color-game").get();
+        const snapshot = await db.collection("color-game-db").get();
 
         const updatePromises = snapshot.docs.map(async (doc) => {
             const data = doc.data();
@@ -32,25 +32,25 @@ export async function updateColorGame() {
                 if (!data.isActive) {
                     updates.isActive = true;
                     updates.hideMarketUser = true;
-                    updates.updatedAt = new Date();
+                    updates.updatedAt = new Date().toISOString();
                     shouldUpdate = true;
                 }
             } else if (currentTime >= endTime) {
                 if (data.isActive) {
                     updates.isActive = false;
-                    updates.updatedAt = new Date()
+                    updates.updatedAt = new Date().toISOString();
                     shouldUpdate = true;
-                    clearInterval(lotteryUpdater);
                 }
             }
 
             if (shouldUpdate) {
-                await db.collection("color-game").doc(doc.id).update(updates);
+                await db.collection("color-game-db").doc(doc.id).update(updates);
 
                 await Market.update(
                     {
                         isActive: updates.isActive ?? data.isActive,
                         hideMarketUser: updates.hideMarketUser ?? data.hideMarketUser,
+                        updatedAt: shouldUpdate ? new Date() : data.updatedAt
                     },
                     {
                         where: { marketId: doc.id },
@@ -80,4 +80,3 @@ function parseDate(dateInput) {
     }
 }
 
-const lotteryUpdater = setInterval(updateColorGame, 1000);
