@@ -73,6 +73,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   .local()
                   .subtract(5, "hours")
                   .subtract(30, "minutes")
+                  .subtract(45, "seconds")
                   .toDate()
               ) < new Date() && (
                 <CountdownTimerLotto
