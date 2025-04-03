@@ -9,8 +9,6 @@ import { Link } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../.././Lottery/firebaseStore/lotteryFirebase";
 
-const [isLotteryUpdate, setIsLotteryUpdate] = useState(null);
-const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
 
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
@@ -34,6 +32,9 @@ const formatDate = (dateStr) => {
 const GetwholeMarket = () => {
   const [user_allGamesWithMarketData, setUser_allGamesWithMarketData] =
     useState([]);
+    const [isLotteryUpdate, setIsLotteryUpdate] = useState(null);
+    const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
+
 
   const { store, dispatch } = useAppContext();
 
