@@ -6,6 +6,12 @@ import strings from "../../../utils/constant/stringConstant";
 import { toast } from "react-toastify";
 import AppDrawer from "../appDrawer";
 import { Link } from "react-router-dom";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../.././Lottery/firebaseStore/lotteryFirebase";
+
+const [isLotteryUpdate, setIsLotteryUpdate] = useState(null);
+const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
+
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
 
@@ -33,7 +39,7 @@ const GetwholeMarket = () => {
 
   useEffect(() => {
     user_getAllGamesWithMarketData();
-  }, []);
+  }, [isLotteryUpdate, isColorgameUpdate]);
 
   const handleGameId = (id) => {
     dispatch({
@@ -53,6 +59,37 @@ const GetwholeMarket = () => {
       setUser_allGamesWithMarketData(response.data);
     }
   }
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "lottery-db"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      console.log("Messages Data:", messagesData);
+      setIsLotteryUpdate(messagesData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "color-game-db"),
+      (snapshot) => {
+        const messagesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        console.log("Messages Data:", messagesData);
+        setIsColorgameUpdate(messagesData);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <>
@@ -90,7 +127,6 @@ const GetwholeMarket = () => {
                                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                               }}
                             >
-                              
                               {/* Market Header */}
                               <div className="row align-items-center">
                                 <span
@@ -112,7 +148,7 @@ const GetwholeMarket = () => {
                               </div>
 
                               {/* Range Details */}
-                              <div className="row mt-1 " >
+                              <div className="row mt-1 ">
                                 <div className="col-3">
                                   <p className="m-0">
                                     <strong>Group Range:</strong>
@@ -160,7 +196,7 @@ const GetwholeMarket = () => {
                           //   ""
                           // )}/${gameWithMarketData?.marketId}`}
                           to={`/lottery-home`}
-                          style={{ textAlign: "right", margin:"16px" }}
+                          style={{ textAlign: "right", margin: "16px" }}
                         >
                           View more.....
                         </Link>
@@ -186,15 +222,20 @@ const GetwholeMarket = () => {
                       {gameWithMarketData &&
                         gameWithMarketData.markets.length > 0 && (
                           <div className="row px-0 m-0">
-                          <span className="col-12 col-md-6 d-none d-md-block text-dark text-decoration-none text-nowrap fw-bold h6"></span>                        
-                          <div className="col-6 col-md-3 rounded-top-2 fw-bold p-1" style={{ background: "#80C2F1" }}>
-                            BACK
-                          </div>  
-                          <div className="col-6 col-md-3 rounded-top-2 fw-bold p-1" style={{ background: "#FAA9BA" }}>
-                            LAY
+                            <span className="col-12 col-md-6 d-none d-md-block text-dark text-decoration-none text-nowrap fw-bold h6"></span>
+                            <div
+                              className="col-6 col-md-3 rounded-top-2 fw-bold p-1"
+                              style={{ background: "#80C2F1" }}
+                            >
+                              BACK
+                            </div>
+                            <div
+                              className="col-6 col-md-3 rounded-top-2 fw-bold p-1"
+                              style={{ background: "#FAA9BA" }}
+                            >
+                              LAY
+                            </div>
                           </div>
-                        </div>
-                        
                         )}
                       {gameWithMarketData &&
                         gameWithMarketData.markets
@@ -211,7 +252,7 @@ const GetwholeMarket = () => {
                                 <div className="row py-1 px-0 m-0 ">
                                   {/* Runner Name and Balance */}
                                   <span className="col-12 col-md-6 text-dark text-decoration-none text-nowrap h6 d-flex flex-wrap">
-                                  <i className="far fa-calendar-alt text-dark me-2 d-block d-md-none mt-1"></i>
+                                    <i className="far fa-calendar-alt text-dark me-2 d-block d-md-none mt-1"></i>
                                     <span
                                       className=""
                                       style={{ color: "#022C44" }}
