@@ -591,6 +591,7 @@ export const filteredGameData = async (req, res) => {
             "endTime",
             "createdAt",
             "announcementResult",
+            "hideMarketUser",
             "isActive",
             "isVoid"
           ],
@@ -636,7 +637,9 @@ export const filteredGameData = async (req, res) => {
       gameName: game.gameName,
       description: game.description,
       isBlink: game.isBlink,
-      markets: game.Markets.map((market) => ({
+      markets: game.Markets
+      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false)
+      .map((market) => ({
         marketId: market.marketId,
         marketName: market.marketName,
         participants: market.participants,
