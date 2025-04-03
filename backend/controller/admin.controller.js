@@ -1047,9 +1047,9 @@ export const inActiveMarketStatus = async (req, res) => {
 
     await marketRef.set(
       {
-        // isActive: market.isActive ,
-        // hideMarketUser: market.hideMarketUser, // Changed to match SQL DB update
-        // isRevoke: market.isRevoke,
+        isActive: market.isActive ,
+        hideMarketUser: market.hideMarketUser, // Changed to match SQL DB update
+        isRevoke: market.isRevoke,
         updatedAt: new Date().toISOString()
       },
       { merge: true }
