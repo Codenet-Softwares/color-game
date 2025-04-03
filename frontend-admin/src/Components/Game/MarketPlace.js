@@ -405,7 +405,7 @@ const MarketPlace = () => {
                                                     }
                                                   >
                                                     <i className="fa-solid fa-lock"></i>{" "}
-                                                    Suspensed
+                                                    Suspened
                                                   </a>
                                                 ) : (
                                                   <>
