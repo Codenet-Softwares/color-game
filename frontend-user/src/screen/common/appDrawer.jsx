@@ -96,15 +96,18 @@ function AppDrawer({
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "color-game-db"), (snapshot) => {
-      const messagesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const unsubscribe = onSnapshot(
+      collection(db, "color-game-db"),
+      (snapshot) => {
+        const messagesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      console.log("Messages Data:", messagesData);
-      setIsColorgameUpdate(messagesData);
-    });
+        console.log("Messages Data:", messagesData);
+        setIsColorgameUpdate(messagesData);
+      }
+    );
 
     return () => unsubscribe();
   }, []);
@@ -135,7 +138,7 @@ function AppDrawer({
           />
         </span>
 
-        {lotteryNewDrawTimes && lotteryNewDrawTimes.length > 0 && (
+        {lotteryNewDrawTimes && (
           <li
             className="MenuHead lottery-section text-center"
             onClick={handleLotteryNewToggle}
@@ -151,7 +154,7 @@ function AppDrawer({
             </div>
 
             {/* Display lottery draw times only when toggled */}
-            {lotteryNewToggle && (
+            {lotteryNewToggle && lotteryNewDrawTimes.length > 0 && (
               <ul className="subMenuItems text-info mt-4 ">
                 {lotteryNewDrawTimes.map((market) => (
                   <li
