@@ -150,7 +150,7 @@ const GetMarketDetailByMarketId = () => {
             );
             setIsActive(message.isActive);
             setIsUpdate(message.updatedAt);
-            if (!message.inactiveGame) {
+            if (message.hideMarketUser === false) {
               window.location.href = "/home";
             }
           }
@@ -491,7 +491,7 @@ const GetMarketDetailByMarketId = () => {
                     moment(user_marketWithRunnerData.startTime)
                       .local()
                       .subtract(5, "hours")
-                      .subtract(30, "minutes")                    
+                      .subtract(30, "minutes")
                       .toDate()
                   ) < new Date() && (
                     <CountdownTimer
