@@ -166,22 +166,22 @@ export const loginUser = async (req, res) => {
   try {
     const baseURL = process.env.WHITE_LABEL_URL;
 
-const response = await axios.get(`${baseURL}/api/admin-user/Active-Locked`);
-const activeLockedUsers = response.data?.data || [];
+    // Fetch Active and Locked Users
+    const response = await axios.get(`${baseURL}/api/admin-user/Active-Locked`);
+    const activeLockedUsers = response.data?.data || [];
 
-const user = activeLockedUsers.find((user) => user.userName === userName);
+    const user = activeLockedUsers.find((user) => user.userName === userName);
 
-if (user && (!user.isActive || user.locked)) {
-  return res.status(statusCode.badRequest).send(
-    apiResponseErr(
-      null,
-      false,
-      statusCode.badRequest,
-      'Your account is Deactivated. Please contact your applying support.'
-    )
-  );
-}
-
+    if (user && (!user.isActive || user.locked)) {
+      return res.status(statusCode.badRequest).send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.badRequest,
+          'Your account is Deactivated. Please contact your applying support.'
+        )
+      );
+    }
 
     const existingUser = await userSchema.findOne({ where: { userName } });
 
@@ -197,88 +197,72 @@ if (user && (!user.isActive || user.locked)) {
       const loginTime = new Date();
       const loginStatus = 'login failed';
       await existingUser.update({ lastLoginTime: loginTime, loginStatus });
-      const baseURL = process.env.WHITE_LABEL_URL
+
       await axios.post(`${baseURL}/api/colorGame-user-lastLoginTime`, {
         userName,
-        loginTime: loginTime,
+        loginTime,
         loginStatus
       });
+
       return res
         .status(statusCode.badRequest)
         .send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid password'));
     }
 
-    if (existingUser.isReset === true) {
-      const resetTokenResponse = {
-        id: null,
-        userName: null,
-        isEighteen: null,
-        userType: null,
-        wallet: null,
-        isReset: existingUser.isReset,
-      };
-
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            {
-              ...resetTokenResponse,
-            },
-            true,
-            statusCode.success,
-            'Password reset required.',
-          ),
-        );
-    } 
-    else {
-      const accessTokenResponse = {
-        id: existingUser.id,
-        userName: existingUser.userName,
-        isEighteen: existingUser.eligibilityCheck,
-        userType: existingUser.userType || 'user',
-        wallet: existingUser.wallet,
-        isReset: existingUser.isReset,
-      };
-
-      const accessToken = jwt.sign(accessTokenResponse, process.env.JWT_SECRET_KEY, {
-        expiresIn: '1d',
-      });
-
-      existingUser.token = accessToken
-
-      const loginTime = new Date();
-      const loginStatus = 'login success';
-
-      await existingUser.update({ lastLoginTime: loginTime, loginStatus });
-      await existingUser.save()
-      // Send the lastLoginTime to adminLogin API
-      const baseURL = process.env.WHITE_LABEL_URL;
-      await axios.post(`${baseURL}/api/colorGame-user-lastLoginTime`, {
-        userName: existingUser.userName,
-        loginTime,
-        loginStatus
-      });
-
-      res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            {
-              accessToken,
-              userId: existingUser.userId,
-              userName: existingUser.userName,
-              isEighteen: existingUser.eligibilityCheck,
-              userType: existingUser.userType || 'user',
-              wallet: existingUser.wallet,
-              isReset: existingUser.isReset,
-            },
-            true,
-            statusCode.success,
-            'Login successful',
-          ),
-        );
+    // If the user already has an active session, force logout
+    if (existingUser.token) {
+      existingUser.token = null;
+      await existingUser.save();
     }
+
+    // Generate a new JWT token
+    const accessTokenResponse = {
+      id: existingUser.id,
+      userName: existingUser.userName,
+      isEighteen: existingUser.eligibilityCheck,
+      userType: existingUser.userType || 'user',
+      wallet: existingUser.wallet,
+      isReset: existingUser.isReset,
+    };
+
+    const accessToken = jwt.sign(accessTokenResponse, process.env.JWT_SECRET_KEY, {
+      expiresIn: '1d',
+    });
+
+    // Store the new token in the database
+    existingUser.token = accessToken;
+    await existingUser.save();
+
+    const loginTime = new Date();
+    const loginStatus = 'login success';
+
+    await existingUser.update({ lastLoginTime: loginTime, loginStatus });
+
+    // Notify Admin Login API
+    await axios.post(`${baseURL}/api/colorGame-user-lastLoginTime`, {
+      userName: existingUser.userName,
+      loginTime,
+      loginStatus
+    });
+
+    res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          {
+            accessToken,
+            userId: existingUser.userId,
+            userName: existingUser.userName,
+            isEighteen: existingUser.eligibilityCheck,
+            userType: existingUser.userType || 'user',
+            wallet: existingUser.wallet,
+            isReset: existingUser.isReset,
+          },
+          true,
+          statusCode.success,
+          'Login successful',
+        ),
+      );
   } catch (error) {
     console.error("Error from API:", error.response ? error.response.data : error.message);
 
@@ -294,6 +278,7 @@ if (user && (!user.isActive || user.locked)) {
       );
   }
 };
+
 
 export const resetPassword = async (req, res) => {
   try {
