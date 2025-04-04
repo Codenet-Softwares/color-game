@@ -25,6 +25,7 @@ import {
   getUserCurrentOrderGames,
   activityLog,
   userActiveInactive,
+  calculateExternalProfitLoss,
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
 import {
@@ -132,5 +133,13 @@ export const UserRoute = (app) => {
   app.get('/api/user-activitylog', authorize([string.User]), activityLog)
 
   app.put('/api/user/active-inactive/:userId',activeInactive,customErrorHandler,  userActiveInactive);
+
+  app.post(
+    '/api/external-profit_loss',
+    // validateProfitLossInput,
+    // customErrorHandler,
+    // authorize([string.User]),
+    calculateExternalProfitLoss,
+  );
 
 };
