@@ -2176,59 +2176,55 @@ export const userActiveInactive = async (req, res) => {
 export const calculateExternalProfitLoss = async (req, res) => {
   try {
     const { userName } = req.body;
+    const { dataType } = req.query;
     const existingUsers = await userSchema.findAll({ where: { userName } });
-
-    console.log("existingUsers",existingUsers)
-
+    
     if (!existingUsers || existingUsers.length === 0) {
       return res
         .status(statusCode.badRequest)
         .send(apiResponseErr([], false, statusCode.badRequest, "User not found"));
     }
+ 
+    let startDate, endDate;
 
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    // const dataType = req.query.dataType;
-    // let startDate, endDate;
-
-    // if (dataType === "live") {
-    //   const today = new Date();
-    //   startDate = new Date(today).setHours(0, 0, 0, 0);
-    //   endDate = new Date(today).setHours(23, 59, 59, 999);
-    // } else if (dataType === "olddata") {
-    //   if (req.query.startDate && req.query.endDate) {
-    //     startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-    //     endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-    //   } else {
-    //     const oneYearAgo = new Date();
-    //     oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-    //     startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
-    //     endDate = new Date().setHours(23, 59, 59, 999);
-    //   }
-    // } else if (dataType === "backup") {
-    //   if (req.query.startDate && req.query.endDate) {
-    //     startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-    //     endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-    //     const maxAllowedDate = new Date(startDate);
-    //     maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
-    //     if (endDate > maxAllowedDate) {
-    //       return res.status(statusCode.badRequest).send(
-    //         apiResponseErr([], false, statusCode.badRequest,
-    //           "The date range for backup data should not exceed 3 months.")
-    //       );
-    //     }
-    //   } else {
-    //     const today = new Date();
-    //     const threeMonthsAgo = new Date();
-    //     threeMonthsAgo.setMonth(today.getMonth() - 3);
-    //     startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
-    //     endDate = new Date(today.setHours(23, 59, 59, 999));
-    //   }
-    // } else {
-    //   return res
-    //     .status(statusCode.success)
-    //     .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
-    // }
+    if (dataType === "live") {
+      const today = new Date();
+      startDate = new Date(today).setHours(0, 0, 0, 0);
+      endDate = new Date(today).setHours(23, 59, 59, 999);
+    } else if (dataType === "olddata") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+      } else {
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
+        endDate = new Date().setHours(23, 59, 59, 999);
+      }
+    } else if (dataType === "backup") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+        const maxAllowedDate = new Date(startDate);
+        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
+        if (endDate > maxAllowedDate) {
+          return res.status(statusCode.badRequest).send(
+            apiResponseErr([], false, statusCode.badRequest,
+              "The date range for backup data should not exceed 3 months.")
+          );
+        }
+      } else {
+        const today = new Date();
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(today.getMonth() - 3);
+        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
+      }
+    } else {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
+    }
 
     const searchGameName = req.query.search || "";
     const combinedProfitLossData = [];
@@ -2252,14 +2248,12 @@ export const calculateExternalProfitLoss = async (req, res) => {
         ],
         where: {
           userId: userId,
-          // date: {
-          //   [Op.between]: [startDate, endDate],
-          // },
+          date: {
+            [Op.between]: [startDate, endDate],
+          },
         },
         group: ["gameId", "Game.gameName"],
       });
-
-      console.log("userId",userId)
 
       const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
         attributes: [
@@ -2281,11 +2275,14 @@ export const calculateExternalProfitLoss = async (req, res) => {
             "totalProfitLoss",
           ],
         ],
-        where: { userId },
+        where: { 
+          userId,
+          date: {
+            [Op.between]: [startDate, endDate],
+          },
+         },
         group: ["userId"],
       });
-
-      console.log("lotteryProfitLossData",lotteryProfitLossData)
 
       combinedProfitLossData.push(
         ...profitLossData.map((item) => ({
@@ -2314,24 +2311,9 @@ export const calculateExternalProfitLoss = async (req, res) => {
       );
     }
 
-    const totalItems = combinedProfitLossData.length;
-    const totalPages = Math.ceil(totalItems / limit);
-    const paginatedCombinedData = combinedProfitLossData.slice(
-      (page - 1) * limit,
-      page * limit
-    );
-
-    const paginationData = {
-      page,
-      limit,
-      totalPages,
-      totalItems,
-    };
-
-
     const groupedData = {};
 
-    paginatedCombinedData.forEach((item) => {
+    combinedProfitLossData.forEach((item) => {
       const gameName = item.gameName;
       const profitLoss = parseFloat(item.totalProfitLoss || 0);
 
