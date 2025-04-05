@@ -136,9 +136,7 @@ export const UserRoute = (app) => {
 
   app.post(
     '/api/external-profit_loss',
-    // validateProfitLossInput,
-    // customErrorHandler,
-    // authenticateSuperAdmin,
+    authenticateSuperAdmin,
     calculateExternalProfitLoss,
   );
 };
