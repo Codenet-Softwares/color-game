@@ -141,5 +141,5 @@ export const UserRoute = (app) => {
     calculateExternalProfitLoss,
   );
 
-  app.post('/api/external/market-wise-profit-loss', getExternalTotalProfitLoss)
+  app.post('/api/external/market-wise-profit-loss',authenticateSuperAdmin, getExternalTotalProfitLoss)
 };
