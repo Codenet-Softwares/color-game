@@ -2329,6 +2329,7 @@ export const calculateExternalProfitLoss = async (req, res) => {
         gameName,
         totalProfitLoss: total.toFixed(2),
       })
+
     );
 
     return res
@@ -2339,6 +2340,8 @@ export const calculateExternalProfitLoss = async (req, res) => {
       
 
   } catch (error) {
+
+    console.log("error",error)
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(
         null,
@@ -2347,5 +2350,237 @@ export const calculateExternalProfitLoss = async (req, res) => {
         error.errMessage || error.message
       )
     );
+  }
+};
+
+export const getExternalTotalProfitLoss = async (req, res) => {
+  try {
+    const { type } = req.query;
+
+    const { userName } = req.body;
+    const existingUsers = await userSchema.findAll({ where: { userName } });
+
+    const dataType = req.query.dataType;
+    let startDate, endDate;
+    if (dataType === "live") {
+      const today = new Date();
+      startDate = new Date(today).setHours(0, 0, 0, 0);
+      endDate = new Date(today).setHours(23, 59, 59, 999);
+    } else if (dataType === "olddata") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+      } else {
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
+        endDate = new Date().setHours(23, 59, 59, 999);
+      }
+    } else if (dataType === "backup") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+        const maxAllowedDate = new Date(startDate);
+        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
+        if (endDate > maxAllowedDate) {
+          return res
+            .status(statusCode.badRequest)
+            .send(
+              apiResponseErr(
+                [],
+                false,
+                statusCode.badRequest,
+                "The date range for backup data should not exceed 3 months."
+              )
+            );
+        }
+      } else {
+        const today = new Date();
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(today.getMonth() - 3);
+        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
+      }
+    } else {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "Data not found.")
+        );
+    }
+
+    console.log("startDate",startDate)
+    console.log("endDate",endDate)
+
+
+    const searchGameName = req.query.search || "";
+
+    const combinedProfitLossData = [];
+
+    for (const user of existingUsers) {
+      const userId = user.userId;
+
+      const profitLossData = await ProfitLoss.findAll({
+        attributes: [
+          "gameId",
+          "marketId",
+          "date",
+          [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
+        ],
+        include: [
+          {
+            model: Game,
+            attributes: ["gameName"],
+            where: searchGameName
+              ? { gameName: { [Op.like]: `%${searchGameName}%` } }
+              : {},
+          },
+          {
+            model: Market,
+            attributes: ["marketName"],
+          },
+        ],
+        where: {
+          userId: userId,
+          date: {
+            [Op.between]: [startDate, endDate],
+          },
+        },
+        group: ["gameId", "marketId", "date", "Game.gameName", "Market.marketName"],
+      });
+
+      const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
+        attributes: [
+          "userId",
+          "marketId",
+          "marketName",
+          "date",
+          [
+            Sequelize.literal(`
+              COALESCE((
+                SELECT SUM(lp.profitLoss)
+                FROM LotteryProfit_Loss lp
+                WHERE lp.userId = LotteryProfit_Loss.userId
+                AND lp.id IN (
+                  SELECT MIN(lp2.id) 
+                  FROM LotteryProfit_Loss lp2
+                  WHERE lp2.userId = lp.userId
+                  GROUP BY lp2.marketId
+                )
+              ), 0)
+            `),
+            "totalProfitLoss",
+          ],
+        ],
+        where: {
+          userId,
+          date: {
+            [Op.between]: [startDate, endDate],
+          },
+        },
+        group: ["userId", "marketId", "marketName","date"],
+      });
+
+      combinedProfitLossData.push(
+        ...profitLossData.map((item) => ({
+          userId,
+          userName: user.userName,
+          marketId: item.dataValues.marketId,
+          marketName: item.Market.marketName,
+          gameId: item.gameId,
+          gameName: item.Game.gameName,
+          totalProfitLoss: item.dataValues.totalProfitLoss,
+          date : item.dataValues.date,
+        })),
+        ...lotteryProfitLossData
+          .filter(
+            (item) =>
+              item.dataValues.totalProfitLoss != null &&
+              item.dataValues.totalProfitLoss !== ""
+          )
+          .map((item) => ({
+            userId,
+            marketId: item.dataValues.marketId,
+            marketName: item.dataValues.marketName,
+            userName: user.userName,
+            gameName: "Lottery",
+            totalProfitLoss: item.dataValues.totalProfitLoss,
+            date : item.dataValues.date,
+          }))
+      );
+    }
+
+    if (combinedProfitLossData.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "No profit/loss data found!"
+          )
+        );
+    }
+
+    const groupedData = {};
+
+    combinedProfitLossData.forEach((item) => {
+      const gameName = item.gameName;
+      const marketName = item.marketName;
+      const date = item.date;
+      const profitLoss = parseFloat(item.totalProfitLoss || 0);
+    
+      if (!groupedData[gameName]) {
+        groupedData[gameName] = {};
+      }
+    
+      if (!groupedData[gameName][marketName]) {
+        groupedData[gameName][marketName] = {
+          totalProfitLoss: 0,
+          date: date,
+        };
+      }
+    
+      groupedData[gameName][marketName].totalProfitLoss += profitLoss;
+
+      if (new Date(groupedData[gameName][marketName].date)) {
+        groupedData[gameName][marketName].date = date;
+      }
+    });
+    
+    const result = [];
+    
+    for (const gameName in groupedData) {
+      for (const marketName in groupedData[gameName]) {
+        const data = groupedData[gameName][marketName];
+        result.push({
+          gameName,
+          marketName,
+          totalProfitLoss: data.totalProfitLoss.toFixed(2),
+          date: data.date,
+        });
+      }
+    }
+    let filteredResult = result;
+    if (type) {
+      filteredResult = result.filter(
+        (item) => item.gameName.toLowerCase() === type.toLowerCase()
+      );
+    }
+
+    return res.status(statusCode.success).send(filteredResult);
+  } catch (error) {
+    console.log("error", error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          error.responseCode || statusCode.internalServerError,
+          error.errMessage || error.message
+        )
+      );
   }
 };

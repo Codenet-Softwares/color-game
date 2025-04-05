@@ -26,6 +26,7 @@ import {
   activityLog,
   userActiveInactive,
   calculateExternalProfitLoss,
+  getExternalTotalProfitLoss,
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
 import {
@@ -139,4 +140,6 @@ export const UserRoute = (app) => {
     authenticateSuperAdmin,
     calculateExternalProfitLoss,
   );
+
+  app.post('/api/external/market-wise-profit-loss', getExternalTotalProfitLoss)
 };
