@@ -22,7 +22,7 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
-import { Admin } from "mongodb";
+import sequelize from "../db.js";
 
 // done
 export const createUser = async (req, res) => {
@@ -2172,5 +2172,84 @@ export const userActiveInactive = async (req, res) => {
   }
 };
 
+export const profitLoss = async (req, res) => {
+  try {
+    const [sportsUsers, lotteryUsers] = await Promise.all([
+      ProfitLoss.findAll({
+        attributes: ['userId', 'userName'],
+        group: ['userId', 'userName'],
+        raw: true
+      }),
+      LotteryProfit_Loss.findAll({
+        attributes: ['userId', 'userName'],
+        group: ['userId', 'userName'],
+        raw: true
+      })
+    ]);
 
+    const allUsersMap = new Map();
+    [...sportsUsers, ...lotteryUsers].forEach(user => {
+      if (!allUsersMap.has(user.userId)) {
+        allUsersMap.set(user.userId, {
+          userId: user.userId,
+          userName: user.userName || 'Unknown'
+        });
+      }
+    });
+    const allUsers = Array.from(allUsersMap.values());
 
+    const usersWithProfitLoss = await Promise.all(
+      allUsers.map(async (user) => {
+        const [sportsRecords, lotteryRecords] = await Promise.all([
+          ProfitLoss.findAll({
+            where: { userId: user.userId },
+            attributes: ['marketId', 'profitLoss'],
+            raw: true
+          }),
+          LotteryProfit_Loss.findAll({
+            where: { userId: user.userId },
+            attributes: ['marketId', 'profitLoss'],
+            raw: true
+          })
+        ]);
+
+        const getUniqueMarketProfitLoss = (records) => {
+          const marketMap = new Map();
+          records.forEach(record => {
+            if (!marketMap.has(record.marketId)) {
+              marketMap.set(record.marketId, record.profitLoss);
+            }
+          });
+          return Array.from(marketMap.values()).reduce((sum, val) => sum + parseFloat(val), 0);
+        };
+
+        const sportsTotal = sportsRecords.length > 0 ? 
+          getUniqueMarketProfitLoss(sportsRecords) : 0;
+        const lotteryTotal = lotteryRecords.length > 0 ? 
+          getUniqueMarketProfitLoss(lotteryRecords) : 0;
+        const combinedTotal = sportsTotal + lotteryTotal;
+
+        return {
+          userId: user.userId,
+          userName: user.userName,
+          profitLoss: combinedTotal.toFixed(2),
+        };
+      })
+    );
+
+    res.status(statusCode.success).send(
+      apiResponseSuccess(usersWithProfitLoss, true, statusCode.success, "Successfully fetched all users profit/loss")
+    );
+
+  } catch (error) {
+    console.error('Error fetching all users profit/loss:', error);
+    res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
+    );
+  }
+};
