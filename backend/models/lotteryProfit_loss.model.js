@@ -35,7 +35,11 @@ LotteryProfit_Loss.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-
+        date: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
+          },
     },
     {
         sequelize,

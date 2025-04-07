@@ -132,5 +132,4 @@ export const UserRoute = (app) => {
   app.get('/api/user-activitylog', authorize([string.User]), activityLog)
 
   app.put('/api/user/active-inactive/:userId',activeInactive,customErrorHandler,  userActiveInactive);
-
 };

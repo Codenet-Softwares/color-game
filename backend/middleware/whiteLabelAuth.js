@@ -30,6 +30,7 @@ export const authenticateSuperAdmin = (req, res, next) => {
         ];
 
         const userRole = decoded.roles[0].role;
+        console.log("userRole.........",userRole)
         if (!allowedRoles.includes(userRole)) {
             return res.status(statusCode.unauthorize).send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized Access'));
         }
