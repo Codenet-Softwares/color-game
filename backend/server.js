@@ -143,7 +143,7 @@ process.on('SIGTERM', async () => {
 let colorGameInterval;
 
 sequelize
-  .sync({ alter: false })
+  .sync({ alter: true })
   .then(() => {
     console.log('DB Synced!');
 
