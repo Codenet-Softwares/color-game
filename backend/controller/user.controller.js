@@ -2469,6 +2469,7 @@ export const getExternalTotalProfitLoss = async (req, res) => {
     combinedProfitLossData.forEach((item) => {
       const gameName = item.gameName;
       const marketName = item.marketName;
+      const marketId = item.marketId;
       const date = item.date;
       const profitLoss = parseFloat(item.totalProfitLoss || 0);
     
@@ -2480,6 +2481,7 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         groupedData[gameName][marketName] = {
           totalProfitLoss: 0,
           date: date,
+          marketId: marketId,
         };
       }
     
@@ -2497,6 +2499,7 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         const data = groupedData[gameName][marketName];
         result.push({
           gameName,
+          marketId: data.marketId,
           marketName,
           totalProfitLoss: data.totalProfitLoss.toFixed(2),
           date: data.date,
