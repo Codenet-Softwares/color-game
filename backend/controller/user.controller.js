@@ -2438,9 +2438,9 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         ],
         where: {
           userId: userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
+          // date: {
+          //   [Op.between]: [startDate, endDate],
+          // },
         },
         group: ["gameId", "marketId", "date", "Game.gameName", "Market.marketName"],
       });
@@ -2470,9 +2470,9 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         ],
         where: {
           userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
+          // date: {
+          //   [Op.between]: [startDate, endDate],
+          // },
         },
         group: ["userId", "marketId", "marketName","date"],
       });
