@@ -22,7 +22,7 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
-import { Admin } from "mongodb";
+import sequelize from "../db.js";
 
 // done
 export const createUser = async (req, res) => {
@@ -2172,21 +2172,12 @@ export const userActiveInactive = async (req, res) => {
   }
 };
 
-
-export const calculateExternalProfitLoss = async (req, res) => {
+export const profitLoss = async (req, res) => {
   try {
-    const { userName } = req.body;
-    const { dataType } = req.query;
-    const existingUsers = await userSchema.findAll({ where: { userName } });
-    
-    if (!existingUsers || existingUsers.length === 0) {
-      return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr([], false, statusCode.badRequest, "User not found"));
-    }
- 
-    let startDate, endDate;
 
+
+    const { dataType } = req.query;    
+    let startDate, endDate;
     if (dataType === "live") {
       const today = new Date();
       startDate = new Date(today).setHours(0, 0, 0, 0);
@@ -2225,129 +2216,91 @@ export const calculateExternalProfitLoss = async (req, res) => {
         .status(statusCode.success)
         .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
     }
+    const [sportsUsers, lotteryUsers] = await Promise.all([
+      ProfitLoss.findAll({
+        attributes: ['userId', 'userName'],
+        group: ['userId', 'userName'],
+        raw: true
+      }),
+      LotteryProfit_Loss.findAll({
+        attributes: ['userId', 'userName'],
+        group: ['userId', 'userName'],
+        raw: true
+      })
+    ]);
 
-    const searchGameName = req.query.search || "";
-    const combinedProfitLossData = [];
-
-    for (const user of existingUsers) {
-      const userId = user.userId;
-
-      const profitLossData = await ProfitLoss.findAll({
-        attributes: [
-          "gameId",
-          [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
-        ],
-        include: [
-          {
-            model: Game,
-            attributes: ["gameName"],
-            where: searchGameName
-              ? { gameName: { [Op.like]: `%${searchGameName}%` } }
-              : {},
-          },
-        ],
-        where: {
-          userId: userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        group: ["gameId", "Game.gameName"],
-      });
-
-      const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
-        attributes: [
-          "userId",
-          [
-            Sequelize.literal(`
-              COALESCE((
-                SELECT SUM(lp.profitLoss)
-                FROM LotteryProfit_Loss lp
-                WHERE lp.userId = LotteryProfit_Loss.userId
-                AND lp.id IN (
-                  SELECT MIN(lp2.id) 
-                  FROM LotteryProfit_Loss lp2
-                  WHERE lp2.userId = lp.userId
-                  GROUP BY lp2.marketId
-                )
-              ), 0)
-            `),
-            "totalProfitLoss",
-          ],
-        ],
-        where: { 
-          userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-         },
-        group: ["userId"],
-      });
-
-      combinedProfitLossData.push(
-        ...profitLossData.map((item) => ({
-          userId,
-          userName : user.userName,
-          gameId: item.gameId,
-          gameName: item.Game.gameName,
-          totalProfitLoss: item.dataValues.totalProfitLoss,
-
-        })),
-        ...lotteryProfitLossData
-          .filter((item) => item.dataValues.totalProfitLoss != null && item.dataValues.totalProfitLoss !== "")
-          .map((item) => ({
-            userId,
-            userName : user.userName,
-            gameName: "Lottery",
-            totalProfitLoss: item.dataValues.totalProfitLoss,
-          }))
-      );
-    };
-
-
-    if (combinedProfitLossData.length === 0) {
-      return res.status(statusCode.success).send(
-        apiResponseSuccess([], true, statusCode.success, "No profit/loss data found!")
-      );
-    }
-
-    const groupedData = {};
-
-    combinedProfitLossData.forEach((item) => {
-      const gameName = item.gameName;
-      const profitLoss = parseFloat(item.totalProfitLoss || 0);
-
-      if (!groupedData[gameName]) {
-        groupedData[gameName] = 0;
+    const allUsersMap = new Map();
+    [...sportsUsers, ...lotteryUsers].forEach(user => {
+      if (!allUsersMap.has(user.userId)) {
+        allUsersMap.set(user.userId, {
+          userId: user.userId,
+          userName: user.userName || 'Unknown'
+        });
       }
-
-      groupedData[gameName] += profitLoss;
     });
+    const allUsers = Array.from(allUsersMap.values());
 
-    const combinedTotalProfitLossByGame = Object.entries(groupedData).map(
-      ([gameName, total]) => ({
-        gameName,
-        totalProfitLoss: total.toFixed(2),
+    const usersWithProfitLoss = await Promise.all(
+      allUsers.map(async (user) => {
+        const [sportsRecords, lotteryRecords] = await Promise.all([
+          ProfitLoss.findAll({
+            where: { 
+              userId: user.userId,
+              date: {
+                [Op.between]: [startDate, endDate],
+              },
+             },
+            attributes: ['marketId', 'profitLoss'],
+            raw: true
+          }),
+          LotteryProfit_Loss.findAll({
+            where: { 
+              userId: user.userId,
+              date: {
+                [Op.between]: [startDate, endDate],
+              }, 
+            },
+            attributes: ['marketId', 'profitLoss'],
+            raw: true
+          })
+        ]);
+
+        const getUniqueMarketProfitLoss = (records) => {
+          const marketMap = new Map();
+          records.forEach(record => {
+            if (!marketMap.has(record.marketId)) {
+              marketMap.set(record.marketId, record.profitLoss);
+            }
+          });
+          return Array.from(marketMap.values()).reduce((sum, val) => sum + parseFloat(val), 0);
+        };
+
+        const sportsTotal = sportsRecords.length > 0 ? 
+          getUniqueMarketProfitLoss(sportsRecords) : 0;
+        const lotteryTotal = lotteryRecords.length > 0 ? 
+          getUniqueMarketProfitLoss(lotteryRecords) : 0;
+        const combinedTotal = sportsTotal + lotteryTotal;
+
+        return {
+          userId: user.userId,
+          userName: user.userName,
+          profitLoss: combinedTotal.toFixed(2),
+        };
       })
 
     );
 
-    return res
-      .status(statusCode.success)
-      .send(
-        combinedTotalProfitLossByGame, 
-      );
-      
+    res.status(statusCode.success).send(
+      apiResponseSuccess(usersWithProfitLoss, true, statusCode.success, "Successfully fetched all users profit/loss")
+    );
 
   } catch (error) {
-
-    console.log("error",error)
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(
         null,
         false,
-        error.responseCode || statusCode.internalServerError,
-        error.errMessage || error.message
+        statusCode.internalServerError,
+        error.message
       )
     );
   }

@@ -65,7 +65,7 @@ const CreateSubAdmin = () => {
           <div className="card">
             <div
               className="card-header text-white p-3 text-center"
-              style={{ backgroundColor: "#1E2761" }}
+              style={{ backgroundColor: "#3E5879" }}
             >
               <b className="text-uppercase">CREATE Sub-Admin</b>
             </div>
@@ -75,12 +75,12 @@ const CreateSubAdmin = () => {
                 {/* Username Field */}
                 <div className="mb-3">
                   <label htmlFor="userName" className="form-label fw-bold">
-                    UserName
+                    Username
                   </label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter UserName"
+                    placeholder="Enter Username"
                     name="userName"
                     value={values.userName}
                     onChange={handleChange}

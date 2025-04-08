@@ -50,24 +50,29 @@ app.use(express.urlencoded({ extended: true }));
 const allowedOrigins = process.env.FRONTEND_URI.split(',');
 app.use(cors({ origin: allowedOrigins }));
 
-const pool = mysql.createPool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+// const pool = mysql.createPool({
+//   host: process.env.DB_HOST,
+//   user: process.env.DB_USER,
+//   password: process.env.DB_PASSWORD,
+//   database: process.env.DB_DATABASE,
+//   waitForConnections: true,
+//   connectionLimit: 10,
+//   queueLimit: 0,
+//   maxIdle: 10,
+//   idleTimeout: 60000,
+//   queueLimit: 0,
+//   enableKeepAlive: true,
+//   keepAliveInitialDelay: 0
+// });
 
-pool.getConnection((err, connection) => {
-  if (err) {
-    console.log('Error to connecting Database: ' + err.message);
-  } else {
-    console.log('Database connection successfully');
-    connection.release();
-  }
-});
+// pool.getConnection((err, connection) => {
+//   if (err) {
+//     console.log('Error to connecting Database: ' + err.message);
+//   } else {
+//     console.log('Database connection successfully');
+//     connection.release();
+//   }
+// });
 
 app.get('/', (req, res) => {
   if (process.env.NODE_ENV === 'production') {
@@ -116,17 +121,50 @@ checkAndManageIndexes('runner');
 checkAndManageIndexes('market');
 
 
+const closeDB = async () => {
+  try {
+    await sequelize.close();
+    console.log('DB connection closed.');
+  } catch (err) {
+    console.error('Error closing DB connection:', err);
+  }
+};
+
+process.on('SIGINT', async () => {
+  await closeDB();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await closeDB();
+  process.exit(0);
+});
+
+let colorGameInterval;
+
 sequelize
-  .sync({ alter: false })
+  .sync({ alter: true })
   .then(() => {
-    console.log('Database & tables created!');
+    console.log('DB Synced!');
+
     app.listen(process.env.PORT, () => {
-      console.log(`App is running on - http://localhost:${process.env.PORT || 7000}`);
+      console.log(`Server running at http://localhost:${process.env.PORT}`);
     });
-    
-    setInterval(updateColorGame, 1000);
-    
+
+    colorGameInterval = setInterval(updateColorGame, 1000);
   })
   .catch((err) => {
-    console.error('Unable to create tables:', err);
+    console.error('DB Sync Error:', err);
   });
+
+process.on('SIGINT', async () => {
+  clearInterval(colorGameInterval);
+  await closeDB();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  clearInterval(colorGameInterval);
+  await closeDB();
+  process.exit(0);
+});

@@ -220,7 +220,7 @@ const UserBetHistory = () => {
                     <input
                       type="text"
                       className="form-control fw-bold"
-                      placeholder="Search By User Or Market Name..."
+                      placeholder="Search By Username..."
                       value={searchTerm} // Bind to searchTerm
                       onChange={handleSearchChange}
                       style={{

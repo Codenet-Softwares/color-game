@@ -28,13 +28,14 @@ import {
   calculateExternalProfitLoss,
   getExternalTotalProfitLoss,
   getAllUserTotalProfitLoss,
+  profitLoss,
+
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
 import {
   activeInactive,
   bidHistorySchema,
   bidTypeSchema,
-  calculateProfitLossValidate,
   createUserValidate,
   marketProfitLossValidate,
   runnerProfitLossValidate,
@@ -135,7 +136,7 @@ export const UserRoute = (app) => {
   app.get('/api/user-activitylog', authorize([string.User]), activityLog)
 
   app.put('/api/user/active-inactive/:userId',activeInactive,customErrorHandler,  userActiveInactive);
-
+  app.get('/api/user-profit-loss', profitLoss)  
   app.post(
     '/api/external-profit_loss',
     authenticateSuperAdmin,
@@ -145,5 +146,6 @@ export const UserRoute = (app) => {
   app.post('/api/external/market-wise-profit-loss',authenticateSuperAdmin, getExternalTotalProfitLoss)
 
   app.post('/api/external/allUser-profit-loss/:marketId', getAllUserTotalProfitLoss)
+
 
 };
