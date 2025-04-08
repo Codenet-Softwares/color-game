@@ -2174,6 +2174,48 @@ export const userActiveInactive = async (req, res) => {
 
 export const profitLoss = async (req, res) => {
   try {
+
+
+    const { dataType } = req.query;    
+    let startDate, endDate;
+    if (dataType === "live") {
+      const today = new Date();
+      startDate = new Date(today).setHours(0, 0, 0, 0);
+      endDate = new Date(today).setHours(23, 59, 59, 999);
+    } else if (dataType === "olddata") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+      } else {
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
+        endDate = new Date().setHours(23, 59, 59, 999);
+      }
+    } else if (dataType === "backup") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+        const maxAllowedDate = new Date(startDate);
+        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
+        if (endDate > maxAllowedDate) {
+          return res.status(statusCode.badRequest).send(
+            apiResponseErr([], false, statusCode.badRequest,
+              "The date range for backup data should not exceed 3 months.")
+          );
+        }
+      } else {
+        const today = new Date();
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(today.getMonth() - 3);
+        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
+      }
+    } else {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
+    }
     const [sportsUsers, lotteryUsers] = await Promise.all([
       ProfitLoss.findAll({
         attributes: ['userId', 'userName'],
@@ -2202,12 +2244,22 @@ export const profitLoss = async (req, res) => {
       allUsers.map(async (user) => {
         const [sportsRecords, lotteryRecords] = await Promise.all([
           ProfitLoss.findAll({
-            where: { userId: user.userId },
+            where: { 
+              userId: user.userId,
+              date: {
+                [Op.between]: [startDate, endDate],
+              },
+             },
             attributes: ['marketId', 'profitLoss'],
             raw: true
           }),
           LotteryProfit_Loss.findAll({
-            where: { userId: user.userId },
+            where: { 
+              userId: user.userId,
+              date: {
+                [Op.between]: [startDate, endDate],
+              }, 
+            },
             attributes: ['marketId', 'profitLoss'],
             raw: true
           })
