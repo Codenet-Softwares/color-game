@@ -25,7 +25,11 @@ import {
   getUserCurrentOrderGames,
   activityLog,
   userActiveInactive,
+  calculateExternalProfitLoss,
+  getExternalTotalProfitLoss,
+  getAllUserTotalProfitLoss,
   profitLoss,
+
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
 import {
@@ -133,6 +137,15 @@ export const UserRoute = (app) => {
 
   app.put('/api/user/active-inactive/:userId',activeInactive,customErrorHandler,  userActiveInactive);
   app.get('/api/user-profit-loss', profitLoss)  
+  app.post(
+    '/api/external-profit_loss',
+    authenticateSuperAdmin,
+    calculateExternalProfitLoss,
+  );
 
-  
+  app.post('/api/external/market-wise-profit-loss',authenticateSuperAdmin, getExternalTotalProfitLoss)
+
+  app.post('/api/external/allUser-profit-loss/:marketId', getAllUserTotalProfitLoss)
+
+
 };
