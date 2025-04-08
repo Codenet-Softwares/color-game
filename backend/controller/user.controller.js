@@ -22,7 +22,7 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
-import { Admin } from "mongodb";
+import sequelize from "../db.js";
 
 // done
 export const createUser = async (req, res) => {
@@ -2172,5 +2172,136 @@ export const userActiveInactive = async (req, res) => {
   }
 };
 
+export const profitLoss = async (req, res) => {
+  try {
 
 
+    const { dataType } = req.query;    
+    let startDate, endDate;
+    if (dataType === "live") {
+      const today = new Date();
+      startDate = new Date(today).setHours(0, 0, 0, 0);
+      endDate = new Date(today).setHours(23, 59, 59, 999);
+    } else if (dataType === "olddata") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+      } else {
+        const oneYearAgo = new Date();
+        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
+        endDate = new Date().setHours(23, 59, 59, 999);
+      }
+    } else if (dataType === "backup") {
+      if (req.query.startDate && req.query.endDate) {
+        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
+        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
+        const maxAllowedDate = new Date(startDate);
+        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
+        if (endDate > maxAllowedDate) {
+          return res.status(statusCode.badRequest).send(
+            apiResponseErr([], false, statusCode.badRequest,
+              "The date range for backup data should not exceed 3 months.")
+          );
+        }
+      } else {
+        const today = new Date();
+        const threeMonthsAgo = new Date();
+        threeMonthsAgo.setMonth(today.getMonth() - 3);
+        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
+      }
+    } else {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
+    }
+    const [sportsUsers, lotteryUsers] = await Promise.all([
+      ProfitLoss.findAll({
+        attributes: ['userId', 'userName'],
+        group: ['userId', 'userName'],
+        raw: true
+      }),
+      LotteryProfit_Loss.findAll({
+        attributes: ['userId', 'userName'],
+        group: ['userId', 'userName'],
+        raw: true
+      })
+    ]);
+
+    const allUsersMap = new Map();
+    [...sportsUsers, ...lotteryUsers].forEach(user => {
+      if (!allUsersMap.has(user.userId)) {
+        allUsersMap.set(user.userId, {
+          userId: user.userId,
+          userName: user.userName || 'Unknown'
+        });
+      }
+    });
+    const allUsers = Array.from(allUsersMap.values());
+
+    const usersWithProfitLoss = await Promise.all(
+      allUsers.map(async (user) => {
+        const [sportsRecords, lotteryRecords] = await Promise.all([
+          ProfitLoss.findAll({
+            where: { 
+              userId: user.userId,
+              date: {
+                [Op.between]: [startDate, endDate],
+              },
+             },
+            attributes: ['marketId', 'profitLoss'],
+            raw: true
+          }),
+          LotteryProfit_Loss.findAll({
+            where: { 
+              userId: user.userId,
+              date: {
+                [Op.between]: [startDate, endDate],
+              }, 
+            },
+            attributes: ['marketId', 'profitLoss'],
+            raw: true
+          })
+        ]);
+
+        const getUniqueMarketProfitLoss = (records) => {
+          const marketMap = new Map();
+          records.forEach(record => {
+            if (!marketMap.has(record.marketId)) {
+              marketMap.set(record.marketId, record.profitLoss);
+            }
+          });
+          return Array.from(marketMap.values()).reduce((sum, val) => sum + parseFloat(val), 0);
+        };
+
+        const sportsTotal = sportsRecords.length > 0 ? 
+          getUniqueMarketProfitLoss(sportsRecords) : 0;
+        const lotteryTotal = lotteryRecords.length > 0 ? 
+          getUniqueMarketProfitLoss(lotteryRecords) : 0;
+        const combinedTotal = sportsTotal + lotteryTotal;
+
+        return {
+          userId: user.userId,
+          userName: user.userName,
+          profitLoss: combinedTotal.toFixed(2),
+        };
+      })
+    );
+
+    res.status(statusCode.success).send(
+      apiResponseSuccess(usersWithProfitLoss, true, statusCode.success, "Successfully fetched all users profit/loss")
+    );
+
+  } catch (error) {
+    console.error('Error fetching all users profit/loss:', error);
+    res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        null,
+        false,
+        statusCode.internalServerError,
+        error.message
+      )
+    );
+  }
+};
