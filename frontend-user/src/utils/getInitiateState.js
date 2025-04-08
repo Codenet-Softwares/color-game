@@ -217,7 +217,7 @@ export function getInitialLotteryData() {
     groups: [],
     series: [],
     numbers: [],
-    semValues: ["5 sem", "10 sem", "25 sem", "50 sem", "100 sem", "200 sem"],
+    semValues: ["5 SEM", "10 SEM", "25 SEM", "50 SEM", "100 SEM", "200 SEM"],
     refreshKey: 0,
     marketName: "",
     searchResult: null,
