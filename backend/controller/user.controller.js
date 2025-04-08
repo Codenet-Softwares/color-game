@@ -2679,7 +2679,8 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
           "gameId",
           "marketId",
           "date",
-          "profitLoss"
+          "profitLoss",
+          "runnerId"
         ],
         include: [
           {
@@ -2714,6 +2715,7 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
         ...profitLossData.map((item) => ({
           userId,
           userName: user.userName,
+          runnerId: item.runnerId,
           marketId: item.marketId,
           marketName: item.Market?.marketName || "",
           gameId: item.gameId,
