@@ -108,7 +108,7 @@ const BetHistoryPage = () => {
                 <input
                   type="text"
                   className="form-control fw-bold"
-                  placeholder="Search By Game Name Or Market Name..."
+                  placeholder="Search By Market Name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={{

@@ -119,7 +119,7 @@ const AccountStatement = () => {
                 <div className="container-fluid">
                   <div className="row g-sm-1 align-items-end justify-content-center text-center">
                      {/* Total Entries */}
-                    <div className="col-12 col-sm-2 col-md-2">
+                    <div className="col-12 col-sm-2 col-md-2 me-sm-3 mb-3 mb-sm-0">
                     <label className="fw-bold d-block">Total Entries</label>
                     <select
                         className="form-select form-select-sm w-100 m-1 fw-bold"
@@ -138,7 +138,7 @@ const AccountStatement = () => {
                       </select>
                     </div>
                       {/* Data Source */}
-                    <div className="col-12 col-sm-2 col-md-2">
+                    <div className="col-12 col-sm-2 col-md-2 mb-3 mb-sm-0">
                     <label className="fw-bold d-block">Data Source</label>
                     <select
                         className="form-select form-select-sm w-100 fw-bold"
@@ -164,7 +164,7 @@ const AccountStatement = () => {
                       </select>
                     </div>
                     {/* Start Date */}
-                    <div className="col-12 col-sm-2 col-md-2">
+                    <div className="col-12 col-sm-2 col-md-2 mb-3 mb-sm-0">
                     <label className="fw-bold d-block">From</label>
                     <DatePicker
                         selected={backupDate.startDate}
@@ -175,7 +175,7 @@ const AccountStatement = () => {
                       />
                     </div>
                       {/* End Date */}
-                    <div className="col-12 col-sm-2 col-md-2">
+                    <div className="col-12 col-sm-2 col-md-2 mb-3 mb-sm-0">
                     <label className="fw-bold d-block">To</label>
                     <DatePicker
                         selected={backupDate.endDate}
@@ -186,7 +186,7 @@ const AccountStatement = () => {
                       />
                     </div>
                      {/* Get Statement Button */}
-                     <div className="col-12 col-sm-2 col-md-2 d-flex align-items-end">
+                     <div className="col-12 col-sm-2 col-md-2 d-flex align-items-end mb-3 mb-sm-0">
                       <button
                         className="btn btn-primary w-100"
                         disabled={
