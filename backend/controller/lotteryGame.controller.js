@@ -287,16 +287,16 @@ export const getMarkets = async (req, res) => {
 
 export const updateBalance = async (req, res) => {
   try {
-    const { userId, prizeAmount, marketId } = req.body;
+    const { userId, prizeAmount, marketId, lotteryPrice } = req.body;
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'User not found.'));
     }
-
+    // here only subtracting the lottery price from the prize amount
     await WinningAmount.create({
       userId: user.userId,
       userName: user.userName,
-      amount:  prizeAmount,
+      amount:  prizeAmount-lotteryPrice,
       type: "win",
       marketId,
     });
@@ -408,7 +408,6 @@ export const createLotteryP_L = async (req, res) => {
       profitLoss,
       price : lotteryPrice
     });
-    console.log("newEntry................................",newEntry)
     return res.status(statusCode.create).send(apiResponseSuccess(newEntry, true, statusCode.create, 'Success'));
   } catch (error) {
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
