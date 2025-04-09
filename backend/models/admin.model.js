@@ -35,6 +35,9 @@ const admins = sequelize.define(
       type: DataTypes.BOOLEAN,
       defaultValue: true,
     },
+    token: {
+      type: DataTypes.TEXT,
+    },
 
   },
   {

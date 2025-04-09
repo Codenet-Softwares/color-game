@@ -4,6 +4,11 @@ export const customErrorHandler = (error) => {
         errorMessage = error?.response?.data?.message
     } else if (error?.response?.data?.errMessage) {
         errorMessage = error?.response?.data?.errMessage
+        if (error?.response?.data?.responseCode === 401) {
+            window.location.href = '/'
+            sessionStorage.removeItem("user");
+            sessionStorage.removeItem("role");
+        }
     } else {
         errorMessage = "something went wrong"
     }

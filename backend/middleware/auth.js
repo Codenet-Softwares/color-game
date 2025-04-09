@@ -85,6 +85,10 @@ export const authorize = (roles, permissions) => {
         }
       }
 
+      if (existingUser.token !== tokenParts[1]) {
+        return res.status(statusCode.unauthorize).json(apiResponseErr(null, false, statusCode.unauthorize, 'Token mismatch. Unauthorized access.'));
+      }
+
       req.user = existingUser;
       next();
     } catch (err) {
