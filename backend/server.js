@@ -28,7 +28,7 @@ import { lotteryRoute } from './routes/lotteryGame.route.js';
 import { voidGameRoute } from './routes/voidGame.route.js';
 import { DeleteRoutes } from './routes/delete.route.js';
 import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
-import { updateColorGame } from './helper/cgCron.js';
+import {  updateColorGame } from './helper/cgCron.js';
 
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
@@ -95,6 +95,12 @@ voidGameRoute(app);
 DeleteRoutes(app);
 MarketDeleteApprovalRoute(app);
 
+setInterval(() => {
+  updateColorGame().catch((err) => {
+    console.error('Error in updateColorGame:', err);
+  });
+}, 1000);
+
 Game.hasMany(Market, { foreignKey: 'gameId', sourceKey: 'gameId' });
 Market.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
 
@@ -121,27 +127,6 @@ checkAndManageIndexes('runner');
 checkAndManageIndexes('market');
 
 
-const closeDB = async () => {
-  try {
-    await sequelize.close();
-    console.log('DB connection closed.');
-  } catch (err) {
-    console.error('Error closing DB connection:', err);
-  }
-};
-
-process.on('SIGINT', async () => {
-  await closeDB();
-  process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-  await closeDB();
-  process.exit(0);
-});
-
-let colorGameInterval;
-
 sequelize
   .sync({ alter: true })
   .then(() => {
@@ -151,20 +136,7 @@ sequelize
       console.log(`Server running at http://localhost:${process.env.PORT}`);
     });
 
-    colorGameInterval = setInterval(updateColorGame, 1000);
   })
   .catch((err) => {
     console.error('DB Sync Error:', err);
   });
-
-process.on('SIGINT', async () => {
-  clearInterval(colorGameInterval);
-  await closeDB();
-  process.exit(0);
-});
-
-process.on('SIGTERM', async () => {
-  clearInterval(colorGameInterval);
-  await closeDB();
-  process.exit(0);
-});
