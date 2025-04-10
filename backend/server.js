@@ -28,6 +28,7 @@ import { lotteryRoute } from './routes/lotteryGame.route.js';
 import { voidGameRoute } from './routes/voidGame.route.js';
 import { DeleteRoutes } from './routes/delete.route.js';
 import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
+import { updateColorGame } from './helper/cgCron.js';
 
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
@@ -127,6 +128,13 @@ sequelize
 
     app.listen(process.env.PORT, () => {
       console.log(`Server running at http://localhost:${process.env.PORT}`);
+
+      const runLottery = async () => {
+        await updateColorGame(); // Waits for previous run to complete
+        setTimeout(runLottery, 1000); // Runs every second (safely)
+      };
+      
+      runLottery(); // Kick off the loop
     });
 
   })
