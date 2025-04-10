@@ -28,7 +28,6 @@ import { lotteryRoute } from './routes/lotteryGame.route.js';
 import { voidGameRoute } from './routes/voidGame.route.js';
 import { DeleteRoutes } from './routes/delete.route.js';
 import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
-import {  updateColorGame } from './helper/cgCron.js';
 
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
@@ -95,12 +94,6 @@ voidGameRoute(app);
 DeleteRoutes(app);
 MarketDeleteApprovalRoute(app);
 
-setInterval(() => {
-  updateColorGame().catch((err) => {
-    console.error('Error in updateColorGame:', err);
-  });
-}, 1000);
-
 Game.hasMany(Market, { foreignKey: 'gameId', sourceKey: 'gameId' });
 Market.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
 
@@ -140,3 +133,16 @@ sequelize
   .catch((err) => {
     console.error('DB Sync Error:', err);
   });
+
+
+  process.on('SIGINT', async () => {
+    console.log('Shutting down gracefully...');
+    try {
+        await sequelize.close();
+        console.log('Database connections closed');
+        process.exit(0);
+    } catch (error) {
+        console.error('Error during shutdown:', error);
+        process.exit(1);
+    }
+});
