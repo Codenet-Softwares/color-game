@@ -122,7 +122,7 @@ checkAndManageIndexes('market');
 
 
 sequelize
-  .sync({ alter: true })
+  .sync({ alter: false })
   .then(() => {
     console.log('DB Synced!');
 
@@ -137,6 +137,11 @@ sequelize
       runLottery(); // Kick off the loop
     });
 
+    process.on('SIGINT', async () => {
+      await sequelize.close();
+      process.exit(0);
+    });
+    
   })
   .catch((err) => {
     console.error('DB Sync Error:', err);
