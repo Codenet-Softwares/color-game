@@ -1,44 +1,51 @@
 import dotenv from 'dotenv';
-import mysql from 'mysql2';
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+import sequelize from './db.js';
+
+// Route imports
 import { AdminRoute } from './routes/admin.route.js';
 import { UserRoute } from './routes/user.route.js';
 import { GameRoute } from './routes/game.route.js';
 import { SliderRoute } from './routes/slider.route.js';
-import cors from 'cors';
 import { AnnouncementRoute } from './routes/announcement.route.js';
-import sequelize from './db.js';
-import Game from './models/game.model.js';
-import Market from './models/market.model.js';
-import Runner from './models/runner.model.js';
 import { authRoute } from './routes/auth.route.js';
-import CurrentOrder from './models/currentOrder.model.js';
-import BetHistory from './models/betHistory.model.js';
-import MarketBalance from './models/marketBalance.js';
 import { InactiveGameRoute } from './routes/inactiveGame.route.js';
-import InactiveGame from './models/inactiveGame.model.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 import { externalApisRoute } from './routes/externalApis.route.js';
-import { checkAndManageIndexes } from './helper/indexManager.js';
 import { lotteryRoute } from './routes/lotteryGame.route.js';
 import { voidGameRoute } from './routes/voidGame.route.js';
 import { DeleteRoutes } from './routes/delete.route.js';
 import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
+
+// Model imports
+import Game from './models/game.model.js';
+import Market from './models/market.model.js';
+import Runner from './models/runner.model.js';
+import CurrentOrder from './models/currentOrder.model.js';
+import BetHistory from './models/betHistory.model.js';
+import MarketBalance from './models/marketBalance.js';
+import InactiveGame from './models/inactiveGame.model.js';
+
+// Helpers
+import { checkAndManageIndexes } from './helper/indexManager.js';
+import { updateColorGame } from './helper/cgCron.js';
+
+// Env config
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 if (process.env.NODE_ENV === 'production') {
   dotenv.config({ path: '.env.production' });
 } else {
   dotenv.config({ path: '.env' });
 }
-
 console.log('Running in environment:', process.env.NODE_ENV);
 
-
-dotenv.config();
+// Express app setup
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -46,41 +53,14 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
-const allowedOrigins = process.env.FRONTEND_URI.split(',');
+// CORS setup
+const allowedOrigins = process.env.FRONTEND_URI?.split(',') || [];
 app.use(cors({ origin: allowedOrigins }));
 
-// const pool = mysql.createPool({
-//   host: process.env.DB_HOST,
-//   user: process.env.DB_USER,
-//   password: process.env.DB_PASSWORD,
-//   database: process.env.DB_DATABASE,
-//   waitForConnections: true,
-//   connectionLimit: 10,
-//   queueLimit: 0,
-//   maxIdle: 10,
-//   idleTimeout: 60000,
-//   queueLimit: 0,
-//   enableKeepAlive: true,
-//   keepAliveInitialDelay: 0
-// });
-
-// pool.getConnection((err, connection) => {
-//   if (err) {
-//     console.log('Error to connecting Database: ' + err.message);
-//   } else {
-//     console.log('Database connection successfully');
-//     connection.release();
-//   }
-// });
-
+// Routes
 app.get('/', (req, res) => {
-  if (process.env.NODE_ENV === 'production') {
-    res.send('Production environment is running.');
-  } else {
-    res.send('Development environment is running.');
-  }
+  res.send(`${process.env.NODE_ENV} environment is running.`);
 });
-
 AdminRoute(app);
 authRoute(app);
 UserRoute(app);
@@ -89,11 +69,12 @@ AnnouncementRoute(app);
 SliderRoute(app);
 InactiveGameRoute(app);
 externalApisRoute(app);
-lotteryRoute(app)
+lotteryRoute(app);
 voidGameRoute(app);
 DeleteRoutes(app);
 MarketDeleteApprovalRoute(app);
 
+// Model Associations
 Game.hasMany(Market, { foreignKey: 'gameId', sourceKey: 'gameId' });
 Market.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
 
@@ -115,34 +96,41 @@ Market.hasMany(InactiveGame, { foreignKey: 'marketId' });
 InactiveGame.belongsTo(Runner, { foreignKey: 'runnerId' });
 Runner.hasMany(InactiveGame, { foreignKey: 'runnerId' });
 
+// Index Management
 checkAndManageIndexes('game');
 checkAndManageIndexes('runner');
 checkAndManageIndexes('market');
 
-
+// Sync and Start Server
 sequelize
   .sync({ alter: true })
   .then(() => {
     console.log('DB Synced!');
 
+    // Start server
     app.listen(process.env.PORT, () => {
       console.log(`Server running at http://localhost:${process.env.PORT}`);
-    });
 
+      // Cron-safe loop
+      const runLottery = async () => {
+        try {
+          await updateColorGame(); // Don't create connections inside here unnecessarily
+        } catch (err) {
+          console.error('Error in updateColorGame:', err.message);
+        } finally {
+          setTimeout(runLottery, 1000); // Loop again safely
+        }
+      };
+
+      runLottery(); // Start the loop
+    });
   })
   .catch((err) => {
     console.error('DB Sync Error:', err);
   });
 
-
-  process.on('SIGINT', async () => {
-    console.log('Shutting down gracefully...');
-    try {
-        await sequelize.close();
-        console.log('Database connections closed');
-        process.exit(0);
-    } catch (error) {
-        console.error('Error during shutdown:', error);
-        process.exit(1);
-    }
+// Cleanup on exit
+process.on('SIGINT', async () => {
+  await sequelize.close();
+  process.exit(0);
 });
