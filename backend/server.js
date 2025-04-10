@@ -103,7 +103,7 @@ checkAndManageIndexes('market');
 
 // Sync and Start Server
 sequelize
-  .sync({ alter: true })
+  .sync({ alter: false })
   .then(() => {
     console.log('DB Synced!');
 

@@ -2308,14 +2308,13 @@ export const profitLoss = async (req, res) => {
 
 export const calculateExternalProfitLoss = async (req, res) => {
   try {
-    const { userName } = req.body;
+    const { userId } = req.body;
     const { dataType } = req.query;
-    const existingUsers = await userSchema.findAll({ where: { userName } });
-    
-    if (!existingUsers || existingUsers.length === 0) {
+    const existingUsers = await userSchema.findAll({ where: { userId } });
+    if (!existingUsers || existingUsers.length == 0) {
       return res
-        .status(statusCode.badRequest)
-        .send(apiResponseErr([], false, statusCode.badRequest, "User not found"));
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
     }
  
     let startDate, endDate;
@@ -2489,9 +2488,13 @@ export const calculateExternalProfitLoss = async (req, res) => {
 export const getExternalTotalProfitLoss = async (req, res) => {
   try {
     const { type } = req.query;
-
-    const { userName } = req.body;
-    const existingUsers = await userSchema.findAll({ where: { userName } });
+    const { userId } = req.body;
+    const existingUsers = await userSchema.findAll({ where: { userId } });
+    if (!existingUsers || existingUsers.length == 0) {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
+    }
 
     const searchGameName = req.query.search || "";
 
@@ -2664,10 +2667,14 @@ export const getExternalTotalProfitLoss = async (req, res) => {
 
 export const getAllUserTotalProfitLoss = async (req, res) => {
   try {
-    const { userName } = req.body;
+    const { userId } = req.body;
     const { marketId } = req.params;
-
-    const existingUsers = await userSchema.findAll({ where: { userName } });
+    const existingUsers = await userSchema.findAll({ where: { userId } });
+    if (!existingUsers || existingUsers.length == 0) {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
+    }
 
     const combinedProfitLossData = [];
 
