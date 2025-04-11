@@ -654,7 +654,7 @@ export const liveMarketBet = async (req, res) => {
     const userIds = users.map((user) => user.userId);
 
     const marketDataRows = await Market.findAll({
-      where: { marketId, hideMarketUser: false },
+      where: { marketId },
       include: [
         {
           model: Runner,
@@ -819,7 +819,7 @@ export const liveUserBet = async (req, res) => {
 
     // Fetch market data
     const marketDataRows = await Market.findAll({
-      where: { marketId, hideMarketUser: false },
+      where: { marketId },
       include: [
         {
           model: Runner,
