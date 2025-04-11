@@ -313,19 +313,19 @@ const MarketPlace = () => {
                               <div className="card border-0 " key={index}>
                                 <div className="card-body align-items-center">
                                   <div className="row align-items-center">
-                                    <div className="col-md-4 d-flex gap-2 align-items-center">
+                                    <div className="col-md-6 d-flex gap-2 align-items-center">
                                       <i className="far fa-circle f_s_14 text_color_4"></i>
                                       <h5 className="f_s_16 f_w_500 mb-0 text-start">
                                         {market.marketName}
                                       </h5>
                                     </div>
 
-                                    <div className=" col-md-4 ">
+                                    <div className=" col-md-2 ">
                                       <div className="d-flex justify-content-between align-items-center w-100">
-                                        <span className="text-dark fw-bold ml-5">
+                                        {/* <span className="text-dark fw-bold ml-5">
                                           Start time :
                                           {formatTime(market.startTime)}
-                                        </span>
+                                        </span> */}
                                         <span
                                           className={`badge rounded-pill fw-bold text-uppercase ${!market.hideMarketUser
                                             ? "bg-success"
@@ -336,14 +336,34 @@ const MarketPlace = () => {
                                             ? "Active"
                                             : "Inactive"}
                                         </span>
-                                        <span className="text-dark fw-bold">
+                                        {/* <span className="text-dark fw-bold">
                                           End time :{formatTime(market.endTime)}
-                                        </span>
+                                        </span> */}
                                       </div>
                                     </div>
                                     <div className="col-md-4">
                                       <div className="header_more_tool d-flex justify-content-end">
                                         <div className="dropdown">
+                                          <button className="btn btn-info text-uppercase fw-bold me-3">
+                                          <a
+                                                  className="dropdown-item fw-bold"
+                                                  href="#"
+                                                  onClick={() =>
+                                                    handleMarketDetailsModalOpen(
+                                                      market.marketId,
+                                                      market.participants,
+                                                      market.isActive,
+                                                      market.startTime,
+                                                      market.endTime,
+                                                      market.marketName
+                                                    )
+                                                  }
+                                                >
+                                                  {/* <i className="ti-eye"></i>{" "} */}
+                                                  Info
+                                                </a>
+                                          </button>
+                                    
                                           <span
                                             className="dropdown-toggle"
                                             id="dropdownMenuButton"
@@ -461,7 +481,7 @@ const MarketPlace = () => {
                                                   Void
                                                 </a>
 
-                                                <a
+                                                {/* <a
                                                   className="dropdown-item"
                                                   href="#"
                                                   onClick={() =>
@@ -477,7 +497,7 @@ const MarketPlace = () => {
                                                 >
                                                   <i className="ti-eye"></i>{" "}
                                                   View Market Details
-                                                </a>
+                                                </a> */}
                                               </>
                                             )}
                                           </div>
