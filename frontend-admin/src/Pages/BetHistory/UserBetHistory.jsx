@@ -62,9 +62,10 @@ const UserBetHistory = () => {
       setBetAfterWin((prev) => ({
         ...prev,
         winBetHistory: response?.data?.data || [],
-        totalPages: response?.pagination?.totalPages || 1,
-        totalData: response?.pagination?.totalItems || 0,
+        totalPages: response?.data?.pagination?.totalPages || 1,
+        totalData: response?.data?.pagination?.totalItems || 0,
       }));
+      
       setMarketName(response?.data?.data?.marketName || "Unknown Market");
     } catch (error) {
       toast.error(customErrorHandler(error));
