@@ -2703,6 +2703,7 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
           userId,
           marketId,
         },
+        group : ["gameId", "marketId", "date", "profitLoss", "runnerId"],
       });
       const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
         attributes: [
@@ -2716,6 +2717,7 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
           userId,
           marketId,
         },
+        group :["userId", "marketId", "marketName", "date", "profitLoss"],
       });
 
       combinedProfitLossData.push(

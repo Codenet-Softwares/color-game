@@ -2295,7 +2295,7 @@ export const getSubAdminHistory = async (req, res) => {
     `;
 
     if (status) {
-      baseQuery += ` AND status = :status ORDER BY createdAt DESC LIMIT :limit OFFSET :offset`;
+      baseQuery += ` AND status = :status`;
     }
 
     if (search) {
