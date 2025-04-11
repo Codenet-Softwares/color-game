@@ -3,69 +3,74 @@ import Market from "../models/market.model.js";
 import { getISTTime } from "./commonMethods.js";
 
 export async function updateColorGame() {
-    const currentTime = getISTTime();
-  
-    try {
-      const snapshot = await db.collection("color-game-db").get();
-  
-      for (const doc of snapshot.docs) {
-        const data = doc.data();
-  
-        let startTime = data.startTime;
-        let endTime = data.endTime;
-  
-        if (!startTime || !endTime) {
-          console.warn(`Missing startTime or endTime for document: ${doc.id}`);
-          continue;
-        }
-  
-        startTime = parseDate(startTime);
-        endTime = parseDate(endTime);
-  
-        if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) {
-          continue;
-        }
-  
-        let updates = {};
-        let shouldUpdate = false;
-  
-        if (currentTime >= startTime && currentTime <= endTime) {
-          if (!data.isActive) {
-            updates.isActive = true;
-            updates.hideMarketUser = true;
-            updates.updatedAt = new Date().toISOString();
-            shouldUpdate = true;
-          }
-        } else if (currentTime >= endTime) {
-          if (data.isActive) {
-            updates.isActive = false;
-            updates.updatedAt = new Date().toISOString();
-            shouldUpdate = true;
-          }
-        }
-  
-        if (shouldUpdate) {
-          // Update Firestore
-          await db.collection("color-game-db").doc(doc.id).update(updates);
-  
-          // Update MySQL via Sequelize
-          await Market.update(
-            {
-              isActive: updates.isActive ?? data.isActive,
-              hideMarketUser: updates.hideMarketUser ?? data.hideMarketUser,
-              updatedAt: shouldUpdate ? new Date() : data.updatedAt,
-            },
-            {
-              where: { marketId: doc.id },
-            }
-          );
-        }
+  const currentTime = getISTTime();
+
+  try {
+    const snapshot = await db.collection("color-game-db").get();
+
+    const updatePromises = snapshot.docs.map(async (doc) => {
+      const data = doc.data();
+
+      let startTime = parseDate(data.startTime);
+      let endTime = parseDate(data.endTime);
+
+      if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) {
+        console.warn(`Invalid or missing time for doc: ${doc.id}`);
+        return;
       }
-    } catch (error) {
-      console.error("Error updating ColorGame:", error);
-    }
+
+      let updates = {};
+      let shouldUpdate = false;
+
+       // Debugging log
+       console.log(`Processing ${doc.id}`, {
+        currentTime,
+        startTime,
+        endTime,
+        isActive: data.isActive,
+      });
+
+      if (currentTime >= startTime && currentTime <= endTime && !data.isActive) {
+        updates.isActive = true;
+        console.log("first entry........................")
+        updates.activeInactive = true;
+        updates.updatedAt = new Date().toISOString();
+        shouldUpdate = true;
+      } else if (currentTime > endTime && data.isActive) {
+        updates.isActive = false; 
+        console.log("second entry........................")
+        updates.updatedAt = new Date().toISOString();
+        shouldUpdate = true;
+      }
+
+      if (shouldUpdate) {
+        // Firestore update
+        const firestoreUpdate = db.collection("color-game-db").doc(doc.id).update(updates);
+
+        // MySQL update
+        const mysqlUpdate = Market.update(
+          {
+            isActive: updates.isActive ?? data.isActive,
+            activeInactive: updates.activeInactive ?? data.activeInactive,
+            updatedAt: new Date(),
+          },
+          {
+            where: { marketId: doc.id },
+          }
+        );
+
+        await Promise.all([firestoreUpdate, mysqlUpdate]);
+      }
+    });
+
+    // Wait for all updates to finish
+    await Promise.all(updatePromises);
+
+  } catch (error) {
+    console.error("Error updating ColorGame:", error);
   }
-  
+}
+ 
 
 function parseDate(dateInput) {
     if (!dateInput) return null;

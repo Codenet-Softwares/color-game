@@ -69,7 +69,11 @@ Market.init(
     deleteApproval : {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    }
+    },
+    activeInactive : {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize,
