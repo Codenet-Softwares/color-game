@@ -570,6 +570,7 @@ export const runnerExternalProfitLoss = async (req, res) => {
         return {
           gameName: game.gameName,
           marketName: market.marketName,
+          marketId: market.marketId,
           runnerName: runner.runnerName,
           runnerId: entry.runnerId,
           profitLoss: parseFloat(entry.profitLoss).toFixed(2),
@@ -773,12 +774,12 @@ export const getLiveBetGames = async (req, res) => {
 
 export const getExternalUserBetList = async (req, res) => {
   try {
-    const { userName, runnerId } = req.params;
+    const { userName, marketId } = req.params;
 
     const rows = await BetHistory.findAll({
       where: {
         userName: userName,
-        runnerId: runnerId,
+        marketId: marketId,
       },
       attributes: [
         "userId",
