@@ -30,7 +30,7 @@ const MarketDetailsModal = ({
               <strong>Market Name:</strong> {marketName }
             </p>
             <p>
-              <strong>Status:</strong> {isActive ? "Active" : "Inactive"}
+              <strong>Status:</strong> {isActive ? "Inactive" : "Active"}
             </p>
             <p>
               <strong>Participants:</strong> {participants}

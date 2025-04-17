@@ -70,14 +70,14 @@ const MarketPlace = () => {
   const handleMarketDetailsModalOpen = (
     market,
     participants,
-    isActive,
+    hideMarketUser,
     startTime,
     endTime,
     marketName
   ) => {
-    console.log("line 51", market, participants);
+    console.log("line 51", market, participants,isActive,startTime,marketName);
     setShowMarketName(marketName);
-    setIsActive(isActive);
+    setIsActive(hideMarketUser);
     setSelectedMarketDetails(market);
     setParticipants(participants);
     setStartTime(startTime);
@@ -344,24 +344,19 @@ const MarketPlace = () => {
                                     <div className="col-md-4">
                                       <div className="header_more_tool d-flex justify-content-end">
                                         <div className="dropdown">
-                                          <button className="btn btn-info text-uppercase fw-bold me-3">
-                                          <a
-                                                  className="dropdown-item fw-bold"
-                                                  href="#"
-                                                  onClick={() =>
-                                                    handleMarketDetailsModalOpen(
-                                                      market.marketId,
-                                                      market.participants,
-                                                      market.isActive,
-                                                      market.startTime,
-                                                      market.endTime,
-                                                      market.marketName
-                                                    )
-                                                  }
-                                                >
-                                                  {/* <i className="ti-eye"></i>{" "} */}
-                                                  Info
-                                                </a>
+                                          <button className="btn btn-info text-uppercase fw-bold me-3" 
+                                            onClick={() =>
+                                              handleMarketDetailsModalOpen(
+                                                market.marketId,
+                                                market.participants,
+                                                market.hideMarketUser,
+                                                market.startTime,
+                                                market.endTime,
+                                                market.marketName
+                                              )
+                                            }
+                                          >
+                                          info
                                           </button>
                                     
                                           <span
