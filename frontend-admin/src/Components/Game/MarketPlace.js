@@ -136,21 +136,27 @@ const MarketPlace = () => {
   };
 
   useEffect(() => {
-    if (auth.user && pathdata[0]?.id) {
-      GameService.getGameMarketPlace(
-        auth.user,
-        pathdata[0]?.id,
-        currentPage,
-        totalEntries,
-        search
-      ).then(
-        (res) => (
-          setGameMarketData(res.data.data),
-          setTotalPages(res.data.pagination.totalPages),
-          setTotalData(res.data.pagination.totalItems)
-        )
-      );
-    }
+    const fetchGameMarketData = async () => {
+      if (auth.user && pathdata[0]?.id) {
+        try {
+          const res = await GameService.getGameMarketPlace(
+            auth.user,
+            pathdata[0]?.id,
+            currentPage,
+            totalEntries,
+            search
+          );
+          setGameMarketData(res.data.data);
+          setTotalPages(res.data.pagination.totalPages);
+          setTotalData(res.data.pagination.totalItems);
+        } catch (error) {
+          // The customErrorHandler will handle the redirect
+          customErrorHandler(error);
+        }
+      }
+    };
+  
+    fetchGameMarketData();
   }, [
     auth,
     currentPage,
