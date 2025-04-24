@@ -3,44 +3,53 @@ import { Button, Modal, Form } from "react-bootstrap";
 import { useAuth } from "../../Utils/Auth";
 import AccountServices from "../../Services/AccountServices";
 import { toast } from "react-toastify";
-import {
-  useParams,
-  useLocation,
-  Link,
-  useSearchParams,
-} from "react-router-dom";
 import { customErrorHandler } from "../../Utils/helper";
-const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
 
+const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
   const [runnername, setRunnerName] = useState(
-    Array(numberOfParticipants).fill({ runnerName: "", back:0, lay: 0 })
+    Array(numberOfParticipants).fill({ runnerName: "", back: 0, lay: 0 })
   );
   const auth = useAuth();
+
   useEffect(() => {
     setRunnerName(
       Array(numberOfParticipants).fill({ runnerName: "", back: 0, lay: 0 })
     );
   }, [numberOfParticipants]);
 
-  
-
   const handleClose = () => {
     setShow(false);
-    setRunnerName(Array(numberOfParticipants).fill({ name: "", back: "", lay: "" }));
+    setRunnerName(Array(numberOfParticipants).fill({ runnerName: "", back: 0, lay: 0 }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Check if all names are filled and back/lay rates are greater than 0
-    const hasInvalidData = runnername.some(runner =>
-     runner.runnerName.trim() === "" || runner.back <= 0 || runner.lay <= 0
+    const hasInvalidData = runnername.some(
+      (runner) =>
+        runner.runnerName.trim() === "" ||
+        Number(runner.back) <= 0 ||
+        Number(runner.lay) <= 0
     );
 
     if (hasInvalidData) {
-      // Show an error message if validation fails
       toast.error("Please ensure all runner names are filled and rates are greater than 0.");
-      return; // Stop the function execution here
+      return;
+    }
+
+    const nameMap = new Map();
+    const hasDuplicate = runnername.some((runner) => {
+      const name = runner.runnerName.trim().toLowerCase();
+      if (nameMap.has(name)) {
+        return true; 
+      }
+      nameMap.set(name, true);
+      return false;
+    });
+
+    if (hasDuplicate) {
+      toast.error("Duplicate runner names are not allowed.");
+      return;
     }
 
     const data = {
@@ -60,29 +69,24 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
 
 
   const handleRunnerNameChange = (index, field, value) => {
-        // For runner name changes, check for duplicates
-        if (field === "runnerName") {
-          const lowercaseNames = runnername.map(runner => 
-            runner.runnerName.toLowerCase().trim()
-          );
-          const currentLowercase = value.toLowerCase().trim();
-          
-          // Check if the new value already exists (case-insensitive)
-          const duplicateIndex = lowercaseNames.findIndex((name, i) => 
-            i !== index && name === currentLowercase && currentLowercase !== ""
-          );
-          
-          if (duplicateIndex !== -1) {
-            toast.error(`Runner name "${value}" already exists!`);
-            // Clear the duplicate value
-            value = "";
-          }
-        }
-    setRunnerName((prevRunnerNames) =>
-      prevRunnerNames.map((runner, i) =>
+    setRunnerName((prev) =>
+      prev.map((runner, i) =>
         i === index ? { ...runner, [field]: value } : runner
       )
     );
+  };
+
+  const handleRunnerBlur = (index) => {
+    const currentName = runnername[index]?.runnerName?.trim().toLowerCase();
+    const isDuplicate = runnername.some(
+      (runner, i) =>
+        i !== index &&
+        runner.runnerName?.trim().toLowerCase() === currentName
+    );
+
+    if (currentName && isDuplicate) {
+      toast.error(`Runner name "${runnername[index].runnerName}" already exists!`);
+    }
   };
 
   return (
@@ -99,27 +103,31 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
                 className="form-control mb-3"
                 placeholder={`Runner ${index + 1}`}
                 value={runnername[index]?.runnerName || ""}
-                onChange={(e) => handleRunnerNameChange(index, "runnerName", e.target.value)}
+                onChange={(e) =>
+                  handleRunnerNameChange(index, "runnerName", e.target.value)
+                }
+                onBlur={() => handleRunnerBlur(index)}
               />
               <input
                 type="number"
                 className="form-control mb-3 mx-1"
-                aria-describedby="basic-addon1"
                 placeholder={`Back Rate ${index + 1}`}
                 value={runnername[index]?.back || ""}
-                onChange={(e) => handleRunnerNameChange(index, "back", e.target.value)}
+                onChange={(e) =>
+                  handleRunnerNameChange(index, "back", e.target.value)
+                }
               />
               <input
                 type="number"
                 className="form-control mb-3 mx-1"
-                aria-describedby="basic-addon1"
                 placeholder={`Lay Rate ${index + 1}`}
                 value={runnername[index]?.lay || ""}
-                onChange={(e) => handleRunnerNameChange(index, "lay", e.target.value)}
+                onChange={(e) =>
+                  handleRunnerNameChange(index, "lay", e.target.value)
+                }
               />
             </div>
           ))}
-
         </Form>
       </Modal.Body>
       <Modal.Footer>
