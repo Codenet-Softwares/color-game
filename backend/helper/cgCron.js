@@ -3,57 +3,60 @@ import Market from "../models/market.model.js";
 import { getISTTime } from "./commonMethods.js";
 
 export async function updateColorGame() {
-    const currentTime = getISTTime();
-  
-    try {
-      const snapshot = await db.collection("color-game-db").get();
-  
-      for (const doc of snapshot.docs) {
-        const data = doc.data();
-  
-        let startTime = data.startTime;
-        let endTime = data.endTime;
-  
-        if (!startTime || !endTime) {
-          console.warn(`Missing startTime or endTime for document: ${doc.id}`);
-          continue;
+  const currentTime = getISTTime();
+
+  try {
+    const snapshot = await db.collection("color-game-db").get();
+
+    for (const doc of snapshot.docs) {
+      const data = doc.data();
+
+      let startTime = data.startTime;
+      let endTime = data.endTime;
+
+      if (!startTime || !endTime) {
+        console.warn(`Missing startTime or endTime for document: ${doc.id}`);
+        continue;
+      }
+
+      startTime = parseDate(startTime);
+      endTime = parseDate(endTime);
+
+      if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) {
+        continue;
+      }
+
+      let updates = {};
+      let shouldUpdate = false;
+
+      if (currentTime >= startTime && currentTime <= endTime) {
+        if (!data.isActive) {
+          updates.isActive = true;
+          updates.hideMarketUser = true;
+          updates.updatedAt = new Date().toISOString();
+          shouldUpdate = true;
         }
-  
-        startTime = parseDate(startTime);
-        endTime = parseDate(endTime);
-  
-        if (!startTime || !endTime || isNaN(startTime) || isNaN(endTime)) {
-          continue;
+      } else if (currentTime >= endTime) {
+        if (data.isActive) {
+          updates.isActive = false;
+          updates.updatedAt = new Date().toISOString();
+          shouldUpdate = true;
         }
-  
-        let updates = {};
-        let shouldUpdate = false;
-  
-        if (currentTime >= startTime && currentTime <= endTime) {
-          if (!data.isActive) {
-            updates.isActive = true;
-            updates.hideMarketUser = true;
-            updates.updatedAt = new Date().toISOString();
-            shouldUpdate = true;
-          }
-        } else if (currentTime >= endTime) {
-          if (data.isActive) {
-            updates.isActive = false;
-            updates.updatedAt = new Date().toISOString();
-            shouldUpdate = true;
-          }
-        }
-  
-        if (shouldUpdate) {
-          // Update Firestore
+      }
+
+      if (shouldUpdate) {
+        const shouldActuallyUpdate =
+          (typeof updates.isActive !== 'undefined' && updates.isActive !== data.isActive) ||
+          (typeof updates.hideMarketUser !== 'undefined' && updates.hideMarketUser !== data.hideMarketUser);
+
+        if (shouldActuallyUpdate) {
           await db.collection("color-game-db").doc(doc.id).update(updates);
-  
-          // Update MySQL via Sequelize
+
           await Market.update(
             {
               isActive: updates.isActive ?? data.isActive,
               hideMarketUser: updates.hideMarketUser ?? data.hideMarketUser,
-              updatedAt: shouldUpdate ? new Date() : data.updatedAt,
+              updatedAt: new Date(),
             },
             {
               where: { marketId: doc.id },
@@ -61,25 +64,23 @@ export async function updateColorGame() {
           );
         }
       }
-    } catch (error) {
-      console.error("Error updating ColorGame:", error);
     }
+  } catch (error) {
+    console.error("Error updating ColorGame:", error);
   }
-  
-
-function parseDate(dateInput) {
-    if (!dateInput) return null;
-    if (typeof dateInput === "string") {
-        const [datePart, timePart] = dateInput.split(" ");
-        if (!datePart || !timePart) return null;
-        return new Date(`${datePart}T${timePart}Z`);
-    } else if (typeof dateInput === "number") {
-        return new Date(dateInput);
-    } else if (dateInput instanceof Date) {
-        return dateInput;
-    } else {
-        return null;
-    }
 }
 
-
+function parseDate(dateInput) {
+  if (!dateInput) return null;
+  if (typeof dateInput === "string") {
+    const [datePart, timePart] = dateInput.split(" ");
+    if (!datePart || !timePart) return null;
+    return new Date(`${datePart}T${timePart}Z`);
+  } else if (typeof dateInput === "number") {
+    return new Date(dateInput);
+  } else if (dateInput instanceof Date) {
+    return dateInput;
+  } else {
+    return null;
+  }
+}
