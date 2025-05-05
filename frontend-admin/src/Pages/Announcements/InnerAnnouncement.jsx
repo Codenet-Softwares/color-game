@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Utils/Auth";  
 import GameService from "../../Services/GameService";  
-
+import UpdateInnerAnnouncement from "./UpdateInnerAnnouncement";
 const InnerAnnouncement = () => {
   const { user } = useAuth();
   const [announcementData, setAnnouncementData] = useState({
@@ -11,6 +11,7 @@ const InnerAnnouncement = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);  
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(""); // State to manage validation error message
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const emojis = [
     "😊", "😂", "😍", "😎", "🤔", "🥺", "💯", "🎉", "👍", "🙏",  
@@ -48,6 +49,8 @@ const InnerAnnouncement = () => {
       await GameService.CreateInnerAnnouncement(user, data);
       toast.success("Inner Announcement created successfully!");
       setAnnouncementData({ announcement: "" });
+      setRefreshTrigger(prev => prev + 1); // Triggers re-fetch in child
+      
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errMessage) {
         toast.error(error.response.data.errMessage);
@@ -65,17 +68,18 @@ const InnerAnnouncement = () => {
       ...prev,
       announcement: prev.announcement + emoji, 
     }));
-    setShowEmojiPicker(false); 
-    setError(""); // Clear error when user adds content
+    setError("");
   };
 
   return (
     <div className="container my-5 p-5">
+
+        <div className="row">
+      <div className="col-6">
+      {/* Show loading spinner */}
       <h3 className="fw-bold text-center text-uppercase p-3 text-white rounded" style={{ background: "#3E5879" }}>
         Create Inner Announcement
       </h3>
-
-      {/* Show loading spinner */}
       {isLoading && (
         <div className="text-center my-3">
           <div className="spinner-border text-primary" role="status">
@@ -140,7 +144,13 @@ const InnerAnnouncement = () => {
             {isLoading ? "Creating..." : "Create Inner Announcement"}
           </button>
         </div>
+      </div> 
+    </div>
+
+      <div className="col-6">
+      <UpdateInnerAnnouncement/>
       </div>
+        </div>
     </div>
   );
 };

@@ -55,7 +55,7 @@ const HamburgerNavBar = () => {
           </div>
           {activeIcon === 'play' && <div className="hover-text">In-Play</div>}
         </div>
-        <div
+        {/* <div
           className={`col-3 col-md text-center text-white d-flex align-items-center flex-column${
             activeIcon === 'heart' ? 'active-icon' : ''
           }`}
@@ -66,7 +66,7 @@ const HamburgerNavBar = () => {
             <FaHeart />
           </div>
           {activeIcon === 'heart' && <div className="hover-text">Mini Game</div>}
-        </div>
+        </div> */}
         <div
           className={`col-3 col-md text-center text-white ${activeIcon === 'menu' ? 'active-icon' : ''}`}
           title="Menu"

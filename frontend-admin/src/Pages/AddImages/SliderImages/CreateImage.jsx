@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import GameService from "../../../Services/GameService";
 import { useAuth } from "../../../Utils/Auth";
 import { toast } from "react-toastify";
+import SliderImageDelete from "./SliderImageDelete";
 
 const CreateImage = () => {
   const [file, setFile] = useState(null);
@@ -86,14 +87,7 @@ const CreateImage = () => {
 
   return (
     <div className="container p-5">
-      <div className="card shadow-sm">
-        <div
-          className="card-header"
-          style={{ backgroundColor: "#3E5879", color: "#FFFFFF" }}
-        >
-          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Create Slider Image</h3>
-        </div>
-        <div className="card-body" style={{ background: "#E1D1C7" }}>
+      <div className="col">
           <div className="mb-4 text-center">
             <div
               onClick={() => document.getElementById("file-input").click()}
@@ -166,11 +160,11 @@ const CreateImage = () => {
           </div>
 
           <div className="text-center">
-            <button className="btn btn-primary text-uppercase" onClick={handleAddImage}>
+            <button className="btn btn-primary" onClick={handleAddImage}>
               Upload Image
             </button>
           </div>
-        </div>
+      <SliderImageDelete/>
       </div>
     </div>
   );
