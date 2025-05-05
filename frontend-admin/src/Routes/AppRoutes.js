@@ -21,7 +21,6 @@ import UserBetHistory from "../Pages/BetHistory/UserBetHistory";
 import DeleteBetHistory from "../Pages/BetHistory/DeleteBetHistory";
 import DeleteMarket from "../Components/Game/DeleteMarket";
 import CreateImage from "../Pages/AddImages/SliderImages/CreateImage";
-import SliderImageDelete from "../Pages/AddImages/SliderImages/SliderImageDelete";
 import CreateGameImage from "../Pages/AddImages/AddGameImageSlider/CreateGameImage";
 import UpdateGameSlider from "../Pages/AddImages/AddGameImageSlider/UpdateGameSlider";
 import AddGameGif from "../Pages/AddImages/AddGameGIFimage/AddGameGif";
@@ -47,14 +46,7 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="reset-password"
-          element={
-          
-              <ResetPassword/>
-           
-          }
-        />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route index element={<Login />} />
         <Route path="*" element={<ErrorPage />} />
         <Route
@@ -207,18 +199,10 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="create-image"
+            path="outer-image"
             element={
               <RequireAuth>
                 <CreateImage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="slider-image-delete"
-            element={
-              <RequireAuth>
-                <SliderImageDelete />
               </RequireAuth>
             }
           />
@@ -231,15 +215,7 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="UpdateGameImage-slider"
-            element={
-              <RequireAuth>
-                <UpdateGameSlider />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="create-game-GIF"
+            path="game-GIF"
             element={
               <RequireAuth>
                 <AddGameGif />
@@ -247,26 +223,10 @@ const AppRoutes = () => {
             }
           />
           <Route
-            path="update-game-GIF"
-            element={
-              <RequireAuth>
-                <UpdateGifSlider />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="create-inner-image"
+            path="inner-image"
             element={
               <RequireAuth>
                 <CreateInnerImage />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="update-inner-image"
-            element={
-              <RequireAuth>
-                <UpdateInnerImage />
               </RequireAuth>
             }
           />
@@ -277,28 +237,12 @@ const AppRoutes = () => {
                 <OuterAnnouncement />
               </RequireAuth>
             }
-          />
-          <Route
-            path="update-outer-announcement"
-            element={
-              <RequireAuth>
-                <UpdateOuterAnnouncement />
-              </RequireAuth>
-            }
-          />
+          />    
           <Route
             path="inner-announcement"
             element={
               <RequireAuth>
                 <InnerAnnouncement />
-              </RequireAuth>
-            }
-          />
-          <Route
-            path="update-inner-announcement"
-            element={
-              <RequireAuth>
-                <UpdateInnerAnnouncement />
               </RequireAuth>
             }
           />

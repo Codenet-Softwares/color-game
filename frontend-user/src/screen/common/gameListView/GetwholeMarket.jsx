@@ -316,7 +316,10 @@ const GetwholeMarket = () => {
                           No market Available
                         </p>
                       )}
+
+
                     </>
+                    
                   )}
                 </>
               );

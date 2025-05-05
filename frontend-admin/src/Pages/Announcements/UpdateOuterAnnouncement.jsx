@@ -41,7 +41,7 @@ const UpdateOuterAnnouncement = () => {
   };
 
   return (
-    <div className="container my-5 p-5">
+    <div className="container">
       <div className="card shadow-sm">
         <div
           className="card-header"

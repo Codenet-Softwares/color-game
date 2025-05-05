@@ -305,15 +305,11 @@ const Navside = () => {
             {isImage && (
               <ul>
                 {/* Slider Image */}
-                <li>
-                  <a
-                    className={`has-arrow ${isSliderImage ? "active" : ""}`}
-                    href="#"
-                    onClick={handleSliderImageToggle}
-                  >
+                <li className="slider-image">
+                  <Link to="/outer-image">
                     <div className="nav_icon_small">
                       <i
-                        class="fa-solid fa-camera"
+                        className="fa-solid fa-camera"
                         style={{
                           color: "#3E5879",
                           marginRight: "10px",
@@ -322,49 +318,34 @@ const Navside = () => {
                       ></i>
                     </div>
                     <div className="nav_title">
-                      <span>Slider Image</span>
+                      <span>Outer Slider Image</span>
                     </div>
-                  </a>
-                  {isSliderImage && (
-                    <ul>
-                      <li>
-                        <Link to="create-image">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Create Slider
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="slider-image-delete">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Update Slider
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                  </Link>
                 </li>
-                <li>
-                  <a
-                    className={`has-arrow ${isGameSliderImage ? "active" : ""}`}
-                    href="#"
-                    onClick={handleGameImageSlider}
-                  >
+
+                <li className="inner-slider-image">
+                  <Link to="/inner-image">
                     <div className="nav_icon_small">
                       <i
-                        class="fa-solid fa-camera"
+                        className="fa-solid fa-camera"
+                        style={{
+                          color: "#3E5879",
+                          marginRight: "10px",
+                          fontSize: "15px",
+                        }}
+                      ></i>
+                    </div>
+                    <div className="nav_title">
+                      <span>Inner Slider Image</span>
+                    </div>
+                  </Link>
+                </li>
+
+                <li className="game-slider-image">
+                  <Link to="/GameImage-slider">
+                    <div className="nav_icon_small">
+                      <i
+                        className="fa-solid fa-camera"
                         style={{
                           color: "#3E5879",
                           marginRight: "10px",
@@ -375,47 +356,14 @@ const Navside = () => {
                     <div className="nav_title">
                       <span>Game Image</span>
                     </div>
-                  </a>
-                  {isGameSliderImage && (
-                    <ul>
-                      <li>
-                        <Link to="GameImage-slider">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Create Slider
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="UpdateGameImage-slider">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Update Slider
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                  </Link>
                 </li>
-                <li>
-                  <a
-                    className={`has-arrow ${isGifSliderImage ? "active" : ""}`}
-                    href="#"
-                    onClick={handleGifImageSlider}
-                  >
+
+                <li className="gif-slider-image">
+                  <Link to="/game-GIF">
                     <div className="nav_icon_small">
                       <i
-                        class="fa-solid fa-camera"
+                        className="fa-solid fa-camera"
                         style={{
                           color: "#3E5879",
                           marginRight: "10px",
@@ -426,90 +374,7 @@ const Navside = () => {
                     <div className="nav_title">
                       <span>Game GIF</span>
                     </div>
-                  </a>
-                  {isGifSliderImage && (
-                    <ul>
-                      <li>
-                        <Link to="create-game-GIF">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Create GIF
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="update-game-GIF">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Update GIF
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-                <li>
-                  <a
-                    className={`has-arrow ${
-                      isInnerSliderImage ? "active" : ""
-                    }`}
-                    href="#"
-                    onClick={handleInnerImageSlider}
-                  >
-                    <div className="nav_icon_small">
-                      <i
-                        class="fa-solid fa-camera"
-                        style={{
-                          color: "#3E5879",
-                          marginRight: "10px",
-                          fontSize: "15px",
-                        }}
-                      ></i>
-                    </div>
-                    <div className="nav_title">
-                      <span>Inner Image</span>
-                    </div>
-                  </a>
-                  {isInnerSliderImage && (
-                    <ul>
-                      <li>
-                        <Link to="create-inner-image">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Create Inner Image
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="update-inner-image">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Update Inner Image
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                  </Link>
                 </li>
               </ul>
             )}
@@ -541,16 +406,10 @@ const Navside = () => {
               <ul>
                 {/* Outer Announcement */}
                 <li className="outer-announcement">
-                  <a
-                    className={`has-arrow ${
-                      isOuterAnnouncement ? "active" : ""
-                    }`}
-                    href="#"
-                    onClick={() => toggleMenu(setIsOuterAnnouncement)}
-                  >
+                  <Link to="outer-announcement">
                     <div className="nav_icon_small">
                       <i
-                        class="fa-solid fa-bell"
+                        className="fa-solid fa-bell"
                         style={{
                           color: "#3E5879",
                           marginRight: "10px",
@@ -561,50 +420,18 @@ const Navside = () => {
                     <div className="nav_title">
                       <span>Outer Announcement</span>
                     </div>
-                  </a>
-                  {isOuterAnnouncement && (
-                    <ul>
-                      <li>
-                        <Link to="outer-announcement">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Create Announcement
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="update-outer-announcement">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Update Announcement
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                  </Link>
                 </li>
+
                 {/* Inner Announcement */}
                 <li className="inner-announcement">
-                  <a
-                    className={`has-arrow ${
-                      isInnerAnnouncement ? "active" : ""
-                    }`}
-                    href="#"
-                    onClick={() => toggleMenu(setIsInnerAnnouncement)}
+                  <Link
+                    to="inner-announcement"
+                    onClick={() => setIsInnerAnnouncement(true)}
                   >
                     <div className="nav_icon_small">
                       <i
-                        class="fa-solid fa-bell"
+                        className="fa-solid fa-bell"
                         style={{
                           color: "#3E5879",
                           marginRight: "10px",
@@ -615,37 +442,7 @@ const Navside = () => {
                     <div className="nav_title">
                       <span>Inner Announcement</span>
                     </div>
-                  </a>
-                  {isInnerAnnouncement && (
-                    <ul>
-                      <li>
-                        <Link to="inner-announcement">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Create Announcement
-                        </Link>
-                      </li>
-                      <li>
-                        <Link to="update-inner-announcement">
-                          <i
-                            className="fa-solid fa-circle"
-                            style={{
-                              color: "#3E5879",
-                              marginRight: "10px",
-                              fontSize: "15px",
-                            }}
-                          ></i>{" "}
-                          Update Announcement
-                        </Link>
-                      </li>
-                    </ul>
-                  )}
+                  </Link>
                 </li>
               </ul>
             )}

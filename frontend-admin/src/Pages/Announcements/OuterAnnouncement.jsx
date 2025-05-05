@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Utils/Auth";
 import GameService from "../../Services/GameService";
+import UpdateOuterAnnouncement from "./UpdateOuterAnnouncement";
 
 const OuterAnnouncement = () => {
   const { user } = useAuth();
@@ -21,7 +22,7 @@ const OuterAnnouncement = () => {
     "🎵", "🎶", "🎤", "🎧", "🎼", "🎷", "🎸", "🎻", "🥁", "🎺",
     "🎬", "📽️", "🍿", "🎥", "📺", "📷", "📸", "📡", "🎮", "🎧",
     "💻", "🖥️", "📱", "📞", "📡", "💾", "🖱️", "🖲️", "⌨️", "💻",
-    "🎁", "💌", "🎀", "🎉", "🎊", "🎈", "🧧", "🧸", "🛍️", "📦",
+    "🎁", "💌", "🎉", "🎊", "🎈", "🧧", "🧸", "🛍️", "📦",
     "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "0️⃣"
   ];
 
@@ -30,21 +31,18 @@ const OuterAnnouncement = () => {
       ...prev,
       announcement: prev.announcement + emoji,
     }));
-    setShowEmojiPicker(false);
-    setError(""); // Clear error when user adds content
+    setError(""); 
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAnnouncementData((prev) => ({ ...prev, [name]: value }));
-    setError(""); // Clear error when user starts typing
+    setError("");
   };
 
   const handleCreateAnnouncement = async () => {
     setIsLoading(true);
     const { announcement } = announcementData;
-
-    // Validation: Check for empty or whitespace-only announcements
     if (!announcement.trim()) {
       setError("Please enter a valid announcement.");
       setIsLoading(false);
@@ -71,7 +69,10 @@ const OuterAnnouncement = () => {
 
   return (
     <div className="container my-5 p-5">
-      <h3 className="fw-bold text-center text-uppercase text-white p-3 rounded" style={{ background: "#3E5879" }}>
+      <div className="col">
+        <div className="row">
+          <div className="col-6">
+          <h3 className="fw-bold text-center text-uppercase text-white p-3 rounded" style={{ background: "#3E5879" }}>
         Create Outer Announcement
       </h3>
       {isLoading && (
@@ -134,6 +135,14 @@ const OuterAnnouncement = () => {
           </button>
         </div>
       </div>
+          </div>
+          <div className="col-6">
+          <UpdateOuterAnnouncement/>
+          </div>
+        </div>
+      </div>
+    
+      
     </div>
   );
 };

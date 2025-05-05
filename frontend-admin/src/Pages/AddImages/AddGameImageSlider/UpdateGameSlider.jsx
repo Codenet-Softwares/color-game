@@ -78,7 +78,7 @@ const UpdateGameSlider = () => {
   };
 
   return (
-    <div className="container my-5 p-5">
+    <div className="mt-3">
       <div className="card shadow-sm">
         <div
           className="card-header"
@@ -87,7 +87,7 @@ const UpdateGameSlider = () => {
             color: "#FFFFFF",
           }}
         >
-          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Update Game Slider</h3>
+          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Game Slider</h3>
         </div>
         <div className="card-body"  style={{ background: "#E1D1C7" }}>
           {sliderImages.length === 0 ? (

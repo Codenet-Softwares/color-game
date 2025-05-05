@@ -85,7 +85,7 @@ const SliderImageDelete = () => {
   };
 
   return (
-    <div className="container my-5 p-5">
+    <div className="mt-3">
       <div className="card shadow-sm">
         <div
           className="card-header"
@@ -95,7 +95,7 @@ const SliderImageDelete = () => {
           }}
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase p-2">
-            Slider Images
+          Outer Images
           </h3>
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
