@@ -24,6 +24,7 @@ import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
 import sequelize from "../db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
+import { log } from "console";
 
 // done
 export const createUser = async (req, res) => {
@@ -732,17 +733,26 @@ export const getUserWallet = async (req, res) => {
 
     const userBalance = await user_Balance(userId)
 
+    const exposure = await MarketListExposure.findAll({
+      where : { UserId: userId },
+    })
+
+    const totalExposure = exposure.reduce((sum, exposure) => {
+      return sum + (exposure.dataValues.exposure || 0);
+    }, 0);
+
     const getBalance = {
+      userId : userData.userId,
       walletId: userData.walletId,
       balance: userBalance,
-      marketListExposure: userData.marketListExposure,
+      marketListExposure: totalExposure,
     };
 
-    res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(getBalance, true, statusCode.success, "success")
-      );
+    console.log("getBalance", getBalance);
+    
+
+    res.status(statusCode.success).send(apiResponseSuccess(getBalance, true, statusCode.success, "success"));
+
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -756,6 +766,7 @@ export const getUserWallet = async (req, res) => {
       );
   }
 };
+
 // done
 export const transactionDetails = async (req, res) => {
   try {
@@ -1164,21 +1175,26 @@ export const createBid = async (req, res) => {
         bidAmount: mainValue,
       });
 
-      const record = await MarketListExposure.findOne({
-        where: { UserId: userId, MarketId: marketId },
-      });
+      if (marketListExposure && Array.isArray(marketListExposure)) {
+        for (const exposureObj of marketListExposure) {
+          for (const [marketId, exposureValue] of Object.entries(exposureObj)) {
+            const record = await MarketListExposure.findOne({
+              where: { UserId: userId, MarketId: marketId },
+            });
 
-      if (record) {
-        record.exposure += marketListExposure;
-        await record.save();
-      } else {
-        await MarketListExposure.create({
-          UserId: userId,
-          MarketId: marketId,
-          exposure: marketListExposure,
-        });
+            if (record) {
+              record.exposure += exposureValue;
+              await record.save();
+            } else {
+              await MarketListExposure.create({
+                UserId: userId,
+                MarketId: marketId,
+                exposure: exposureValue,
+              });
+            }
+          }
+        }
       }
-
       await user.save();
     }
 
