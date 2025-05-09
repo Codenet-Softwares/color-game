@@ -1602,9 +1602,12 @@ export const approveResult = async (req, res) => {
                 Number(runnerBalance.bal)
               );
 
-              const marketExposureEntry = userDetails.marketListExposure.find(
-                (item) => Object.keys(item)[0] === marketId
-              );
+              const exposureEntry = await MarketListExposure.findOne({
+                where: { MarketId: marketId, UserId: user.userId },
+              });
+
+              const marketExposureValue = exposureEntry ? Number(exposureEntry.exposure) : 0;
+              const runnerBalanceValue = Number(runnerBalance.bal);
 
               if (marketExposureEntry) {
                 const marketExposureValue = Number(marketExposureEntry[marketId]);
@@ -1616,7 +1619,7 @@ export const approveResult = async (req, res) => {
                     userName: userDetails.userName,
                     amount: runnerBalanceValue,
                     type: "win",
-                    marketId: marketId,
+                    marketId,
                     runnerId: runnerId1,
                   });
                 } else {
@@ -1625,7 +1628,7 @@ export const approveResult = async (req, res) => {
                     userName: userDetails.userName,
                     amount: Math.abs(marketExposureValue),
                     type: "loss",
-                    marketId: marketId,
+                    marketId,
                     runnerId: runnerId1,
                   });
                 }
@@ -1633,25 +1636,17 @@ export const approveResult = async (req, res) => {
                 await ProfitLoss.create({
                   userId: user.userId,
                   userName: userDetails.userName,
-                  gameId: gameId,
-                  marketId: marketId,
+                  gameId,
+                  marketId,
                   runnerId: runnerId1,
                   date: new Date(),
                   profitLoss: runnerBalanceValue,
                 });
 
-                userDetails.marketListExposure =
-                  userDetails.marketListExposure.filter(
-                    (item) => Object.keys(item)[0] !== marketId
-                  );
-
-                await userSchema.update(
-                  { marketListExposure: userDetails.marketListExposure },
-                  { where: { userId: user.userId } }
-                );
-
-                await userDetails.save();
-
+                await MarketListExposure.destroy({
+                  where: { MarketId: marketId, UserId: user.userId },
+                });
+  
                 await MarketBalance.destroy({
                   where: { marketId, runnerId: runnerId1, userId: user.userId },
                 });
