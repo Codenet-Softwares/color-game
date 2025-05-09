@@ -11,6 +11,7 @@ import Game from "../models/game.model.js";
 import Runner from "../models/runner.model.js";
 import { Op } from "sequelize";
 import BetHistory from "../models/betHistory.model.js";
+import MarketListExposure from "../models/marketListExposure.model.js";
 
 export const voidMarket = async (req, res) => {
   try {
@@ -24,7 +25,7 @@ export const voidMarket = async (req, res) => {
     }
 
     market.isVoid = true;
-    await market.save();  
+    await market.save();
 
     const users = await MarketBalance.findAll({ where: { marketId } });
 
@@ -32,23 +33,22 @@ export const voidMarket = async (req, res) => {
       const userDetails = await userSchema.findOne({ where: { userId: user.userId } });
 
       if (userDetails) {
-        let marketExposureEntry
+        const exposureEntry = await MarketListExposure.findOne({
+          where: {
+            UserId: user.userId,
+            MarketId: marketId,
+          },
+        });
 
-        if (Array.isArray(userDetails.marketListExposure)) {
-           marketExposureEntry = userDetails.marketListExposure.find(
-            (item) => Object.keys(item)[0] === marketId
-          );
-        } 
-        
-        if (marketExposureEntry) {
+        if (exposureEntry) {
+          await MarketListExposure.destroy({
+            where: {
+              UserId: user.userId,
+              MarketId: marketId,
+            },
+          });
 
-          userDetails.marketListExposure = userDetails.marketListExposure.filter(
-            (item) => Object.keys(item)[0] !== marketId
-          );
-
-          await userDetails.save();
-
-          const orders = await CurrentOrder.findAll({ where: { marketId } });
+          const orders = await CurrentOrder.findAll({ where: { marketId, userId: user.userId } });
 
           for (const order of orders) {
             await BetHistory.create({
@@ -77,6 +77,7 @@ export const voidMarket = async (req, res) => {
           await MarketBalance.destroy({
             where: { marketId, userId: user.userId },
           });
+
           await CurrentOrder.destroy({
             where: { marketId, userId: user.userId },
           });
@@ -94,6 +95,7 @@ export const voidMarket = async (req, res) => {
       .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
+
 
 export const getAllVoidMarkets = async (req, res) => {
   try {

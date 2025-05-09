@@ -26,6 +26,7 @@ import ResultRequest from "../models/resultRequest.model.js";
 import ResultHistory from "../models/resultHistory.model.js";
 import { db } from "../firebase-db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
+import AllRunnerBalance from "../models/allRunnerBalances.model.js";
 
 
 dotenv.config();
@@ -472,29 +473,60 @@ export const storePreviousState = async (
   gameId,
   runnerBalanceValue
 ) => {
+  // Save or update market list exposure in MarketListExposure table
+  const existingExposure = await MarketListExposure.findOne({
+    where: { UserId: user.userId, MarketId: marketId },
+  });
+
+  if (existingExposure) {
+    await existingExposure.update({ exposure: user.marketListExposure });
+  } else {
+    await MarketListExposure.create({
+      UserId: user.userId,
+      MarketId: marketId,
+      exposure: user.marketListExposure,
+    });
+  }
+
+  // Save or update all runner balances in AllRunnerBalance table
   const allRunnerBalances = await MarketBalance.findAll({
     where: { marketId, userId: user.userId },
     attributes: ["runnerId", "bal"],
   });
 
-  const allRunnerBalancesObj = {};
-  allRunnerBalances.forEach((item) => {
-    allRunnerBalancesObj[item.runnerId] = Number(item.bal);
-  });
+  for (const item of allRunnerBalances) {
+    const existingBalance = await AllRunnerBalance.findOne({
+      where: {
+        UserId: user.userId,
+        MarketId: marketId,
+        RunnerId: item.runnerId,
+      },
+    });
 
+    if (existingBalance) {
+      await existingBalance.update({ balance: item.bal });
+    } else {
+      await AllRunnerBalance.create({
+        UserId: user.userId,
+        MarketId: marketId,
+        RunnerId: item.runnerId,
+        balance: item.bal,
+      });
+    }
+  }
+
+  // Store base previous state (without marketListExposure/allRunnerBalances)
   const previousState = {
     userId: user.userId,
-    marketId: marketId,
-    runnerId: runnerId,
-    gameId: gameId,
-    marketListExposure: JSON.stringify(user.marketListExposure),
+    marketId,
+    runnerId,
+    gameId,
     runnerBalance: runnerBalanceValue,
-    allRunnerBalances: JSON.stringify(allRunnerBalancesObj),
     isReverted: false,
   };
 
   const existingRecord = await PreviousState.findOne({
-    where: { userId: user.userId, marketId: marketId },
+    where: { userId: user.userId, marketId },
   });
 
   if (existingRecord) {
@@ -514,9 +546,7 @@ export const afterWining = async (req, res) => {
     if (!declaredBy || !declaredById) {
       return res
         .status(statusCode.unauthorize)
-        .send(
-          apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: User not authenticated")
-        );
+        .send(apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: User not authenticated"));
     }
 
     const market = await Market.findOne({
@@ -527,9 +557,7 @@ export const afterWining = async (req, res) => {
     if (!market) {
       return res
         .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
-        );
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Market not found"));
     }
 
     const gameId = market.gameId;
@@ -537,69 +565,50 @@ export const afterWining = async (req, res) => {
     if (!runner) {
       return res
         .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Runner not found")
-        );
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Runner not found"));
     }
 
     const runnerName = runner.runnerName;
 
     if (userRole === 'subAdmin') {
       const existingResultRequest = await ResultRequest.findOne({
-        where: {
-          marketId,
-          declaredById,
-          deletedAt: null
-        }
+        where: { marketId, declaredById, deletedAt: null }
       });
 
       if (existingResultRequest) {
         return res
           .status(statusCode.badRequest)
-          .send(
-            apiResponseErr(null, false, statusCode.badRequest, "You have already created a result request for this market")
-          );
-      };
+          .send(apiResponseErr(null, false, statusCode.badRequest, "You have already created a result request for this market"));
+      }
 
       const rejectedSubadmins = await ResultHistory.findAll({
         attributes: ["declaredById"],
-        where: { 
-          marketId, 
-          isApproved: false,
-          status: 'Rejected',
-        },
+        where: { marketId, isApproved: false, status: 'Rejected' },
         raw: true,
       });
-      
+
       const rejectedAdminIds = rejectedSubadmins.map(entry => entry.declaredById).flat();
-      
+
       if (rejectedAdminIds.length === 2 && !rejectedAdminIds.includes(declaredById)) {
         return res
           .status(statusCode.badRequest)
-          .send(
-            apiResponseErr(null, false, statusCode.badRequest, "Only the two sub-admins with rejected entries can submit results for this market!")
-          );
-      };
-      
+          .send(apiResponseErr(null, false, statusCode.badRequest, "Only the two sub-admins with rejected entries can submit results for this market!"));
+      }
+
       const activeResultRequests = await ResultRequest.count({
-        where: {
-          marketId,
-          deletedAt: null
-        }
+        where: { marketId, deletedAt: null }
       });
 
       if (activeResultRequests >= 2) {
         return res
           .status(statusCode.badRequest)
-          .send(
-            apiResponseErr(null, false, statusCode.badRequest, "Maximum number of result requests reached for this market")
-          );
+          .send(apiResponseErr(null, false, statusCode.badRequest, "Maximum number of result requests reached for this market"));
       }
 
       await ResultRequest.create({
         gameId,
         marketId,
-        marketName : market.marketName,
+        marketName: market.marketName,
         runnerId,
         runnerName,
         isWin,
@@ -609,20 +618,11 @@ export const afterWining = async (req, res) => {
 
       return res
         .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            null,
-            true,
-            statusCode.success,
-            "Result declaration by sub-admin successful"
-          )
-        );
+        .send(apiResponseSuccess(null, true, statusCode.success, "Result declaration by sub-admin successful"));
     }
 
     if (userRole === 'admin') {
-      await ResultRequest.destroy({
-        where: { marketId }
-      });
+      await ResultRequest.destroy({ where: { marketId } });
 
       if (market.runners) {
         market.runners.forEach((runner) => {
@@ -662,12 +662,15 @@ export const afterWining = async (req, res) => {
                 Number(runnerBalance.bal)
               );
 
-              const marketExposureEntry = userDetails.marketListExposure.find(
-                (item) => Object.keys(item)[0] === marketId
-              );
+              const exposureRecord = await MarketListExposure.findOne({
+                where: {
+                  UserId: userDetails.userId,
+                  MarketId: marketId,
+                },
+              });
 
-              if (marketExposureEntry) {
-                const marketExposureValue = Number(marketExposureEntry[marketId]);
+              if (exposureRecord) {
+                const marketExposureValue = Number(exposureRecord.exposure);
                 const runnerBalanceValue = Number(runnerBalance.bal);
 
                 if (isWin) {
@@ -676,8 +679,8 @@ export const afterWining = async (req, res) => {
                     userName: userDetails.userName,
                     amount: runnerBalanceValue,
                     type: "win",
-                    marketId: marketId,
-                    runnerId: runnerId,
+                    marketId,
+                    runnerId,
                   });
                 } else {
                   await WinningAmount.create({
@@ -685,8 +688,8 @@ export const afterWining = async (req, res) => {
                     userName: userDetails.userName,
                     amount: Math.abs(marketExposureValue),
                     type: "loss",
-                    marketId: marketId,
-                    runnerId: runnerId,
+                    marketId,
+                    runnerId,
                   });
                 }
 
@@ -700,15 +703,12 @@ export const afterWining = async (req, res) => {
                   profitLoss: runnerBalanceValue,
                 });
 
-                userDetails.marketListExposure =
-                  userDetails.marketListExposure.filter(
-                    (item) => Object.keys(item)[0] !== marketId
-                  );
-
-                await userSchema.update(
-                  { marketListExposure: userDetails.marketListExposure },
-                  { where: { userId: user.userId } }
-                );
+                await MarketListExposure.destroy({
+                  where: {
+                    UserId: userDetails.userId,
+                    MarketId: marketId,
+                  },
+                });
 
                 await userDetails.save();
 
@@ -751,6 +751,7 @@ export const afterWining = async (req, res) => {
 
         await CurrentOrder.destroy({ where: { marketId } });
       }
+
       await Market.update(
         {
           isRevoke: false,
@@ -764,35 +765,20 @@ export const afterWining = async (req, res) => {
 
       return res
         .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            null,
-            true,
-            statusCode.success,
-            "Result declaration by admin successfully"
-          )
-        );
+        .send(apiResponseSuccess(null, true, statusCode.success, "Result declaration by admin successfully"));
     }
 
     return res
       .status(statusCode.unauthorize)
-      .send(
-        apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: Invalid user role")
-      );
+      .send(apiResponseErr(null, false, statusCode.unauthorize, "Unauthorized: Invalid user role"));
   } catch (error) {
     console.error("Error sending balance:", error);
     return res
       .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+      .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
+
 
 export const revokeWinningAnnouncement = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -811,37 +797,47 @@ export const revokeWinningAnnouncement = async (req, res) => {
       });
 
       if (user) {
+        // Fetch all runner balances from DB
+        const allRunnerBalances = await AllRunnerBalance.findAll({
+          where: {
+            UserId: user.userId,
+            MarketId: marketId,
+          },
+          transaction,
+        });
 
-        const allRunnerBalances = JSON.parse(prevState.allRunnerBalances);
-
-        const balances = Object.values(allRunnerBalances);
-
+        // Calculate max negative runner balance
+        const balances = allRunnerBalances.map(rb => rb.balance);
         const maxNegativeRunnerBalance = balances.reduce((max, current) => {
           return current < max ? current : max;
         }, 0);
 
-        let marketExposure = user.marketListExposure || [];
+        // Upsert market exposure
+        await MarketListExposure.upsert(
+          {
+            UserId: user.userId,
+            MarketId: marketId,
+            exposure: Math.abs(maxNegativeRunnerBalance),
+          },
+          { transaction }
+        );
 
-        let exposureMap = marketExposure.reduce((acc, obj) => {
-          return { ...acc, ...obj };
-        }, {});
+        // Delete winning amount
+        await WinningAmount.destroy({ where: { marketId }, transaction });
 
-        exposureMap[marketId] = Math.abs(maxNegativeRunnerBalance);
+        // Update MarketBalance for each runner
+        for (const runnerBalance of allRunnerBalances) {
+          const { RunnerId: runnerId, balance } = runnerBalance;
 
-        user.marketListExposure = Object.keys(exposureMap).map(key => ({ [key]: exposureMap[key] }));
-
-        await WinningAmount.destroy({ where: { marketId } }, transaction);
-
-        for (const [runnerId, balance] of Object.entries(allRunnerBalances)) {
           try {
-            let runnerBalance = await MarketBalance.findOne({
+            let mb = await MarketBalance.findOne({
               where: { marketId, runnerId, userId: user.userId },
               transaction,
             });
 
-            if (runnerBalance) {
-              runnerBalance.bal = balance.toString();
-              await runnerBalance.save({ transaction });
+            if (mb) {
+              mb.bal = balance.toString();
+              await mb.save({ transaction });
             } else {
               await MarketBalance.create(
                 {
@@ -857,36 +853,50 @@ export const revokeWinningAnnouncement = async (req, res) => {
             console.error("Error processing runner balance:", error);
           }
         }
-
-        await user.save({ transaction });
       } else {
         console.log("User Not Found for userId:", prevState.userId);
       }
     }
+
+    // Mark previous state as reverted
     await PreviousState.update(
       { isReverted: true },
       { where: { marketId, runnerId }, transaction }
     );
 
+    // Update market flags
     await Market.update(
       {
         isRevoke: true,
         isActive: false,
         hideMarketUser: false,
         hideMarket: false,
-        announcementResult:false
+        announcementResult: false,
       },
       { where: { marketId }, transaction }
     );
 
-    await ResultHistory.update({
-      isRevokeAfterWin: true
-    }, { where: { marketId }, transaction })
+    // Mark result history as revoked
+    await ResultHistory.update(
+      {
+        isRevokeAfterWin: true,
+      },
+      { where: { marketId }, transaction }
+    );
 
+    // Update runner flags
     await Runner.update(
-      { hideRunnerUser: false, hideRunner: false, isWin: false, isBidding: true, clientMessage: false },
+      {
+        hideRunnerUser: false,
+        hideRunner: false,
+        isWin: false,
+        isBidding: true,
+        clientMessage: false,
+      },
       { where: { runnerId }, transaction }
     );
+
+    // Recreate bets as current orders
     const bets = await BetHistory.findAll({
       where: { marketId },
       transaction,
@@ -915,9 +925,12 @@ export const revokeWinningAnnouncement = async (req, res) => {
         { transaction }
       );
     }
-    await BetHistory.destroy({ where: { marketId } });
-    await ProfitLoss.destroy({ where: { marketId } });
 
+    // Cleanup
+    await BetHistory.destroy({ where: { marketId }, transaction });
+    await ProfitLoss.destroy({ where: { marketId }, transaction });
+
+    // Commit transaction
     await transaction.commit();
 
     return res
@@ -1458,9 +1471,7 @@ export const approveResult = async (req, res) => {
     if (resultRequests.length !== 2) {
       return res
         .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Exactly two declarations are required")
-        );
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Exactly two declarations are required"));
     }
 
     const runnerId1 = resultRequests[0].runnerId;
@@ -1480,9 +1491,7 @@ export const approveResult = async (req, res) => {
     if (!market) {
       return res
         .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
-        );
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Market not found"));
     }
 
     const gameName = market.Game.gameName;
@@ -1496,67 +1505,56 @@ export const approveResult = async (req, res) => {
 
     let remarks = '';
     if (action === 'reject') {
-      if (type === 'Matched') {
-        remarks = "Your result has been rejected. Kindly reach out to your upline for further guidance.";
-      } else {
-        remarks = "Oops! Your submission does not match our records. Please check the data and try again.";
-      }
+      remarks = type === 'Matched'
+        ? "Your result has been rejected. Kindly reach out to your upline for further guidance."
+        : "Oops! Your submission does not match our records. Please check the data and try again.";
 
       await ResultHistory.create({
-        gameId: gameId,
-        gameName: gameName,
-        marketId: marketId,
-        marketName: marketName,
+        gameId,
+        gameName,
+        marketId,
+        marketName,
         runnerId: [runnerId1, runnerId2],
-        runnerNames: runnerNames,
+        runnerNames,
         isApproved: false,
-        type: type,
-        declaredByNames: declaredByNames,
+        type,
+        declaredByNames,
         declaredById: declaredByIds,
-        remarks: remarks,
+        remarks,
         status: 'Rejected',
         createdAt: new Date(),
       });
 
       await ResultRequest.update(
-        { status: "Rejected", type: type, remarks: remarks },
+        { status: "Rejected", type, remarks },
         { where: { marketId, status: "Pending" } }
       );
 
       await ResultRequest.destroy({ where: { marketId } });
 
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            null,
-            true,
-            statusCode.success,
-            "Result rejected successfully"
-          )
-        );
+      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result rejected successfully"));
     }
 
     remarks = "Congratulations! Your result has been approved.";
 
     await ResultHistory.create({
-      gameId: gameId,
-      gameName: gameName,
-      marketId: marketId,
-      marketName: marketName,
+      gameId,
+      gameName,
+      marketId,
+      marketName,
       runnerId: [runnerId1, runnerId2],
-      runnerNames: runnerNames,
-      isApproved: isApproved,
-      type: type,
-      declaredByNames: declaredByNames,
+      runnerNames,
+      isApproved,
+      type,
+      declaredByNames,
       declaredById: declaredByIds,
-      remarks: remarks,
+      remarks,
       status: 'Approved',
       createdAt: new Date(),
     });
 
     await ResultRequest.update(
-      { status: "Approved", type: type, remarks: remarks },
+      { status: "Approved", type, remarks },
       { where: { marketId, status: "Pending" } }
     );
 
@@ -1609,48 +1607,44 @@ export const approveResult = async (req, res) => {
               const marketExposureValue = exposureEntry ? Number(exposureEntry.exposure) : 0;
               const runnerBalanceValue = Number(runnerBalance.bal);
 
-              if (marketExposureEntry) {
-                const marketExposureValue = Number(marketExposureEntry[marketId]);
-                const runnerBalanceValue = Number(runnerBalance.bal);
-
-                if (resultRequests[0].isWin) {
-                  await WinningAmount.create({
-                    userId: userDetails.userId,
-                    userName: userDetails.userName,
-                    amount: runnerBalanceValue,
-                    type: "win",
-                    marketId,
-                    runnerId: runnerId1,
-                  });
-                } else {
-                  await WinningAmount.create({
-                    userId: userDetails.userId,
-                    userName: userDetails.userName,
-                    amount: Math.abs(marketExposureValue),
-                    type: "loss",
-                    marketId,
-                    runnerId: runnerId1,
-                  });
-                }
-
-                await ProfitLoss.create({
-                  userId: user.userId,
+              if (resultRequests[0].isWin) {
+                await WinningAmount.create({
+                  userId: userDetails.userId,
                   userName: userDetails.userName,
-                  gameId,
+                  amount: runnerBalanceValue,
+                  type: "win",
                   marketId,
                   runnerId: runnerId1,
-                  date: new Date(),
-                  profitLoss: runnerBalanceValue,
                 });
-
-                await MarketListExposure.destroy({
-                  where: { MarketId: marketId, UserId: user.userId },
-                });
-  
-                await MarketBalance.destroy({
-                  where: { marketId, runnerId: runnerId1, userId: user.userId },
+              } else {
+                await WinningAmount.create({
+                  userId: userDetails.userId,
+                  userName: userDetails.userName,
+                  amount: Math.abs(marketExposureValue),
+                  type: "loss",
+                  marketId,
+                  runnerId: runnerId1,
                 });
               }
+
+              await ProfitLoss.create({
+                userId: user.userId,
+                userName: userDetails.userName,
+                gameId,
+                marketId,
+                runnerId: runnerId1,
+                date: new Date(),
+                profitLoss: runnerBalanceValue,
+              });
+
+              // Delete exposure after use
+              await MarketListExposure.destroy({
+                where: { MarketId: marketId, UserId: user.userId },
+              });
+
+              await MarketBalance.destroy({
+                where: { marketId, runnerId: runnerId1, userId: user.userId },
+              });
             }
           }
         } catch (error) {
@@ -1666,7 +1660,7 @@ export const approveResult = async (req, res) => {
             betId: order.betId,
             userId: order.userId,
             userName: order.userName,
-            gameId: gameId,
+            gameId,
             gameName: order.gameName,
             marketId: order.marketId,
             marketName: order.marketName,
@@ -1687,41 +1681,18 @@ export const approveResult = async (req, res) => {
         await CurrentOrder.destroy({ where: { marketId } });
       }
     } else {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            null,
-            true,
-            statusCode.success,
-            "Result rejected due to mismatched declarations"
-          )
-        );
+      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result rejected due to mismatched declarations"));
     }
 
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          null,
-          true,
-          statusCode.success,
-          "Result approved and declared successfully"
-        )
-      );
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result approved and declared successfully"));
   } catch (error) {
+    console.error("Approval Error:", error);
     return res
       .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+      .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
+
 
 export const getResultRequests = async (req, res) => {
   try {
