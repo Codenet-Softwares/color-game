@@ -19,17 +19,13 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     wallet: null,
   });
 
-  useEffect(() => {
-    let currentExposure = null;
-    store.user.wallet?.marketListExposure.forEach((entry) => {
-      currentExposure += Object.values(entry)[0];
-    });
-
-    setExposureAndWallet({
-      ...exposureAndWallet,
-      exposure: currentExposure,
-    });
-  }, [store.user.wallet?.marketListExposure]);
+ useEffect(() => {
+     let currentExposure =  store.user.wallet?.marketListExposure;
+     setExposureAndWallet({
+       ...exposureAndWallet,
+       exposure: currentExposure,
+     });
+   }, [store.user.wallet?.marketListExposure]);
 
   const fetchAnnouncement = async () => {
     try {

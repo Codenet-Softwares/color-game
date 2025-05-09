@@ -48,11 +48,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   }, [userId, accessTokenFromStore]);
 
   useEffect(() => {
-    let currentExposure = null;
-    store.user.wallet?.marketListExposure.forEach((entry) => {
-      currentExposure += Object.values(entry)[0];
-    });
-
+    let currentExposure =  store.user.wallet?.marketListExposure;
     setExposureAndWallet({
       ...exposureAndWallet,
       exposure: currentExposure,
