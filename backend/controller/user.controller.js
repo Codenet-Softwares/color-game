@@ -723,7 +723,7 @@ export const getUserWallet = async (req, res) => {
 
     const userData = await userSchema.findOne({ where: { userId } });
 
-    if (!userData || userData.length === 0) {
+    if (!userData) {
       return res
         .status(statusCode.notFound)
         .send(
@@ -731,28 +731,32 @@ export const getUserWallet = async (req, res) => {
         );
     }
 
-    const userBalance = await user_Balance(userId)
+    const userBalance = await user_Balance(userId);
 
-    const exposure = await MarketListExposure.findAll({
-      where : { UserId: userId },
-    })
+    console.log("userBalance", userBalance);
+    
+    const marketExposures = await MarketListExposure.findAll({
+      where: { UserId: userId },
+      attributes: ['MarketId', 'exposure']
+    });
 
-    const totalExposure = exposure.reduce((sum, exposure) => {
-      return sum + (exposure.dataValues.exposure || 0);
-    }, 0);
+    const marketListExposure = marketExposures.map(exposure => ({
+      [exposure.MarketId]: exposure.exposure
+    }));
+
+    console.log("marketListExposure", marketListExposure);
 
     const getBalance = {
-      userId : userData.userId,
       walletId: userData.walletId,
       balance: userBalance,
-      marketListExposure: totalExposure,
+      marketListExposure: marketListExposure,
     };
 
-    console.log("getBalance", getBalance);
-    
-
-    res.status(statusCode.success).send(apiResponseSuccess(getBalance, true, statusCode.success, "success"));
-
+    res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(getBalance, true, statusCode.success, "success")
+      );
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -1183,7 +1187,7 @@ export const createBid = async (req, res) => {
             });
 
             if (record) {
-              record.exposure += exposureValue;
+              record.exposure = exposureValue;
               await record.save();
             } else {
               await MarketListExposure.create({

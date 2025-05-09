@@ -25,6 +25,7 @@ import WinningAmount from "../models/winningAmount.model.js";
 import ResultRequest from "../models/resultRequest.model.js";
 import ResultHistory from "../models/resultHistory.model.js";
 import { db } from "../firebase-db.js";
+import MarketListExposure from "../models/marketListExposure.model.js";
 
 
 dotenv.config();
@@ -1402,9 +1403,19 @@ export const user_Balance = async (userId) => {
         balance -= parseFloat(transaction.amount);
       }
     }
+    
+    // const getExposure = await MarketListExposure.findOne({ where: { userId } })
 
-    const getExposure = await userSchema.findOne({ where: { userId } })
-    const exposure = getExposure.marketListExposure
+    const getExposure = await MarketListExposure.findAll({
+          where: { UserId: userId },
+          attributes: ['MarketId', 'exposure']
+        });
+
+    // const exposure = getExposure.marketListExposure
+
+    const exposure = getExposure.map(exposure => ({
+      [exposure.MarketId]: exposure.exposure
+    }));
 
     if (Array.isArray(exposure)) {
       for (const item of exposure) {
