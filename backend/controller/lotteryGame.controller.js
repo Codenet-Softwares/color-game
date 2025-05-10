@@ -50,7 +50,7 @@ export const purchaseLottery = async (req, res) => {
   const t = await sequelize.transaction();
   try {
     const { generateId, lotteryPrice } = req.body;
-    const { userId, userName, roles, balance, marketListExposure } = req.user;
+    const { userId, userName, roles, marketListExposure } = req.user;
     const { marketId } = req.params;
     const baseURL = process.env.LOTTERY_URL;
     const whiteLabelUrl = process.env.WHITE_LABEL_URL;
@@ -60,8 +60,10 @@ export const purchaseLottery = async (req, res) => {
     });
 
     const userBalance = await user_Balance(userId)
+
+    const balance = userBalance?.[0]?.[0]?.UserBalance ?? 0;
     
-    if (userBalance < lotteryPrice) {
+    if (balance < lotteryPrice) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Insufficient balance"));
     }
 
