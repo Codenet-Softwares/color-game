@@ -17,7 +17,7 @@ export const authenticateSuperAdmin = (req, res, next) => {
             return res.status(statusCode.unauthorize).send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized Access'));
         }
 
-        if (!decoded.roles || !Array.isArray(decoded.roles) || decoded.roles.length === 0) {
+        if (!decoded.role || decoded.role.length === 0) {
             return res.status(statusCode.unauthorize).send(apiResponseErr(null, false, statusCode.unauthorize, 'Invalid token or roles not found.'));
         }
 
@@ -29,7 +29,7 @@ export const authenticateSuperAdmin = (req, res, next) => {
             string.masterAgent
         ];
 
-        const userRole = decoded.roles[0].role;
+        const userRole = decoded.role;
         if (!allowedRoles.includes(userRole)) {
             return res.status(statusCode.unauthorize).send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized Access'));
         }
