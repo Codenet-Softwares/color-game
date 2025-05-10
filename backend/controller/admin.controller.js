@@ -1401,61 +1401,29 @@ export const getBetMarketsAfterWin = async (req, res) => {
 };
 
 // Generic user Balance function
-export const user_Balance = async (userId) => {
+export const user_Balance = async (userId, getExposure = false) => {
   try {
-    let balance = 0;
-    const user_transactions = await transactionRecord.findAll({
-      where: { userId },
-    });
-
-    for (const transaction of user_transactions) {
-      if (transaction.transactionType === 'credit') {
-        balance += parseFloat(transaction.amount);
+    const results = await sequelize.query(
+      'CALL getUserWallet(:userId, :getExposure)',
+      {
+        replacements: { userId, getExposure : true },
+        multiple: true,
+        raw: true,
       }
-      if (transaction.transactionType === 'withdrawal') {
-        balance -= parseFloat(transaction.amount);
-      }
+    );
+    console.log("Stored procedure results:", results);
+    // Check for valid results
+    if (!results || !results[0] || results[0].length === 0) {
+      throw new Error("No balance data returned");
     }
-    
-    // const getExposure = await MarketListExposure.findOne({ where: { userId } })
-
-    const getExposure = await MarketListExposure.findAll({
-          where: { UserId: userId },
-          attributes: ['MarketId', 'exposure']
-        });
-
-    // const exposure = getExposure.marketListExposure
-
-    const exposure = getExposure.map(exposure => ({
-      [exposure.MarketId]: exposure.exposure
-    }));
-
-    if (Array.isArray(exposure)) {
-      for (const item of exposure) {
-        const exposureValue = Object.values(item)[0];
-        balance -= parseFloat(exposureValue);
-      }
+    // Assuming the result set has a column named `UserBalance`
+    const userBalance = results[0]?.UserBalance;
+    if (userBalance === undefined || userBalance === null) {
+      throw new Error("UserBalance not found in the result set");
     }
-
-    const winningAmounts = await WinningAmount.findAll({
-      where: { userId },
-    });
-
-    for (const trans of winningAmounts) {
-      if (trans.type === 'win') {
-        balance += parseFloat(trans.amount);
-      }
-      if (trans.type === 'loss') {
-        balance -= parseFloat(trans.amount);
-      }
-      if (trans.isVoidAfterWin === true && trans.type === 'loss') {
-        balance += parseFloat(trans.amount);
-      }
-    }
-
-
-    return balance;
+    return userBalance;
   } catch (error) {
+    console.error("Error in user_Balance:", error);
     throw new Error(`Error calculating balance: ${error.message}`);
   }
 };

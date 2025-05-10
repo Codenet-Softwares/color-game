@@ -7,6 +7,9 @@ const sequelize = new Sequelize(process.env.DB_DBNAME, process.env.DB_USER, proc
   host: process.env.DB_HOST,
   dialect: 'mysql',
   logging: false,
+  dialectOptions: {
+    multipleStatements: true, // Required for handling multiple result sets
+  },
   pool: {
     max: 10,
     min: 0,
