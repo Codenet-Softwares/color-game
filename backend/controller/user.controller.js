@@ -731,25 +731,20 @@ export const getUserWallet = async (req, res) => {
         );
     }
 
-    const userBalance = await user_Balance(userId);
+    const userBalance = await user_Balance(userId, true);
 
-    console.log("userBalance", userBalance);
-    
-    const marketExposures = await MarketListExposure.findAll({
-      where: { UserId: userId },
-      attributes: ['MarketId', 'exposure']
-    });
+    const balance = userBalance?.[0]?.[0]?.UserBalance ?? 0;
 
-    const marketListExposure = marketExposures.map(exposure => ({
-      [exposure.MarketId]: exposure.exposure
+    const exposureList = userBalance?.[1] ?? [];
+
+    const marketListExposure = exposureList.map((exposure) => ({
+      [exposure.MarketId]: exposure.exposure,
     }));
-
-    console.log("marketListExposure", marketListExposure);
 
     const getBalance = {
       walletId: userData.walletId,
-      balance: userBalance,
-      marketListExposure: marketListExposure,
+      balance,
+      marketListExposure,
     };
 
     res

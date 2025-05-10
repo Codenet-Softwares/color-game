@@ -20,13 +20,14 @@ import BetHistory from "../models/betHistory.model.js";
 import { Op, Sequelize } from "sequelize";
 import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
-import sequelize from "../db.js";
+import sequelize  from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import ResultRequest from "../models/resultRequest.model.js";
 import ResultHistory from "../models/resultHistory.model.js";
 import { db } from "../firebase-db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
 import AllRunnerBalance from "../models/allRunnerBalances.model.js";
+import { sql } from "../db.js";
 
 
 dotenv.config();
@@ -1403,30 +1404,17 @@ export const getBetMarketsAfterWin = async (req, res) => {
 // Generic user Balance function
 export const user_Balance = async (userId, getExposure = false) => {
   try {
-    const results = await sequelize.query(
-      'CALL getUserWallet(:userId, :getExposure)',
-      {
-        replacements: { userId, getExposure : true },
-        multiple: true,
-        raw: true,
-      }
+    const [results] = await sql.query(
+      `CALL getUserWallet(?, ?)`,
+      [userId, getExposure]
     );
-    console.log("Stored procedure results:", results);
-    // Check for valid results
-    if (!results || !results[0] || results[0].length === 0) {
-      throw new Error("No balance data returned");
-    }
-    // Assuming the result set has a column named `UserBalance`
-    const userBalance = results[0]?.UserBalance;
-    if (userBalance === undefined || userBalance === null) {
-      throw new Error("UserBalance not found in the result set");
-    }
-    return userBalance;
+    return results;
   } catch (error) {
-    console.error("Error in user_Balance:", error);
+    console.error("Error in user_Balance:", error.message);
     throw new Error(`Error calculating balance: ${error.message}`);
   }
 };
+
 
 export const approveResult = async (req, res) => {
   try {
