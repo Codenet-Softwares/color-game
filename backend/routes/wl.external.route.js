@@ -1,18 +1,20 @@
-import { getAllGameImg, getAllGif, getAllInnerImg, getAllSliderTextImg, getAnnouncement, getInnerAnnouncement } from "../controller/wl.external.controller.js";
+import { string } from "../constructor/string.js";
+import {  getAnnouncement, getGameImg, getGif, getInnerAnnouncement, getInnerImg, getSliderTextImg } from "../controller/wl.external.controller.js";
+import { authorize } from "../middleware/auth.js";
 import customErrorHandler from "../middleware/customErrorHandler.js";
-import { authenticateSuperAdmin } from "../middleware/whiteLabelAuth.js";
+
 
 
 export const wlExternalRoute = (app) => {
-    app.get('/api/all-slider-text-img',customErrorHandler,  getAllSliderTextImg);
+    app.get('/api/slider-text-img',customErrorHandler,authorize([string.User]),  getSliderTextImg);
 
-    app.get('/api/get-all-gif', customErrorHandler, getAllGif);
+    app.get('/api/get-gif', customErrorHandler,authorize([string.User]), getGif);
 
-    app.get('/api/get-all-game-img', customErrorHandler, getAllGameImg);
+    app.get('/api/get-game-img', customErrorHandler,authorize([string.User]), getGameImg);
 
-    app.get('/api/get-all-inner-img', customErrorHandler, getAllInnerImg);
+    app.get('/api/get-inner-game-img', customErrorHandler,authorize([string.User]), getInnerImg);
 
-    app.get('/api/get-admin-announcements', customErrorHandler, getAnnouncement);
+    app.get('/api/get-announcements', customErrorHandler,authorize([string.User]), getAnnouncement);
 
-    app.get('/api/get-admin-inner-announcements', customErrorHandler, getInnerAnnouncement);
+    app.get('/api/get-inner-announcements', customErrorHandler,authorize([string.User]), getInnerAnnouncement);
 }
