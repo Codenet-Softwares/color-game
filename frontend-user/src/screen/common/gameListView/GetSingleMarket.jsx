@@ -115,31 +115,37 @@ const GetSingleMarket = () => {
                           }`}
                           onClick={() => handleMarketId(marketData?.marketId)}
                         >
-                          <span className="fw-bold">
-                            {formatDate(marketData.startTime)}
-                          </span>{" "}
-                          |{" "}
-                          <span className="fw-bold text-primary">
-                            {" "}
-                            {marketData.marketName}
-                          </span>
+                       <div className="d-flex flex-column flex-md-row">
+  <span className="fw-bold me-2">
+    {formatDate(marketData.startTime)}
+  </span>
+  <span className="fw-bold text-primary">
+     💹{marketData.marketName}
+  </span>
+</div>
+
                         </Link>
-                        <div
-                          className="col-2 rounded fw-bold "
-                          style={{  backgroundColor: "#80C2F1",
-                            fontSize: "13px",
-                            padding: "5px",}}
-                        >
-                          {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
-                        </div>
-                        <div
-                          className="col-2 rounded fw-bold"
-                          style={{ backgroundColor: "#FAA9BA",
-                            fontSize: "13px",
-                            padding: "5px", }}
-                        >
-                          {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
-                        </div>
+                  <div
+  className="col-2 rounded fw-bold text-center text-md-start"
+  style={{
+    backgroundColor: "#80C2F1",
+    fontSize: "13px",
+    padding: "5px",
+  }}
+>
+  {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
+</div>
+<div
+  className="col-2 rounded fw-bold text-center text-md-start"
+  style={{
+    backgroundColor: "#FAA9BA",
+    fontSize: "13px",
+    padding: "5px",
+  }}
+>
+  {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
+</div>
+
                       </div>
                     );
                   })}

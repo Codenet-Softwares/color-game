@@ -220,10 +220,9 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         </div>
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
+      {/* <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
         <h4 className="mb-0 fw-bold">MARKETS</h4>
 
-        {/* Search Input Section */}
         <div className="d-flex w-50 justify-content-end">
           <input
             type="text"
@@ -237,10 +236,9 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
             }}
           />
         </div>
-      </div>
+      </div> */}
 
-      {/* Market Badge Section */}
-      <div className="d-flex justify-content-start align-items-center mb-3 position-relative">
+      {/* <div className="d-flex justify-content-start align-items-center mb-3 position-relative">
         <button
           className="btn btn-sm btn-outline-secondary me-2"
           onClick={handleLeftClick}
@@ -283,7 +281,6 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         MY LOTTERY PURCHASES
       </h2>
 
-      {/* Conditional Table Rendering */}
       {markets.length > 0 ? (
         <Table striped hover responsive bordered className="table-sm">
           <thead
@@ -314,7 +311,6 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   </td>
                   <td>{purchase.sem || "N/A"}</td>
                   <td>
-                    {/* Dropdown for ticket numbers */}
                     <div className="dropdown" style={{ position: "relative" }}>
                       <button
                         className="btn btn-link dropdown-toggle"
@@ -383,7 +379,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
             endIndex={endIndex}
             totalData={pagination.totalItems}
           />
-        )}
+        )} */}
     </div>
   );
 };

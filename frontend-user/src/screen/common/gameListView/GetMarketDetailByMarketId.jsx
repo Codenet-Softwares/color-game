@@ -443,7 +443,7 @@ const GetMarketDetailByMarketId = () => {
     const nData = biddingButton.map((list) => (
       <div className={`${list.col} p-0`}>
         <button
-          className={`btn btn-sm  rounded-2 col-11 fw-bold text-white`}
+          className={`btn btn-sm  rounded-2 col-11 fw-bold text-white mb-1`}
           style={{
             background: `${toggle.mode === "lay" ? "#F09397" : "#18ADC5"}`,
           }}

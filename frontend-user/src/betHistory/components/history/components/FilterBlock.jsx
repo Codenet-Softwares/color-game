@@ -12,159 +12,120 @@ const FilterBlock = ({
 }) => {
   return (
     <div
-      className="card shadow p-3 mb-5  rounded"
+      className="card shadow p-3 mb-5 rounded"
       style={{ marginTop: "150px", background: "#2CB3D1" }}
     >
       <div className="card-body">
-        <div className="row">
-          <div className="col">
-            <div className="form-group">
-              <select
-                className="form-select form-select-sm fw-bold"
-                aria-label=".form-select-sm example"
-                name="dataSource"
-                value={betHistoryData.dataSource}
-                onChange={(e) => handleBetHistorySelectionMenu(e)}
-              >
-                <option className="fw-bold" value="live" selected>
-                  Live Data
-                </option>
-                <option value="backup" className="fw-bold">
-                  Back Data
-                </option>
-                <option value="olddata" className="fw-bold">
-                  Old Data
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div className="col-auto">&nbsp;</div>
-
-          <div className="col">
-            <div className="form-group ">
-              <select
-                className="form-select form-select-sm fw-bold"
-                aria-label=".form-select-sm example"
-                name="selectGame"
-                value={betHistoryData.selectGame || ""}
-                onChange={(e) => handleBetHistorySelectionMenu(e)}
-              >
-                <option value="" className="">
-                  {" "}
-                  Select Game{" "}
-                </option>
-                {betHistoryData.gameSelectionData.map((game, index) => (
-                  <option className="" key={index} value={game.gameId}>
-                    {game.gameName}
-                  </option>
-                ))}
-                <option value="lottery" className="">
-                  Lottery
-                </option>
-              </select>
-            </div>
-          </div>
-
-          <div className="col-auto">&nbsp;</div>
-
-          <div className="col">
-            <div className="form-group">
-              <select
-                className="form-select form-select-sm fw-bold"
-                aria-label=".form-select-sm example"
-                name="selectMenu"
-                value={betHistoryData.selectMenu}
-                onChange={(e) => handleBetHistorySelectionMenu(e)}
-              >
-                <option selected className="fw-bold">
-                  Open this select menu
-                </option>
-                <option value="void" className="fw-bold">
-                  Void
-                </option>
-                <option value="settle" className="fw-bold">
-                  Settle
-                </option>
-                <option value="unsettle" className="fw-bold">
-                  Unsettle
-                </option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* {dateVisible && ( */}
-        <div className="row align-items-center">
-          <div className="col">
-            <div className="form-group">
-              <label className="">From:</label>
-              <div className="input-group" style={{ maxWidth: "100%" }}>
-                <Datetime
-                  value={betHistoryData.startDate}
-                  name="startDate"
-                  dateFormat="DD-MM-YYYY"
-                  onChange={(e) =>
-                    handleDateValue("startDate", moment(e).toDate())
-                  }
-                  timeFormat="HH:mm"
-                  isValidDate={(current) => current.isBefore(new Date())}
-                  closeOnSelect={true}
-                  inputProps={{
-                    readOnly: true, // Prevents manual typing
-                    onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
-                    style: {
-                      cursor: "pointer",
-                      backgroundColor: "#f3f3f3",
-                    }, // Optional: Styling
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="col">
-            <div className="form-group">
-              <label className="">To:</label>
-              <div className="input-group" style={{ maxWidth: "100%" }}>
-                <Datetime
-                  value={betHistoryData.endDate}
-                  name="endDate"
-                  dateFormat="DD-MM-YYYY"
-                  onChange={(e) =>
-                    handleDateValue("endDate", moment(e).toDate())
-                  }
-                  timeFormat="HH:mm"
-                  isValidDate={(current) => current.isBefore(new Date())}
-                  closeOnSelect={true}
-                  inputProps={{
-                    readOnly: true, // Prevents manual typing
-                    onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
-                    style: {
-                      cursor: "pointer",
-                      backgroundColor: "#f3f3f3",
-                    }, // Optional: Styling
-                  }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="col">
-            <button
-              className="btn btn-primary "
-              onClick={() =>
-                betHistoryData.selectGame === "lottery"
-                  ? getHistoryForLotteryBetHistory()
-                  : handleGetHistory()
-              }
-              disabled={!betHistoryData.selectGame}
+        {/* Row 1 (Mobile): Live Data + Select Game */}
+        <div className="d-flex gap-2 mb-3">
+          <div className="w-50">
+            <select
+              className="form-select form-select-sm fw-bold"
+              name="dataSource"
+              value={betHistoryData.dataSource}
+              onChange={handleBetHistorySelectionMenu}
             >
-              Get History
-            </button>
+              <option value="live" className="fw-bold">Live Data</option>
+              <option value="backup" className="fw-bold">Back Data</option>
+              <option value="olddata" className="fw-bold">Old Data</option>
+            </select>
+          </div>
+          <div className="w-50">
+            <select
+              className="form-select form-select-sm fw-bold"
+              name="selectGame"
+              value={betHistoryData.selectGame || ""}
+              onChange={handleBetHistorySelectionMenu}
+            >
+              <option value="">Select Game</option>
+              {betHistoryData.gameSelectionData.map((game, index) => (
+                <option key={index} value={game.gameId}>{game.gameName}</option>
+              ))}
+              <option value="lottery">Lottery</option>
+            </select>
           </div>
         </div>
-        {/* )} */}
+
+<div className="text-center">
+  <div className="mb-2 d-flex justify-content-center">
+    <div className="w-75">
+      <select
+        className="form-select form-select-sm fw-bold mx-auto"
+        name="selectMenu"
+        value={betHistoryData.selectMenu}
+        onChange={handleBetHistorySelectionMenu}
+      >
+        <option className="fw-bold">Open this select menu</option>
+        <option value="void" className="fw-bold">Void</option>
+        <option value="settle" className="fw-bold">Settle</option>
+        <option value="unsettle" className="fw-bold">Unsettle</option>
+      </select>
+    </div>
+  </div>
+
+  <div className="mb-2 d-flex justify-content-center flex-column align-items-center">
+    <label className="text-center">From:</label>
+    <div className="w-75 ">
+      <Datetime
+        value={betHistoryData.startDate}
+        name="startDate"
+        dateFormat="DD-MM-YYYY"
+        onChange={(e) => handleDateValue("startDate", moment(e).toDate())}
+        timeFormat="HH:mm"
+        isValidDate={(current) => current.isBefore(new Date())}
+        closeOnSelect={true}
+        inputProps={{
+          readOnly: true,
+          onKeyDown: (e) => e.preventDefault(),
+          style: {
+            cursor: "pointer",
+            backgroundColor: "#f3f3f3",
+          },
+        }}
+      />
+    </div>
+  </div>
+
+  <div className="mb-2 d-flex justify-content-center flex-column align-items-center">
+    <label className="text-center">To:</label>
+    <div className="w-75">
+      <Datetime
+        value={betHistoryData.endDate}
+        name="endDate"
+        dateFormat="DD-MM-YYYY"
+        onChange={(e) => handleDateValue("endDate", moment(e).toDate())}
+        timeFormat="HH:mm"
+        isValidDate={(current) => current.isBefore(new Date())}
+        closeOnSelect={true}
+        inputProps={{
+          readOnly: true,
+          onKeyDown: (e) => e.preventDefault(),
+          style: {
+            cursor: "pointer",
+            backgroundColor: "#f3f3f3",
+          },
+        }}
+      />
+    </div>
+  </div>
+
+  <div className="d-flex justify-content-center">
+    <div className="w-75">
+      <button
+        className="btn btn-primary w-100"
+        onClick={() =>
+          betHistoryData.selectGame === "lottery"
+            ? getHistoryForLotteryBetHistory()
+            : handleGetHistory()
+        }
+        disabled={!betHistoryData.selectGame}
+      >
+        Get History
+      </button>
+    </div>
+  </div>
+</div>
+
       </div>
     </div>
   );

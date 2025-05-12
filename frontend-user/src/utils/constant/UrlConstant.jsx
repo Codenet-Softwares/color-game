@@ -53,12 +53,12 @@ class UrlConstant {
   getPurchaseMarketTime = `${this.url_dev}/${this.user}/getMarkets`;
   getUpdateMarketStatus = `${this.url_dev}/update-market-status`;
   liveUsersBet = `${this.url_dev}/live-users-bet`;
-  getSliderTextImg = `${this.url_dev}/admin/slider-text-img`;
-  getGifImg = `${this.url_dev}/admin/get-gif`;
-  getGameImg = `${this.url_dev}/admin/get-game-img`;
-  getInnerImg = `${this.url_dev}/admin/get-inner-game-img`;
-  getAannouncement = `${this.url_dev}/admin/get-announcements`;
-  getInnerAannouncement = `${this.url_dev}/admin/get-inner-announcements`;
+  getSliderTextImg = `${this.url_dev}/slider-text-img`;
+  getGifImg = `${this.url_dev}/get-gif`;
+  getGameImg = `${this.url_dev}/get-game-img`;
+  getInnerImg = `${this.url_dev}/get-inner-game-img`;
+  getAannouncement = `${this.url_dev}/get-announcements`;
+  getInnerAannouncement = `${this.url_dev}/get-inner-announcements`;
   anonymousMarkets = `${this.url_dev}/external/get-allLottery-game`;
 }
 

@@ -613,23 +613,35 @@ export async function getUpdateMarketStatus(body, marketId, isToast = false) {
     throw error;
   }
 }
-
-export const getSliderImgText = async () => {
+export const getSliderImgText = async (body = {}, isToast = false) => {
   try {
-    const callParams = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const response = await fetch(urls.getSliderTextImg, callParams);
-    const data = await response.json();
-    return data;
+    const callParams = await getCallParams(strings.GET, body, isToast);
+    const response = await makeCall(
+      `${urls.getSliderTextImg}`,
+      callParams,
+      isToast
+    );
+    return response;
   } catch (err) {
-    console.error("Error in getSliderImgText:", err);
     throw err;
   }
 };
+// export const getSliderImgText = async () => {
+//   try {
+//     const callParams = {
+//       method: "GET",
+//       headers: {
+//         "Conte nt-Type": "application/json",
+//       },
+//     };
+//     const response = await fetch(urls.getSliderTextImg, callParams);
+//     const data = await response.json();
+//     return data;
+//   } catch (err) {
+//     console.error("Error in getSliderImgText:", err);
+//     throw err;
+//   }
+// };
 
 export const getGameImg = async () => {
   try {
