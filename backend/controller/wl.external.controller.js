@@ -1,154 +1,101 @@
 import axios from "axios";
-import jwt from "jsonwebtoken"
 import { statusCode } from "../helper/statusCodes.js";
 import { apiResponseErr, apiResponseSuccess } from "../middleware/serverError.js";
 
-export const getAllSliderTextImg = async (req, res) => {
+export const getSliderTextImg = async (req, res) => {
   try {
-    // const token = jwt.sign(
-    //   { role: req.user.role },
-    //   process.env.JWT_SECRET_KEY,
-    //   { expiresIn: '1h' }
-    // );
-
-    // console.log("token..........", token)
-    
     const baseURL = process.env.WHITE_LABEL_URL;
 
-    const response = await axios.get(`${baseURL}/api/admin/all-slider-text-img`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-// }
-    });
-    const {data}=response.data.data
-    console.log("data........",data)
+    const response = await axios.get(`${baseURL}/api/admin/slider-text-img`);
+    const {data}=response.data
 
     if (!response.data.success) {
       return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, "Failed to get market")
+        apiResponseErr(null, false, statusCode.badRequest, "Failed to fetch")
       );
     }
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(response.data.data, true, statusCode.success, "Success")
+      apiResponseSuccess(data, true, statusCode.success, "Success")
     );
 
   } catch (error) {
-    console.log("err....", error);
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
   }
 };
 
-export const getAllGif = async (req, res) => {
-  try {
-    // const token = jwt.sign(
-    //   { role: req.user.role },
-    //   process.env.JWT_SECRET_KEY,
-    //   { expiresIn: '1h' }
-    // );
 
-    // console.log("token..........", token)
-    
+
+export const getGif = async (req, res) => {
+  try {
     const baseURL = process.env.WHITE_LABEL_URL;
 
-    const response = await axios.get(`${baseURL}/api/admin/get-all-gif`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-// }
-    });
-    const {data}=response.data.data
-    console.log("data........",data)
+    const response = await axios.get(`${baseURL}/api/admin/get-gif`);
+    const {data}=response.data
+    
 
     if (!response.data.success) {
       return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, "Failed to get market")
+        apiResponseErr(null, false, statusCode.badRequest, "Failed to fetch")
       );
     }
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(response.data.data, true, statusCode.success, "Success")
+      apiResponseSuccess(data, true, statusCode.success, "Success")
     );
 
   } catch (error) {
-    console.log("err....", error);
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
   }
 };
 
-export const getAllGameImg = async (req, res) => {
+export const getGameImg = async (req, res) => {
   try {
-    // const token = jwt.sign(
-    //   { role: req.user.role },
-    //   process.env.JWT_SECRET_KEY,
-    //   { expiresIn: '1h' }
-    // );
-
-    // console.log("token..........", token)
-    
     const baseURL = process.env.WHITE_LABEL_URL;
 
-    const response = await axios.get(`${baseURL}/api/admin/get-all-game-img`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-// }
-    });
-    const {data}=response.data.data
-    console.log("data........",data)
+    const response = await axios.get(`${baseURL}/api/admin/get-game-img`);
+    const {data}=response.data
+   
 
     if (!response.data.success) {
       return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, "Failed to get market")
+        apiResponseErr(null, false, statusCode.badRequest, "Failed to fetch")
       );
     }
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(response.data.data, true, statusCode.success, "Success")
+      apiResponseSuccess(data, true, statusCode.success, "Success")
     );
 
   } catch (error) {
-    console.log("err....", error);
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
   }
 };
 
-export const getAllInnerImg = async (req, res) => {
+export const getInnerImg = async (req, res) => {
   try {
-    // const token = jwt.sign(
-    //   { role: req.user.role },
-    //   process.env.JWT_SECRET_KEY,
-    //   { expiresIn: '1h' }
-    // );
-
-    // console.log("token..........", token)
-    
     const baseURL = process.env.WHITE_LABEL_URL;
 
-    const response = await axios.get(`${baseURL}/api/admin/get-all-inner-img`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-// }
-    });
-    const {data}=response.data.data
-    console.log("data........",data)
+    const response = await axios.get(`${baseURL}/api/admin/get-inner-game-img`);
+    const {data}=response.data
 
     if (!response.data.success) {
       return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, "Failed to get market")
+        apiResponseErr(null, false, statusCode.badRequest, "Failed to fetch")
       );
     }
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(response.data.data, true, statusCode.success, "Success")
+      apiResponseSuccess(data, true, statusCode.success, "Success")
     );
 
   } catch (error) {
-    console.log("err....", error);
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
@@ -156,37 +103,23 @@ export const getAllInnerImg = async (req, res) => {
 };
 
 export const getAnnouncement = async (req, res) => {
-  try {
-    // const token = jwt.sign(
-    //   { role: req.user.role },
-    //   process.env.JWT_SECRET_KEY,
-    //   { expiresIn: '1h' }
-    // );
-
-    // console.log("token..........", token)
-    
+  try {  
     const baseURL = process.env.WHITE_LABEL_URL;
 
-    const response = await axios.get(`${baseURL}/api/admin/get-admin-announcements`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-// }
-    });
-    const {data}=response.data.data
-    console.log("data........",data)
+    const response = await axios.get(`${baseURL}/api/admin/get-announcements`);
+    const {data}=response.data
 
     if (!response.data.success) {
       return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, "Failed to get market")
+        apiResponseErr(null, false, statusCode.badRequest, "Failed to fetch")
       );
     }
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(response.data.data, true, statusCode.success, "Success")
+      apiResponseSuccess(data, true, statusCode.success, "Success")
     );
 
   } catch (error) {
-    console.log("err....", error);
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
@@ -194,37 +127,23 @@ export const getAnnouncement = async (req, res) => {
 };
 
 export const getInnerAnnouncement = async (req, res) => {
-  try {
-    // const token = jwt.sign(
-    //   { role: req.user.role },
-    //   process.env.JWT_SECRET_KEY,
-    //   { expiresIn: '1h' }
-    // );
-
-    // console.log("token..........", token)
-    
+  try {   
     const baseURL = process.env.WHITE_LABEL_URL;
 
-    const response = await axios.get(`${baseURL}/api/admin/get-admin-inner-announcements`, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-// }
-    });
-    const {data}=response.data.data
-    console.log("data........",data)
+    const response = await axios.get(`${baseURL}/api/admin/get-inner-announcements`);
+    const {data}=response.data
 
     if (!response.data.success) {
       return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, "Failed to get market")
+        apiResponseErr(null, false, statusCode.badRequest, "Failed to fetch")
       );
     }
 
     return res.status(statusCode.success).send(
-      apiResponseSuccess(response.data.data, true, statusCode.success, "Success")
+      apiResponseSuccess(data, true, statusCode.success, "Success")
     );
 
   } catch (error) {
-    console.log("err....", error);
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
