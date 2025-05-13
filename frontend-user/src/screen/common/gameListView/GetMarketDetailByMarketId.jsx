@@ -52,7 +52,7 @@ const GetMarketDetailByMarketId = () => {
   const [isSuspend, setIsSuspend] = useState(null);
   const [isUpdate, setIsUpdate] = useState(null);
   const marketIdFromUrl = useLocation().pathname.split("/")[4];
-const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
     if (user_marketWithRunnerData?.runners?.length) {
@@ -270,6 +270,10 @@ const [showLogin, setShowLogin] = useState(false);
   };
 
   const handleUserBidding = async (index, amount, mode) => {
+    if (!store.user.isLogin) {
+      setShowLogin(true); // Open login modal
+      return; // Exit the function
+    }
     let difference = 0;
     let bal = 0;
 
@@ -1025,13 +1029,17 @@ const [showLogin, setShowLogin] = useState(false);
                                 <button
                                   className="btn btn-sm  border border-2 rounded-3 col-12 fw-bold"
                                   style={{ background: "#06A706" }}
-                                  onClick={() =>
-                                    handleUserBidding(
-                                      index,
-                                      bidding.amount,
-                                      toggle.mode
-                                    )
-                                  }
+                                  onClick={() => {
+                                    if (!store.user.isLogin) {
+                                      setShowLogin(true);
+                                    } else {
+                                      handleUserBidding(
+                                        index,
+                                        bidding.amount,
+                                        toggle.mode
+                                      );
+                                    }
+                                  }}
                                 >
                                   Place Bet
                                 </button>
@@ -1047,6 +1055,7 @@ const [showLogin, setShowLogin] = useState(false);
             <ShimmerEffect />
           )}
         </AppDrawer>
+         <Login showLogin={showLogin} setShowLogin={setShowLogin} />
       </div>
     </>
   );
