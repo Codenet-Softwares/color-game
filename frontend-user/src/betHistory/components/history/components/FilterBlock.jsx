@@ -15,57 +15,60 @@ const FilterBlock = ({
       className="card shadow p-3 mb-5 rounded"
       style={{ marginTop: "150px", background: "#2CB3D1" }}
     >
-      <div className="card-body">
-        {/* Row 1 (Mobile): Live Data + Select Game */}
-        <div className="d-flex gap-2 mb-3">
-          <div className="w-50">
-            <select
-              className="form-select form-select-sm fw-bold"
-              name="dataSource"
-              value={betHistoryData.dataSource}
-              onChange={handleBetHistorySelectionMenu}
-            >
-              <option value="live" className="fw-bold">Live Data</option>
-              <option value="backup" className="fw-bold">Back Data</option>
-              <option value="olddata" className="fw-bold">Old Data</option>
-            </select>
-          </div>
-          <div className="w-50">
-            <select
-              className="form-select form-select-sm fw-bold"
-              name="selectGame"
-              value={betHistoryData.selectGame || ""}
-              onChange={handleBetHistorySelectionMenu}
-            >
-              <option value="">Select Game</option>
-              {betHistoryData.gameSelectionData.map((game, index) => (
-                <option key={index} value={game.gameId}>{game.gameName}</option>
-              ))}
-              <option value="lottery">Lottery</option>
-            </select>
-          </div>
-        </div>
-
-<div className="text-center">
-  <div className="mb-2 d-flex justify-content-center">
-    <div className="w-75">
+<div className="card-body">
+  {/* First Row: Live Data, Select Game, Select Menu */}
+<div className="d-flex flex-column flex-md-row gap-2">
+  {/* Live Data & Select Game: Always together */}
+  <div className="d-flex flex-row w-100 gap-2">
+    <div className="w-50">
       <select
-        className="form-select form-select-sm fw-bold mx-auto"
-        name="selectMenu"
-        value={betHistoryData.selectMenu}
+        className="form-select form-select-sm fw-bold"
+        name="dataSource"
+        value={betHistoryData.dataSource}
         onChange={handleBetHistorySelectionMenu}
       >
-        <option className="fw-bold">Open this select menu</option>
-        <option value="void" className="fw-bold">Void</option>
-        <option value="settle" className="fw-bold">Settle</option>
-        <option value="unsettle" className="fw-bold">Unsettle</option>
+        <option value="live" className="fw-bold">Live Data</option>
+        <option value="backup" className="fw-bold">Back Data</option>
+        <option value="olddata" className="fw-bold">Old Data</option>
+      </select>
+    </div>
+    <div className="w-50">
+      <select
+        className="form-select form-select-sm fw-bold"
+        name="selectGame"
+        value={betHistoryData.selectGame || ""}
+        onChange={handleBetHistorySelectionMenu}
+      >
+        <option value="">Select Game</option>
+        {betHistoryData.gameSelectionData.map((game, index) => (
+          <option key={index} value={game.gameId}>{game.gameName}</option>
+        ))}
+        <option value="lottery">Lottery</option>
       </select>
     </div>
   </div>
 
-  <div className="mb-2 d-flex justify-content-center flex-column align-items-center">
-    <label className="text-center">From:</label>
-    <div className="w-75 ">
+  {/* Select Menu: Below in mobile, inline in desktop */}
+  <div className="w-75 w-md-25 mt-md-0">
+    <select
+      className="form-select form-select-sm fw-bold "
+      name="selectMenu"
+      value={betHistoryData.selectMenu}
+      onChange={handleBetHistorySelectionMenu}
+    >
+      <option className="fw-bold">Open this select menu</option>
+      <option value="void" className="fw-bold">Void</option>
+      <option value="settle" className="fw-bold">Settle</option>
+      <option value="unsettle" className="fw-bold">Unsettle</option>
+    </select>
+  </div>
+</div>
+
+
+  {/* Second Row: From Date, To Date, Get History Button */}
+  <div className="d-flex flex-column flex-md-row gap-2 align-items-md-end m-0">
+    <div className="w-100 w-md-25 m-0">
+      <label className="form-label">From:</label>
       <Datetime
         value={betHistoryData.startDate}
         name="startDate"
@@ -84,11 +87,8 @@ const FilterBlock = ({
         }}
       />
     </div>
-  </div>
-
-  <div className="mb-2 d-flex justify-content-center flex-column align-items-center">
-    <label className="text-center">To:</label>
-    <div className="w-75">
+    <div className="w-100 w-md-25">
+      <label className="form-label">To:</label>
       <Datetime
         value={betHistoryData.endDate}
         name="endDate"
@@ -107,12 +107,9 @@ const FilterBlock = ({
         }}
       />
     </div>
-  </div>
-
-  <div className="d-flex justify-content-center">
-    <div className="w-75">
+    <div className="w-100 w-md-25">
       <button
-        className="btn btn-primary w-100"
+        className="btn btn-primary w-100 mt-3 mt-md-0"
         onClick={() =>
           betHistoryData.selectGame === "lottery"
             ? getHistoryForLotteryBetHistory()
@@ -126,7 +123,8 @@ const FilterBlock = ({
   </div>
 </div>
 
-      </div>
+
+
     </div>
   );
 };
