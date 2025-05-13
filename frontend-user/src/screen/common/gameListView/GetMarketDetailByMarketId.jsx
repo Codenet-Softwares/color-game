@@ -18,7 +18,7 @@ import moment from "moment";
 import ShimmerEffect from "../../../globlaCommon/ShimmerEffect";
 import { db } from "../../../utils/config/firebaseConfig";
 import { collection, onSnapshot } from "firebase/firestore";
-
+import Login from "../../loginModal/loginModal";
 const GetMarketDetailByMarketId = () => {
   const navigate = useNavigate();
   const [user_marketWithRunnerData, setUser_marketWithRunnerData] = useState(
@@ -52,6 +52,7 @@ const GetMarketDetailByMarketId = () => {
   const [isSuspend, setIsSuspend] = useState(null);
   const [isUpdate, setIsUpdate] = useState(null);
   const marketIdFromUrl = useLocation().pathname.split("/")[4];
+const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
     if (user_marketWithRunnerData?.runners?.length) {

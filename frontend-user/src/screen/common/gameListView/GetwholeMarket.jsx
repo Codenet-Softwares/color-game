@@ -130,7 +130,9 @@ const GetwholeMarket = () => {
                               <div className="row align-items-center">
                                 <span
                                   className="col-12 font-weight-bold text-uppercase text-primary fw-bold"
-                                  
+                                  style={{
+                                    fontSize: "16px",
+                                  }}
                                 >
                                   💹 {marketData?.marketName ?? "Unknown"} |{" "}
                                   <span
@@ -143,7 +145,7 @@ const GetwholeMarket = () => {
                               </div>
 
                               {/* Range Details */}
-                              <table className="table table-bordered text-start">
+                              <table className="table table-bordered mt-1 text-start">
                                 <thead>
                                   <tr>
                                     <th>Group Range</th>
@@ -175,7 +177,7 @@ const GetwholeMarket = () => {
 
                       {gameWithMarketData.markets.length > 0 ? (
                         <Link
-                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold text-`}
+                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold`}
                           // to={`/gameView/${gameWithMarketData?.gameName?.replace(
                           //   /\s/g,
                           //   ""
@@ -197,7 +199,7 @@ const GetwholeMarket = () => {
                   ) : (
                     <>
                       <div
-                        className="col-12 p-2 fw-bold h6 text-white shadow-lg border"
+                        className="col-12 p-2 fw-bold h6 text-white shadow-lg"
                         style={{ backgroundColor: "#18ADC5" }}
                       >
                         {gameWithMarketData.gameName}

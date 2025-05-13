@@ -613,35 +613,35 @@ export async function getUpdateMarketStatus(body, marketId, isToast = false) {
     throw error;
   }
 }
-export const getSliderImgText = async (body = {}, isToast = false) => {
-  try {
-    const callParams = await getCallParams(strings.GET, body, isToast);
-    const response = await makeCall(
-      `${urls.getSliderTextImg}`,
-      callParams,
-      isToast
-    );
-    return response;
-  } catch (err) {
-    throw err;
-  }
-};
-// export const getSliderImgText = async () => {
+// export const getSliderImgText = async (body = {}, isToast = false) => {
 //   try {
-//     const callParams = {
-//       method: "GET",
-//       headers: {
-//         "Conte nt-Type": "application/json",
-//       },
-//     };
-//     const response = await fetch(urls.getSliderTextImg, callParams);
-//     const data = await response.json();
-//     return data;
+//     const callParams = await getCallParams(strings.GET, body, isToast);
+//     const response = await makeCall(
+//       `${urls.getSliderTextImg}`,
+//       callParams,
+//       isToast
+//     );
+//     return response;
 //   } catch (err) {
-//     console.error("Error in getSliderImgText:", err);
 //     throw err;
 //   }
 // };
+export const getSliderImgText = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getSliderTextImg, callParams);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
 
 export const getGameImg = async () => {
   try {
@@ -677,24 +677,37 @@ export const getGifImg = async () => {
     throw err;
   }
 };
-
-export const getInnerImg = async () => {
+export const getInnerImg = async (body = {}, isToast = false) => {
   try {
-    const callParams = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const response = await fetch(urls.getInnerImg, callParams);
-
-    const data = await response.json();
-    return data;
+    const callParams = await getCallParams(strings.GET, body, isToast);
+    const response = await makeCall(
+      `${urls.getInnerImg}`,
+      callParams,
+      isToast
+    );
+    return response;
   } catch (err) {
-    console.error("Error in getSliderImgText:", err);
     throw err;
   }
 };
+
+// export const getInnerImg = async () => {
+//   try {
+//     const callParams = {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     const response = await fetch(urls.getInnerImg, callParams);
+
+//     const data = await response.json();
+//     return data;
+//   } catch (err) {
+//     console.error("Error in getSliderImgText:", err);
+//     throw err;
+//   }
+// };
 
 export const getAnnouncement = async () => {
   try {
@@ -713,24 +726,36 @@ export const getAnnouncement = async () => {
     throw err;
   }
 };
-
-export const getInnerAnnouncement = async () => {
+export const getInnerAnnouncement = async (body = {}, isToast = false) => {
   try {
-    const callParams = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const response = await fetch(urls.getInnerAannouncement, callParams);
-
-    const data = await response.json();
-    return data;
+    const callParams = await getCallParams(strings.GET, body, isToast);
+    const response = await makeCall(
+      `${urls.getInnerAannouncement}`,
+      callParams,
+      isToast
+    );
+    return response;
   } catch (err) {
-    console.error("Error in getSliderImgText:", err);
     throw err;
   }
 };
+// export const getInnerAnnouncement = async () => {
+//   try {
+//     const callParams = {
+//       method: "GET",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     };
+//     const response = await fetch(urls.getInnerAannouncement, callParams);
+
+//     const data = await response.json();
+//     return data;
+//   } catch (err) {
+//     console.error("Error in getSliderImgText:", err);
+//     throw err;
+//   }
+// };
 
 
 export const getUserLotteryMarket_api = async (body = {}, isToast = false) => {
