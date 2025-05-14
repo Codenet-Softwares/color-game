@@ -10,7 +10,7 @@ import Carousel from "../common/Carousel";
 import HitGames from "../HitGames";
 import Gif from "../common/Gif";
 import DownloadApp from "../DownloadApp";
-import Footer from "../common/Footer";
+// import Footer from "../common/Footer";
 import Login from "../loginModal/loginModal";
 import AOS from "aos";
 import GetwholeMarket from "../common/gameListView/GetwholeMarket";
@@ -94,7 +94,7 @@ const Home = () => {
       <Gif />
       <GetwholeMarket />
       <DownloadApp />
-      <Footer />
+      {/* <Footer /> */}
       <Login showLogin={showLogin} setShowLogin={setShowLogin} />
     </div>
   );

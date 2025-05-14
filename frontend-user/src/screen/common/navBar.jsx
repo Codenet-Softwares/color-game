@@ -47,18 +47,18 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     }
   }, [userId, accessTokenFromStore]);
 
- useEffect(() => {
-   let currentExposure = null;
-   store.user.wallet?.marketListExposure.forEach((entry) => {
-     currentExposure += Object.values(entry)[0];
-   });
+  useEffect(() => {
+    let currentExposure = null;
+    store.user.wallet?.marketListExposure.forEach((entry) => {
+      currentExposure += Object.values(entry)[0];
+    });
 
-   setExposureAndWallet({
-     ...exposureAndWallet,
-     exposure: currentExposure,
-   });
- }, [store.user.wallet?.marketListExposure]);
- 
+    setExposureAndWallet({
+      ...exposureAndWallet,
+      exposure: currentExposure,
+    });
+  }, [store.user.wallet?.marketListExposure]);
+
   const handleUserWallet = async () => {
     const response = await userWallet(userId, true);
     if (response) {
@@ -168,7 +168,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 }}
               />
               &nbsp;&nbsp;
-              {store.user?.userName} - ({store?.user?.wallet?.balance})
+              {store.user?.userName}
             </h6>
             <button
               type="button"
@@ -190,7 +190,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                       background: "#2FA8BA",
                     }}
                   >
-                    Exposure {store.user?.wallet?.exposure}
+                    Balance ({store?.user?.wallet?.balance})
                   </span>
                   <span
                     type="button"
@@ -201,7 +201,11 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                       background: "#2FA8BA",
                     }}
                   >
-                    P&L {store.user?.wallet?.profit_loss}
+                    Exposure (
+                    {exposureAndWallet.exposure ??
+                      store?.user?.wallet?.exposure ??
+                      0}
+                    )
                   </span>
                 </span>
               </li>
@@ -227,17 +231,17 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 />{" "}
                 Account Statement
               </li>
-              <li
+              {/* <li
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "white",
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
+                  e.currentTarget.style.color = "#2FA8BA"; 
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "white"; 
                 }}
               >
                 <FaMoneyCheck
@@ -246,7 +250,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                   }}
                 />{" "}
                 Rolling Commission
-              </li>
+              </li> */}
               <li
                 onClick={handlePasswordChangeClick}
                 class="nav-item mb-3 align-items-start"
