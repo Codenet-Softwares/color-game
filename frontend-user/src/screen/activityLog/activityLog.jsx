@@ -36,9 +36,12 @@ const ActivityLog = () => {
     <>
       <AppDrawer showCarousel={false}>
         <Layout />
-        <div className="container-fluid d-flex justify-content-center align-items-center min-vh-100" style={{
-          background:"#E6F7FF"
-        }}>
+        <div
+          className="container-fluid d-flex justify-content-center align-items-center min-vh-100"
+          style={{
+            background: "#E6F7FF",
+          }}
+        >
           <div className="row justify-content-center w-100">
             <div className="col-12 col-md-10 col-lg-8 col-xl-6">
               <div className="card rounded">
@@ -48,58 +51,34 @@ const ActivityLog = () => {
                 >
                   <b>&nbsp;&nbsp;Activity Log</b>
                 </div>
-                <ul className="list-group list-group-flush">
-                  <li className="list-group-item p-3">
-                    <div className="table-responsive">
-                      <table className="table table-bordered">
-                        <thead>
-                          <tr className="table-active">
-                            <th scope="col" className="text-center">
-                              Date & Time
-                            </th>
-                            <th scope="col" className="text-center">
-                              Status
-                            </th>
-                            <th scope="col" className="text-center">
-                              IP
-                            </th>
-                            <th scope="col" className="text-center">
-                              ISP
-                            </th>
-                            <th scope="col" className="text-center">
-                              City/State/Country
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td
-                              scope="row"
-                              className="text-center text-truncate"
-                            >
-                              {formatDate(data?.loginDateTime)}
-                            </td>
-                            <td className="text-center text-truncate">
-                              {data?.loginStatus}
-                            </td>
-                            <td className="text-center text-truncate">
-                              {data?.ip?.iP}
-                            </td>
-                            <td className="text-center text-truncate">
-                              {isLocalhost
-                                ? "NDA"
-                                : data?.ip?.isp}
-                            </td>
-                            <td className="text-center text-truncate">
-                            {isLocalhost
-                                ? "NDA"
-                                : data?.ip?.region}/ {isLocalhost
-                                  ? "NDA"
-                                  : data?.ip?.country}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                <ul className="list-group list-group-flush text-center">
+                  <li className="list-group-item p-3  ">
+                    <div className="row mb-2 border-bottom border-1">
+                      <div className="col-5 fw-bold">Date & Time:</div>
+                      <div className="col-7">
+                        {formatDate(data?.loginDateTime)}
+                      </div>
+                    </div>
+                    <div className="row mb-2 border-bottom border-1">
+                      <div className="col-5 fw-bold">Status:</div>
+                      <div className="col-7">{data?.loginStatus}</div>
+                    </div>
+                    <div className="row mb-2 border-bottom border-1">
+                      <div className="col-5 fw-bold">IP:</div>
+                      <div className="col-7">{data?.ip?.iP}</div>
+                    </div> 
+                    <div className="row mb-2 border-bottom border-1">
+                      <div className="col-5 fw-bold">ISP:</div>
+                      <div className="col-7">
+                        {isLocalhost ? "NDA" : data?.ip?.isp}
+                      </div>
+                    </div>
+                    <div className="row">
+                      <div className="col-5 fw-bold">City/State/Country:</div>
+                      <div className="col-7">
+                        {isLocalhost ? "NDA" : data?.ip?.region} /{" "}
+                        {isLocalhost ? "NDA" : data?.ip?.country}
+                      </div>
                     </div>
                   </li>
                 </ul>

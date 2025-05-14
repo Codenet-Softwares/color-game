@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { useAuth } from "../../../Utils/Auth";
 import GameService from "../../../Services/GameService";
+import UpdateGifSlider from "./UpdateGifSlider";
 
 const AddGameGif = () => {
   const [file, setFile] = useState(null);
@@ -85,15 +86,7 @@ const AddGameGif = () => {
   };
 
   return (
-    <div className="container p-5">
-      <div className="card shadow-sm">
-        <div
-          className="card-header"
-          style={{ backgroundColor: "#3E5879", color: "#FFFFFF" }}
-        >
-          <h3 className="mb-0 fw-bold text-center text-uppercase p-2">Create GIF</h3>
-        </div>
-        <div className="card-body" style={{ background: "#E1D1C7" }}>
+    <div className="container p-5">       
           <div className="mb-4 text-center">
             <div
               onClick={() => document.getElementById("file-input").click()}
@@ -166,8 +159,7 @@ const AddGameGif = () => {
               Upload GIF
             </button>
           </div>
-        </div>
-      </div>
+          <UpdateGifSlider/>
     </div>
   );
 };

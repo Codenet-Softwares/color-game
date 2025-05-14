@@ -357,8 +357,8 @@ const ProfitLoss = ({
             style={{ backgroundColor: "#2CB3D1", borderRadius: "8px" }}
           >
             <div class="container">
-              <div class="row">
-                <div class="col-12 col-md-3 text-center">
+              <div class="row justify-content-center">
+                <div class="col-9 col-md-3 text-center">
                   <label className="fw-bold mb-1">Data Source</label>{" "}
                   <select
                     class="form-select fw-bold"
@@ -381,7 +381,7 @@ const ProfitLoss = ({
                     </option>
                   </select>
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column text-center">
+                <div class="col-9 col-md-3 d-flex flex-column text-center">
                   {" "}
                   <label className="fw-bold mb-1">From:</label>
                   <DatePicker
@@ -391,7 +391,7 @@ const ProfitLoss = ({
                     className="form-control"
                   />
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column text-center">
+                <div class="col-9 col-md-3 d-flex flex-column text-center">
                   {" "}
                   <label className="fw-bold mb-1">To:</label>
                   <DatePicker

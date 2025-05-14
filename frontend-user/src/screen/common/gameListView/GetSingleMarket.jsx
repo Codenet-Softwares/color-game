@@ -57,7 +57,9 @@ const GetSingleMarket = () => {
     <>
       <Layout />
       <div
-        className={`global-margin-top${store.user.isLogin ? "-logged" : ""} mb-5`}
+        className={`global-margin-top${
+          store.user.isLogin ? "-logged" : ""
+        } mb-5`}
       >
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           <div className="row p-0 m-0">
@@ -73,7 +75,8 @@ const GetSingleMarket = () => {
                   <div className="col-8"></div>
                   <div
                     className="col-2 fw-bold rounded-top-3 text-uppercase"
-                    style={{background: "#80C2F1",
+                    style={{
+                      background: "#80C2F1",
                       fontSize: "14px",
                       padding: "5px",
                     }}
@@ -115,28 +118,32 @@ const GetSingleMarket = () => {
                           }`}
                           onClick={() => handleMarketId(marketData?.marketId)}
                         >
-                          <span className="fw-bold">
-                            {formatDate(marketData.startTime)}
-                          </span>{" "}
-                          |{" "}
-                          <span className="fw-bold text-primary">
-                            {" "}
-                            {marketData.marketName}
-                          </span>
+                          <div className="d-flex flex-column flex-md-row">
+                            <span className="fw-bold me-2">
+                              {formatDate(marketData.startTime)}
+                            </span>
+                            <span className="fw-bold text-primary">
+                              💹{marketData.marketName}
+                            </span>
+                          </div>
                         </Link>
                         <div
-                          className="col-2 rounded fw-bold "
-                          style={{  backgroundColor: "#80C2F1",
+                          className="col-2 rounded fw-bold text-center text-md-start"
+                          style={{
+                            backgroundColor: "#80C2F1",
                             fontSize: "13px",
-                            padding: "5px",}}
+                            padding: "5px",
+                          }}
                         >
                           {marketData?.runners[0]?.rate[0]?.back ?? "N/A"}
                         </div>
                         <div
-                          className="col-2 rounded fw-bold"
-                          style={{ backgroundColor: "#FAA9BA",
+                          className="col-2 rounded fw-bold text-center text-md-start"
+                          style={{
+                            backgroundColor: "#FAA9BA",
                             fontSize: "13px",
-                            padding: "5px", }}
+                            padding: "5px",
+                          }}
                         >
                           {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
                         </div>
@@ -147,9 +154,11 @@ const GetSingleMarket = () => {
             ) : (
               <p
                 className="text-center fw-bold"
-                style={{ backgroundColor: "#FAA9BA",
+                style={{
+                  backgroundColor: "#FAA9BA",
                   fontSize: "13px",
-                  padding: "5px", }}
+                  padding: "5px",
+                }}
               >
                 No market Available
               </p>
