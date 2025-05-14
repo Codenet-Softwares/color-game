@@ -23,6 +23,8 @@ import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
 import sequelize from "../db.js";
+import MarketListExposure from "../models/marketListExposure.model.js";
+import { log } from "console";
 
 // done
 export const createUser = async (req, res) => {
@@ -721,7 +723,7 @@ export const getUserWallet = async (req, res) => {
 
     const userData = await userSchema.findOne({ where: { userId } });
 
-    if (!userData || userData.length === 0) {
+    if (!userData) {
       return res
         .status(statusCode.notFound)
         .send(
@@ -729,12 +731,20 @@ export const getUserWallet = async (req, res) => {
         );
     }
 
-    const userBalance = await user_Balance(userId)
+    const userBalance = await user_Balance(userId, true);
+
+    const balance = userBalance?.[0]?.[0]?.UserBalance ?? 0;
+
+    const exposureList = userBalance?.[1] ?? [];
+
+    const marketListExposure = exposureList.map((exposure) => ({
+      [exposure.MarketId]: exposure.exposure,
+    }));
 
     const getBalance = {
       walletId: userData.walletId,
-      balance: userBalance,
-      marketListExposure: userData.marketListExposure,
+      balance,
+      marketListExposure,
     };
 
     res
@@ -755,6 +765,7 @@ export const getUserWallet = async (req, res) => {
       );
   }
 };
+
 // done
 export const transactionDetails = async (req, res) => {
   try {
@@ -1008,6 +1019,7 @@ export const filterMarketData = async (req, res) => {
   }
 };
 
+
 export const createBid = async (req, res) => {
   const {
     userId,
@@ -1018,6 +1030,7 @@ export const createBid = async (req, res) => {
     bidType,
     marketListExposure,
   } = req.body;
+
   try {
     if (!userId) {
       throw apiResponseErr(
@@ -1027,6 +1040,7 @@ export const createBid = async (req, res) => {
         "User ID is required"
       );
     }
+
     if (value < 0) {
       throw apiResponseErr(
         null,
@@ -1035,6 +1049,7 @@ export const createBid = async (req, res) => {
         "Bid value cannot be negative"
       );
     }
+
     if (value < 100) {
       throw apiResponseErr(
         null,
@@ -1043,6 +1058,7 @@ export const createBid = async (req, res) => {
         "Bid value cannot be less than 100"
       );
     }
+
     const user = await userSchema.findOne({ where: { userId } });
     if (!user) {
       throw apiResponseErr(
@@ -1052,6 +1068,7 @@ export const createBid = async (req, res) => {
         "User Not Found"
       );
     }
+
     if (user.balance < value) {
       throw apiResponseErr(
         null,
@@ -1060,6 +1077,7 @@ export const createBid = async (req, res) => {
         "Insufficient balance. Bid cannot be placed."
       );
     }
+
     const game = await Game.findOne({
       where: { gameId },
       include: {
@@ -1067,6 +1085,7 @@ export const createBid = async (req, res) => {
         as: "Markets",
       },
     });
+
     if (!game) {
       throw apiResponseErr(
         null,
@@ -1075,6 +1094,7 @@ export const createBid = async (req, res) => {
         "Game Not Found"
       );
     }
+
     const market = game.Markets.find(
       (market) => String(market.marketId) === String(marketId)
     );
@@ -1086,33 +1106,35 @@ export const createBid = async (req, res) => {
         "Market Not Found"
       );
     }
+
     if (market.isRevoke) {
       throw apiResponseErr(
         null,
         false,
         statusCode.badRequest,
-        "Bid cannot be placed!Market is Suspended."
+        "Bid cannot be placed! Market is Suspended."
       );
     }
 
     const currentTime = getISTTime();
 
     if (currentTime < market.startTime) {
-      throw apiResponseErr(null, false, statusCode.badRequest,  "Market has not opened yet.");
+      throw apiResponseErr(
+        null,
+        false,
+        statusCode.badRequest,
+        "Market has not opened yet."
+      );
     }
 
     if (currentTime > market.endTime) {
-      throw apiResponseErr(null, false, statusCode.badRequest, "Market is closed.");
+      throw apiResponseErr(
+        null,
+        false,
+        statusCode.badRequest,
+        "Market is closed."
+      );
     }
-
-    // if (!market.isActive) {
-    //   throw apiResponseErr(
-    //     null,
-    //     false,
-    //     statusCode.badRequest,
-    //     "Market is suspended. Bid cannot be placed."
-    //   );
-    // }
 
     const runner = await Runner.findOne({ where: { marketId, runnerId } });
     if (!runner) {
@@ -1123,31 +1145,55 @@ export const createBid = async (req, res) => {
         "Runner Not Found"
       );
     }
+
     const gameName = game.gameName;
     const marketName = market.marketName;
     const runnerName = runner.runnerName;
     const userName = user.userName;
+
     if (bidType === "back" || bidType === "lay") {
       const adjustedRate = runner[bidType.toLowerCase()] - 1;
       const mainValue = Math.round(adjustedRate * value);
       const betAmount = bidType === "back" ? value : mainValue;
-      user.marketListExposure = marketListExposure;
+
+      // Create Bid
       await CurrentOrder.create({
         betId: uuidv4(),
-        userId: userId,
-        userName: userName,
-        gameId: gameId,
-        gameName: gameName,
-        marketId: marketId,
-        marketName: marketName,
-        runnerId: runnerId,
-        runnerName: runnerName,
+        userId,
+        userName,
+        gameId,
+        gameName,
+        marketId,
+        marketName,
+        runnerId,
+        runnerName,
         type: bidType,
-        value: value,
+        value,
         rate: runner[bidType.toLowerCase()],
         date: new Date(),
         bidAmount: mainValue,
       });
+
+      if (marketListExposure && Array.isArray(marketListExposure)) {
+        for (const exposureObj of marketListExposure) {
+          for (const [marketId, exposureValue] of Object.entries(exposureObj)) {
+            const record = await MarketListExposure.findOne({
+              where: { UserId: userId, MarketId: marketId },
+            });
+
+            if (record) {
+              record.exposure = exposureValue;
+              await record.save();
+            } else {
+              await MarketListExposure.create({
+                UserId: userId,
+                MarketId: marketId,
+                exposure: exposureValue,
+              });
+            }
+          }
+        }
+      }
       await user.save();
     }
 
@@ -1176,6 +1222,7 @@ export const createBid = async (req, res) => {
       );
   }
 };
+
 // done
 export const getUserBetHistory = async (req, res) => {
   try {

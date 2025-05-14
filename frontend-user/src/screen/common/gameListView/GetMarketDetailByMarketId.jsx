@@ -61,17 +61,17 @@ const GetMarketDetailByMarketId = () => {
     }
   }, [bidding.amount]);
 
-  useEffect(() => {
-    let currentExposure = null;
-    store.user.wallet?.marketListExposure.forEach((entry) => {
-      currentExposure += Object.values(entry)[0];
-    });
+ useEffect(() => {
+   let currentExposure = null;
+   store.user.wallet?.marketListExposure.forEach((entry) => {
+     currentExposure += Object.values(entry)[0];
+   });
 
-    setExposureAndWallet({
-      ...exposureAndWallet,
-      exposure: currentExposure,
-    });
-  }, [store.user.wallet?.marketListExposure]);
+   setExposureAndWallet({
+     ...exposureAndWallet,
+     exposure: currentExposure,
+   });
+ }, [store.user.wallet?.marketListExposure]);
 
   const handleRunnerId = (id) => {
     dispatch({

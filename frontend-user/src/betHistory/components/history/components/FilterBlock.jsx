@@ -93,7 +93,7 @@ const FilterBlock = ({
             </div>
           </div>
         </div>
-
+        {console.log("first====>", betHistoryData.dataSource)}
         {/* {dateVisible && ( */}
         <div className="row align-items-center">
           <div className="col">
@@ -104,6 +104,7 @@ const FilterBlock = ({
                   value={betHistoryData.startDate}
                   name="startDate"
                   dateFormat="DD-MM-YYYY"
+                  disabled={betHistoryData.dataSource === "live"}
                   onChange={(e) =>
                     handleDateValue("startDate", moment(e).toDate())
                   }
@@ -112,6 +113,7 @@ const FilterBlock = ({
                   closeOnSelect={true}
                   inputProps={{
                     readOnly: true, // Prevents manual typing
+                    disabled: betHistoryData.dataSource === "live",
                     onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
                     style: {
                       cursor: "pointer",
@@ -139,6 +141,7 @@ const FilterBlock = ({
                   closeOnSelect={true}
                   inputProps={{
                     readOnly: true, // Prevents manual typing
+                    disabled: betHistoryData.dataSource === "live",
                     onKeyDown: (e) => e.preventDefault(), // Disables keyboard input
                     style: {
                       cursor: "pointer",
