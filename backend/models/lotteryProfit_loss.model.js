@@ -35,7 +35,7 @@ LotteryProfit_Loss.init(
             type: DataTypes.INTEGER,
             allowNull: true,
         },
-        date: {
+        dates: {
             type: DataTypes.DATE,
             allowNull: false,
             defaultValue: DataTypes.NOW,

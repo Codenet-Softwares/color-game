@@ -22,14 +22,13 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
-import sequelize from "../db.js";
+import sequelize, { sql } from "../db.js";
 
 // done
 export const createUser = async (req, res) => {
   const { userId, userName, password } = req.body;
   try {
     const existingUser = await userSchema.findOne({ where: { userName } });
-
     if (existingUser) {
       return res
         .status(statusCode.badRequest)
@@ -57,14 +56,14 @@ export const createUser = async (req, res) => {
       .status(statusCode.create)
       .send(
         apiResponseSuccess(
-          null,
+          newUser,
           true,
           statusCode.create,
           "User created successfully"
         )
       );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -2128,7 +2127,7 @@ export const userActiveInactive = async (req, res) => {
     const existingUser = await userSchema.findOne({ where: { userId } });
 
     if (!existingUser || existingUser.length == 0) {
-      res
+     return res
         .status(statusCode.success)
         .send(
           apiResponseSuccess([], true, statusCode.success, "No user found!.")
@@ -2153,13 +2152,13 @@ export const userActiveInactive = async (req, res) => {
 
     existingUser.save();
 
-    res
+    return res
     .status(statusCode.success)
     .send(
       apiResponseSuccess(existingUser, true, statusCode.success, "User update successfully.")
     );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -2306,17 +2305,25 @@ export const profitLoss = async (req, res) => {
   }
 };
 
+
 export const calculateExternalProfitLoss = async (req, res) => {
   try {
     const { userId } = req.body;
     const { dataType } = req.query;
-    const existingUsers = await userSchema.findAll({ where: { userId } });
+    const existingUsers = await userSchema.findAll({
+      where: { userId },
+    });
+
     if (!existingUsers || existingUsers.length == 0) {
       return res
         .status(statusCode.success)
-        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "User not found")
+        );
     }
- 
+
+    const userIds = existingUsers.map((user) => user.userId);
+
     let startDate, endDate;
 
     if (dataType === "live") {
@@ -2340,148 +2347,52 @@ export const calculateExternalProfitLoss = async (req, res) => {
         const maxAllowedDate = new Date(startDate);
         maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
         if (endDate > maxAllowedDate) {
-          return res.status(statusCode.badRequest).send(
-            apiResponseErr([], false, statusCode.badRequest,
-              "The date range for backup data should not exceed 3 months.")
-          );
+          return res
+            .status(statusCode.badRequest)
+            .send(
+              apiResponseErr(
+                [],
+                false,
+                statusCode.badRequest,
+                "The date range for backup data should not exceed 3 months."
+              )
+            );
         }
       } else {
-        const today = new Date();
+        // const today = new Date();
         const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(today.getMonth() - 3);
-        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
-        endDate = new Date(today.setHours(23, 59, 59, 999));
+        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+        startDate = new Date(threeMonthsAgo).setHours(0, 0, 0, 0);
+        endDate = new Date().setHours(23, 59, 59, 999);
       }
     } else {
       return res
         .status(statusCode.success)
-        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "Data not found.")
+        );
     }
 
-    const searchGameName = req.query.search || "";
-    const combinedProfitLossData = [];
+    const user = `'${userIds.join(",")}'`;
+    const [response] = await sql.query("CALL calculateProfitLoss(?, ? ,?)", [
+      user,
+      startDate,
+      endDate,
+    ]);
+    const data = response[0];
 
-    for (const user of existingUsers) {
-      const userId = user.userId;
-
-      const profitLossData = await ProfitLoss.findAll({
-        attributes: [
-          "gameId",
-          [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
-        ],
-        include: [
-          {
-            model: Game,
-            attributes: ["gameName"],
-            where: searchGameName
-              ? { gameName: { [Op.like]: `%${searchGameName}%` } }
-              : {},
-          },
-        ],
-        where: {
-          userId: userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        group: ["gameId", "Game.gameName"],
-      });
-
-      const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
-        attributes: [
-          "userId",
-          [
-            Sequelize.literal(`
-              COALESCE((
-                SELECT SUM(lp.profitLoss)
-                FROM LotteryProfit_Loss lp
-                WHERE lp.userId = LotteryProfit_Loss.userId
-                AND lp.id IN (
-                  SELECT MIN(lp2.id) 
-                  FROM LotteryProfit_Loss lp2
-                  WHERE lp2.userId = lp.userId
-                  GROUP BY lp2.marketId
-                )
-              ), 0)
-            `),
-            "totalProfitLoss",
-          ],
-        ],
-        where: { 
-          userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-         },
-        group: ["userId"],
-      });
-
-      combinedProfitLossData.push(
-        ...profitLossData.map((item) => ({
-          userId,
-          userName : user.userName,
-          gameId: item.gameId,
-          gameName: item.Game.gameName,
-          totalProfitLoss: item.dataValues.totalProfitLoss,
-
-        })),
-        ...lotteryProfitLossData
-          .filter((item) => item.dataValues.totalProfitLoss != null && item.dataValues.totalProfitLoss !== "")
-          .map((item) => ({
-            userId,
-            userName : user.userName,
-            gameName: "Lottery",
-            totalProfitLoss: item.dataValues.totalProfitLoss,
-          }))
-      );
-    };
-
-
-    if (combinedProfitLossData.length === 0) {
-      return res.status(statusCode.success).send(
-        apiResponseSuccess([], true, statusCode.success, "No profit/loss data found!")
-      );
-    }
-
-    const groupedData = {};
-
-    combinedProfitLossData.forEach((item) => {
-      const gameName = item.gameName;
-      const profitLoss = parseFloat(item.totalProfitLoss || 0);
-
-      if (!groupedData[gameName]) {
-        groupedData[gameName] = 0;
-      }
-
-      groupedData[gameName] += profitLoss;
-    });
-
-    const combinedTotalProfitLossByGame = Object.entries(groupedData).map(
-      ([gameName, total]) => ({
-        gameName,
-        totalProfitLoss: total.toFixed(2),
-      })
-
-    );
-
-    return res
-      .status(statusCode.success)
-      .send(
-        combinedTotalProfitLossByGame, 
-      );
-      
-
+    return res.status(statusCode.success).send(data);
   } catch (error) {
-
-    console.log("error",error)
-    return res.status(statusCode.internalServerError).send(
-      apiResponseErr(
-        null,
-        false,
-        error.responseCode || statusCode.internalServerError,
-        error.errMessage || error.message
-      )
-    );
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          error.responseCode || statusCode.internalServerError,
+          error.errMessage || error.message
+        )
+      );
   }
 };
 
