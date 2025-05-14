@@ -116,11 +116,10 @@ function AppDrawer({
     return (
       <div
         className="sidebar border mt-4"
-        style={{ overflowY: "auto", height: "82vh" }}
+        style={{ overflowY: "auto", height: "85.5vh" }}
       >
-        <span
+        <span 
           style={{
-            // background: "#2cb3d1",
             display: "block",
             textIndent: "65px",
             fontWeight: "500",
@@ -128,7 +127,6 @@ function AppDrawer({
           }}
           className="text-white"
         >
-          {/* Popular{" "} */}
           <button
             type="button"
             className="btn-close d-xl-none d-lg-none d-md-none"
@@ -226,53 +224,53 @@ function AppDrawer({
     return isMobile ? (
       getLeftNavBar()
     ) : (
-      <div className="container-fluid">
-        <div className="row" style={{ height: "100vh", display: "flex" }}>
-          <div
-            className="col-md-2 position-fixed d-none d-md-block vertical-navbar p-0"
-            style={{
-              height: "100vh",
-              marginTop: isHomePage ? "0px" : "93px",
-            }}
-          >
-            {getLeftNavBar()}
-          </div>
+  <div className="container-fluid">
+  <div className="row" style={{ height: "100vh", display: "flex" }}>
+    {/* LEFT NAVBAR - md: 4, lg: 2 */}
+    <div
+      className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar p-0"
+      style={{
+        height: "100vh",
+        marginTop: isHomePage ? "0px" : "93px",
+      }}
+    >
+      {getLeftNavBar()}
+    </div>
 
-          <div
-            className={`custom-scrollbar col-md-${
-              ["/home", "/"].includes(location?.pathname) ? "7" : "10"
-            } offset-md-2`}
-            style={{
-              overflowY: "auto",
+    {/* MAIN CONTENT - md: 8 offset-4, lg: 7 offset-2 */}
+    <div
+      className={`custom-scrollbar offset-md-4 col-md-8 offset-lg-2 col-lg-7`}
+      style={{
+        overflowY: "auto",
+        height: "calc(100vh - 40px)",
+      }}
+    >
+      <div className="col-12">{showCarousel && <InnerCarousel />}</div>
+      {children}
+    </div>
+ 
 
-              height: "calc(100vh - 40px)",
-            }}
-          >
-            <div className="col-md-12">{showCarousel && <InnerCarousel />}</div>
-            {children}
-          </div>
-          {["/home", "/"].includes(location?.pathname) && (
-            <div
-              className={`col-md-${
-                ["/home", "/"].includes(location?.pathname) ? "3" : ""
-              } d-none d-md-block  p-0`}
-              style={{
-                position:
-                  ["/home", "/"].includes(location?.pathname) && "fixed",
-                right: "0",
-                top: isHomePage ? "125px" : "",
-                height: "calc(100vh - 125px)",
-                overflowY: "auto",
-              }}
-            >
-              <OpenBets
-                betHistoryData={openBetData}
-                handleBetHistorySelectionMenu={handleOpenBetsSelectionMenu}
-              />
-            </div>
-          )}
-        </div>
-      </div>
+  {/* RIGHT SIDEBAR - only for desktop (lg: col-3) */}
+  {["/home", "/"].includes(location?.pathname) && (
+    <div
+      className="d-none d-lg-block col-lg-3 p-0"
+      style={{
+        position: "fixed",
+        right: "0",
+        top: isHomePage ? "125px" : "",
+        height: "calc(100vh - 125px)",
+        overflowY: "auto",
+      }}
+    >
+      <OpenBets
+        betHistoryData={openBetData}
+        handleBetHistorySelectionMenu={handleOpenBetsSelectionMenu}
+      />
+    </div>
+  )}
+   </div>
+</div>
+
     );
   }
 

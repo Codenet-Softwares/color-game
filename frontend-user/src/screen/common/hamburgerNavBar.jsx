@@ -28,7 +28,7 @@ const HamburgerNavBar = () => {
   return (
     <div className="container-fluid">
       <div
-        className="navbar fixed-bottom navbar-light d-lg-none "
+        className="navbar fixed-bottom navbar-light d-lg-none d-md-none"
         style={{
           borderTopLeftRadius: "15px",
           borderTopRightRadius: "15px",
