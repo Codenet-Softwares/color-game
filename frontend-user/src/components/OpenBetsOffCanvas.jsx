@@ -4,7 +4,7 @@ import OpenBets from "../betHistory/components/openBets/OpenBets";
 const OpenBetsOffCanvas = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   return (
     <div
-      className="offcanvas offcanvas-top d-md-none"
+      className="offcanvas offcanvas-top  "
       tabIndex="-1"
       id="offcanvasTop"
       aria-labelledby="offcanvasTopLabel"
