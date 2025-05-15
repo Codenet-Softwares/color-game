@@ -115,10 +115,10 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className="sidebar border mt-4"
+        className={`sidebar border ${store.user.isLogin ? "mt-4" : "mt-1"}`}
         style={{ overflowY: "auto", height: "85.5vh" }}
       >
-        <span 
+        <span
           style={{
             display: "block",
             textIndent: "65px",
