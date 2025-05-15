@@ -2328,17 +2328,18 @@ export const calculateExternalProfitLoss = async (req, res) => {
 
     if (dataType === "live") {
       const today = new Date();
-      startDate = new Date(today).setHours(0, 0, 0, 0);
-      endDate = new Date(today).setHours(23, 59, 59, 999);
+      startDate = new Date(today.setHours(0, 0, 0, 0));
+      endDate = new Date(today.setHours(23, 59, 59, 999));
     } else if (dataType === "olddata") {
       if (req.query.startDate && req.query.endDate) {
         startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
         endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
       } else {
+        const today = new Date();
         const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
-        endDate = new Date().setHours(23, 59, 59, 999);
+        oneYearAgo.setFullYear(today.getFullYear() - 1);
+        startDate = new Date(oneYearAgo.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
       }
     } else if (dataType === "backup") {
       if (req.query.startDate && req.query.endDate) {
@@ -2347,31 +2348,26 @@ export const calculateExternalProfitLoss = async (req, res) => {
         const maxAllowedDate = new Date(startDate);
         maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
         if (endDate > maxAllowedDate) {
-          return res
-            .status(statusCode.badRequest)
-            .send(
-              apiResponseErr(
-                [],
-                false,
-                statusCode.badRequest,
-                "The date range for backup data should not exceed 3 months."
-              )
-            );
+          return res.status(statusCode.badRequest).send(
+            apiResponseErr([], false, statusCode.badRequest,
+              "The date range for backup data should not exceed 3 months.")
+          );
         }
       } else {
-        // const today = new Date();
+        const today = new Date();
         const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-        startDate = new Date(threeMonthsAgo).setHours(0, 0, 0, 0);
-        endDate = new Date().setHours(23, 59, 59, 999);
+        threeMonthsAgo.setMonth(today.getMonth() - 3);
+        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
       }
     } else {
       return res
         .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "Data not found.")
-        );
+        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
     }
+
+    console.log("startDate", startDate);
+    console.log("endDate", endDate);
 
     const user = `'${userIds.join(",")}'`;
     const [response] = await sql.query("CALL calculateProfitLoss(?, ? ,?)", [

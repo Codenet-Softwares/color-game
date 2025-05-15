@@ -38,7 +38,7 @@ ProfitLoss.init(
       allowNull: false,
       defaultValue: 0.0,
     },
-    dates: {
+    date: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
