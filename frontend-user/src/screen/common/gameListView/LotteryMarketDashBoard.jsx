@@ -42,9 +42,9 @@ const LotteryMarketDashBoard = () => {
     };
 
     return (
-      <div className="">
+      <div className=" p-3 mt-5 mt-sm-2">
         {loading ? (
-          <div className="text-center py-5">
+          <div className="text-center ">
             <div className="spinner-border text-primary" role="status">
               <span className="sr-only">Loading...</span>
             </div>
@@ -95,7 +95,7 @@ const LotteryMarketDashBoard = () => {
               </div>
 
               {/* Range Details */}
-              <div className="row mx-0 px-2 mt-3 text-muted">
+              <div className="row mx-0 px-2 mt-3 text-muted text-center">
                 <div className="col-md-3 col-sm-6 mb-3">
                   <p className="m-0">
                     <strong className="text-dark">Group Range:</strong>

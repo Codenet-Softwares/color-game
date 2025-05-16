@@ -16,6 +16,7 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import axios from "axios";
 import sequelize from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
+import { user_Balance } from "./admin.controller.js";
 
 export const getExternalUserBetHistory = async (req, res) => {
   try {
@@ -1380,16 +1381,12 @@ export const getAllLotteryMarket = async (req, res) => {
 export const getExposure = async (req, res) => {
   try {
     const { userId } = req.params
-    const getExposure = await userSchema.findOne({ where: { userId } })
-    const userExposures = getExposure.marketListExposure
-    let exposure = 0
-    if (Array.isArray(userExposures)) {
-      for (const item of userExposures) {
-        const exposureValue = Object.values(item)[0];
-        exposure += parseFloat(exposureValue);
-      }
-    }
-    res.json({ exposure });
+    const userBalance = await user_Balance(userId, true);
+    const exposureList = userBalance?.[1] ?? [];
+    const marketListExposure = exposureList.map((exposure) => ({
+      [exposure.MarketId]: exposure.exposure,
+    }));
+    res.json({ marketListExposure });
   } catch (error) {
     return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
 

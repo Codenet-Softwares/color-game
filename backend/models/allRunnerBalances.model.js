@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { write_db } from "../../config/database.js";
+import sequelize from "../db.js";
 
-const AllRunnerBalance = write_db.define('AllRunnerBalances', {
+const AllRunnerBalance =  sequelize.define('AllRunnerBalances', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -20,7 +20,7 @@ const AllRunnerBalance = write_db.define('AllRunnerBalances', {
         allowNull: false,
     },
     balance: {
-        type: DataTypes.NUMBER,
+        type: DataTypes.FLOAT,
         allowNull: false,
     }
 },
