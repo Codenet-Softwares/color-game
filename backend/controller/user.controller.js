@@ -2323,6 +2323,7 @@ export const calculateExternalProfitLoss = async (req, res) => {
     }
 
     const userIds = existingUsers.map((user) => user.userId);
+    const user = `'${userIds.join(",")}'`;
 
     let startDate, endDate;
 
@@ -2366,15 +2367,18 @@ export const calculateExternalProfitLoss = async (req, res) => {
         .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
     }
 
-    console.log("startDate", startDate);
+    console.log("user", user);
+    console.log("startDate", startDate); 
     console.log("endDate", endDate);
 
-    const user = `'${userIds.join(",")}'`;
-    const [response] = await sql.query("CALL calculateProfitLoss(?, ? ,?)", [
+    const [response] = await sql.query(`CALL calculateProfitLoss(?, ? ,?)`, [
       user,
       startDate,
       endDate,
     ]);
+
+console.log("response", response);
+
     const data = response[0];
 
     return res.status(statusCode.success).send(data);
@@ -2403,21 +2407,31 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
     }
 
+    const userIds = existingUsers.map((user) => user.userId);
+    const user = `'${userIds.join(",")}'`;
+
+    const [response] = await sql.query("CALL calculateMarketWiseProfitLoss(?)", [
+      user,
+    ]);
+
+    const data = response[0];
+
     let startDate, endDate;
 
     if (dataType === "live") {
       const today = new Date();
-      startDate = new Date(today).setHours(0, 0, 0, 0);
-      endDate = new Date(today).setHours(23, 59, 59, 999);
+      startDate = new Date(today.setHours(0, 0, 0, 0));
+      endDate = new Date(today.setHours(23, 59, 59, 999));
     } else if (dataType === "olddata") {
       if (req.query.startDate && req.query.endDate) {
         startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
         endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
       } else {
+        const today = new Date();
         const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
-        endDate = new Date().setHours(23, 59, 59, 999);
+        oneYearAgo.setFullYear(today.getFullYear() - 1);
+        startDate = new Date(oneYearAgo.setHours(0, 0, 0, 0));
+        endDate = new Date(today.setHours(23, 59, 59, 999));
       }
     } else if (dataType === "backup") {
       if (req.query.startDate && req.query.endDate) {
@@ -2443,7 +2457,6 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         .status(statusCode.success)
         .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
     }
-
 
     const searchGameName = req.query.search || "";
 
@@ -2527,8 +2540,6 @@ export const getExternalTotalProfitLoss = async (req, res) => {
       );
     }
 
-  
-
     if (combinedProfitLossData.length === 0) {
       return res
         .status(statusCode.success)
@@ -2575,7 +2586,6 @@ export const getExternalTotalProfitLoss = async (req, res) => {
     for (const gameName in groupedData) {
       for (const marketName in groupedData[gameName]) {
         const data = groupedData[gameName][marketName];
-        console.log("data", data)
         result.push({
           gameName,
           marketId: data.marketId,
@@ -2585,6 +2595,8 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         });
       }
     }
+
+
     let filteredResult = result;
     if (type) {
       filteredResult = result.filter(
