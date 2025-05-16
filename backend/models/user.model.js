@@ -35,10 +35,6 @@ userSchema.init(
       defaultValue: uuid4(),
       allowNull: true,
     },
-    marketListExposure: {
-      type: DataTypes.JSON,
-      allowNull: true,
-    },
     token: {
       type: DataTypes.STRING(512),
     },

@@ -75,7 +75,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   const fetchMarketData = async () => {
     try {
       const response = await GetPurchaseHistoryMarketTimings({
-        date:selectedDate,
+        date: selectedDate,
       });
       if (response?.success) {
         setMarkets(response.data || []);
@@ -93,7 +93,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   // Fetch purchase history
   useEffect(() => {
     fetchMarketData();
-  }, [ selectedDate]);
+  }, [selectedDate]);
   const fetchPurchaseHistory = async () => {
     if (!selectedMarketId) return;
 
@@ -220,170 +220,161 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         </div>
       </div>
 
-      <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
-        <h4 className="mb-0 fw-bold">MARKETS</h4>
 
-        {/* Search Input Section */}
-        <div className="d-flex w-50 justify-content-end">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search purchased tickets by SEM.."
-            aria-label="Search tickets"
-            value={searchTerm}
-            onChange={handleSearchChange}
-            style={{
-              maxWidth: "300px",
-            }}
-          />
+
+      {markets.length === 0 ? (
+        <div className="text-center my-4">
+          <h5 className="text-danger fw-bold">
+            🛈 No market available for the selected date
+          </h5>
         </div>
-      </div>
-
-      {/* Market Badge Section */}
-      <div className="d-flex justify-content-start align-items-center mb-3 position-relative">
-        <button
-          className="btn btn-sm btn-outline-secondary me-2"
-          onClick={handleLeftClick}
-          disabled={visibleStartIndex === 0}
-        >
-          &lt;
-        </button>
-
-        <div className="d-flex flex-wrap" style={{gap:"8px"}}>
-          {visibleMarkets.length > 0 ? (
-            visibleMarkets.map((market) => (
-              <span
-                key={market.marketId}
-                className={`badge ${
-                  selectedMarketId === market.marketId
-                    ? "bg-success"
-                    : "bg-primary"
-                } me-2`}
-                style={{ cursor: "pointer" }}
-                onClick={() => handleMarketClick(market.marketId)}
-              >
-                {market.marketName}
-              </span>
-            ))
-          ) : (
-            <span>No markets available</span>
-          )}
-        </div>
-
-        <button
-          className="btn btn-sm btn-outline-secondary ms-2"
-          onClick={handleRightClick}
-          disabled={visibleStartIndex + visibleCount >= markets.length}
-        >
-          &gt;
-        </button>
-      </div>
-
-      <h2 className="text-center mb-4" style={{ color: "#4682B4" }}>
-        MY LOTTERY PURCHASES
-      </h2>
-
-      {/* Conditional Table Rendering */}
-      {markets.length > 0 ? (
-        <Table striped hover responsive bordered className="table-sm">
-          <thead
-            style={{
-              backgroundColor: "#4682B4",
-              color: "#fff",
-              fontWeight: "bold",
-              textAlign: "center",
-            }}
-          >
-            <tr>
-              <th>Serial Number</th>
-              <th>Market Name</th>
-              <th>Price</th>
-              <th>SEM</th>
-              <th>Ticket Numbers</th>
-              <th>User Name</th>
-            </tr>
-          </thead>
-          <tbody style={{ textAlign: "center" }}>
-            {purchaseHistory.length > 0 ? (
-              purchaseHistory.map((purchase, index) => (
-                <tr key={index}>
-                  <td>{startIndex + index}</td>
-                  <td>{purchase.marketName || "N/A"}</td>
-                  <td>
-                    {purchase.price !== undefined ? purchase.price : "N/A"}
-                  </td>
-                  <td>{purchase.sem || "N/A"}</td>
-                  <td>
-                    {/* Dropdown for ticket numbers */}
-                    <div className="dropdown" style={{ position: "relative" }}>
-                      <button
-                        className="btn btn-link dropdown-toggle"
-                        type="button"
-                        onClick={() => toggleDropdown(index)}
-                      >
-                        View Tickets
-                      </button>
-                      {dropdownOpen === index && (
-                        <div className="custom-dropdown-menu">
-                          <span className="dropdown-item-text">
-                            Ticket Numbers:
-                          </span>
-                          <div className="dropdown-divider" />
-                          <div
-                            className="ticket-list"
-                            style={{
-                              maxHeight: "150px",
-                              overflowY:
-                                purchase.tickets.length > 8
-                                  ? "auto"
-                                  : "visible",
-                            }}
-                          >
-                            {Array.isArray(purchase.tickets) &&
-                            purchase.tickets.length > 0 ? (
-                              purchase.tickets.map((number, i) => (
-                                <span key={i} className="dropdown-item">
-                                  {number}
-                                </span>
-                              ))
-                            ) : (
-                              <span className="dropdown-item text-muted">
-                                No ticket numbers available
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td>{purchase.userName || "N/A"}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center">
-                  No purchase history available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </Table>
       ) : (
-        <div className="text-center">
-          <h4>No purchases found on this date selection</h4>
-        </div>
+        <>
+          <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
+            <h4 className="mb-0 fw-bold">MARKETS</h4>
+
+            <div className="d-flex w-50 justify-content-end">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Search purchased tickets by SEM.."
+                aria-label="Search tickets"
+                value={searchTerm}
+                onChange={handleSearchChange}
+                style={{ maxWidth: "300px" }}
+              />
+            </div>
+          </div>
+          <div className="d-flex justify-content-start align-items-center mb-3 position-relative">
+            <button
+              className="btn btn-sm btn-outline-secondary me-2"
+              onClick={handleLeftClick}
+              disabled={visibleStartIndex === 0}
+            >
+              &lt;
+            </button>
+
+            <div className="d-flex flex-wrap" style={{ gap: "8px" }}>
+              {visibleMarkets.length > 0 &&
+                visibleMarkets.map((market) => (
+                  <span
+                    key={market.marketId}
+                    className={`badge ${selectedMarketId === market.marketId
+                      ? "bg-success"
+                      : "bg-primary"
+                      } me-2`}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleMarketClick(market.marketId)}
+                  >
+                    {market.marketName}
+                  </span>
+                ))}
+            </div>
+
+            <button
+              className="btn btn-sm btn-outline-secondary ms-2"
+              onClick={handleRightClick}
+              disabled={visibleStartIndex + visibleCount >= markets.length}
+            >
+              &gt;
+            </button>
+          </div>
+
+          <h2 className="text-center mb-4" style={{ color: "#4682B4" }}>
+            MY LOTTERY PURCHASES
+          </h2>
+
+          {purchaseHistory.length > 0 ? (
+            <Table striped hover responsive bordered className="table-sm">
+              <thead
+                style={{
+                  backgroundColor: "#4682B4",
+                  color: "#fff",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                }}
+              >
+                <tr>
+                  <th>Serial Number</th>
+                  <th>Market Name</th>
+                  <th>Price</th>
+                  <th>SEM</th>
+                  <th>Ticket Numbers</th>
+                  <th>User Name</th>
+                </tr>
+              </thead>
+              <tbody style={{ textAlign: "center" }}>
+                {purchaseHistory.map((purchase, index) => (
+                  <tr key={index}>
+                    <td>{startIndex + index}</td>
+                    <td>{purchase.marketName || "N/A"}</td>
+                    <td>
+                      {purchase.price !== undefined ? purchase.price : "N/A"}
+                    </td>
+                    <td>{purchase.sem || "N/A"}</td>
+                    <td>
+                      <div className="dropdown" style={{ position: "relative" }}>
+                        <button
+                          className="btn btn-link dropdown-toggle"
+                          type="button"
+                          onClick={() => toggleDropdown(index)}
+                        >
+                          View Tickets
+                        </button>
+                        {dropdownOpen === index && (
+                          <div className="custom-dropdown-menu">
+                            <span className="dropdown-item-text">
+                              Ticket Numbers:
+                            </span>
+                            <div className="dropdown-divider" />
+                            <div
+                              className="ticket-list"
+                              style={{
+                                maxHeight: "150px",
+                                overflowY:
+                                  purchase.tickets.length > 8 ? "auto" : "visible",
+                              }}
+                            >
+                              {Array.isArray(purchase.tickets) &&
+                                purchase.tickets.length > 0 ? (
+                                purchase.tickets.map((number, i) => (
+                                  <span key={i} className="dropdown-item">
+                                    {number}
+                                  </span>
+                                ))
+                              ) : (
+                                <span className="dropdown-item text-muted">
+                                  No ticket numbers available
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td>{purchase.userName || "N/A"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <div className="text-center">
+              <h4>No purchase history available</h4>
+            </div>
+          )}
+        </>
       )}
 
       {purchaseHistory.length > 0 && markets.length > 0 && (
-          <Pagination
-            currentPage={pagination.page}
-            totalPages={pagination.totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={pagination.totalItems}
-          />
-        )}
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
+          handlePageChange={handlePageChange}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          totalData={pagination.totalItems}
+        />
+      )}
     </div>
   );
 };
