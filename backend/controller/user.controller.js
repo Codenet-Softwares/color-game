@@ -2323,7 +2323,7 @@ export const calculateExternalProfitLoss = async (req, res) => {
     }
 
     const userIds = existingUsers.map((user) => user.userId);
-    const user = `'${userIds.join(",")}'`;
+    const user = userIds.join(",");
 
     let startDate, endDate;
 
@@ -2367,19 +2367,13 @@ export const calculateExternalProfitLoss = async (req, res) => {
         .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
     }
 
-    console.log("user", user);
-    console.log("startDate", startDate); 
-    console.log("endDate", endDate);
-
-    const [response] = await sql.query(`CALL calculateProfitLoss(?, ? ,?)`, [
+    const [results] = await sql.query(`CALL calculateProfitLoss(?, ?, ?)`, [
       user,
       startDate,
       endDate,
     ]);
 
-console.log("response", response);
-
-    const data = response[0];
+    const data = results[0];
 
     return res.status(statusCode.success).send(data);
   } catch (error) {
