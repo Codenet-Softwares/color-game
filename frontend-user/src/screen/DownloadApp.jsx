@@ -6,10 +6,10 @@ const DownloadApp = () => {
   return (
     <>
       <br />
-      <div className="app-download-section mb-5 mb-lg-1 text-white">
+      <div className="app-download-section mb-5 mb-lg-1 text-white mb-md-1">
         <div className="container-fluid">
           <div className="row d-flex flex-column-reverse flex-md-row align-items-center">
-            <div className="col-12 col-md-6 d-flex flex-column align-items-center justify-content-center text-center px-3 py-2">
+            <div className="col-12 col-md-7 d-flex flex-column align-items-center justify-content-center text-center px-3 py-2 mt-md-3 mb-md-3">
               <h1 className="fw-bolder text-uppercase get_text">
                 Get In On The Action!
               </h1>
@@ -22,7 +22,7 @@ const DownloadApp = () => {
               </button>
             </div>
 
-            <div className="col-12 col-md-6 text-center mb-3">
+            <div className="col-12 col-md-5 text-center mb-3">
               <img src={LogoImg} alt="App Logo" className="img-fluid" />
             </div>
           </div>
