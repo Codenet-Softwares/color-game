@@ -10,6 +10,7 @@ import Market from "../models/market.model.js";
 import Runner from "../models/runner.model.js";
 import MarketBalance from "../models/marketBalance.js";
 import { PreviousState } from "../models/previousState.model.js";
+import MarketListExposure from "../models/marketListExposure.model.js";
 
 export const deleteLiveBetMarkets = async (req, res) => {
   const transaction = await sequelize.transaction();
@@ -27,6 +28,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
     }, { transaction });
 
     const user = await userSchema.findOne({ where: { userId }, transaction });
+
     if (!user) {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
@@ -37,15 +39,15 @@ export const deleteLiveBetMarkets = async (req, res) => {
       where: { marketId, runnerId, userId },
     });
 
-    if (marketBalanceData > 0) {
-    await marketBalanceData.destroy({ transaction });
+    if (marketBalanceData) {
+      await marketBalanceData.destroy({ transaction });
     }
 
     const previousStateData = await PreviousState.findOne({
       where: { marketId, runnerId, userId },
     });
 
-    if (previousStateData > 0) {
+    if (previousStateData) {
       await previousStateData.destroy({ transaction });
     }
 
@@ -70,7 +72,6 @@ export const deleteLiveBetMarkets = async (req, res) => {
       runners: [],
     };
 
-    // Initialize runner data
     marketDataRows[0].Runners.forEach((runner) => {
       marketDataObj.runners.push({
         id: runner.id,
@@ -102,18 +103,15 @@ export const deleteLiveBetMarkets = async (req, res) => {
         transaction
       });
 
-      // Calculate user market balance
       const userMarketBalance = {
         userId,
         marketId,
         runnerBalance: [],
       };
 
-
       marketDataObj.runners.forEach((runner) => {
         let runnerBalance = 0;
         remainingMarket.forEach((order) => {
-
           if (order.type === "back") {
             if (String(runner.runnerName.runnerId) === String(order.runnerId)) {
               runnerBalance += Number(order.bidAmount);
@@ -134,39 +132,48 @@ export const deleteLiveBetMarkets = async (req, res) => {
           bal: runnerBalance,
         });
 
-
         runner.runnerName.bal = runnerBalance;
-        const maxNegativeRunnerBalance = userMarketBalance.runnerBalance.reduce((max, current) => {
-          return current.bal < max.bal ? current : max;
-        }, { bal: 0 });
-
-        let marketExposure = user.marketListExposure || [];
-
-        let exposureMap = marketExposure.reduce((acc, obj) => {
-          return { ...acc, ...obj };
-        }, {});
-        
-        exposureMap[marketId] = Math.abs(maxNegativeRunnerBalance.bal);
-        
-        user.marketListExposure = Object.keys(exposureMap).map(key => ({ [key]: exposureMap[key] }));
-        
       });
 
+      // Calculate max negative balance for exposure
+      const maxNegativeRunnerBalance = userMarketBalance.runnerBalance.reduce((max, current) => {
+        return current.bal < max.bal ? current : max;
+      }, { bal: 0 });
 
-      await user.update({
-        marketListExposure: user.marketListExposure,
-      }, { transaction });
+      const updatedExposureValue = Math.abs(maxNegativeRunnerBalance.bal);
 
+      // Save or update MarketListExposure
+      const existingExposure = await MarketListExposure.findOne({
+        where: {
+          UserId: userId,
+          MarketId: marketId
+        },
+        transaction
+      });
+
+      if (existingExposure) {
+        await existingExposure.update({
+          exposure: updatedExposureValue
+        }, { transaction });
+      } else {
+        await MarketListExposure.create({
+          UserId: userId,
+          MarketId: marketId,
+          exposure: updatedExposureValue
+        }, { transaction });
+      }
     }
-    await transaction.commit();
 
+    await transaction.commit();
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
+
   } catch (error) {
     await transaction.rollback();
     console.error("Error deleting live bet markets:", error);
     return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
+
 
 export const getMarket = async (req, res) => {
   try {
@@ -223,7 +230,7 @@ export const getMarket = async (req, res) => {
       ...new Map(
         filteredMarkets.map((m) => [
           m.marketId,
-          { marketId: m.marketId, marketName: m.marketName, gameId : m.gameId,  gameName : m.gameName, userName: m.userName },
+          { marketId: m.marketId, marketName: m.marketName, gameId: m.gameId, gameName: m.gameName, userName: m.userName },
         ])
       ).values(),
     ];
@@ -549,7 +556,7 @@ export const restoreMarketData = async (req, res) => {
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Restore data successfully"));
 
   } catch (error) {
-    console.log("error",error)
+    console.log("error", error)
     await transaction.rollback();
     return res
       .status(statusCode.internalServerError)

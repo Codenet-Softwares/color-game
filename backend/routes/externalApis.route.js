@@ -40,7 +40,8 @@ export const externalApisRoute = (app) => {
   app.get('/api/external/get-user-balance/:userId', async (req, res) => {
     try {
       const { userId } = req.params;
-      const balance = await user_Balance(userId);
+      const userBalance = await user_Balance(userId);
+      const balance = userBalance?.[0]?.[0]?.UserBalance ?? 0;
       res.json({ balance });
     } catch (error) {
       res.status(500).json({ error: `Error fetching balance: ${error.message}` });

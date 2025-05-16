@@ -47,7 +47,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   const fetchMarketData = useCallback(async () => {
     try {
       const response = await GetPurchaseHistoryMarketTimings({
-        date: state.selectedDate,
+        date: selectedDate,
       });
 
       if (response?.success) {
@@ -68,10 +68,12 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
     }
   }, [state.selectedDate]);
 
-  // Debounced fetch for purchase history
-  const fetchPurchaseHistory = useCallback(
-    debounce(async (searchTerm) => {
-      if (!state.selectedMarketId) return;
+  // Fetch purchase history
+  useEffect(() => {
+    fetchMarketData();
+  }, [selectedDate]);
+  const fetchPurchaseHistory = async () => {
+    if (!selectedMarketId) return;
 
       try {
         const response = await lotteryPurchaseHIstoryUserNew({
@@ -329,34 +331,74 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         )}
       </div>
 
-      {visibleMarkets.length > 0 ? (
+
+
+      {markets.length === 0 ? (
+        <div className="text-center my-4">
+          <h5 className="text-danger fw-bold">
+            🛈 No market available for the selected date
+          </h5>
+        </div>
+      ) : (
         <>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h3 className="fw-bold" style={{ color: "#284B63" }}>
-              PURCHASED LOTTERY TICKETS
-            </h3>
-            <div className="w-50">
+          <div className="d-flex justify-content-between align-items-center mb-3 mt-4">
+            <h4 className="mb-0 fw-bold">MARKETS</h4>
+
+            <div className="d-flex w-50 justify-content-end">
               <input
                 type="text"
                 className="form-control"
                 placeholder="Search purchased tickets by SEM.."
                 aria-label="Search tickets"
-                value={state.searchTerm}
+                value={searchTerm}
                 onChange={handleSearchChange}
+                style={{ maxWidth: "300px" }}
               />
             </div>
           </div>
+          <div className="d-flex justify-content-start align-items-center mb-3 position-relative">
+            <button
+              className="btn btn-sm btn-outline-secondary me-2"
+              onClick={handleLeftClick}
+              disabled={visibleStartIndex === 0}
+            >
+              &lt;
+            </button>
 
-          <div
-            style={{ maxHeight: "300px", overflowY: "auto" }}
-            className="custom-scrollbar"
-          >
-            <Table striped hover responsive bordered>
+            <div className="d-flex flex-wrap" style={{ gap: "8px" }}>
+              {visibleMarkets.length > 0 &&
+                visibleMarkets.map((market) => (
+                  <span
+                    key={market.marketId}
+                    className={`badge ${selectedMarketId === market.marketId
+                      ? "bg-success"
+                      : "bg-primary"
+                      } me-2`}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleMarketClick(market.marketId)}
+                  >
+                    {market.marketName}
+                  </span>
+                ))}
+            </div>
+
+            <button
+              className="btn btn-sm btn-outline-secondary ms-2"
+              onClick={handleRightClick}
+              disabled={visibleStartIndex + visibleCount >= markets.length}
+            >
+              &gt;
+            </button>
+          </div>
+
+          <h2 className="text-center mb-4" style={{ color: "#4682B4" }}>
+            MY LOTTERY PURCHASES
+          </h2>
+
+          {purchaseHistory.length > 0 ? (
+            <Table striped hover responsive bordered className="table-sm">
               <thead
                 style={{
-                  position: "sticky",
-                  top: 0,
-                  zIndex: 2,
                   backgroundColor: "#4682B4",
                   color: "#fff",
                   fontWeight: "bold",
@@ -368,101 +410,80 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   <th>Market Name</th>
                   <th>Price</th>
                   <th>SEM</th>
-                  <th>Tickets</th>
+                  <th>Ticket Numbers</th>
                   <th>User Name</th>
                 </tr>
               </thead>
               <tbody style={{ textAlign: "center" }}>
-                {state.loading ? (
-                  <tr>
-                    <td colSpan="6">
-                      <div className="d-flex justify-content-center align-items-center">
-                        <Spinner animation="border" variant="primary" />
-                        <span className="ms-2">Loading Tickets....</span>
+                {purchaseHistory.map((purchase, index) => (
+                  <tr key={index}>
+                    <td>{startIndex + index}</td>
+                    <td>{purchase.marketName || "N/A"}</td>
+                    <td>
+                      {purchase.price !== undefined ? purchase.price : "N/A"}
+                    </td>
+                    <td>{purchase.sem || "N/A"}</td>
+                    <td>
+                      <div className="dropdown" style={{ position: "relative" }}>
+                        <button
+                          className="btn btn-link dropdown-toggle"
+                          type="button"
+                          onClick={() => toggleDropdown(index)}
+                        >
+                          View Tickets
+                        </button>
+                        {dropdownOpen === index && (
+                          <div className="custom-dropdown-menu">
+                            <span className="dropdown-item-text">
+                              Ticket Numbers:
+                            </span>
+                            <div className="dropdown-divider" />
+                            <div
+                              className="ticket-list"
+                              style={{
+                                maxHeight: "150px",
+                                overflowY:
+                                  purchase.tickets.length > 8 ? "auto" : "visible",
+                              }}
+                            >
+                              {Array.isArray(purchase.tickets) &&
+                                purchase.tickets.length > 0 ? (
+                                purchase.tickets.map((number, i) => (
+                                  <span key={i} className="dropdown-item">
+                                    {number}
+                                  </span>
+                                ))
+                              ) : (
+                                <span className="dropdown-item text-muted">
+                                  No ticket numbers available
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </td>
+                    <td>{purchase.userName || "N/A"}</td>
                   </tr>
-                ) : state.purchasedTickets.length > 0 ? (
-                  state.purchasedTickets.map((ticket, index) => (
-                    <tr key={index}>
-                      <td>{startIndex + index}</td>
-                      <td>{ticket.marketName || "N/A"}</td>
-                      <td>
-                        {ticket.price !== undefined ? ticket.price : "N/A"}
-                      </td>
-                      <td>{ticket.sem || "N/A"}</td>
-                      <td>
-                        <div
-                          className="dropdown"
-                          style={{ position: "relative" }}
-                        >
-                          <button
-                            className="btn btn-outline-dark fw-semibold px-4 py-2 rounded-5 shadow-sm border-1"
-                            type="button"
-                            onClick={() => openModalWithTickets(ticket.tickets)}
-                          >
-                            <i className="bi bi-ticket-perforated me-2"></i>
-                            View Tickets
-                          </button>
-                          <ViewTicketsModal
-                            isOpen={state.modalOpen}
-                            onClose={() =>
-                              setState((prev) => ({
-                                ...prev,
-                                modalOpen: false,
-                                selectedTickets: [],
-                              }))
-                            }
-                            ticketNumbers={state.selectedTickets}
-                          />
-                        </div>
-                      </td>
-                      <td>{ticket.userName || "N/A"}</td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="text-center">
-                      No tickets Found.
-                    </td>
-                  </tr>
-                )}
+                ))}
               </tbody>
             </Table>
-          </div>
-        </>
-      ) : (
-        <div className="d-flex flex-column align-items-center mt-5">
-          <div
-            className="d-flex justify-content-center align-items-center mt-3"
-            style={{
-              background: "#e6f7ff",
-              padding: "20px",
-              borderRadius: "10px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-          >
-            <div>
-              <h5 className="text-secondary text-center">
-                No Purchases To Display
-              </h5>
-              <p className="mb-0 text-muted">
-                Your Purchase History Will Appear Here Once Available Markets
-                Are Added.
-              </p>
+          ) : (
+            <div className="text-center">
+              <h4>No purchase history available</h4>
             </div>
-          </div>
-        </div>
+          )}
+        </>
       )}
 
-      {state.purchasedTickets?.length > 0 && visibleMarkets?.length > 0 && (
+      {purchaseHistory.length > 0 && markets.length > 0 && (
         <Pagination
-          currentPage={state.pagination.page}
-          totalPages={state.pagination.totalPages}
+          currentPage={pagination.page}
+          totalPages={pagination.totalPages}
           handlePageChange={handlePageChange}
           startIndex={startIndex}
           endIndex={endIndex}
-          totalData={state.pagination.totalItems}
+          totalData={pagination.totalItems}
         />
       )}
     </div>
