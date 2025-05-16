@@ -15,7 +15,7 @@ export async function updateColorGame() {
       let endTime = data.endTime;
 
       if (!startTime || !endTime) {
-        console.warn(`Missing startTime or endTime for document: ${doc.id}`);
+       // console.warn(`Missing startTime or endTime for document: ${doc.id}`);
         continue;
       }
 
