@@ -7,6 +7,7 @@ import {
 } from "../../utils/apiService";
 import { format } from "date-fns";
 import debounce from "lodash.debounce";
+import ViewTicketsModal from "../../betHistory/components/history/components/ViewTicketsModal";
 
 // Initial state function
 export function initialLotteryPurchaseState() {
@@ -25,6 +26,8 @@ export function initialLotteryPurchaseState() {
     visibleStartIndex: 0,
     loading: true,
     dropdownOpen: null,
+    modalOpen: false,
+    selectedTickets: [],
   };
 }
 
@@ -179,6 +182,14 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
     setState((prev) => ({
       ...prev,
       dropdownOpen: prev.dropdownOpen === id ? null : id,
+    }));
+  };
+
+  const openModalWithTickets = (ticketNumbers) => {
+    setState((prev) => ({
+      ...prev,
+      selectedTickets: ticketNumbers,
+      modalOpen: true,
     }));
   };
 
@@ -386,43 +397,24 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                           style={{ position: "relative" }}
                         >
                           <button
-                            className="btn btn-link dropdown-toggle"
+                            className="btn btn-outline-dark fw-semibold px-4 py-2 rounded-5 shadow-sm border-1"
                             type="button"
-                            onClick={() => toggleDropdown(index)}
+                            onClick={() => openModalWithTickets(ticket.tickets)}
                           >
+                            <i className="bi bi-ticket-perforated me-2"></i>
                             View Tickets
                           </button>
-                          {state.dropdownOpen === index && (
-                            <div className="custom-dropdown-menu">
-                              <span className="dropdown-item-text">
-                                Ticket Numbers:
-                              </span>
-                              <div className="dropdown-divider" />
-                              <div
-                                className="ticket-list"
-                                style={{
-                                  maxHeight: "150px",
-                                  overflowY:
-                                    ticket.tickets.length > 8
-                                      ? "auto"
-                                      : "visible",
-                                }}
-                              >
-                                {Array.isArray(ticket.tickets) &&
-                                ticket.tickets.length > 0 ? (
-                                  ticket.tickets.map((number, i) => (
-                                    <span key={i} className="dropdown-item">
-                                      {number}
-                                    </span>
-                                  ))
-                                ) : (
-                                  <span className="dropdown-item text-muted">
-                                    No ticket numbers available
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          )}
+                          <ViewTicketsModal
+                            isOpen={state.modalOpen}
+                            onClose={() =>
+                              setState((prev) => ({
+                                ...prev,
+                                modalOpen: false,
+                                selectedTickets: [],
+                              }))
+                            }
+                            ticketNumbers={state.selectedTickets}
+                          />
                         </div>
                       </td>
                       <td>{ticket.userName || "N/A"}</td>
