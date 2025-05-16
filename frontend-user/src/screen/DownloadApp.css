@@ -5,7 +5,7 @@
 }
 .get_text {
   color: #e0dfdc;
-  font-size: clamp(30px, 5vw, 55px);
+  font-size: clamp(30px, 6vw, 55px);
   text-shadow: -3px -3px 3px #111111, 4px 4px 1px #363636;
 }
 .download_btn {

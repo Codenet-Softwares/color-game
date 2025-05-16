@@ -7,7 +7,7 @@
 
 /* Heading */
 .search-results-heading {
-  color: #18ADC5;
+  color: #4682B4;
   font-weight: bold;
 }
 
@@ -39,6 +39,6 @@
 
 /* Price & SEM Text */
 .result-price, .result-sem {
-  color: #18ADC5;
+  color: #3b6e91;
   font-size: clamp(0.9rem, 2vw, 1.2rem);
 }

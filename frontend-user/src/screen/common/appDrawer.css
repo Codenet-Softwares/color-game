@@ -5,7 +5,7 @@
 
 .sidebar ul li {
   display: block;
-  /* border-bottom: 2px solid rgb(226, 225, 225); */
+  border-bottom: 2px solid rgb(226, 225, 225);
 }
 .sidebar {
   height: 82vh; /* Allow sidebar to grow with content */
@@ -20,7 +20,7 @@
 
 .sidebar ul li a {
   display: block;
-  padding: 8px;
+  padding: 10px;
   text-decoration: none;
   color: #034e52;
   position: relative;
@@ -30,17 +30,17 @@
 
 .sidebar ul li.subMenuItems a {
   display: block;
+  /* padding: 0px; */
   text-decoration: none;
-  color: #034e52;
+  color: black;
   position: relative;
   transition: background-color 0.3s, color 0.3s;
-  margin: 10px;
-  text-align: center;
-  border: 1px solid rgb(211, 208, 208);
-  background: linear-gradient(135deg, #e6f7ff, #fff);
-
+  background-color: #d3d8ea;
+  font-size: small;
+  /* opacity: 50%; */
+  margin: 0px;
 }
-/* 
+
 .sidebar ul li.MenuHead a::after {
   content: "\2193";
   position: absolute;
@@ -50,6 +50,7 @@
 }
 
 .sidebar ul li.subMenuItems a::after {
+  content: " \2192";
   position: absolute;
   bottom: 10px;
   right: 10px;
@@ -63,7 +64,7 @@
   right: 10px;
   font-size: 0.8em;
   font-weight: 700;
-} */
+}
 
 .sidebar ul li a:hover {
   background-color: #e6f7ff;
@@ -71,10 +72,8 @@
 }
 
 .sidebar ul li.subMenuItems a:hover {
-  /* background-color: #2cb3d1; */
-  /* color: #fff; */
-   color: #444;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
+  background-color:#2CB3D1;
+  color: #fff;
 }
 
 /* lottery section  */
@@ -84,13 +83,14 @@
   font-weight: bold;
   color: #fff;
   padding: 10px;
+
   list-style-type: none;
   cursor: pointer; /* Change cursor to pointer for better UX */
   transition: background-color 0.3s; /* Smooth transition on hover */
 }
 
 .lottery-section:hover {
-  background-color: #f1f5f8;
+  background-color: #f1f5f8; /* Soft gray */
   color: #f8f9fa !important; /* Off-white for contrast */
 }
 
@@ -98,13 +98,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between; /* Space between text and icon */
+
 }
-.game-wrapper{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: none;
-}
+
 .new-tag {
   font-size: 12px;
   font-weight: bold;
@@ -115,10 +111,7 @@
   margin-right: 10px;
   animation: blink 1s infinite;
 }
-.sidebar ul:hover{
-  background-color: #f1f5f8;
 
-}
 .dropdown-icon {
   margin-left: 10px; /* Space between text and icon */
   transition: transform 0.3s; /* Smooth transition for rotation */
@@ -129,8 +122,8 @@
 }
 
 .subMenuItems {
+  padding-left: 20px; /* Indent submenu items for differentiation */
   list-style-type: none; /* Remove default bullets */
-  margin: 10px;
 }
 
 .subMenuHead {
@@ -140,10 +133,10 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #e6f7ff, #fff);
+  background: linear-gradient(135deg, #e6f7ff, #fff); /* Light background */
   transition: all 0.3s ease;
   cursor: pointer;
-  border: 1px solid rgb(211, 208, 208);
+  border: 2px solid rgb(211, 208, 208);
 }
 
 .subMenuHead:hover {

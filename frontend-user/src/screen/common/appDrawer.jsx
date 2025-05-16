@@ -33,7 +33,6 @@ function AppDrawer({
 
   const [lotteryNewDrawTimes, setLotteryNewDrawTimes] = useState([]);
   const [lotteryNewToggle, setLotteryNewToggle] = useState(false); // New state for toggling draw times
-  const [gameNewToggle, setGameNewToggle] = useState(false);
   const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
   const { dispatch, store } = useAppContext();
@@ -57,9 +56,6 @@ function AppDrawer({
   }
   const handleLotteryNewToggle = () => {
     setLotteryNewToggle(!lotteryNewToggle);
-  };
-  const handleGameNewToggle = () => {
-    setGameNewToggle(!gameNewToggle);
   };
   const handleAllId = (gameId, marketId) => {
     dispatch({
@@ -120,7 +116,7 @@ function AppDrawer({
     return (
       <div
         className={`sidebar border ${store.user.isLogin ? "mt-4" : "mt-1"}`}
-        style={{ overflowY: "auto", height: "83vh" }}
+        style={{ overflowY: "auto", height: "85.5vh" }}
       >
         <span
           style={{
@@ -184,20 +180,10 @@ function AppDrawer({
               ) : (
                 <>
                   <li
-                    className={toggleStates[index] ? "" : "MenuHead"}
+                    className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
                     onClick={() => handleToggle(index)}
                   >
-                    {/* <Link>{gameObj?.gameName}</Link> */}
-                    <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
-                      {gameObj?.gameName}
-                      <span
-                        className={`dropdown-icon ${
-                          toggleStates[index] ? "active" : ""
-                        }`}
-                      >
-                        ▼
-                      </span>
-                    </div>
+                    <Link>{gameObj?.gameName}</Link>
                   </li>
                   {/* Mapping over markets inside each gameName */}
                   {toggleStates[index] && gameObj.markets.length > 0
