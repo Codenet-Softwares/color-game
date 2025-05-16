@@ -123,9 +123,9 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
         navigate("/home");
 
         // Proper window.location.reload() with a slight delay
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 500);
       } else {
         toast.error(response.message || "Logout failed");
       }
