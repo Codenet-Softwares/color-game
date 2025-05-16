@@ -92,10 +92,11 @@ const Table = ({
                             style={{ position: "relative" }}
                           >
                             <button
-                              className="btn btn-link "
+                              className="btn btn-outline-dark fw-semibold px-4 py-2 rounded-5 shadow-sm border-1"
                               type="button"
                               onClick={() => openModalWithTickets(item.tickets)}
                             >
+                              <i className="bi bi-ticket-perforated me-2"></i>{" "}
                               View Tickets
                             </button>
                             <ViewTicketsModal
@@ -108,69 +109,6 @@ const Table = ({
                               }
                               ticketNumbers={betHistoryData.selectedTickets}
                             />
-                            {/* <div
-                              className="custom-dropdown-content"
-                              style={{
-                                height: dropdownOpen === index ? "200px" : "0",
-                                overflow:
-                                  dropdownOpen === index ? "auto" : "hidden",
-                                transition: "height 0.3s ease",
-                                background: "white",
-                                border: "1px solid #ccc",
-                                borderRadius: "4px",
-                                boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-                              }}
-                            >
-                              {dropdownOpen === index && (
-                                <div
-                                  style={{
-                                    maxHeight: "200px", // Sets the maximum height
-                                    // overflowY: "auto", // Enables scrolling if necessary
-                                    padding: "10px", // Optional: Space inside the dropdown
-                                  }}
-                                >
-                                  <span
-                                    style={{
-                                      fontWeight: "bold",
-                                      display: "block",
-                                      marginBottom: "5px",
-                                    }}
-                                  >
-                                    Ticket Numbers:
-                                  </span>
-                                  <hr
-                                    style={{
-                                      margin: "5px 0",
-                                      borderColor: "#ddd",
-                                    }}
-                                  />
-                                  {item?.tickets?.length > 0 ? (
-                                    item?.tickets?.map((number, i) => (
-                                      <span
-                                        key={i}
-                                        style={{
-                                          display: "block",
-                                          padding: "5px 10px",
-                                          borderBottom: "1px solid #eee",
-                                          color: "#333",
-                                        }}
-                                      >
-                                        {number}
-                                      </span>
-                                    ))
-                                  ) : (
-                                    <span
-                                      style={{
-                                        color: "#999",
-                                        fontStyle: "italic",
-                                      }}
-                                    >
-                                      No ticket numbers available
-                                    </span>
-                                  )}
-                                </div>
-                              )}
-                            </div> */}
                           </div>
                         </td>
                         <td>{item.sem}</td>
