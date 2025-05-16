@@ -28,15 +28,16 @@ const HamburgerNavBar = () => {
   return (
     <div className="container-fluid">
       <div
-        className="navbar fixed-bottom navbar-light d-lg-none d-md-none"
+        className="navbar fixed-bottom navbar-light d-lg-none d-md-none "
         style={{
           borderTopLeftRadius: "15px",
           borderTopRightRadius: "15px",
           background: "#25616a",
+        
         }}
       >
         <div
-          className={`col-3 col-md text-center text-white  ${
+          className={`col-3 col-md text-center text-white mx-4  ${
             activeIcon === "home" ? "active-icon" : ""
           }`}
           title="Home"
@@ -47,7 +48,7 @@ const HamburgerNavBar = () => {
           </div>
           {activeIcon === "home" && <div className="hover-text ">Home</div>}
         </div>
-        <div
+        {/* <div
           className={`col-3 col-md text-center text-white ${
             activeIcon === "play" ? "active-icon" : ""
           }`}
@@ -58,7 +59,7 @@ const HamburgerNavBar = () => {
             <FaPlay />
           </div>
           {activeIcon === "play" && <div className="hover-text">In-Play</div>}
-        </div>
+        </div> */}
         {/* <div
           className={`col-3 col-md text-center text-white d-flex align-items-center flex-column${
             activeIcon === 'heart' ? 'active-icon' : ''
@@ -72,7 +73,7 @@ const HamburgerNavBar = () => {
           {activeIcon === 'heart' && <div className="hover-text">Mini Game</div>}
         </div> */}
         <div
-          className={`col-3 col-md text-center text-white ${
+          className={`col-3 col-md text-center text-white mx-4${
             activeIcon === "menu" ? "active-icon" : ""
           }`}
           title="Menu"

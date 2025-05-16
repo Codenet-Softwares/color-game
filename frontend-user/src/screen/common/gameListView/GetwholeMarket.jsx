@@ -93,7 +93,7 @@ const GetwholeMarket = () => {
   return (
     <>
       {/* <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}> */}
-      <div className="row p-0 m-1">
+      <div className="row m-1">
         {user_allGamesWithMarketData &&
           user_allGamesWithMarketData
             .slice(0, store.user.isLogin ? 5 : 3)
@@ -119,9 +119,8 @@ const GetwholeMarket = () => {
                           .map((marketData, index) => (
                             <div
                               key={index}
-                              className="row my-2"
+                              className="row my-2 m-0"
                               style={{
-                                backgroundColor: "#f9f9f9",
                                 borderRadius: "5px",
                                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                               }}
@@ -134,7 +133,7 @@ const GetwholeMarket = () => {
                                     fontSize: "16px",
                                   }}
                                 >
-                                  💹 {marketData?.marketName ?? "Unknown"} |{" "}
+                                  💹{marketData?.marketName ?? "Unknown"} |{" "}
                                   <span
                                     className=""
                                     style={{ color: "#022C44" }}
@@ -185,7 +184,7 @@ const GetwholeMarket = () => {
                           to={`/lottery-home`}
                           style={{ textAlign: "right", margin: "16px" }}
                         >
-                          View more.....
+                          View more...
                         </Link>
                       ) : (
                         <p

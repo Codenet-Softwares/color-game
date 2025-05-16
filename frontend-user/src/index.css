@@ -13,6 +13,7 @@
 
 .global-margin-top {
   margin-top: 150px;
+  overflow: hidden;
 }
 
 .global-margin-top-logged {
