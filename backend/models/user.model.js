@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db.js';
+import { sequelize } from '../db.js';
 import { v4 as uuid4 } from 'uuid';
 
 class userSchema extends Model { }

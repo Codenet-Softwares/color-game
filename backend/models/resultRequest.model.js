@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db.js';
+import { sequelize } from '../db.js';
 import Game from './game.model.js';
 import Market from './market.model.js';
 import Runner from './runner.model.js';

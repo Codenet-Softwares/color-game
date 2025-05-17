@@ -20,7 +20,7 @@ import BetHistory from "../models/betHistory.model.js";
 import { Op, Sequelize } from "sequelize";
 import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
-import sequelize  from "../db.js";
+import { sequelize }  from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import ResultRequest from "../models/resultRequest.model.js";
 import ResultHistory from "../models/resultHistory.model.js";

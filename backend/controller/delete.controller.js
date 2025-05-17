@@ -3,7 +3,7 @@ import { statusCode } from "../helper/statusCodes.js";
 import { apiResponseErr, apiResponseSuccess } from "../middleware/serverError.js";
 import CurrentOrder from "../models/currentOrder.model.js"
 import MarketTrash from "../models/trash.model.js"
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 import userSchema from "../models/user.model.js";
 import { Op, Sequelize } from 'sequelize';
 import Market from "../models/market.model.js";

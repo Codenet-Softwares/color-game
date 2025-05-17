@@ -14,7 +14,7 @@ import MarketBalance from "../models/marketBalance.js";
 import userSchema from "../models/user.model.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import axios from "axios";
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import { user_Balance } from "./admin.controller.js";
 

@@ -22,13 +22,13 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
-import sequelize, { sql } from "../db.js";
+import  { sequelize , sql } from "../db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
 
 // done
 export const createUser = async (req, res) => {
-  const { userId, userName, password } = req.body;
   try {
+  const { userId, userName, password } = req.body;
     const existingUser = await userSchema.findOne({ where: { userName } });
     if (existingUser) {
       return res
@@ -977,24 +977,6 @@ export const filterMarketData = async (req, res) => {
           bal: balance.bal,
         });
       }
-
-      // Check if previous state should be shown
-      // const previousState = await PreviousState.findOne({
-      //   where: { marketId, userId, isReverted: true },
-      // });
-
-      //   if (previousState) {
-      //     // Fetch previously stored balances from PreviousState
-      //     const previousBalances = JSON.parse(previousState.allRunnerBalances);
-
-      //     // Update the marketDataObj with previous balances
-      //     marketDataObj.runners.forEach((runner) => {
-      //       if (previousBalances[runner.runnerName.runnerId]) {
-      //         runner.runnerName.bal =
-      //           previousBalances[runner.runnerName.runnerId];
-      //       }
-      //     });
-      //   }
     }
 
     return res

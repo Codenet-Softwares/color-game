@@ -7,7 +7,7 @@ import {
 } from "../middleware/serverError.js";
 import userSchema from "../models/user.model.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 import { user_Balance } from "./admin.controller.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import { Op } from "sequelize";
