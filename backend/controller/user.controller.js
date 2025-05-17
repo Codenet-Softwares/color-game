@@ -23,7 +23,6 @@ import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
 import sequelize, { sql } from "../db.js";
-import sequelize from "../db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
 
 // done
