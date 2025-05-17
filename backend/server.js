@@ -28,11 +28,12 @@ import Runner from './models/runner.model.js';
 import CurrentOrder from './models/currentOrder.model.js';
 import BetHistory from './models/betHistory.model.js';
 import MarketBalance from './models/marketBalance.js';
-//import InactiveGame from './models/inactiveGame.model.js';
+import InactiveGame from './models/inactiveGame.models.js';
 
 // Helpers
 import { checkAndManageIndexes } from './helper/indexManager.js';
 import { updateColorGame } from './helper/cgCron.js';
+import { wlExternalRoute } from './routes/wl.external.route.js';
 
 // Env config
 const __filename = fileURLToPath(import.meta.url);
@@ -73,6 +74,7 @@ lotteryRoute(app);
 voidGameRoute(app);
 DeleteRoutes(app);
 MarketDeleteApprovalRoute(app);
+wlExternalRoute(app)
 
 // Model Associations
 Game.hasMany(Market, { foreignKey: 'gameId', sourceKey: 'gameId' });
