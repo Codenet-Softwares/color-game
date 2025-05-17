@@ -22,16 +22,15 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
+import sequelize, { sql } from "../db.js";
 import sequelize from "../db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
-import { log } from "console";
 
 // done
 export const createUser = async (req, res) => {
   const { userId, userName, password } = req.body;
   try {
     const existingUser = await userSchema.findOne({ where: { userName } });
-
     if (existingUser) {
       return res
         .status(statusCode.badRequest)
@@ -59,14 +58,14 @@ export const createUser = async (req, res) => {
       .status(statusCode.create)
       .send(
         apiResponseSuccess(
-          null,
+          newUser,
           true,
           statusCode.create,
           "User created successfully"
         )
       );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -2175,7 +2174,7 @@ export const userActiveInactive = async (req, res) => {
     const existingUser = await userSchema.findOne({ where: { userId } });
 
     if (!existingUser || existingUser.length == 0) {
-      res
+     return res
         .status(statusCode.success)
         .send(
           apiResponseSuccess([], true, statusCode.success, "No user found!.")
@@ -2200,13 +2199,13 @@ export const userActiveInactive = async (req, res) => {
 
     existingUser.save();
 
-    res
+    return res
     .status(statusCode.success)
     .send(
       apiResponseSuccess(existingUser, true, statusCode.success, "User update successfully.")
     );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -2353,189 +2352,57 @@ export const profitLoss = async (req, res) => {
   }
 };
 
+
 export const calculateExternalProfitLoss = async (req, res) => {
   try {
     const { userId } = req.body;
-    const { dataType } = req.query;
-    const existingUsers = await userSchema.findAll({ where: { userId } });
+    const { dataType, startDate, endDate } = req.query;
+    const existingUsers = await userSchema.findAll({
+      where: { userId },
+    });
     if (!existingUsers || existingUsers.length == 0) {
       return res
         .status(statusCode.success)
-        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "User not found")
+        );
     }
- 
-    let startDate, endDate;
-
-    if (dataType === "live") {
-      const today = new Date();
-      startDate = new Date(today).setHours(0, 0, 0, 0);
-      endDate = new Date(today).setHours(23, 59, 59, 999);
-    } else if (dataType === "olddata") {
-      if (req.query.startDate && req.query.endDate) {
-        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-      } else {
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
-        endDate = new Date().setHours(23, 59, 59, 999);
-      }
-    } else if (dataType === "backup") {
-      if (req.query.startDate && req.query.endDate) {
-        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-        const maxAllowedDate = new Date(startDate);
-        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
-        if (endDate > maxAllowedDate) {
-          return res.status(statusCode.badRequest).send(
-            apiResponseErr([], false, statusCode.badRequest,
-              "The date range for backup data should not exceed 3 months.")
-          );
-        }
-      } else {
-        const today = new Date();
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(today.getMonth() - 3);
-        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
-        endDate = new Date(today.setHours(23, 59, 59, 999));
-      }
+    const userIds = existingUsers.map((user) => user.userId);
+    const user = userIds.join(",");
+    let datestart, dateend;
+    if (startDate && endDate) {
+      datestart = startDate;
+      dateend = endDate;
     } else {
-      return res
-        .status(statusCode.success)
-        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
+      datestart = null;
+      dateend = null;
     }
-
-    const searchGameName = req.query.search || "";
-    const combinedProfitLossData = [];
-
-    for (const user of existingUsers) {
-      const userId = user.userId;
-
-      const profitLossData = await ProfitLoss.findAll({
-        attributes: [
-          "gameId",
-          [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
-        ],
-        include: [
-          {
-            model: Game,
-            attributes: ["gameName"],
-            where: searchGameName
-              ? { gameName: { [Op.like]: `%${searchGameName}%` } }
-              : {},
-          },
-        ],
-        where: {
-          userId: userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        group: ["gameId", "Game.gameName"],
-      });
-
-      const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
-        attributes: [
-          "userId",
-          [
-            Sequelize.literal(`
-              COALESCE((
-                SELECT SUM(lp.profitLoss)
-                FROM LotteryProfit_Loss lp
-                WHERE lp.userId = LotteryProfit_Loss.userId
-                AND lp.id IN (
-                  SELECT MIN(lp2.id) 
-                  FROM LotteryProfit_Loss lp2
-                  WHERE lp2.userId = lp.userId
-                  GROUP BY lp2.marketId
-                )
-              ), 0)
-            `),
-            "totalProfitLoss",
-          ],
-        ],
-        where: { 
-          userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-         },
-        group: ["userId"],
-      });
-
-      combinedProfitLossData.push(
-        ...profitLossData.map((item) => ({
-          userId,
-          userName : user.userName,
-          gameId: item.gameId,
-          gameName: item.Game.gameName,
-          totalProfitLoss: item.dataValues.totalProfitLoss,
-
-        })),
-        ...lotteryProfitLossData
-          .filter((item) => item.dataValues.totalProfitLoss != null && item.dataValues.totalProfitLoss !== "")
-          .map((item) => ({
-            userId,
-            userName : user.userName,
-            gameName: "Lottery",
-            totalProfitLoss: item.dataValues.totalProfitLoss,
-          }))
-      );
-    };
-
-
-    if (combinedProfitLossData.length === 0) {
-      return res.status(statusCode.success).send(
-        apiResponseSuccess([], true, statusCode.success, "No profit/loss data found!")
-      );
-    }
-
-    const groupedData = {};
-
-    combinedProfitLossData.forEach((item) => {
-      const gameName = item.gameName;
-      const profitLoss = parseFloat(item.totalProfitLoss || 0);
-
-      if (!groupedData[gameName]) {
-        groupedData[gameName] = 0;
-      }
-
-      groupedData[gameName] += profitLoss;
-    });
-
-    const combinedTotalProfitLossByGame = Object.entries(groupedData).map(
-      ([gameName, total]) => ({
-        gameName,
-        totalProfitLoss: total.toFixed(2),
-      })
-
-    );
-
-    return res
-      .status(statusCode.success)
-      .send(
-        combinedTotalProfitLossByGame, 
-      );
-      
-
+    const [results] = await sql.query(`CALL calculateProfitLoss(?, ?, ?, ?)`, [
+      user,
+      dataType,
+      datestart,
+      dateend,
+    ]);
+    const data = results[0];
+    return res.status(statusCode.success).send(data);
   } catch (error) {
-
-    console.log("error",error)
-    return res.status(statusCode.internalServerError).send(
-      apiResponseErr(
-        null,
-        false,
-        error.responseCode || statusCode.internalServerError,
-        error.errMessage || error.message
-      )
-    );
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          error.responseCode || statusCode.internalServerError,
+          error.errMessage || error.message
+        )
+      );
   }
 };
 
 export const getExternalTotalProfitLoss = async (req, res) => {
   try {
-    const { type, dataType } = req.query;
     const { userId } = req.body;
+    const { type, dataType, startDate, endDate} = req.query;
     const existingUsers = await userSchema.findAll({ where: { userId } });
     if (!existingUsers || existingUsers.length == 0) {
       return res
@@ -2543,198 +2410,29 @@ export const getExternalTotalProfitLoss = async (req, res) => {
         .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
     }
 
-    let startDate, endDate;
+    const userIds = existingUsers.map((user) => user.userId);
+    const user = userIds.join(",");
 
-    if (dataType === "live") {
-      const today = new Date();
-      startDate = new Date(today).setHours(0, 0, 0, 0);
-      endDate = new Date(today).setHours(23, 59, 59, 999);
-    } else if (dataType === "olddata") {
-      if (req.query.startDate && req.query.endDate) {
-        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-      } else {
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
-        endDate = new Date().setHours(23, 59, 59, 999);
-      }
-    } else if (dataType === "backup") {
-      if (req.query.startDate && req.query.endDate) {
-        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-        const maxAllowedDate = new Date(startDate);
-        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
-        if (endDate > maxAllowedDate) {
-          return res.status(statusCode.badRequest).send(
-            apiResponseErr([], false, statusCode.badRequest,
-              "The date range for backup data should not exceed 3 months.")
-          );
-        }
-      } else {
-        const today = new Date();
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(today.getMonth() - 3);
-        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
-        endDate = new Date(today.setHours(23, 59, 59, 999));
-      }
+     let datestart, dateend;
+    if (startDate && endDate) {
+      datestart = startDate;
+      dateend = endDate;
     } else {
-      return res
-        .status(statusCode.success)
-        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
+      datestart = null;
+      dateend = null;
     }
 
+    const [response] = await sql.query("CALL calculateMarketWiseProfitLoss(?,?,?,?,?)", [
+      user,
+      dataType,
+      type,
+      datestart,
+      dateend
+    ]);
 
-    const searchGameName = req.query.search || "";
-
-    const combinedProfitLossData = [];
-
-    for (const user of existingUsers) {
-      const userId = user.userId;
-
-      const profitLossData = await ProfitLoss.findAll({
-        attributes: [
-          "gameId",
-          "marketId",
-          "date",
-          "profitLoss",
-        ],
-        include: [
-          {
-            model: Game,
-            attributes: ["gameName"],
-            where: searchGameName
-              ? { gameName: { [Op.like]: `%${searchGameName}%` } }
-              : {},
-          },
-          {
-            model: Market,
-            attributes: ["marketName"],
-          },
-        ],
-        where: {
-          userId: userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        group: ["gameId", "marketId", "Game.gameName", "Market.marketName"],
-      });
-
-      const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
-        attributes: [
-          "userId",
-          "marketId",
-          "marketName",
-          "date",
-          "profitLoss",
-        ],
-        where: {
-          userId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        group: ["userId", "marketId"],
-      });
-
-      combinedProfitLossData.push(
-        ...profitLossData.map((item) => ({
-          userId,
-          userName: user.userName,
-          marketId: item.dataValues.marketId,
-          marketName: item.Market.marketName,
-          gameId: item.gameId,
-          gameName: item.Game.gameName,
-          totalProfitLoss: item.dataValues.profitLoss,
-          date : item.dataValues.date,
-        })),
-        ...lotteryProfitLossData
-          .filter(
-            (item) =>
-              item.dataValues.profitLoss != null &&
-              item.dataValues.profitLoss !== ""
-          )
-          .map((item) => ({
-            userId,
-            marketId: item.dataValues.marketId,
-            marketName: item.dataValues.marketName,
-            userName: user.userName,
-            gameName: "Lottery",
-            totalProfitLoss: item.dataValues.profitLoss,
-            date : item.dataValues.date,
-          }))
-      );
-    }
-
-  
-
-    if (combinedProfitLossData.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            [],
-            true,
-            statusCode.success,
-            "No profit/loss data found!"
-          )
-        );
-    }
-
-    const groupedData = {};
-
-    combinedProfitLossData.forEach((item) => {
-      const gameName = item.gameName;
-      const marketName = item.marketName;
-      const marketId = item.marketId;
-      const date = item.date;
-      const profitLoss = parseFloat(item.totalProfitLoss || 0);
-    
-      if (!groupedData[gameName]) {
-        groupedData[gameName] = {};
-      }
-    
-      if (!groupedData[gameName][marketName]) {
-        groupedData[gameName][marketName] = {
-          totalProfitLoss: 0,
-          date: date,
-          marketId: marketId,
-        };
-      }
-    
-      groupedData[gameName][marketName].totalProfitLoss += profitLoss;
-
-      if (new Date(groupedData[gameName][marketName].date)) {
-        groupedData[gameName][marketName].date = date;
-      }
-    });
-    
-    const result = [];
-    
-    for (const gameName in groupedData) {
-      for (const marketName in groupedData[gameName]) {
-        const data = groupedData[gameName][marketName];
-        console.log("data", data)
-        result.push({
-          gameName,
-          marketId: data.marketId,
-          marketName,
-          totalProfitLoss: data.totalProfitLoss.toFixed(2),
-          date: data.date,
-        });
-      }
-    }
-    let filteredResult = result;
-    if (type) {
-      filteredResult = result.filter(
-        (item) => item.gameName.toLowerCase() === type.toLowerCase()
-      );
-    }
-
-    return res.status(statusCode.success).send(filteredResult);
+     const data = response[0];
+    return res.status(statusCode.success).send(data);
   } catch (error) {
-    console.log("error", error);
     return res
       .status(statusCode.internalServerError)
       .send(
@@ -2752,7 +2450,9 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
   try {
     const { userId } = req.body;
     const { marketId } = req.params;
-    const { dataType } = req.query;
+    const { dataType, startDate, endDate} = req.query;
+
+
     const existingUsers = await userSchema.findAll({ where: { userId } });
     if (!existingUsers || existingUsers.length == 0) {
       return res
@@ -2760,132 +2460,30 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
         .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
     }
 
-    
-    let startDate, endDate;
+    const userIds = existingUsers.map((user) => user.userId);
+    const user = userIds.join(",");
 
-    if (dataType === "live") {
-      const today = new Date();
-      startDate = new Date(today).setHours(0, 0, 0, 0);
-      endDate = new Date(today).setHours(23, 59, 59, 999);
-    } else if (dataType === "olddata") {
-      if (req.query.startDate && req.query.endDate) {
-        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-      } else {
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        startDate = new Date(oneYearAgo).setHours(0, 0, 0, 0);
-        endDate = new Date().setHours(23, 59, 59, 999);
-      }
-    } else if (dataType === "backup") {
-      if (req.query.startDate && req.query.endDate) {
-        startDate = new Date(req.query.startDate).setHours(0, 0, 0, 0);
-        endDate = new Date(req.query.endDate).setHours(23, 59, 59, 999);
-        const maxAllowedDate = new Date(startDate);
-        maxAllowedDate.setMonth(maxAllowedDate.getMonth() + 3);
-        if (endDate > maxAllowedDate) {
-          return res.status(statusCode.badRequest).send(
-            apiResponseErr([], false, statusCode.badRequest,
-              "The date range for backup data should not exceed 3 months.")
-          );
-        }
-      } else {
-        const today = new Date();
-        const threeMonthsAgo = new Date();
-        threeMonthsAgo.setMonth(today.getMonth() - 3);
-        startDate = new Date(threeMonthsAgo.setHours(0, 0, 0, 0));
-        endDate = new Date(today.setHours(23, 59, 59, 999));
-      }
+     let datestart, dateend;
+    if (startDate && endDate) {
+      datestart = startDate;
+      dateend = endDate;
     } else {
-      return res
-        .status(statusCode.success)
-        .send(apiResponseSuccess([], true, statusCode.success, "Data not found."));
+      datestart = null;
+      dateend = null;
     }
 
-    const combinedProfitLossData = [];
+    
+    const [response] = await sql.query("CALL getAllUserTotalProfitLoss(?,?,?,?,?)", [
+      user,
+      dataType,
+      marketId,
+      datestart,
+      dateend
+    ]);
 
-    for (const user of existingUsers) {
-      const userId = user.userId;
+      const data = response[0];
 
-      const profitLossData = await ProfitLoss.findAll({
-        attributes: [
-          "gameId",
-          "marketId",
-          "date",
-          "profitLoss",
-          "runnerId"
-        ],
-        include: [
-          {
-            model: Game,
-            attributes: ["gameName"],
-          },
-          {
-            model: Market,
-            attributes: ["marketName"],
-          },
-        ],
-        where: {
-          userId,
-          marketId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        group : ["gameId", "marketId", "date", "profitLoss", "runnerId"],
-      });
-      const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
-        attributes: [
-          "userId",
-          "marketId",
-          "marketName",
-          "date",
-          "profitLoss" 
-        ],
-        where: {
-          userId,
-          marketId,
-          date: {
-            [Op.between]: [startDate, endDate],
-          },
-        },
-        group :["userId", "marketId"],
-      });
-
-      console.log("lotteryProfitLossData", lotteryProfitLossData)
-
-      combinedProfitLossData.push(
-        ...profitLossData.map((item) => ({
-          userId,
-          userName: user.userName,
-          runnerId: item.runnerId,
-          marketId: item.marketId,
-          marketName: item.Market?.marketName || "",
-          gameId: item.gameId,
-          gameName: item.Game?.gameName || "",
-          totalProfitLoss:item.profitLoss,
-          date: item.date,
-        })),
-        ...lotteryProfitLossData.map((item) => ({
-          userId,
-          userName: user.userName,
-          marketId: item.marketId,
-          marketName: item.marketName,
-          gameName: "Lottery",
-          totalProfitLoss: item.profitLoss,
-          date: item.date,
-        }))
-      );
-    }
-
-
-    if (combinedProfitLossData.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(apiResponseSuccess([], true, statusCode.success, "No profit/loss data found!"));
-    }
-
-    return res.status(statusCode.success).send(combinedProfitLossData);
+    return res.status(statusCode.success).send(data);
 
   } catch (error) {
     console.log("error", error);
