@@ -19,17 +19,17 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     wallet: null,
   });
 
-  useEffect(() => {
-    let currentExposure = null;
-    store.user.wallet?.marketListExposure.forEach((entry) => {
-      currentExposure += Object.values(entry)[0];
-    });
+ useEffect(() => {
+   let currentExposure = null;
+   store.user.wallet?.marketListExposure.forEach((entry) => {
+     currentExposure += Object.values(entry)[0];
+   });
 
-    setExposureAndWallet({
-      ...exposureAndWallet,
-      exposure: currentExposure,
-    });
-  }, [store.user.wallet?.marketListExposure]);
+   setExposureAndWallet({
+     ...exposureAndWallet,
+     exposure: currentExposure,
+   });
+ }, [store.user.wallet?.marketListExposure]);
 
   const fetchAnnouncement = async () => {
     try {
@@ -87,7 +87,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             </button>
             {store.user.isLogin && (
               <button
-                className="btn btn-primary mt-2 d-lg-none hambargerIcon d-md-none"
+                className="btn btn-primary mt-2 d-lg-none hambargerIcon "
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasTop"

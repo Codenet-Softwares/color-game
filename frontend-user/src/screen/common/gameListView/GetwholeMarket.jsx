@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../.././Lottery/firebaseStore/lotteryFirebase";
 
-
 const formatDate = (dateStr) => {
   const date = new Date(dateStr);
 
@@ -32,9 +31,8 @@ const formatDate = (dateStr) => {
 const GetwholeMarket = () => {
   const [user_allGamesWithMarketData, setUser_allGamesWithMarketData] =
     useState([]);
-    const [isLotteryUpdate, setIsLotteryUpdate] = useState(null);
-    const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
-
+  const [isLotteryUpdate, setIsLotteryUpdate] = useState(null);
+  const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
 
   const { store, dispatch } = useAppContext();
 
@@ -95,7 +93,7 @@ const GetwholeMarket = () => {
   return (
     <>
       {/* <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}> */}
-      <div className="row p-0 m-1">
+      <div className="row m-1">
         {user_allGamesWithMarketData &&
           user_allGamesWithMarketData
             .slice(0, store.user.isLogin ? 5 : 3)
@@ -121,9 +119,8 @@ const GetwholeMarket = () => {
                           .map((marketData, index) => (
                             <div
                               key={index}
-                              className="row my-2 p-2"
+                              className="row my-2 m-0"
                               style={{
-                                backgroundColor: "#f9f9f9",
                                 borderRadius: "5px",
                                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                               }}
@@ -134,11 +131,9 @@ const GetwholeMarket = () => {
                                   className="col-12 font-weight-bold text-uppercase text-primary fw-bold"
                                   style={{
                                     fontSize: "16px",
-                                    borderBottom: "2px solid #ddd",
-                                    // paddingBottom: "5px",
                                   }}
                                 >
-                                  💹 {marketData?.marketName ?? "Unknown"} |{" "}
+                                  💹{marketData?.marketName ?? "Unknown"} |{" "}
                                   <span
                                     className=""
                                     style={{ color: "#022C44" }}
@@ -149,43 +144,33 @@ const GetwholeMarket = () => {
                               </div>
 
                               {/* Range Details */}
-                              <div className="row mt-1 ">
-                                <div className="col-3">
-                                  <p className="m-0">
-                                    <strong>Group Range:</strong>
-                                  </p>
-                                  <p className="m-0">
-                                    {marketData?.group_start ?? "N/A"} -{" "}
-                                    {marketData?.group_end ?? "N/A"}
-                                  </p>
-                                </div>
-                                <div className="col-3">
-                                  <p className="m-0">
-                                    <strong>Series Range:</strong>
-                                  </p>
-                                  <p className="m-0">
-                                    {marketData?.series_start ?? "N/A"} -{" "}
-                                    {marketData?.series_end ?? "N/A"}
-                                  </p>
-                                </div>
-                                <div className="col-3">
-                                  <p className="m-0">
-                                    <strong>Number Range:</strong>
-                                  </p>
-                                  <p className="m-0">
-                                    {marketData?.number_start ?? "N/A"} -{" "}
-                                    {marketData?.number_end ?? "N/A"}
-                                  </p>
-                                </div>
-                                <div className="col-3">
-                                  <p className="m-0">
-                                    <strong>Price:</strong>
-                                  </p>
-                                  <p className="m-0">
-                                    {marketData?.price ?? "N/A"}
-                                  </p>
-                                </div>
-                              </div>
+                              <table className="table table-bordered mt-1 text-start">
+                                <thead>
+                                  <tr>
+                                    <th>Group Range</th>
+                                    <th>Series Range</th>
+                                    <th>Number Range</th>
+                                    <th>Price</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr>
+                                    <td>
+                                      {marketData?.group_start ?? "N/A"} -{" "}
+                                      {marketData?.group_end ?? "N/A"}
+                                    </td>
+                                    <td>
+                                      {marketData?.series_start ?? "N/A"} -{" "}
+                                      {marketData?.series_end ?? "N/A"}
+                                    </td>
+                                    <td>
+                                      {marketData?.number_start ?? "N/A"} -{" "}
+                                      {marketData?.number_end ?? "N/A"}
+                                    </td>
+                                    <td>{marketData?.price ?? "N/A"}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
                           ))}
 
@@ -199,7 +184,7 @@ const GetwholeMarket = () => {
                           to={`/lottery-home`}
                           style={{ textAlign: "right", margin: "16px" }}
                         >
-                          View more.....
+                          View more...
                         </Link>
                       ) : (
                         <p
@@ -213,7 +198,7 @@ const GetwholeMarket = () => {
                   ) : (
                     <>
                       <div
-                        className="col-12 p-2 fw-bold h6 text-white shadow-lg border"
+                        className="col-12 p-2 fw-bold h6 text-white shadow-lg"
                         style={{ backgroundColor: "#18ADC5" }}
                       >
                         {gameWithMarketData.gameName}

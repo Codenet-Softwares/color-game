@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
-import { write_db } from "../../config/database.js";
+import sequelize from "../db.js";
 
-const MarketListExposuer = write_db.define('MarketListExposuers', {
+const MarketListExposure = sequelize.define('MarketListExposuers', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -15,8 +15,8 @@ const MarketListExposuer = write_db.define('MarketListExposuers', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    exposuer: {
-        type: DataTypes.NUMBER,
+    exposure: {
+        type: DataTypes.FLOAT,
         allowNull: false,
     }
 },
@@ -25,4 +25,4 @@ const MarketListExposuer = write_db.define('MarketListExposuers', {
     }
 )
 
-export default MarketListExposuer
+export default MarketListExposure

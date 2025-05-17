@@ -39,8 +39,10 @@ export const AdminRoute = (app) => {
   // done
   app.post('/api/admin-create', adminCreateValidate, customErrorHandler, createAdmin);
 
+  // done
   app.post('/api/create-subAdmin',validateSubAdmin,customErrorHandler, authorize([string.Admin]), createSubAdmin);
 
+  // done
   app.get('/api/get-sub-admins', authorize([string.Admin]), getSubAdmins);
 
   // done

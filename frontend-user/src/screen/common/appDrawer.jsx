@@ -33,6 +33,7 @@ function AppDrawer({
 
   const [lotteryNewDrawTimes, setLotteryNewDrawTimes] = useState([]);
   const [lotteryNewToggle, setLotteryNewToggle] = useState(false); // New state for toggling draw times
+  const [gameNewToggle, setGameNewToggle] = useState(false);
   const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
   const { dispatch, store } = useAppContext();
@@ -56,6 +57,9 @@ function AppDrawer({
   }
   const handleLotteryNewToggle = () => {
     setLotteryNewToggle(!lotteryNewToggle);
+  };
+  const handleGameNewToggle = () => {
+    setGameNewToggle(!gameNewToggle);
   };
   const handleAllId = (gameId, marketId) => {
     dispatch({
@@ -115,12 +119,11 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className="sidebar border mt-4"
-        style={{ overflowY: "auto", height: "82vh" }}
+        className={`sidebar border ${store.user.isLogin ? "mt-4" : "mt-1"}`}
+        style={{ overflowY: "auto", height: "83vh" }}
       >
         <span
           style={{
-            // background: "#2cb3d1",
             display: "block",
             textIndent: "65px",
             fontWeight: "500",
@@ -128,7 +131,6 @@ function AppDrawer({
           }}
           className="text-white"
         >
-          {/* Popular{" "} */}
           <button
             type="button"
             className="btn-close d-xl-none d-lg-none d-md-none"
@@ -182,10 +184,20 @@ function AppDrawer({
               ) : (
                 <>
                   <li
-                    className={toggleStates[index] ? "subMenuHead" : "MenuHead"}
+                    className={toggleStates[index] ? "" : "MenuHead"}
                     onClick={() => handleToggle(index)}
                   >
-                    <Link>{gameObj?.gameName}</Link>
+                    {/* <Link>{gameObj?.gameName}</Link> */}
+                    <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
+                      {gameObj?.gameName}
+                      <span
+                        className={`dropdown-icon ${
+                          toggleStates[index] ? "active" : ""
+                        }`}
+                      >
+                        ▼
+                      </span>
+                    </div>
                   </li>
                   {/* Mapping over markets inside each gameName */}
                   {toggleStates[index] && gameObj.markets.length > 0
@@ -228,8 +240,9 @@ function AppDrawer({
     ) : (
       <div className="container-fluid">
         <div className="row" style={{ height: "100vh", display: "flex" }}>
+          {/* LEFT NAVBAR - md: 4, lg: 2 */}
           <div
-            className="col-md-2 position-fixed d-none d-md-block vertical-navbar p-0"
+            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar p-0"
             style={{
               height: "100vh",
               marginTop: isHomePage ? "0px" : "93px",
@@ -238,27 +251,28 @@ function AppDrawer({
             {getLeftNavBar()}
           </div>
 
+          {/* MAIN CONTENT - md: 8 offset-4, lg: 7 offset-2 */}
           <div
-            className={`custom-scrollbar col-md-${
-              ["/home", "/"].includes(location?.pathname) ? "7" : "10"
-            } offset-md-2`}
+            className={`custom-scrollbar offset-md-4 col-md-8 offset-lg-2 ${
+              ["/home", "/"].includes(location?.pathname)
+                ? "col-lg-7"
+                : "col-lg-10"
+            } `}
             style={{
               overflowY: "auto",
-
               height: "calc(100vh - 40px)",
             }}
           >
-            <div className="col-md-12">{showCarousel && <InnerCarousel />}</div>
+            <div className="col-12">{showCarousel && <InnerCarousel />}</div>
             {children}
           </div>
+
+          {/* RIGHT SIDEBAR - only for desktop (lg: col-3) */}
           {["/home", "/"].includes(location?.pathname) && (
             <div
-              className={`col-md-${
-                ["/home", "/"].includes(location?.pathname) ? "3" : ""
-              } d-none d-md-block  p-0`}
+              className="d-none d-lg-block col-lg-3 p-0"
               style={{
-                position:
-                  ["/home", "/"].includes(location?.pathname) && "fixed",
+                position: "fixed",
                 right: "0",
                 top: isHomePage ? "125px" : "",
                 height: "calc(100vh - 125px)",

@@ -357,8 +357,8 @@ const ProfitLoss = ({
             style={{ backgroundColor: "#2CB3D1", borderRadius: "8px" }}
           >
             <div class="container">
-              <div class="row">
-                <div class="col-12 col-md-3 text-center">
+              <div class="row justify-content-center">
+                <div class="col-9 col-md-9 text-center ">
                   <label className="fw-bold mb-1">Data Source</label>{" "}
                   <select
                     class="form-select fw-bold"
@@ -381,7 +381,7 @@ const ProfitLoss = ({
                     </option>
                   </select>
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column text-center">
+                <div class="col-9 col-md-6 d-flex flex-column text-center">
                   {" "}
                   <label className="fw-bold mb-1">From:</label>
                   <DatePicker
@@ -391,7 +391,7 @@ const ProfitLoss = ({
                     className="form-control"
                   />
                 </div>
-                <div class="col-12 col-md-3 d-flex flex-column text-center">
+                <div class="col-9 col-md-6 d-flex flex-column text-center">
                   {" "}
                   <label className="fw-bold mb-1">To:</label>
                   <DatePicker
@@ -401,7 +401,7 @@ const ProfitLoss = ({
                     className="form-control"
                   />
                 </div>
-                <div class="col-12 col-md-3 d-flex align-items-end mt-3">
+                <div class="col-12 col-md-9 d-flex align-items-end mt-3">
                   <button
                     className="btn btn-danger w-100 fw-bold"
                     disabled={startDate === null || endDate === null}
@@ -438,135 +438,133 @@ const ProfitLoss = ({
                 <option value="50">50 Entries</option>
                 <option value="100">100 Entries</option>
               </select>
-              </div>
-              <div className="col-12 col-md-auto ms-auto">
+            </div>
+            <div className="col-12 col-md-auto ms-auto">
               <input
                 type="search"
                 className="form-control"
                 placeholder="Search..."
                 onChange={handleSearch}
               />
-              </div>
+            </div>
           </div>
-                {/* Table */}
-                  <div class="table-responsive">
-                    <table className="table lms_table_active3 table-bordered">
-                      <thead>
-                        <tr
-                          style={{
-                            backgroundColor: "#e6e9ed",
-                            color: "#5562a3",
-                          }}
-                          className="text-center"
+          {/* Table */}
+          <div class="table-responsive">
+            <table className="table lms_table_active3 table-bordered">
+              <thead>
+                <tr
+                  style={{
+                    backgroundColor: "#e6e9ed",
+                    color: "#5562a3",
+                  }}
+                  className="text-center"
+                >
+                  <th>
+                    <h6 className="fw-bold">Sport Name</h6>
+                  </th>
+                  <th>
+                    <h6 className="fw-bold">Profit & Loss</h6>
+                  </th>
+                  <th>
+                    <h6 className="fw-bold">Commission</h6>
+                  </th>
+                  <th>
+                    <h6 className="fw-bold">Total P&L</h6>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dataGameWise?.length > 0 ? (
+                  dataGameWise?.map((data) => (
+                    <tr align="center">
+                      {" "}
+                      <td
+                        onClick={() =>
+                          data?.gameName === "Lottery"
+                            ? getProfitLossLotteryEventWise(
+                              data?.gameId,
+                              "ProfitAndLossLotteryEvent"
+                            )
+                            : getProfitLossEventWise(
+                              data?.gameId,
+                              "ProfitAndLossEvent"
+                            )
+                        }
+                        className="text-primary fw-bold"
+                        style={{ cursor: "pointer" }}
+                      >
+                        {data?.gameName}
+                      </td>
+                      <td
+                        className={`fw-bold ${data?.totalProfitLoss > 0
+                          ? "text-success"
+                          : "text-danger"
+                          }`}
+                      >
+                        {data?.totalProfitLoss}
+                      </td>
+                      <td>{data?.commission || 0}</td>
+                      <td>
+                        <span
+                          className={`fw-bold ${data?.totalProfitLoss > 0
+                            ? "text-success"
+                            : "text-danger"
+                            }`}
                         >
-                          <th>
-                            <h6 className="fw-bold">Sport Name</h6>
-                          </th>
-                          <th>
-                            <h6 className="fw-bold">Profit & Loss</h6>
-                          </th>
-                          <th>
-                            <h6 className="fw-bold">Commission</h6>
-                          </th>
-                          <th>
-                            <h6 className="fw-bold">Total P&L</h6>
-                          </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {dataGameWise?.length > 0 ? (
-                          dataGameWise?.map((data) => (
-                            <tr align="center">
-                              {" "}
-                              <td
-                                onClick={() =>
-                                  data?.gameName === "Lottery"
-                                    ? getProfitLossLotteryEventWise(
-                                        data?.gameId,
-                                        "ProfitAndLossLotteryEvent"
-                                      )
-                                    : getProfitLossEventWise(
-                                        data?.gameId,
-                                        "ProfitAndLossEvent"
-                                      )
-                                }
-                                className="text-primary fw-bold"
-                                style={{ cursor: "pointer" }}
-                              >
-                                {data?.gameName}
-                              </td>
-                              <td
-                                className={`fw-bold ${
-                                  data?.totalProfitLoss > 0
-                                    ? "text-success"
-                                    : "text-danger"
-                                }`}
-                              >
-                                {data?.totalProfitLoss}
-                              </td>
-                              <td>{data?.commission || 0}</td>
-                              <td>
-                                <span
-                                  className={`fw-bold ${
-                                    data?.totalProfitLoss > 0
-                                      ? "text-success"
-                                      : "text-danger"
-                                  }`}
-                                >
-                                  {data?.totalProfitLoss}
-                                </span>
-                              </td>
-                            </tr>
-                          ))
-                        ) : (
-                          <tr align="center">
-                            <td colspan="4">
-                              <div
-                                className="alert alert-info fw-bold text-danger"
-                                role="alert"
-                              >
-                                No Data Found !!
-                              </div>
-                            </td>
-                          </tr>
-                        )}
-                        </tbody>
-                      
-                    </table>
-                  </div>
-                  {/* Table */}
+                          {data?.totalProfitLoss}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr align="center">
+                    <td colspan="4">
+                      <div
+                        className="alert alert-info fw-bold text-danger"
+                        role="alert"
+                      >
+                        No Data Found !!
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
 
-                {/* No Data Found */}
-                {/* {props.length === 0 && (
+            </table>
+          </div>
+          {/* Table */}
+
+          {/* No Data Found */}
+          {/* {props.length === 0 && (
                 <div className="alert text-dark bg-light mt-3" role="alert">
                   <div className="alert-text d-flex justify-content-center">
                     <b> &#128680; No Data Found !! </b>
                   </div>
                 </div>
               )} */}
-                {/* End of No Data Found */}
-                <li
-  className="list-group-item"
-  style={{
-    overflowX: "auto",
-    overflowY: "hidden",
-    scrollbarWidth: "none",
-    msOverflowStyle: "none",
-  }}
->
-  {/* Pagination */}
-  {dataGameWise?.length > 0 && (
-    <Pagination
-      currentPage={currentPage}
-      totalPages={totalPages}
-      handlePageChange={handlePageChange}
-      startIndex={startIndex}
-      endIndex={endIndex}
-      totalData={totalData}
-    />
-  )}
-  {/* Pagination */}
-</li>
+          {/* End of No Data Found */}
+          <li
+            className="list-group-item"
+            style={{
+              overflowX: "auto",
+              overflowY: "hidden",
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
+          >
+            {/* Pagination */}
+            {dataGameWise?.length > 0 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                handlePageChange={handlePageChange}
+                startIndex={startIndex}
+                endIndex={endIndex}
+                totalData={totalData}
+              />
+            )}
+            {/* Pagination */}
+          </li>
 
         </div>
       ) : (

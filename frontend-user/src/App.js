@@ -30,6 +30,7 @@ import LotteryBuyLayout from "./screen/Lottery/UserPurchase/LotteryBuyLayout";
 import BetHistory from "./betHistory/BetHistory";
 
 // import GameWithMarketList from "./screen/common/gameListView/gameWithMarketList";
+import LivegameList from "./screen/common/gameListView/LivegameList";
 
 function App() {
   return (
@@ -134,6 +135,12 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          <Route path="/livegames" element={
+            <PrivateRoute>
+              <LivegameList />
+            </PrivateRoute>
+          } />
 
           {/* not found */}
           <Route path="*" element={<NotFound />} />

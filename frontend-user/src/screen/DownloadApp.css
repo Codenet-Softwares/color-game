@@ -1,0 +1,30 @@
+.app-download-section {
+  background: linear-gradient(to bottom, #045662, #1fa5c3, #094359);
+  background-repeat: no-repeat;
+  /* border-radius: 20px; */
+}
+.get_text {
+  color: #e0dfdc;
+  font-size: clamp(30px, 5vw, 55px);
+  text-shadow: -3px -3px 3px #111111, 4px 4px 1px #363636;
+}
+.download_btn {
+  background-image: linear-gradient(
+    45deg,
+    rgb(220, 220, 220),
+    rgb(150, 220, 240),
+    rgba(180, 255, 255, 0.5)
+  );
+  color: #005870;
+  font-size: 1.2rem;
+  padding: 12px 28px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 60px;
+  box-shadow: 0 8px 16px rgba(0, 128, 148, 0.4),
+    0 0 15px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
+  text-shadow: 1px 1px 3px rgba(0, 128, 148, 0.8),
+    0 0 5px rgba(255, 255, 255, 0.6);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid #005870;
+}
