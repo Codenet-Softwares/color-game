@@ -89,14 +89,14 @@ BetHistory.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as
 Market.hasMany(MarketBalance, { foreignKey: 'marketId', sourceKey: 'marketId' });
 MarketBalance.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
 
-InactiveGame.belongsTo(Game, { foreignKey: 'gameId' });
-Game.hasMany(InactiveGame, { foreignKey: 'gameId' });
+// InactiveGame.belongsTo(Game, { foreignKey: 'gameId' });
+// Game.hasMany(InactiveGame, { foreignKey: 'gameId' });
 
-InactiveGame.belongsTo(Market, { foreignKey: 'marketId' });
-Market.hasMany(InactiveGame, { foreignKey: 'marketId' });
+// InactiveGame.belongsTo(Market, { foreignKey: 'marketId' });
+// Market.hasMany(InactiveGame, { foreignKey: 'marketId' });
 
-InactiveGame.belongsTo(Runner, { foreignKey: 'runnerId' });
-Runner.hasMany(InactiveGame, { foreignKey: 'runnerId' });
+// InactiveGame.belongsTo(Runner, { foreignKey: 'runnerId' });
+// Runner.hasMany(InactiveGame, { foreignKey: 'runnerId' });
 
 // Index Management
 checkAndManageIndexes('game');

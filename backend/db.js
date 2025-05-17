@@ -26,6 +26,7 @@ sequelize
     console.error('Unable to connect to the database:', err);
   });
 
+
   export const sql = mysql2.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
