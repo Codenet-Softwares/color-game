@@ -152,3 +152,18 @@
     opacity: 1;
   }
 }
+.sidebar {
+  height: 90vh;
+  overflow-y: auto; 
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    height: 100vh;
+  }
+}
+@media (min-width: 768px) {
+  .sidebar {
+    height: 84vh;
+  }
+}
