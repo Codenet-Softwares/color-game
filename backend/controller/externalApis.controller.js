@@ -86,15 +86,13 @@ export const getExternalUserBetHistory = async (req, res) => {
     if (type === "void") {
       whereCondition.isVoid = true;
       model = BetHistory;
-    }else if(type === "settle")
-    {
+    } else if (type === "settle") {
       whereCondition.isVoid = false;
       model = BetHistory;
-    }else if(type === "unsettle")
-    {
+    } else if (type === "unsettle") {
       whereCondition.isWin = false;
       model = CurrentOrder;
-    }else{
+    } else {
       return res
         .status(statusCode.success)
         .send(
@@ -132,7 +130,7 @@ export const getExternalUserBetHistory = async (req, res) => {
       })
     );
   } catch (error) {
-    console.log("error",error)
+    console.log("error", error)
     res
       .status(statusCode.internalServerError)
       .send(
@@ -236,7 +234,7 @@ export const calculateExternalProfitLoss = async (req, res) => {
       offset: (page - 1) * limit,
       limit: limit,
     });
-/*********************************Previous Logic***************************************************************************************************************** */
+    /*********************************Previous Logic***************************************************************************************************************** */
     // const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
     //   attributes: [
     //     [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
@@ -280,7 +278,7 @@ export const calculateExternalProfitLoss = async (req, res) => {
         ],
       ],
       where: {
-         userName: userName,
+        userName: userName,
       },
       group: ["userId"],
     });
@@ -651,7 +649,7 @@ export const liveMarketBet = async (req, res) => {
     );
 
 
-    const { users } = response.data.data; 
+    const { users } = response.data.data;
     const userIds = users.map((user) => user.userId);
 
     const marketDataRows = await Market.findAll({
@@ -693,11 +691,11 @@ export const liveMarketBet = async (req, res) => {
         where: {
           marketId: marketDataRows[0].marketId,
           runnerId: runner.runnerId,
-          userId: userIds, 
+          userId: userIds,
         },
       });
 
-      
+
 
       marketDataObj.runners.push({
         id: runner.id,
@@ -852,7 +850,7 @@ export const liveUserBet = async (req, res) => {
       announcementResult: marketDataRows[0].announcementResult,
       isActive: marketDataRows[0].isActive,
       runners: [],
-      usersDetails: [], 
+      usersDetails: [],
     };
 
     // Populate runners data
@@ -967,7 +965,7 @@ export const getExternalLotteryP_L = async (req, res) => {
     const parsedLimit = parseInt(limit);
     const offset = (currentPage - 1) * parsedLimit;
 
-    const  lotteryProfitLossRecords  = await LotteryProfit_Loss.findAll({
+    const lotteryProfitLossRecords = await LotteryProfit_Loss.findAll({
       where: { userName },
       attributes: ['gameName', 'marketName', 'marketId', 'profitLoss'],
     });
@@ -989,7 +987,7 @@ export const getExternalLotteryP_L = async (req, res) => {
       page: currentPage,
       limit: parsedLimit,
       totalPages,
-      totalItems: uniqueRecords.length, 
+      totalItems: uniqueRecords.length,
     };
 
 
@@ -1125,7 +1123,7 @@ export const getRevokeMarket = async (req, res) => {
       }
       userProfitLossMap[userId].totalProfitLoss += Number(profitLoss) > 0 ? Number(profitLoss) : 0;
       userProfitLossMap[userId].totalPrice += Number(price);
-      userProfitLossMap[userId].exposurePrice += Number(price); 
+      userProfitLossMap[userId].exposurePrice += Number(price);
     });
 
     const userIds = Object.keys(userProfitLossMap);
@@ -1150,7 +1148,7 @@ export const getRevokeMarket = async (req, res) => {
       let existingMarket = marketListExposure.find(market => market[marketId] !== undefined);
 
       if (existingMarket) {
-        existingMarket[marketId] += exposurePrice; 
+        existingMarket[marketId] += exposurePrice;
       } else {
         marketListExposure.push({ [marketId]: exposurePrice });
       }
@@ -1192,15 +1190,11 @@ export const getDeleteLiveMarket = async (req, res) => {
           )
         );
     }
-    const users = await userSchema.findAll({
-      where: { userId },
+    const userExposures = await MarketListExposure.findAll({
+      where: { UserId: userId },
     });
 
-    const user = await userSchema.findOne({
-      where: { userId },
-    });
-
-    if (!user || user.length === 0) {
+    if (!userExposures || userExposures.length === 0) {
       return res
         .status(statusCode.notFound)
         .send(
@@ -1208,48 +1202,39 @@ export const getDeleteLiveMarket = async (req, res) => {
             null,
             false,
             statusCode.notFound,
-            "No matching users found in the database"
+            "No matching exposures found in the database"
           )
         );
     }
-    let exposureValue = 0;
-    for (const user of users) {
-      const totalExposures = user.marketListExposure.filter(
-        (item) => Object.keys(item)[0] === marketId
-      );
-
-
-      for (const exposure of totalExposures) {
-        exposureValue += Number(exposure[marketId]);
-      }
-    }
-    const matchedExposures = user.marketListExposure.filter(
-      (item) => Object.values(item)[0] === price
+    const totalMarketExposures = userExposures.filter(
+      (item) => item.MarketId === marketId
     );
 
     let totalExposureValue = 0;
 
-    matchedExposures.forEach((item) => {
-      totalExposureValue += Number(Object.values(item)[0]);
+    totalMarketExposures.forEach((item) => {
+      totalExposureValue += Number(item.exposure);
     });
 
-    let marketExposure = user.marketListExposure.filter(item => Object.keys(item)[0] === marketId);
+    const matchedExposure = await MarketListExposure.findOne({
+      where: {
+        UserId: userId,
+        MarketId: marketId,
+        exposure: price,
+      },
+    });
 
-    if (marketExposure.length > 0) {
-      const marketKey = Object.keys(marketExposure[0])[0];
-      let marketValue = marketExposure[0][marketKey];
-
-      marketExposure[0][marketKey] = marketValue - price;
-
-      user.set('marketListExposure', [...user.marketListExposure]);
-      user.changed('marketListExposure', true);
-
-      await user.update({ marketListExposure: user.marketListExposure }, { transaction: t });
+    if (matchedExposure) {
+      let newExposure = matchedExposure.exposure - price;
+      if (newExposure <= 0) {
+        await matchedExposure.destroy({ transaction: t });
+      } else {
+        matchedExposure.exposure = newExposure;
+        await matchedExposure.save({ transaction: t });
+      }
     }
 
-    await user.save();
     await t.commit();
-
     return res
       .status(statusCode.success)
       .send(
@@ -1405,13 +1390,13 @@ export const deleteBetAfterWin = async (req, res) => {
       complementaryPrize,
     } = req.body;
 
-    console.log("prizeAmount........................",prizeAmount)
+    console.log("prizeAmount........................", prizeAmount)
     console.log("complementaryPrize....................", complementaryPrize)
 
     let subtractAmount;
     if (prizeCategory === "First Prize") {
       subtractAmount = prizeAmount;
-    } else if(complementaryPrize > 0){
+    } else if (complementaryPrize > 0) {
       subtractAmount = complementaryPrize;
     }
     else {
@@ -1506,21 +1491,21 @@ export const afterWinVoidMarket = async (req, res) => {
     }
 
     await WinningAmount.update(
-      { amount: 0 }, 
+      { amount: 0 },
       {
         where: {
           userId: userId,
-          marketId, 
+          marketId,
           type: 'win',
         },
       }
     );
 
-    await  WinningAmount.update({isVoidAfterWin: true},{where:{marketId}})
+    await WinningAmount.update({ isVoidAfterWin: true }, { where: { marketId } })
 
-      await LotteryProfit_Loss.destroy({
-        where: { marketId , userId},
-      });
+    await LotteryProfit_Loss.destroy({
+      where: { marketId, userId },
+    });
 
     return res
       .status(statusCode.success)
