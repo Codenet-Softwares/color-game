@@ -66,7 +66,17 @@ Runner.init(
     clientMessage: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    }
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isPermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,
