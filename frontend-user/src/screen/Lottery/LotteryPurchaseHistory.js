@@ -261,19 +261,26 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         </h5>
         {visibleMarkets.length > 0 ? (
           <>
-            <div className="d-flex align-items-center justify-content-center flex-wrap mb-2">
+            <div className="d-flex align-items-center justify-content-center flex-wrap mb-2 shadow-lg px-2 rounded">
               <button
-                className="btn btn-sm btn-outline-primary me-2"
+                className="btn btn-sm me-2"
                 onClick={handleLeftClick}
                 disabled={state.visibleStartIndex === 0}
                 style={{
-                  borderRadius: "50%",
+                  // borderRadius: "50%",
                   width: "35px",
                   height: "35px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   padding: 0,
+                  backgroundColor:
+                    state.visibleStartIndex === 0 ? "#ccc" : "#0d6efd",
+                  color: "#fff",
+                  border: "none",
+                  cursor:
+                    state.visibleStartIndex === 0 ? "not-allowed" : "pointer",
+                  opacity: state.visibleStartIndex === 0 ? 0.6 : 1,
                 }}
               >
                 <span style={{ fontSize: "16px", fontWeight: "bold" }}>
@@ -281,7 +288,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                 </span>
               </button>
 
-              <div className="d-flex flex-wrap justify-content-center">
+              <div className="d-flex flex-wrap justify-content-center mt-2">
                 {visibleMarkets.map((market) => (
                   <span
                     key={market.marketId}
@@ -296,6 +303,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                       fontSize: "14px",
                       borderRadius: "20px",
                       transition: "all 0.3s ease-in-out",
+                      borderRadius:"5px"
                     }}
                     onClick={() => handleMarketClick(market.marketId)}
                   >
@@ -305,19 +313,36 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
               </div>
 
               <button
-                className="btn btn-sm btn-outline-primary"
+                className="btn btn-sm"
                 onClick={handleRightClick}
                 disabled={
                   state.visibleStartIndex + visibleCount >= state.markets.length
                 }
                 style={{
-                  borderRadius: "50%",
+                  // borderRadius: "50%",
                   width: "35px",
                   height: "35px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   padding: 0,
+                  backgroundColor:
+                    state.visibleStartIndex + visibleCount >=
+                    state.markets.length
+                      ? "#ccc"
+                      : "#0d6efd",
+                  color: "#fff",
+                  border: "none",
+                  cursor:
+                    state.visibleStartIndex + visibleCount >=
+                    state.markets.length
+                      ? "not-allowed"
+                      : "pointer",
+                  opacity:
+                    state.visibleStartIndex + visibleCount >=
+                    state.markets.length
+                      ? 0.6
+                      : 1,
                 }}
               >
                 <span style={{ fontSize: "16px", fontWeight: "bold" }}>
