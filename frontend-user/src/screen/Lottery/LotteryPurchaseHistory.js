@@ -255,7 +255,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       </div>
 
       {/* Market Navigation */}
-      <div className="d-flex flex-column align-items-center mb-3 p-2 rounded shadow mt-3">
+      <div className="d-flex flex-column align-items-center mb-3 p-2 rounded shadow mt-5">
         <h5 className="fw-bold " style={{ color: "#284B63" }}>
           LOTTERY MARKETS
         </h5>
