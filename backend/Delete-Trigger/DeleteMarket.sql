@@ -1,4 +1,5 @@
 USE colorgame_refactor;
+
 DELIMITER $$
 
 CREATE TRIGGER DeleteMarket
@@ -14,9 +15,10 @@ BEGIN
 
   -- Handle isPermanentDeleted change
   IF NEW.isPermanentDeleted = TRUE AND OLD.isPermanentDeleted = FALSE THEN
-    UPDATE whiteLabel_refactor_archive.market
+    UPDATE colorgame_refactor_archive.market
     SET isPermanentDeleted = TRUE
     WHERE gameId = OLD.gameId;
+    
   END IF;
 END$$
 

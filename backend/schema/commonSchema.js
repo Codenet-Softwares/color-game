@@ -795,9 +795,9 @@ export const validateRevokeLiveMarket= [
 ]
 
 export const validateApprovalMarket = [
-  param("approvalMarketId")
+  param("marketId")
     .isUUID()
-    .withMessage("Invalid Approval ID."),
+    .withMessage("Invalid Market ID."),
 ];
 
 export const validateUserLiveBet = [

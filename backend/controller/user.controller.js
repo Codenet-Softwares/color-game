@@ -460,6 +460,7 @@ export const getAllGameData = async (req, res) => {
             "isActive",
             "hideMarketUser",
             "isVoid",
+            "isDeleted",
             "createdAt",
           ],
           include: [
@@ -475,13 +476,13 @@ export const getAllGameData = async (req, res) => {
                 "hideRunnerUser",
                 "createdAt",
               ],
-              order: [["createdAt", "DESC"]], // Sort Runners in DESC order
+              order: [["createdAt", "DESC"]],
             },
           ],
-          order: [["createdAt", "DESC"]], // Sort Markets in DESC order
+          order: [["createdAt", "DESC"]],
         },
       ],
-      order: [["createdAt", "DESC"]], // Sort Games in DESC order
+      order: [["createdAt", "DESC"]],
     });
     
 
@@ -493,7 +494,7 @@ export const getAllGameData = async (req, res) => {
     isBlink: game.isBlink,
     createdAt: game.createdAt, // Ensure createdAt is included
     markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false)
+      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
       .map((market) => ({
         marketId: market.marketId,
@@ -594,6 +595,7 @@ export const filteredGameData = async (req, res) => {
             "announcementResult",
             "hideMarketUser",
             "isActive",
+            "isDeleted",
             "isVoid"
           ],
           where: {
@@ -639,7 +641,7 @@ export const filteredGameData = async (req, res) => {
       description: game.description,
       isBlink: game.isBlink,
       markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false)
+      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .map((market) => ({
         marketId: market.marketId,
         marketName: market.marketName,
@@ -667,7 +669,7 @@ export const filteredGameData = async (req, res) => {
     }));
 
     // Send the formatted response
-    res
+    return res
       .status(statusCode.success)
       .json(
         apiResponseSuccess(
@@ -679,7 +681,7 @@ export const filteredGameData = async (req, res) => {
       );
   } catch (error) {
     console.error("Error retrieving game data:", error);
-    res
+    return res
       .status(statusCode.internalServerError)
       .json(
         apiResponseErr(

@@ -309,7 +309,7 @@ export const getAllMarkets = async (req, res) => {
         },
         hideMarket: false,
         isVoid: false,
-        deleteApproval: false
+        isDeleted: false
       },
       offset: (page - 1) * pageSize,
       limit: pageSize,
@@ -1028,26 +1028,34 @@ export const deleteMarket = async (req, res) => {
   try {
     const { marketId } = req.params;
 
-    const getMarket = await Market.findOne({ where: { marketId }, transaction });
+    const getMarket = await Market.findOne({
+      where: { marketId },
+      transaction,
+    });
     if (!getMarket) {
       return res
         .status(statusCode.success)
-        .send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Market or Runner not found"
+          )
+        );
     }
 
-    await MarketDeleteApproval.create({
-      approvalMarkets: [getMarket.dataValues],
-      approvalMarketId: uuidv4(),
-    }, { transaction });
-
-    await getMarket.update({
-      deleteApproval: true,
-      transaction,
-    });
+    await Market.update(
+      { isDeleted: true },
+      {
+        where: { marketId },
+        transaction,
+      }
+    );
 
     await transaction.commit();
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
@@ -1059,7 +1067,7 @@ export const deleteMarket = async (req, res) => {
       );
   } catch (error) {
     transaction.rollback();
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
@@ -1089,7 +1097,7 @@ export const deleteRunner = async (req, res) => {
         );
     }
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
@@ -1100,7 +1108,7 @@ export const deleteRunner = async (req, res) => {
         )
       );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(

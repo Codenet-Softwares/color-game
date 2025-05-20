@@ -13,25 +13,25 @@ export const getDeleteMarket = async (req, res) => {
         const { page = 1, limit = 10, search = "" } = req.query;
         const offset = (page - 1) * limit;
 
-        const where = search
-            ? Sequelize.literal(`JSON_SEARCH(approvalMarkets, 'one', '%${search}%', NULL, '$[*].marketName') IS NOT NULL`)
-            : {};
+        const where = { isDeleted: true };
 
-        const { rows: deleteMarket, count: totalItems } = await MarketDeleteApproval.findAndCountAll({
-            attributes: ["approvalMarketId", "approvalMarkets"],
+        if (search) {
+          where.marketName = { [Op.like]: `%${search}%` };
+        }
+
+        const { rows: existingMarket, count: totalItems } =
+          await Market.findAndCountAll({
             where,
             limit: parseInt(limit),
             offset: parseInt(offset),
-            order : [["createdAt", "DESC"]],
-        });
+            order: [["createdAt", "DESC"]],
+          });
 
-        const response = deleteMarket.map((approval) => {
-            const market = approval.approvalMarkets[0];
+        const response = existingMarket.map((item) => {
             return {
-                approvalMarketId: approval.approvalMarketId,
-                marketName: market.marketName,
-                marketId: market.marketId,
-                isActive: market.isActive,
+                marketName: item.marketName,
+                marketId: item.marketId,
+                isActive: item.isActive,
             };
         });
 
@@ -56,10 +56,10 @@ export const getDeleteMarket = async (req, res) => {
 
 export const restoreDeleteMarket = async (req, res) => {
     try {
-        const { approvalMarketId } = req.params;
+        const { marketId } = req.params;
 
-        const restoreDeletedMarket = await MarketDeleteApproval.findOne({
-            where: { approvalMarketId }
+        const restoreDeletedMarket = await Market.findOne({
+            where: { marketId }
         });
 
         if (!restoreDeletedMarket) {
@@ -68,16 +68,10 @@ export const restoreDeleteMarket = async (req, res) => {
                 .send(apiResponseErr(null, false, statusCode.notFound, "Market not found"));
         }
 
-        const marketData = restoreDeletedMarket.approvalMarkets[0];
-
         await Market.update(
-            { deleteApproval: false },
-            { where: { marketId: marketData.marketId } }
+            { isDeleted: false },
+            { where: { marketId } }
         );
-
-        await MarketDeleteApproval.destroy({
-            where: { approvalMarketId }
-        });
 
         return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market restored successfully"));
     } catch (error) {
