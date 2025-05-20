@@ -120,7 +120,9 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className={`sidebar border-top-0 border-end ${store.user.isLogin ? "mt-4" : "mt-1"}`}
+        className={`sidebar border-top-0 border-end ${
+          store.user.isLogin ? "mt-4" : "mt-1"
+        }`}
         style={{ overflowY: "auto" }}
       >
         <span
@@ -137,7 +139,7 @@ function AppDrawer({
             className="btn-close d-xl-none d-lg-none d-md-none"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
-            style={{ marginLeft: "70%",position:"absolute",top:"0"}}
+            style={{ marginLeft: "70%", position: "absolute", top: "0" }}
           />
         </span>
 
@@ -162,7 +164,11 @@ function AppDrawer({
                 {lotteryNewDrawTimes.map((market) => (
                   <li
                     key={market.marketId}
-                    className="subMenuHead mt-2 text-info text-uppercase"
+                    className="subMenuHead mt-2 text-info text-uppercase text-wrap"
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "normal",
+                    }}
                   >
                     <Link
                       to={`/lottoPurchase/${market.marketId}`}
@@ -205,9 +211,13 @@ function AppDrawer({
                     ? gameObj?.markets?.map((marketObj, marketIndex) => {
                         return (
                           <li
-                            className="subMenuItems"
+                            className="subMenuItems text-wrap"
+                            style={{
+                              wordBreak: "break-word",
+                              whiteSpace: "normal",
+                            }}
                             key={marketIndex}
-                             onClick={() =>
+                            onClick={() =>
                               handleAllId(gameObj?.gameId, marketObj?.marketId)
                             }
                           >
