@@ -1094,7 +1094,7 @@ export const liveUsersBet = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
 
-    const whereCondition = { marketId, isDeleted: false };
+    const whereCondition = { marketId, isLiveDeleted: false };
 
     if (search) {
       whereCondition.userName = { [Op.like]: `%${search}%` };
@@ -1180,17 +1180,26 @@ export const getUsersLiveBetGames = async (req, res) => {
     const limit = parseInt(pageSize, 10);
     const offset = (parseInt(page, 10) - 1) * limit;
 
-    const whereClause = search
-      ? {
-          [Op.or]: [
-            { userName: { [Op.like]: `%${search}%` } },
-            { marketName: { [Op.like]: `%${search}%` } },
-          ],
-        }
-      : {};
+    const whereClause = {
+      isLiveDeleted: false,
+    };
+
+    if (search) {
+      whereClause[Op.or] = [
+        { userName: { [Op.like]: `%${search}%` } },
+        { marketName: { [Op.like]: `%${search}%` } },
+      ];
+    }
 
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "createdAt"],
+      attributes: [
+        "gameId",
+        "gameName",
+        "marketId",
+        "marketName",
+        "userName",
+        "createdAt",
+      ],
       where: whereClause,
       order: [["createdAt", "DESC"]],
       raw: true,
