@@ -84,6 +84,16 @@ CurrentOrder.init(
       allowNull: false,
       defaultValue: false,
     },
+    isLiveDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+      isLivePermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    }
   },
   {
     sequelize,

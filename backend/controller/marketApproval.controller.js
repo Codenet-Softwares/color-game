@@ -1,7 +1,6 @@
 import { Op, Sequelize } from "sequelize";
 import { statusCode } from "../helper/statusCodes.js";
 import { apiResponseErr, apiResponseSuccess } from "../middleware/serverError.js";
-import MarketDeleteApproval from "../models/marketApproval.model.js";
 import Market from "../models/market.model.js";
 import { sequelize } from "../db.js";
 import Runner from "../models/runner.model.js";
@@ -85,56 +84,50 @@ export const restoreDeleteMarket = async (req, res) => {
 export const deleteMarket = async (req, res) => {
     const transaction = await sequelize.transaction();
     try {
-        const { approvalMarketId } = req.params;
+        const { marketId } = req.params;
 
-        const deletedMarket = await MarketDeleteApproval.findOne({
-            where: { approvalMarketId }
-        });
-
-        const marketData = deletedMarket.approvalMarkets[0];
-        const runners = await Runner.findAll({
-            where: { marketId: marketData.marketId },
+        const existingMarket = await Market.findOne({
+            where: { marketId },
             transaction,
         });
 
+        if (!existingMarket) {
+            return res
+                .status(statusCode.notFound)
+                .send(apiResponseErr([], false, statusCode.notFound, "Market not found"));
+        }
+
+        const runners = await Runner.findAll({ where: { marketId }, transaction });
         const runnerIds = runners.map((runner) => runner.runnerId);
 
-        if (runnerIds.length) {
-            await rateSchema.destroy({
-                where: { runnerId: { [Op.in]: runnerIds } },
-                transaction,
-            });
-
-            await Runner.destroy({
-                where: { marketId: marketData.marketId },
-                transaction,
-            });
+        if (runnerIds.length > 0) {
+            await rateSchema.update({ isPermanentDeleted: true }, { where: { runnerId: runnerIds }, transaction });
         }
 
-        await CurrentOrder.destroy({
-            where: { marketId: marketData.marketId },
-            transaction,
-        });
+        await Runner.update({ isPermanentDeleted: true }, { where: { marketId }, transaction });
+        await CurrentOrder.update({ isPermanentDeleted: true }, { where: { marketId }, transaction });
+        await Market.update({ isPermanentDeleted: true }, { where: { marketId }, transaction });
 
-        const deletedMarketCount = await Market.destroy({
-            where: { marketId: marketData.marketId },
-            transaction,
-        });
+        if (runnerIds.length > 0) {
+            await rateSchema.destroy({ where: { runnerId: { [Op.in]: runnerIds } }, transaction });
+        }
+
+        await Runner.destroy({ where: { marketId }, transaction });
+        await CurrentOrder.destroy({ where: { marketId }, transaction });
+
+        const deletedMarketCount = await Market.destroy({ where: { marketId }, transaction });
 
         if (deletedMarketCount === 0) {
-            res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market deletion failed"));
+            await transaction.rollback();
+            return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market deletion failed"));
         }
 
-        await MarketDeleteApproval.destroy({
-            where: { approvalMarketId }
-        });
-
         await transaction.commit();
-
         return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market deleted successfully"));
 
     } catch (error) {
-        transaction.rollback();
+        console.error("Error deleting market:", error);
+        await transaction.rollback();
         return res
             .status(statusCode.internalServerError)
             .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));

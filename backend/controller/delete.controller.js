@@ -22,10 +22,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
     }
 
-    await MarketTrash.create({
-      trashMarkets: [getMarket.dataValues],
-      trashMarketId: uuidv4(),
-    }, { transaction });
+    await getMarket.update({ isLiveDeleted: true }, { transaction });
 
     const user = await userSchema.findOne({ where: { userId }, transaction });
 
@@ -33,14 +30,12 @@ export const deleteLiveBetMarkets = async (req, res) => {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
 
-    await getMarket.destroy({ transaction });
-
     const marketBalanceData = await MarketBalance.findOne({
       where: { marketId, runnerId, userId },
     });
 
     if (marketBalanceData) {
-      await marketBalanceData.destroy({ transaction });
+      await marketBalanceData.update({ isLiveDeleted: true  }, { transaction });
     }
 
     const previousStateData = await PreviousState.findOne({
@@ -48,7 +43,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
     });
 
     if (previousStateData) {
-      await previousStateData.destroy({ transaction });
+      await previousStateData.update({ isLiveDeleted : true  }, { transaction });
     }
 
     const marketDataRows = await Market.findAll({

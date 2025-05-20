@@ -12,7 +12,6 @@ import Runner from "../models/runner.model.js";
 import rateSchema from "../models/rate.model.js";
 import BetHistory from "../models/betHistory.model.js";
 import CurrentOrder from "../models/currentOrder.model.js";
-import MarketDeleteApproval from "../models/marketApproval.model.js";
 import ResultRequest from "../models/resultRequest.model.js";
 import { sequelize } from "../db.js";
 import { db } from "../firebase-db.js";

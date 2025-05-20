@@ -1094,7 +1094,7 @@ export const liveUsersBet = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
 
-    const whereCondition = { marketId };
+    const whereCondition = { marketId, isDeleted: false };
 
     if (search) {
       whereCondition.userName = { [Op.like]: `%${search}%` };
@@ -1110,7 +1110,7 @@ export const liveUsersBet = async (req, res) => {
     });
 
     if (!existingUser || existingUser.length == 0) {
-      res
+      return res
         .status(statusCode.success)
         .send(
           apiResponseSuccess([], true, statusCode.success, "Data not found!")
@@ -1123,6 +1123,7 @@ export const liveUsersBet = async (req, res) => {
         where: {
           marketId,
           userId: user.userId,
+          isLiveDeleted: false,
         }
       });
       return userBetCount;
@@ -1148,7 +1149,7 @@ export const liveUsersBet = async (req, res) => {
       totalItems,
     };
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
@@ -1160,7 +1161,7 @@ export const liveUsersBet = async (req, res) => {
         )
       );
   } catch (error) {
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -2383,7 +2384,7 @@ export const liveUsersBetHistory = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
 
-    const whereCondition = { marketId, userId };
+    const whereCondition = { marketId, userId, isLiveDeleted: false };
 
     if (search) {
       whereCondition.runnerName = { [Op.like]: `%${search}%` };
