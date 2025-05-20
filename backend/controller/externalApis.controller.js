@@ -17,6 +17,7 @@ import axios from "axios";
 import sequelize from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import { user_Balance } from "./admin.controller.js";
+import MarketListExposure from "../models/marketListExposure.model.js";
 
 export const getExternalUserBetHistory = async (req, res) => {
   try {
@@ -1209,20 +1210,21 @@ export const getDeleteLiveMarket = async (req, res) => {
     const totalMarketExposures = userExposures.filter(
       (item) => item.MarketId === marketId
     );
-
+    console.log(totalMarketExposures)
     let totalExposureValue = 0;
 
     totalMarketExposures.forEach((item) => {
       totalExposureValue += Number(item.exposure);
     });
+   
 
     const matchedExposure = await MarketListExposure.findOne({
       where: {
         UserId: userId,
         MarketId: marketId,
-        exposure: price,
       },
     });
+   
 
     if (matchedExposure) {
       let newExposure = matchedExposure.exposure - price;
