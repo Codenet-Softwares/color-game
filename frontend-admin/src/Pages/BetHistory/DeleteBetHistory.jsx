@@ -61,8 +61,8 @@ const DeleteBetHistory = () => {
     fetchMarketHistory();
   }, [fetchMarketHistory]);
 
-  const deleteMarketTrash = (trashMarketId) => {
-    GameService.deleteTrashMarket(auth.user)
+  const handleDeleteMarketTrash = (data) => {
+    GameService.deleteTrashMarket(auth.user,data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
@@ -76,8 +76,8 @@ const DeleteBetHistory = () => {
       });
   };
 
-  const restoreMarketTrash = (trashMarketId) => {
-    GameService.restoreTrashMarket(auth.user, trashMarketId)
+  const handleRestoreMarketTrash = (data) => {
+    GameService.restoreTrashMarket(auth.user,data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
@@ -97,7 +97,7 @@ const DeleteBetHistory = () => {
         auth.user,
         marketId,
         1,
-        1000,
+        10,
         ""
       );
       if (response.data.success) {
@@ -210,10 +210,16 @@ const DeleteBetHistory = () => {
                     >
                       <div className="d-flex justify-content-between w-100">
                         <h6 className="fw-bolder">
-                        Game Name: <h6 className="fw-bold text-danger">{market.gameName}</h6>
+                          Game Name:{" "}
+                          <h6 className="fw-bold text-danger">
+                            {market.gameName}
+                          </h6>
                         </h6>
                         <h6 className="fw-bolder px-3">
-                          Market Name:<h6 className="fw-bold text-danger">{market.marketName}</h6>
+                          Market Name:
+                          <h6 className="fw-bold text-danger">
+                            {market.marketName}
+                          </h6>
                         </h6>
                       </div>
                     </button>
@@ -229,8 +235,8 @@ const DeleteBetHistory = () => {
                         <GetBetTrash
                           selectedMarketDetails={selectedMarketDetails}
                           marketName={selectedMarketName}
-                          deleteMarketTrash={deleteMarketTrash}
-                          restoreMarketTrash={restoreMarketTrash}
+                          handleDeleteMarketTrash={handleDeleteMarketTrash}
+                          handleRestoreMarketTrash={handleRestoreMarketTrash}
                           setSelectedMarketDetails={setSelectedMarketDetails}
                         />
                       )}
@@ -239,16 +245,8 @@ const DeleteBetHistory = () => {
                 </div>
               ))
             ) : (
-              <div className="accordion-item">
-                <h2 className="accordion-header">
-                  <button
-                    className="accordion-button text-danger fw-bold"
-                    type="button"
-                    disabled
-                  >
-                    No Deleted Markets Found.
-                  </button>
-                </h2>
+              <div className="alert alert-warning text-center fw-bold shadow rounded-pill px-4 py-3">
+                🚫 No Deleted Markets Found.
               </div>
             )}
           </div>

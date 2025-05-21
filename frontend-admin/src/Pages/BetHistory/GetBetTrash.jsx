@@ -6,10 +6,9 @@ import { useAuth } from "../../Utils/Auth";
 const GetBetTrash = ({
   selectedMarketDetails,
   marketName,
-  deleteMarketTrash,
-  restoreMarketTrash,
-  setSelectedMarketDetails, // Add this
-
+  handleRestoreMarketTrash,
+  handleDeleteMarketTrash,
+  setSelectedMarketDetails,
 }) => {
   const auth = useAuth();
   const [pagination, setPagination] = useState({
@@ -32,48 +31,45 @@ const GetBetTrash = ({
     });
   };
 
-  const handleDelete = async (trashMarketId) => {
-    const isConfirmed = window.confirm(
-        "Are you sure you want to Delete this market?"
-    );
-    if (!isConfirmed) return; // Exit if the user cancels
+  //   const handleDelete = async (trashMarketId) => {
+  //     const isConfirmed = window.confirm(
+  //         "Are you sure you want to Delete this market?"
+  //     );
+  //     if (!isConfirmed) return; // Exit if the user cancels
 
-    auth.showLoader(); // Show loader only when the user confirms
-    try {
-        await deleteMarketTrash(trashMarketId);
-        // Remove the deleted item from selectedMarketDetails
-        setSelectedMarketDetails((prevDetails) =>
-            prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
-        );
-    } catch (error) {
-        console.error("Error deleting market:", error);
-    } finally {
-        auth.hideLoader(); // Hide loader after completion
-    }
-};
+  //     auth.showLoader(); // Show loader only when the user confirms
+  //     try {
+  //         await deleteMarketTrash(trashMarketId);
+  //         // Remove the deleted item from selectedMarketDetails
+  //         setSelectedMarketDetails((prevDetails) =>
+  //             prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
+  //         );
+  //     } catch (error) {
+  //         console.error("Error deleting market:", error);
+  //     } finally {
+  //         auth.hideLoader(); // Hide loader after completion
+  //     }
+  // };
 
-  
-const handleRestore = async (trashMarketId) => {
-  const isConfirmed = window.confirm(
-      "Are you sure you want to Restore this market?"
-  );
-  if (!isConfirmed) return; // Exit if the user cancels
+  // const handleRestore = async (trashMarketId) => {
+  //   const isConfirmed = window.confirm(
+  //       "Are you sure you want to Restore this market?"
+  //   );
+  //   if (!isConfirmed) return; // Exit if the user cancels
 
-  auth.showLoader(); // Show loader only when the user confirms
-  try {
-      await restoreMarketTrash(trashMarketId);
-      // Remove the restored item from selectedMarketDetails
-      setSelectedMarketDetails((prevDetails) =>
-          prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
-      );
-  } catch (error) {
-      console.error("Error restoring market:", error);
-  } finally {
-      auth.hideLoader(); // Hide loader after completion
-  }
-};
-
-
+  //   auth.showLoader(); // Show loader only when the user confirms
+  //   try {
+  //       await restoreMarketTrash(trashMarketId);
+  //       // Remove the restored item from selectedMarketDetails
+  //       setSelectedMarketDetails((prevDetails) =>
+  //           prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
+  //       );
+  //   } catch (error) {
+  //       console.error("Error restoring market:", error);
+  //   } finally {
+  //       auth.hideLoader(); // Hide loader after completion
+  //   }
+  // };
 
   const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
   const endIndex = Math.min(
@@ -135,15 +131,29 @@ const handleRestore = async (trashMarketId) => {
                     {Math.round(detail.value)}({Math.round(detail.bidAmount)})
                   </td>
                   <td>
-                  <button
+                    <button
                       className="btn btn-danger me-2"
-                      onClick={() => handleDelete(detail.trashMarketId)}
+                      onClick={() =>
+                        handleDeleteMarketTrash({
+                          marketId: detail.marketId,
+                          userId: detail.userId,
+                          runnerId: detail.runnerId,
+                          betId: detail.betId,
+                        })
+                      }
                     >
                       Delete
                     </button>
                     <button
                       className="btn btn-info"
-                      onClick={() => handleRestore(detail.trashMarketId)}
+                      onClick={() =>
+                        handleRestoreMarketTrash({
+                          marketId: detail.marketId,
+                          userId: detail.userId,
+                          runnerId: detail.runnerId,
+                          betId: detail.betId,
+                        })
+                      }
                     >
                       Restore
                     </button>
@@ -152,7 +162,9 @@ const handleRestore = async (trashMarketId) => {
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="text-danger text-center fw-bold">No Data Found For The Selected Market</td>
+                <td colSpan="6" className="text-danger text-center fw-bold">
+                  No Data Found For The Selected Market
+                </td>
               </tr>
             )}
           </tbody>
