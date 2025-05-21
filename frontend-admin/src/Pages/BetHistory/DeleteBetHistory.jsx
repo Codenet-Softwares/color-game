@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Utils/Auth";
@@ -26,6 +26,8 @@ const DeleteBetHistory = () => {
     search: "",
     totalData: 0,
   });
+
+  // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -33,15 +35,8 @@ const DeleteBetHistory = () => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  useEffect(() => {
-    fetchMarketHistory();
-  }, [
-    marketHistory.currentPage,
-    marketHistory.totalEntries,
-    debouncedSearchTerm,
-  ]);
-
-  const fetchMarketHistory = () => {
+  // Memoized fetch function
+  const fetchMarketHistory = useCallback(() => {
     GameService.trashLiveBetHistory(
       auth.user,
       marketHistory.currentPage,
@@ -59,10 +54,15 @@ const DeleteBetHistory = () => {
       .catch((err) => {
         toast.error(customErrorHandler(err));
       });
-  };
+  }, [auth.user, marketHistory.currentPage, marketHistory.totalEntries, debouncedSearchTerm]);
+
+  // Main API call effect
+  useEffect(() => {
+    fetchMarketHistory();
+  }, [fetchMarketHistory]);
 
   const deleteMarketTrash = (trashMarketId) => {
-    GameService.deleteTrashMarket(auth.user, trashMarketId)
+    GameService.deleteTrashMarket(auth.user)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
@@ -90,10 +90,6 @@ const DeleteBetHistory = () => {
         toast.error("Error restoring market trash");
       });
   };
-
-  useEffect(() => {
-    fetchMarketHistory();
-  }, [debouncedSearchTerm]);
 
   const fetchMarketDetails = async (marketId) => {
     try {
@@ -128,15 +124,8 @@ const DeleteBetHistory = () => {
     setMarketHistory((prev) => ({ ...prev, currentPage: pageNumber }));
   };
 
-  // const handleEntriesChange = (e) => {
-  //   setPagination({
-  //     currentPage: 1,
-  //     totalEntries: parseInt(e.target.value, 10),
-  //   });
-  // };
-
   const handleClearSearch = () => {
-    setMarketHistory((prev) => ({ ...prev, search: "" }));
+    setSearchTerm("");
   };
 
   const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
@@ -225,7 +214,6 @@ const DeleteBetHistory = () => {
                         </h6>
                         <h6 className="fw-bolder px-3">
                           Market Name:<h6 className="fw-bold text-danger">{market.marketName}</h6>
-
                         </h6>
                       </div>
                     </button>
