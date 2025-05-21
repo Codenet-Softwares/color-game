@@ -54,7 +54,12 @@ const DeleteBetHistory = () => {
       .catch((err) => {
         toast.error(customErrorHandler(err));
       });
-  }, [auth.user, marketHistory.currentPage, marketHistory.totalEntries, debouncedSearchTerm]);
+  }, [
+    auth.user,
+    marketHistory.currentPage,
+    marketHistory.totalEntries,
+    debouncedSearchTerm,
+  ]);
 
   // Main API call effect
   useEffect(() => {
@@ -62,7 +67,7 @@ const DeleteBetHistory = () => {
   }, [fetchMarketHistory]);
 
   const handleDeleteMarketTrash = (data) => {
-    GameService.deleteTrashMarket(auth.user,data)
+    GameService.deleteTrashMarket(auth.user, data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
@@ -77,7 +82,7 @@ const DeleteBetHistory = () => {
   };
 
   const handleRestoreMarketTrash = (data) => {
-    GameService.restoreTrashMarket(auth.user,data)
+    GameService.restoreTrashMarket(auth.user, data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
@@ -103,10 +108,18 @@ const DeleteBetHistory = () => {
       if (response.data.success) {
         setSelectedMarketDetails(response.data.data || []);
       } else {
-        toast.error("Failed to fetch market details");
+        const errorMessage = customErrorHandler({
+          response: { data: response.data },
+        });
+        if (errorMessage) {
+          toast.error(errorMessage);
+        }
       }
     } catch (error) {
-      toast.error("Error fetching market details");
+      const errorMessage = customErrorHandler(error);
+      if (errorMessage) {
+        toast.error(errorMessage);
+      }
     }
   };
 
