@@ -1051,22 +1051,22 @@ export const getVoidMarket = async (req, res) => {
     }
 
     for (const user of users) {
-      const matchedExposures = user.marketListExposure.filter(
-        (item) => Object.keys(item)[0] === marketId
-      );
+      const exposures = await MarketListExposure.findAll({
+        where: {
+          UserId: user.userId,
+          MarketId: marketId,
+        },
+      });
 
-      let totalExposureValue = 0;
-
-      for (const exposure of matchedExposures) {
-        totalExposureValue += Number(exposure[marketId]);
-      }
+      const totalExposureValue = exposures.reduce((sum, exp) => sum + exp.exposure, 0);
 
       if (totalExposureValue > 0) {
-        user.marketListExposure = user.marketListExposure.filter(
-          (item) => Object.keys(item)[0] !== marketId
-        );
-
-        await user.save();
+        await MarketListExposure.destroy({
+          where: {
+            UserId: user.userId,
+            MarketId: marketId,
+          },
+        });
       }
     }
 
