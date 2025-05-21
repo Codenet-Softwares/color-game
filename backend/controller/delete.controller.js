@@ -16,39 +16,35 @@ import { user_Balance } from "./admin.controller.js";
 export const deleteLiveBetMarkets = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
-    const { marketId, runnerId, userId, betId } = req.body;
+   const { marketId, runnerId, userId, betId } = req.body;
 
     const getMarket = await CurrentOrder.findOne({ where: { marketId, runnerId, betId } });
     if (!getMarket) {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
     }
 
-    await MarketTrash.create({
-      trashMarkets: [getMarket.dataValues],
-      trashMarketId: uuidv4(),
-    }, { transaction });
+    await getMarket.update({ isLiveDeleted: true }, { transaction });
 
     const user = await userSchema.findOne({ where: { userId }, transaction });
+
     if (!user) {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
-
-    await getMarket.destroy({ transaction });
 
     const marketBalanceData = await MarketBalance.findOne({
       where: { marketId, runnerId, userId },
     });
 
-    if (marketBalanceData > 0) {
-      await marketBalanceData.destroy({ transaction });
+    if (marketBalanceData) {
+      await marketBalanceData.update({ isLiveDeleted: true  }, { transaction });
     }
 
     const previousStateData = await PreviousState.findOne({
       where: { marketId, runnerId, userId },
     });
 
-    if (previousStateData > 0) {
-      await previousStateData.destroy({ transaction });
+    if (previousStateData) {
+      await previousStateData.update({ isLiveDeleted : true  }, { transaction });
     }
 
     const marketDataRows = await Market.findAll({
@@ -111,7 +107,9 @@ export const deleteLiveBetMarkets = async (req, res) => {
         runnerBalance: [],
       };
 
-      const userBalance = await user_Balance(existingUser.userId, true);
+      const userBalance = await user_Balance(userId, true);
+
+      // console.log("userBalance", userBalance);
 
       marketDataObj.runners.forEach((runner) => {
         let runnerBalance = 0;
@@ -145,11 +143,14 @@ export const deleteLiveBetMarkets = async (req, res) => {
 
         const exposureList = userBalance?.[1] ?? [];
 
-        const marketListExposure = exposureList.map((exposure) => ({
+
+        let marketListExposure = exposureList.map((exposure) => ({
           [exposure.MarketId]: exposure.exposure,
         }));
 
         let marketExposure = marketListExposure || [];
+
+        // console.log("marketExposure", marketExposure);
 
         let exposureMap = marketExposure.reduce((acc, obj) => {
           return { ...acc, ...obj };
@@ -158,6 +159,8 @@ export const deleteLiveBetMarkets = async (req, res) => {
         exposureMap[marketId] = Math.abs(maxNegativeRunnerBalance.bal);
 
         marketListExposure = Object.keys(exposureMap).map(key => ({ [key]: exposureMap[key] }));
+
+        console.log("marketListExposure", marketListExposure);
 
       });
 
