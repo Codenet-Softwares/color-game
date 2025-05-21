@@ -118,14 +118,13 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
         const closeButton = document.querySelector(".btn-close");
         if (location.pathname === "/home" && closeButton) {
           closeButton.click();
+          setTimeout(() => {
+            window.location.reload();
+          }, 500);
         }
 
         navigate("/home");
 
-        // Proper window.location.reload() with a slight delay
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
       } else {
         toast.error(response.message || "Logout failed");
       }
