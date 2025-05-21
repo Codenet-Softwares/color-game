@@ -22,13 +22,13 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
-import sequelize, { sql } from "../db.js";
+import  { sequelize , sql } from "../db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
 
 // done
 export const createUser = async (req, res) => {
-  const { userId, userName, password } = req.body;
   try {
+  const { userId, userName, password } = req.body;
     const existingUser = await userSchema.findOne({ where: { userName } });
     if (existingUser) {
       return res
@@ -460,6 +460,7 @@ export const getAllGameData = async (req, res) => {
             "isActive",
             "hideMarketUser",
             "isVoid",
+            "isDeleted",
             "createdAt",
           ],
           include: [
@@ -475,13 +476,13 @@ export const getAllGameData = async (req, res) => {
                 "hideRunnerUser",
                 "createdAt",
               ],
-              order: [["createdAt", "DESC"]], // Sort Runners in DESC order
+              order: [["createdAt", "DESC"]],
             },
           ],
-          order: [["createdAt", "DESC"]], // Sort Markets in DESC order
+          order: [["createdAt", "DESC"]],
         },
       ],
-      order: [["createdAt", "DESC"]], // Sort Games in DESC order
+      order: [["createdAt", "DESC"]],
     });
     
 
@@ -493,7 +494,7 @@ export const getAllGameData = async (req, res) => {
     isBlink: game.isBlink,
     createdAt: game.createdAt, // Ensure createdAt is included
     markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false)
+      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
       .map((market) => ({
         marketId: market.marketId,
@@ -594,6 +595,7 @@ export const filteredGameData = async (req, res) => {
             "announcementResult",
             "hideMarketUser",
             "isActive",
+            "isDeleted",
             "isVoid"
           ],
           where: {
@@ -639,7 +641,7 @@ export const filteredGameData = async (req, res) => {
       description: game.description,
       isBlink: game.isBlink,
       markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false)
+      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .map((market) => ({
         marketId: market.marketId,
         marketName: market.marketName,
@@ -667,7 +669,7 @@ export const filteredGameData = async (req, res) => {
     }));
 
     // Send the formatted response
-    res
+    return res
       .status(statusCode.success)
       .json(
         apiResponseSuccess(
@@ -679,7 +681,7 @@ export const filteredGameData = async (req, res) => {
       );
   } catch (error) {
     console.error("Error retrieving game data:", error);
-    res
+    return res
       .status(statusCode.internalServerError)
       .json(
         apiResponseErr(
@@ -977,24 +979,6 @@ export const filterMarketData = async (req, res) => {
           bal: balance.bal,
         });
       }
-
-      // Check if previous state should be shown
-      // const previousState = await PreviousState.findOne({
-      //   where: { marketId, userId, isReverted: true },
-      // });
-
-      //   if (previousState) {
-      //     // Fetch previously stored balances from PreviousState
-      //     const previousBalances = JSON.parse(previousState.allRunnerBalances);
-
-      //     // Update the marketDataObj with previous balances
-      //     marketDataObj.runners.forEach((runner) => {
-      //       if (previousBalances[runner.runnerName.runnerId]) {
-      //         runner.runnerName.bal =
-      //           previousBalances[runner.runnerName.runnerId];
-      //       }
-      //     });
-      //   }
     }
 
     return res

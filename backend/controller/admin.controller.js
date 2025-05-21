@@ -20,7 +20,7 @@ import BetHistory from "../models/betHistory.model.js";
 import { Op, Sequelize } from "sequelize";
 import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
-import sequelize  from "../db.js";
+import { sequelize }  from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import ResultRequest from "../models/resultRequest.model.js";
 import ResultHistory from "../models/resultHistory.model.js";
@@ -1094,7 +1094,7 @@ export const liveUsersBet = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (parseInt(page, 10) - 1) * parseInt(pageSize, 10);
 
-    const whereCondition = { marketId };
+    const whereCondition = { marketId, isLiveDeleted: false };
 
     if (search) {
       whereCondition.userName = { [Op.like]: `%${search}%` };
@@ -1110,7 +1110,7 @@ export const liveUsersBet = async (req, res) => {
     });
 
     if (!existingUser || existingUser.length == 0) {
-      res
+      return res
         .status(statusCode.success)
         .send(
           apiResponseSuccess([], true, statusCode.success, "Data not found!")
@@ -1123,6 +1123,7 @@ export const liveUsersBet = async (req, res) => {
         where: {
           marketId,
           userId: user.userId,
+          isLiveDeleted: false,
         }
       });
       return userBetCount;
@@ -1148,7 +1149,7 @@ export const liveUsersBet = async (req, res) => {
       totalItems,
     };
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
@@ -1160,7 +1161,7 @@ export const liveUsersBet = async (req, res) => {
         )
       );
   } catch (error) {
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1179,17 +1180,26 @@ export const getUsersLiveBetGames = async (req, res) => {
     const limit = parseInt(pageSize, 10);
     const offset = (parseInt(page, 10) - 1) * limit;
 
-    const whereClause = search
-      ? {
-          [Op.or]: [
-            { userName: { [Op.like]: `%${search}%` } },
-            { marketName: { [Op.like]: `%${search}%` } },
-          ],
-        }
-      : {};
+    const whereClause = {
+      isLiveDeleted: false,
+    };
+
+    if (search) {
+      whereClause[Op.or] = [
+        { userName: { [Op.like]: `%${search}%` } },
+        { marketName: { [Op.like]: `%${search}%` } },
+      ];
+    }
 
     const { rows: currentOrders } = await CurrentOrder.findAndCountAll({
-      attributes: ["gameId", "gameName", "marketId", "marketName", "userName", "createdAt"],
+      attributes: [
+        "gameId",
+        "gameName",
+        "marketId",
+        "marketName",
+        "userName",
+        "createdAt",
+      ],
       where: whereClause,
       order: [["createdAt", "DESC"]],
       raw: true,
@@ -2383,7 +2393,7 @@ export const liveUsersBetHistory = async (req, res) => {
     const { page = 1, pageSize = 10, search } = req.query;
     const offset = (page - 1) * pageSize;
 
-    const whereCondition = { marketId, userId };
+    const whereCondition = { marketId, userId, isLiveDeleted: false };
 
     if (search) {
       whereCondition.runnerName = { [Op.like]: `%${search}%` };

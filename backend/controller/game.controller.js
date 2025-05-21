@@ -12,17 +12,16 @@ import Runner from "../models/runner.model.js";
 import rateSchema from "../models/rate.model.js";
 import BetHistory from "../models/betHistory.model.js";
 import CurrentOrder from "../models/currentOrder.model.js";
-import MarketDeleteApproval from "../models/marketApproval.model.js";
-import sequelize from "../db.js";
+import ResultRequest from "../models/resultRequest.model.js";
+import { sequelize } from "../db.js";
 import { db } from "../firebase-db.js";
 
 
 // done
 export const createGame = async (req, res) => {
-  const { gameName, description, isBlink } = req.body;
   try {
+      const { gameName, description, isBlink } = req.body;
     const gameId = uuidv4();
-
     const existingGame = await Game.findOne({ where: { gameName } });
 
     if (existingGame) {
@@ -56,7 +55,8 @@ export const createGame = async (req, res) => {
         )
       );
   } catch (error) {
-    res
+    console.error("Error creating game:", error);
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -82,6 +82,7 @@ export const getAllGames = async (req, res) => {
         gameName: {
           [Op.like]: `%${searchQuery}%`,
         },
+        isDeleted: false,
       },
       offset: (page - 1) * pageSize,
       limit: pageSize,
@@ -307,7 +308,7 @@ export const getAllMarkets = async (req, res) => {
         },
         hideMarket: false,
         isVoid: false,
-        deleteApproval: false
+        isDeleted: false
       },
       offset: (page - 1) * pageSize,
       limit: pageSize,
@@ -889,8 +890,9 @@ export const getAllRunners = async (req, res) => {
 };
 // done
 export const deleteGame = async (req, res) => {
-  const gameId = req.params.gameId;
   try {
+  const gameId = req.params.gameId;
+
     if (!gameId) {
       return res
         .status(statusCode.badRequest)
@@ -922,14 +924,9 @@ export const deleteGame = async (req, res) => {
 
     const runnerIds = runners.map((runner) => runner.runnerId);
 
-    await CurrentOrder.destroy({
-      where: {
-        marketId: {
-          [Op.in]: marketIds,
-        },
-      },
-    });
-    await BetHistory.destroy({
+    await CurrentOrder.update({
+      isDeleted: true,
+    }, {
       where: {
         marketId: {
           [Op.in]: marketIds,
@@ -937,7 +934,19 @@ export const deleteGame = async (req, res) => {
       },
     });
 
-    await rateSchema.destroy({
+    await BetHistory.update({
+      isDeleted: true,
+    }, {
+      where: {
+        marketId: {
+          [Op.in]: marketIds,
+        },
+      },
+    });
+
+    await rateSchema.update({
+      isDeleted: true,
+    }, {
       where: {
         runnerId: {
           [Op.in]: runnerIds,
@@ -945,7 +954,9 @@ export const deleteGame = async (req, res) => {
       },
     });
 
-    await Runner.destroy({
+    await Runner.update({
+      isDeleted: true,
+    }, {
       where: {
         marketId: {
           [Op.in]: marketIds,
@@ -953,13 +964,27 @@ export const deleteGame = async (req, res) => {
       },
     });
 
-    await Market.destroy({
+    await ResultRequest.update({
+      isDeleted: true,
+    }, {
+      where: {
+        marketId: {
+          [Op.in]: marketIds,
+        },
+      },
+    });
+
+    await Market.update({
+      isDeleted: true,
+    }, {
       where: {
         gameId: gameId,
       },
     });
 
-    const deletedGameCount = await Game.destroy({
+    const deletedGameCount = await Game.update({
+      isDeleted: true,
+    }, {
       where: {
         gameId: gameId,
       },
@@ -973,7 +998,7 @@ export const deleteGame = async (req, res) => {
         );
     }
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
@@ -984,7 +1009,7 @@ export const deleteGame = async (req, res) => {
         )
       );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1002,26 +1027,34 @@ export const deleteMarket = async (req, res) => {
   try {
     const { marketId } = req.params;
 
-    const getMarket = await Market.findOne({ where: { marketId }, transaction });
+    const getMarket = await Market.findOne({
+      where: { marketId },
+      transaction,
+    });
     if (!getMarket) {
       return res
         .status(statusCode.success)
-        .send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Market or Runner not found"
+          )
+        );
     }
 
-    await MarketDeleteApproval.create({
-      approvalMarkets: [getMarket.dataValues],
-      approvalMarketId: uuidv4(),
-    }, { transaction });
-
-    await getMarket.update({
-      deleteApproval: true,
-      transaction,
-    });
+    await Market.update(
+      { isDeleted: true },
+      {
+        where: { marketId },
+        transaction,
+      }
+    );
 
     await transaction.commit();
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
@@ -1033,7 +1066,7 @@ export const deleteMarket = async (req, res) => {
       );
   } catch (error) {
     transaction.rollback();
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
@@ -1063,7 +1096,7 @@ export const deleteRunner = async (req, res) => {
         );
     }
 
-    res
+    return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
@@ -1074,7 +1107,7 @@ export const deleteRunner = async (req, res) => {
         )
       );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1170,7 +1203,7 @@ export const updateGameStatus = async (req, res) => {
       );
 
   } catch (error) {
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1183,3 +1216,72 @@ export const updateGameStatus = async (req, res) => {
   }
 };
 
+export const trashDeleteGame = async (req, res) => {
+  const t = await sequelize.transaction();
+  try {
+    const gameId = req.params.gameId;
+
+    if (!gameId) {
+      return res.status(statusCode.badRequest).send(
+        apiResponseErr(null, false, statusCode.badRequest, "Game ID cannot be empty")
+      );
+    }
+
+    const markets = await Market.findAll({ where: { gameId }, transaction: t });
+    const marketIds = markets.map((market) => market.marketId);
+
+    if (marketIds.length === 0) {
+      await t.rollback();
+      return res.status(statusCode.notFound).send(
+        apiResponseErr(null, false, statusCode.notFound, "No markets found for this game")
+      );
+    }
+
+    const runners = await Runner.findAll({
+      where: { marketId: { [Op.in]: marketIds } },
+      transaction: t
+    });
+
+    const runnerIds = runners.map((runner) => runner.runnerId);
+
+    await CurrentOrder.update({ isPermanentDeleted: true }, { where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await BetHistory.update({ isPermanentDeleted: true }, { where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await rateSchema.update({ isPermanentDeleted: true }, { where: { runnerId: { [Op.in]: runnerIds } }, transaction: t });
+    await Runner.update({ isPermanentDeleted: true }, { where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await ResultRequest.update({ isPermanentDeleted: true }, { where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await Market.update({ isPermanentDeleted: true }, { where: { gameId }, transaction: t });
+
+    const [deletedGameCount] = await Game.update({ isPermanentDeleted: true }, { where: { gameId }, transaction: t });
+
+    if (deletedGameCount === 0) {
+      await t.rollback();
+      return res.status(statusCode.notFound).send(
+        apiResponseErr(null, false, statusCode.notFound, "Game not found")
+      );
+    }
+
+    await CurrentOrder.destroy({ where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await BetHistory.destroy({ where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await rateSchema.destroy({ where: { runnerId: { [Op.in]: runnerIds } }, transaction: t });
+    await Runner.destroy({ where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await ResultRequest.destroy({ where: { marketId: { [Op.in]: marketIds } }, transaction: t });
+    await Market.destroy({ where: { gameId }, transaction: t });
+    await Game.destroy({ where: { gameId }, transaction: t });
+
+    await t.commit();
+
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(null, true, statusCode.success, "Game deleted successfully")
+    );
+  } catch (error) {
+    await t.rollback();
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(
+        error.data ?? null,
+        false,
+        error.responseCode ?? statusCode.internalServerError,
+        error.errMessage ?? error.message
+      )
+    );
+  }
+};

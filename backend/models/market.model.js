@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db.js';
+import { sequelize } from '../db.js';
 
 class Market extends Model {}
 
@@ -69,7 +69,17 @@ Market.init(
     deleteApproval : {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    }
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isPermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,

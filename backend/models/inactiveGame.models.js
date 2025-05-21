@@ -1,5 +1,5 @@
 import { DataTypes, json, Model } from "sequelize";
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 
 class InactiveGame extends Model {}
 

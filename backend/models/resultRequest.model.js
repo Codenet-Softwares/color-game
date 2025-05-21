@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db.js';
+import { sequelize } from '../db.js';
 import Game from './game.model.js';
 import Market from './market.model.js';
 import Runner from './runner.model.js';
@@ -58,6 +58,16 @@ ResultRequest.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isPermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,
@@ -70,7 +80,7 @@ ResultRequest.init(
 );
 
 ResultRequest.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
-ResultRequest.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
+ResultRequest.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', onDelete: 'CASCADE', });
 ResultRequest.belongsTo(Runner, { foreignKey: 'runnerId', targetKey: 'runnerId' });
 
 export default ResultRequest;

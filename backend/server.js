@@ -5,14 +5,12 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import sequelize from './db.js';
+import { sequelize } from './db.js';
 
 // Route imports
 import { AdminRoute } from './routes/admin.route.js';
 import { UserRoute } from './routes/user.route.js';
 import { GameRoute } from './routes/game.route.js';
-import { SliderRoute } from './routes/slider.route.js';
-import { AnnouncementRoute } from './routes/announcement.route.js';
 import { authRoute } from './routes/auth.route.js';
 import { InactiveGameRoute } from './routes/inactiveGame.route.js';
 import { externalApisRoute } from './routes/externalApis.route.js';
@@ -66,8 +64,6 @@ AdminRoute(app);
 authRoute(app);
 UserRoute(app);
 GameRoute(app);
-AnnouncementRoute(app);
-SliderRoute(app);
 InactiveGameRoute(app);
 externalApisRoute(app);
 lotteryRoute(app);

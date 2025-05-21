@@ -3,7 +3,7 @@ import { statusCode } from "../helper/statusCodes.js";
 import { apiResponseErr, apiResponseSuccess } from "../middleware/serverError.js";
 import CurrentOrder from "../models/currentOrder.model.js"
 import MarketTrash from "../models/trash.model.js"
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 import userSchema from "../models/user.model.js";
 import { Op, Sequelize } from 'sequelize';
 import Market from "../models/market.model.js";
@@ -22,10 +22,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
     }
 
-    await MarketTrash.create({
-      trashMarkets: [getMarket.dataValues],
-      trashMarketId: uuidv4(),
-    }, { transaction });
+    await getMarket.update({ isLiveDeleted: true }, { transaction });
 
     const user = await userSchema.findOne({ where: { userId }, transaction });
 
@@ -33,14 +30,12 @@ export const deleteLiveBetMarkets = async (req, res) => {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
 
-    await getMarket.destroy({ transaction });
-
     const marketBalanceData = await MarketBalance.findOne({
       where: { marketId, runnerId, userId },
     });
 
     if (marketBalanceData) {
-      await marketBalanceData.destroy({ transaction });
+      await marketBalanceData.update({ isLiveDeleted: true  }, { transaction });
     }
 
     const previousStateData = await PreviousState.findOne({
@@ -48,7 +43,7 @@ export const deleteLiveBetMarkets = async (req, res) => {
     });
 
     if (previousStateData) {
-      await previousStateData.destroy({ transaction });
+      await previousStateData.update({ isLiveDeleted : true  }, { transaction });
     }
 
     const marketDataRows = await Market.findAll({
@@ -182,21 +177,24 @@ export const getMarket = async (req, res) => {
     page = parseInt(page);
     pageSize = parseInt(pageSize);
 
-    const existingMarket = await MarketTrash.findAll({
-      attributes: ["trashMarkets", "createdAt"],
-      order: [["createdAt", "DESC"]]
-    });
+    const whereCondition = {
+      isLiveDeleted: true,
+    };
 
-    const allMarkets = [];
-    existingMarket.forEach((record) => {
-      const markets = record.trashMarkets;
-      if (Array.isArray(markets)) {
-        allMarkets.push(...markets);
-      }
-    });
+    if (search) {
+      whereCondition.marketName = {
+        [Op.like]: `%${search}%`,
+      };
+    }
 
+    const existingMarket = await CurrentOrder.findAll({ 
+      attributes: ["marketId", "marketName", "gameId", "gameName", "userName", "createdAt"],
+      where: whereCondition,
+      order: [["createdAt", "DESC"]],
+      group: ["marketId"],
+    })
 
-    if (allMarkets.length === 0) {
+    if (!existingMarket || existingMarket.length === 0) {
       return res
         .status(statusCode.success)
         .send(apiResponseSuccess(
@@ -205,41 +203,22 @@ export const getMarket = async (req, res) => {
           statusCode.success,
           "No markets found",
         ));
-    }
+    };
 
-    const filteredMarkets = search
-      ? allMarkets.filter(
-        (market) =>
-          market.userName?.toLowerCase().includes(search.toLowerCase()) ||
-          market.marketName?.toLowerCase().includes(search.toLowerCase())
-      )
-      : allMarkets;
-
-    if (filteredMarkets.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(apiResponseSuccess(
-          [],
-          true,
-          statusCode.success,
-          "No markets match the search criteria",
-        ));
-    }
-
-    const uniqueMarkets = [
-      ...new Map(
-        filteredMarkets.map((m) => [
-          m.marketId,
-          { marketId: m.marketId, marketName: m.marketName, gameId: m.gameId, gameName: m.gameName, userName: m.userName },
-        ])
-      ).values(),
-    ];
+    // const uniqueMarkets = [
+    //   ...new Map(
+    //     filteredMarkets.map((m) => [
+    //       m.marketId,
+    //       { marketId: m.marketId, marketName: m.marketName, gameId: m.gameId, gameName: m.gameName, userName: m.userName },
+    //     ])
+    //   ).values(),
+    // ];
 
     const offset = (page - 1) * pageSize;
 
-    const getAllMarkets = uniqueMarkets.slice(offset, offset + pageSize);
+    const getAllMarkets = existingMarket.slice(offset, offset + pageSize);
 
-    const totalItems = uniqueMarkets.length;
+    const totalItems = existingMarket.length;
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const paginationData = {
@@ -277,65 +256,58 @@ export const getMarket = async (req, res) => {
 export const getTrashMarketDetails = async (req, res) => {
   try {
     let { page = 1, pageSize = 10 } = req.query;
+    const { marketId } = req.params;
 
     page = parseInt(page);
     pageSize = parseInt(pageSize);
 
-    const { marketId } = req.params;
-    const marketData = await MarketTrash.findAll({
-      attributes: ["trashMarkets", "trashMarketId"],
-      where: Sequelize.where(
-        Sequelize.fn(
-          "JSON_CONTAINS",
-          Sequelize.col("trashMarkets"),
-          JSON.stringify([{ marketId }])
-        ),
-        true
-      ),
+    const orders = await CurrentOrder.findAll({
+      where: {
+        marketId,
+        isLiveDeleted: true,
+      },
+      order: [["createdAt", "DESC"]],
     });
 
-    const getData = marketData
-      .map((item) => {
-        const trashMarkets = item.trashMarkets;
-        const parsedMarkets = Array.isArray(trashMarkets)
-          ? trashMarkets
-          : JSON.parse(trashMarkets);
+    if (!orders.length) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess([], true, statusCode.success, "No data found for this market")
+        );
+    }
 
-        return parsedMarkets
-          .filter((data) => data.marketId === marketId)
-          .map((data) => ({
-            trashMarketId: item.trashMarketId,
-            marketName: data.marketName,
-            marketId: data.marketId,
-            runnerName: data.runnerName,
-            runnerId: data.runnerId,
-            userId: data.userId,
-            userName: data.userName,
-            rate: data.rate,
-            type: data.type,
-            bidAmount: data.bidAmount,
-            value: data.value,
-          }));
-      })
-      .flat();
+    const getData = orders.map((order) => ({
+      currentOrderId: order.currentOrderId,
+      marketId: order.marketId,
+      marketName: order.marketName,
+      runnerId: order.runnerId,
+      runnerName: order.runnerName,
+      userId: order.userId,
+      userName: order.userName,
+      betId: order.betId,
+      rate: order.rate,
+      type: order.type,
+      bidAmount: order.bidAmount,
+      value: order.value,
+      createdAt: order.createdAt,
+    }));
 
     const offset = (page - 1) * pageSize;
-    const getallmarkets = getData.slice(offset, offset + pageSize);
-    const totalItems = getData.length;
-    const totalPages = Math.ceil(totalItems / pageSize);
+    const paginatedData = getData.slice(offset, offset + pageSize);
 
     const paginationData = {
       page,
       pageSize,
-      totalPages,
-      totalItems,
+      totalPages: Math.ceil(getData.length / pageSize),
+      totalItems: getData.length,
     };
 
     return res
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          getallmarkets,
+          paginatedData,
           true,
           statusCode.success,
           "Market details fetched successfully",
@@ -343,6 +315,7 @@ export const getTrashMarketDetails = async (req, res) => {
         )
       );
   } catch (error) {
+    console.error("Error fetching market details:", error);
     return res
       .status(statusCode.internalServerError)
       .send(
@@ -356,9 +329,20 @@ export const getTrashMarketDetails = async (req, res) => {
   }
 };
 
+
 export const deleteMarketTrash = async (req, res) => {
   try {
-    const { trashMarketId } = req.params
+
+    const { marketId, userId, runnerId, betId } = req.body;
+
+
+    const getMarket = await CurrentOrder.findOne({ where: { marketId, runnerId, betId } });
+    if (!getMarket) {
+      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
+    }
+
+     await getMarket.update({ isLivePermanentDeleted: true }, { transaction });
+
     const trashData = await MarketTrash.findOne({ where: { trashMarketId } });
 
     if (!trashData) {
