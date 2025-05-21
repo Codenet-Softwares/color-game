@@ -2068,8 +2068,6 @@ export const deleteBetAfterWin = async (req, res) => {
         );
     }
 
-
-
     const profitLossAmount = await ProfitLoss.findOne({
       where: { userId, marketId },
       transaction: t,

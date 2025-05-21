@@ -205,15 +205,6 @@ export const getMarket = async (req, res) => {
         ));
     };
 
-    // const uniqueMarkets = [
-    //   ...new Map(
-    //     filteredMarkets.map((m) => [
-    //       m.marketId,
-    //       { marketId: m.marketId, marketName: m.marketName, gameId: m.gameId, gameName: m.gameName, userName: m.userName },
-    //     ])
-    //   ).values(),
-    // ];
-
     const offset = (page - 1) * pageSize;
 
     const getAllMarkets = existingMarket.slice(offset, offset + pageSize);
@@ -329,113 +320,83 @@ export const getTrashMarketDetails = async (req, res) => {
   }
 };
 
-
 export const deleteMarketTrash = async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
-
     const { marketId, userId, runnerId, betId } = req.body;
 
-
-    const getMarket = await CurrentOrder.findOne({ where: { marketId, runnerId, betId } });
+    const getMarket = await CurrentOrder.findOne({ where: { marketId, runnerId, betId }, transaction });
     if (!getMarket) {
+      await transaction.rollback();
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
     }
 
-     await getMarket.update({ isLivePermanentDeleted: true }, { transaction });
+    await getMarket.update({ isLivePermanentDeleted: true }, { transaction });
+    await getMarket.destroy({ transaction });
 
-    const trashData = await MarketTrash.findOne({ where: { trashMarketId } });
-
-    if (!trashData) {
-      return res
-        .status(statusCode.badRequest)
-        .send(
-          apiResponseErr(
-            null,
-            false,
-            statusCode.badRequest,
-            'Market trash data not found'
-          )
-        );
+    const user = await userSchema.findOne({ where: { userId }, transaction });
+    if (!user) {
+      await transaction.rollback();
+      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
     }
-    await MarketTrash.destroy({ where: { trashMarketId } });
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          null,
-          true,
-          statusCode.success,
-          'Market trash data deleted successfully'
-        )
-      );
+
+    const marketBalanceData = await MarketBalance.findOne({ where: { marketId, runnerId, userId }, transaction });
+    if (marketBalanceData) {
+      await marketBalanceData.update({ isLivePermanentDeleted: true }, { transaction });
+      await marketBalanceData.destroy({ transaction });
+    }
+
+    const previousStateData = await PreviousState.findOne({ where: { marketId, runnerId, userId }, transaction });
+    if (previousStateData) {
+      await previousStateData.update({ isLivePermanentDeleted: true }, { transaction });
+      await previousStateData.destroy({ transaction });
+    }
+
+    await transaction.commit();
+    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Bet deleted successfully"));
 
   } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    await transaction.rollback();
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
-}
+};
+
 
 export const restoreMarketData = async (req, res) => {
   const transaction = await sequelize.transaction();
   try {
-    const { trashMarketId } = req.params
+    const { marketId, userId, runnerId, betId } = req.body;
 
-    const trash_data = await MarketTrash.findOne({ where: { trashMarketId } });
-
-    if (!trash_data) { return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Market trash data not found')) }
-
-    const trash_markets = trash_data.dataValues.trashMarkets;
-
-    const map_trash_data = trash_markets.map((data) => ({
-      userId: data.userId,
-      userName: data.userName,
-      gameId: data.gameId,
-      gameName: data.gameName,
-      marketId: data.marketId,
-      marketName: data.marketName,
-      runnerId: data.runnerId,
-      runnerName: data.runnerName,
-      rate: parseFloat(data.rate),
-      value: parseFloat(data.value),
-      type: data.type,
-      date: (data.date),
-      bidAmount: parseFloat(data.bidAmount),
-      isWin: data.isWin,
-      profitLoss: data.profitLoss,
-      betId: data.betId,
-      createdAt: data.createdAt,
-      updatedAt: data.updatedAt
-    }));
-
-    const { marketId, userId, runnerId, betId } = map_trash_data[0];
-
-    const checkMarket = await Market.findOne({ where: { marketId }, transaction });
-
-    if (!checkMarket) {
-      return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, 'Market is no longer available, cannot restore bet')
-      );
+    const getMarket = await CurrentOrder.findOne({ where: { marketId, runnerId, betId }, transaction });
+    if (!getMarket) {
+      await transaction.rollback();
+      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market or Runner not found"));
     }
 
-    if (!checkMarket.isActive) {
-      return res.status(statusCode.badRequest).send(
-        apiResponseErr(null, false, statusCode.badRequest, 'Market is suspended, cannot restore bet.')
-      );
-    }
-
-    await CurrentOrder.bulkCreate(map_trash_data, { transaction });
+    await getMarket.update({ isLiveDeleted: false }, { transaction });
 
     const user = await userSchema.findOne({ where: { userId }, transaction });
     if (!user) {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "User not found"));
+    }
+
+    const marketBalanceData = await MarketBalance.findOne({
+      where: { marketId, runnerId, userId },
+      transaction
+    });
+    if (marketBalanceData) {
+      await marketBalanceData.update({ isLiveDeleted: false }, { transaction });
+    }
+
+    const previousStateData = await PreviousState.findOne({
+      where: { marketId, runnerId, userId },
+      transaction
+    });
+
+    if (previousStateData) {
+      await previousStateData.update({ isLiveDeleted: false }, { transaction });
     }
 
     const marketDataRows = await Market.findAll({
@@ -534,8 +495,6 @@ export const restoreMarketData = async (req, res) => {
     }, { transaction });
 
     await transaction.commit();
-
-    await MarketTrash.destroy({ where: { trashMarketId } })
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Restore data successfully"));
 
