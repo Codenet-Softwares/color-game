@@ -303,22 +303,10 @@ export const updateBalance = async (req, res) => {
       type: "win",
       marketId,
     });
-
-     const users = await userSchema.findAll({
-      where: { marketListExposure: { [Op.ne]: null } },
+     await MarketListExposure.destroy({
+      where: { MarketId: marketId }
     });
-
-    for (const user of users) {
-      if (user.marketListExposure) {
-        let updatedExposure = user.marketListExposure.filter((entry) => !entry[marketId]);
-
-        await userSchema.update(
-          { marketListExposure: updatedExposure },
-          { where: { userId: user.userId } }
-        );
-      }
-    }
-
+   
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update"));
   } catch (error) {

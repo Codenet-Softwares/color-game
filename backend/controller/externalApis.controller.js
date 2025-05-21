@@ -1390,21 +1390,19 @@ export const deleteBetAfterWin = async (req, res) => {
       prizeAmount,
       prizeCategory,
       complementaryPrize,
+      price
     } = req.body;
-
-    console.log("prizeAmount........................", prizeAmount)
-    console.log("complementaryPrize....................", complementaryPrize)
+   
 
     let subtractAmount;
     if (prizeCategory === "First Prize") {
-      subtractAmount = prizeAmount;
+      subtractAmount = prizeAmount - price;
     } else if (complementaryPrize > 0) {
-      subtractAmount = complementaryPrize;
+      subtractAmount = complementaryPrize - price;
     }
     else {
-      subtractAmount = sem * prizeAmount;
+      subtractAmount = sem * prizeAmount - price;
     }
-
     const winningAmount = await WinningAmount.findOne({
       where: { userId, marketId },
       transaction: t,
@@ -1424,7 +1422,6 @@ export const deleteBetAfterWin = async (req, res) => {
         );
     }
 
-    // Update the amount by subtracting the calculated amount
     const updatedAmount = winningAmount.amount - subtractAmount;
     await WinningAmount.update(
       { amount: updatedAmount },
