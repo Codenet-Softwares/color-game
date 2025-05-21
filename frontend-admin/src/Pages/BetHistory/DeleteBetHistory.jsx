@@ -107,14 +107,7 @@ const DeleteBetHistory = () => {
       );
       if (response.data.success) {
         setSelectedMarketDetails(response.data.data || []);
-      } else {
-        const errorMessage = customErrorHandler({
-          response: { data: response.data },
-        });
-        if (errorMessage) {
-          toast.error(errorMessage);
-        }
-      }
+      } 
     } catch (error) {
       const errorMessage = customErrorHandler(error);
       if (errorMessage) {
