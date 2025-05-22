@@ -258,7 +258,7 @@ const Navside = () => {
                   }}
                 ></i>
               </div>
-              <span className="ms-3">Live Bet</span>
+              <span className="ms-3">Live Bets</span>
             </Link>
           </li>
         )}

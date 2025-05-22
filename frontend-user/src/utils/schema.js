@@ -11,11 +11,11 @@ const passwordErrorMessage = {
 
 // Forgot Password Schema
 export const ForgotPasswordSchema = Yup.object().shape({
-  oldPassword: Yup.string().required('Old Password is required'),
-  newPassword: Yup.string().min(8, 'New Password must be at least 8 characters').required('New Password is required'),
+  oldPassword: Yup.string().required('Old Password Is Required'),
+  newPassword: Yup.string().min(8, 'New Password must be at least 8 characters').required('New Password Is Required'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
-    .required('Confirm Password is required'),
+    .required('Confirm Password Is Required'),
 });
 
 // Login Schema
@@ -23,8 +23,8 @@ export const LoginSchema = Yup.object().shape({
   userName: Yup.string()
     .min(2, 'Username must be at least 2 characters')
     .max(25, 'Username must not exceed 25 characters')
-    .required('Username is required'),
-  password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
+    .required('Username Is Required'),
+  password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password Is Required'),
 });
 
 // Reset Password Schema
@@ -32,48 +32,48 @@ export const LoginSchema = Yup.object().shape({
 //   userName: Yup.string()
 //     .min(2, 'Username must be at least 2 characters')
 //     .max(25, 'Username must not exceed 25 characters')
-//     .required('Username is required'),
+//     .required('Username Is Required'),
 // //   oldPassword: Yup.string()
-// //     .required('New Password is required')
+// //     .required('New Password Is Required')
 // //     .test('password-length', passwordErrorMessage.length, value => value && value.length >= 8)
 // //     .test('password-uppercase', passwordErrorMessage.uppercase, value => value && /[A-Z]/.test(value))
 // //     .test('password-lowercase', passwordErrorMessage.lowercase, value => value && /[a-z]/.test(value))
 // //     .test('password-number', passwordErrorMessage.number, value => value && /\d/.test(value))
 // //     .test('password-special', passwordErrorMessage.special, value => value && /[@$!%*?&]/.test(value)),
-// oldPassword: Yup.string().required('Old Password is required'), 
-// // newPassword: Yup.string().required('New Password is required'),
+// oldPassword: Yup.string().required('Old Password Is Required'), 
+// // newPassword: Yup.string().required('New Password Is Required'),
 //  confirmPassword: Yup.string()
 //     .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
-//     .required('New Password is required'),
+//     .required('New Password Is Required'),
 // });
 
 // export const ResetPasswordSchema = Yup.object().shape({
 //   userName: Yup.string()
 //     .min(2, 'Username must be at least 2 characters')
 //     .max(25, 'Username must not exceed 25 characters')
-//     .required('Username is required'),
+//     .required('Username Is Required'),
 // //   oldPassword: Yup.string()
-// //     .required('New Password is required')
+// //     .required('New Password Is Required')
 // //     .test('password-length', passwordErrorMessage.length, value => value && value.length >= 8)
 // //     .test('password-uppercase', passwordErrorMessage.uppercase, value => value && /[A-Z]/.test(value))
 // //     .test('password-lowercase', passwordErrorMessage.lowercase, value => value && /[a-z]/.test(value))
 // //     .test('password-number', passwordErrorMessage.number, value => value && /\d/.test(value))
 // //     .test('password-special', passwordErrorMessage.special, value => value && /[@$!%*?&]/.test(value)),
-// oldPassword: Yup.string().required('Old Password is required'), 
-// // newPassword: Yup.string().required('New Password is required'),
+// oldPassword: Yup.string().required('Old Password Is Required'), 
+// // newPassword: Yup.string().required('New Password Is Required'),
 //  confirmPassword: Yup.string()
 //     .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
-//     .required('New Password is required'),
+//     .required('New Password Is Required'),
 // });
 
 export const ResetPasswordSchema = Yup.object().shape({
   userName: Yup.string(),
   confirmPassword: Yup.string()
-    .required("Confirm Password is required")
+    .required("Confirm Password Is Required")
     .oneOf([Yup.ref("newPassword"), null], "Passwords must match")
     .min(6, "Password should be at least 8 characters"),
   oldPassword: Yup.string(),
   newPassword: Yup.string()
     .min(6, "Password should be at least 8 characters")
-    .required("New Password is required"),
+    .required("New Password Is Required"),
 });

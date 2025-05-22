@@ -376,7 +376,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search purchased tickets by SEM.."
+                placeholder="Search Purchased Tickets By SEM.."
                 aria-label="Search tickets"
                 value={state.searchTerm}
                 onChange={handleSearchChange}
@@ -482,7 +482,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                 ) : (
                   <tr>
                     <td colSpan="6" className="text-center">
-                      No tickets Found.
+                      No Tickets Found.
                     </td>
                   </tr>
                 )}
