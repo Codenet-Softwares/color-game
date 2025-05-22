@@ -889,9 +889,11 @@ export const getAllRunners = async (req, res) => {
   }
 };
 // done
+
 export const deleteGame = async (req, res) => {
+  const transaction = await sequelize.transaction();
   try {
-  const gameId = req.params.gameId;
+    const gameId = req.params.gameId;
 
     if (!gameId) {
       return res
@@ -906,97 +908,96 @@ export const deleteGame = async (req, res) => {
         );
     }
 
-    const markets = await Market.findAll({
-      where: {
-        gameId: gameId,
-      },
-    });
+    const markets = await Market.findAll({ where: { gameId }, transaction });
 
-    const marketIds = markets.map((market) => market.marketId);
+    const marketIds = markets.map((m) => m.marketId);
 
     const runners = await Runner.findAll({
-      where: {
-        marketId: {
-          [Op.in]: marketIds,
-        },
-      },
+      where: { marketId: { [Op.in]: marketIds } },
+      transaction,
     });
 
-    const runnerIds = runners.map((runner) => runner.runnerId);
+    const runnerIds = runners.map((r) => r.runnerId);
 
-    await CurrentOrder.update({
-      isDeleted: true,
-    }, {
-      where: {
-        marketId: {
-          [Op.in]: marketIds,
-        },
-      },
-    });
+    const [updateOrder] = await CurrentOrder.update(
+      { isPermanentDeleted: true },
+      { where: { marketId: { [Op.in]: marketIds } }, transaction }
+    );
+    if (updateOrder > 0) {
+      await CurrentOrder.destroy({
+        where: { marketId: { [Op.in]: marketIds } },
+        transaction,
+      });
+    }
 
-    await BetHistory.update({
-      isDeleted: true,
-    }, {
-      where: {
-        marketId: {
-          [Op.in]: marketIds,
-        },
-      },
-    });
+    const [updateHistory] = await BetHistory.update(
+      { isPermanentDeleted: true },
+      { where: { marketId: { [Op.in]: marketIds } }, transaction }
+    );
+    if (updateHistory > 0) {
+      await BetHistory.destroy({
+        where: { marketId: { [Op.in]: marketIds } },
+        transaction,
+      });
+    }
 
-    await rateSchema.update({
-      isDeleted: true,
-    }, {
-      where: {
-        runnerId: {
-          [Op.in]: runnerIds,
-        },
-      },
-    });
+    const [updateRate] = await rateSchema.update(
+      { isPermanentDeleted: true },
+      { where: { runnerId: { [Op.in]: runnerIds } }, transaction }
+    );
+    if (updateRate > 0) {
+      await rateSchema.destroy({
+        where: { runnerId: { [Op.in]: runnerIds } },
+        transaction,
+      });
+    }
 
-    await Runner.update({
-      isDeleted: true,
-    }, {
-      where: {
-        marketId: {
-          [Op.in]: marketIds,
-        },
-      },
-    });
+    const [updateRunner] = await Runner.update(
+      { isPermanentDeleted: true },
+      { where: { marketId: { [Op.in]: marketIds } }, transaction }
+    );
+    if (updateRunner > 0) {
+      await Runner.destroy({
+        where: { marketId: { [Op.in]: marketIds } },
+        transaction,
+      });
+    }
 
-    await ResultRequest.update({
-      isDeleted: true,
-    }, {
-      where: {
-        marketId: {
-          [Op.in]: marketIds,
-        },
-      },
-    });
+    const [updateResult] = await ResultRequest.update(
+      { isPermanentDeleted: true },
+      { where: { marketId: { [Op.in]: marketIds } }, transaction }
+    );
+    if (updateResult > 0) {
+      await ResultRequest.destroy({
+        where: { marketId: { [Op.in]: marketIds } },
+        transaction,
+      });
+    }
 
-    await Market.update({
-      isDeleted: true,
-    }, {
-      where: {
-        gameId: gameId,
-      },
-    });
+    const [updateMarket] = await Market.update(
+      { isPermanentDeleted: true },
+      { where: { gameId }, transaction }
+    );
+    if (updateMarket > 0) {
+      await Market.destroy({ where: { gameId }, transaction });
+    }
 
-    const deletedGameCount = await Game.update({
-      isDeleted: true,
-    }, {
-      where: {
-        gameId: gameId,
-      },
-    });
-
-    if (deletedGameCount === 0) {
+    const [updateGame] = await Game.update(
+      { isPermanentDeleted: true },
+      { where: { gameId }, transaction }
+    );
+    if (updateGame === 0) {
+      await transaction.rollback();
       return res
         .status(statusCode.notFound)
         .send(
           apiResponseErr(null, false, statusCode.notFound, "Game not found")
         );
     }
+
+    await Game.destroy({ where: { gameId }, transaction });
+
+    await transaction.commit();
 
     return res
       .status(statusCode.success)
@@ -1009,7 +1010,8 @@ export const deleteGame = async (req, res) => {
         )
       );
   } catch (error) {
-   return res
+    await transaction.rollback();
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1021,6 +1023,8 @@ export const deleteGame = async (req, res) => {
       );
   }
 };
+
+
 // done
 export const deleteMarket = async (req, res) => {
   const transaction = await sequelize.transaction();

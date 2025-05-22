@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Utils/Auth";
@@ -26,6 +26,8 @@ const DeleteBetHistory = () => {
     search: "",
     totalData: 0,
   });
+
+  // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -33,15 +35,8 @@ const DeleteBetHistory = () => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  useEffect(() => {
-    fetchMarketHistory();
-  }, [
-    marketHistory.currentPage,
-    marketHistory.totalEntries,
-    debouncedSearchTerm,
-  ]);
-
-  const fetchMarketHistory = () => {
+  // Memoized fetch function
+  const fetchMarketHistory = useCallback(() => {
     GameService.trashLiveBetHistory(
       auth.user,
       marketHistory.currentPage,
@@ -59,10 +54,20 @@ const DeleteBetHistory = () => {
       .catch((err) => {
         toast.error(customErrorHandler(err));
       });
-  };
+  }, [
+    auth.user,
+    marketHistory.currentPage,
+    marketHistory.totalEntries,
+    debouncedSearchTerm,
+  ]);
 
-  const deleteMarketTrash = (trashMarketId) => {
-    GameService.deleteTrashMarket(auth.user, trashMarketId)
+  // Main API call effect
+  useEffect(() => {
+    fetchMarketHistory();
+  }, [fetchMarketHistory]);
+
+  const handleDeleteMarketTrash = (data) => {
+    GameService.deleteTrashMarket(auth.user, data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
@@ -76,8 +81,8 @@ const DeleteBetHistory = () => {
       });
   };
 
-  const restoreMarketTrash = (trashMarketId) => {
-    GameService.restoreTrashMarket(auth.user, trashMarketId)
+  const handleRestoreMarketTrash = (data) => {
+    GameService.restoreTrashMarket(auth.user, data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
@@ -91,26 +96,23 @@ const DeleteBetHistory = () => {
       });
   };
 
-  useEffect(() => {
-    fetchMarketHistory();
-  }, [debouncedSearchTerm]);
-
   const fetchMarketDetails = async (marketId) => {
     try {
       const response = await GameService.getBetTrash(
         auth.user,
         marketId,
         1,
-        1000,
+        10,
         ""
       );
       if (response.data.success) {
         setSelectedMarketDetails(response.data.data || []);
-      } else {
-        toast.error("Failed to fetch market details");
-      }
+      } 
     } catch (error) {
-      toast.error("Error fetching market details");
+      const errorMessage = customErrorHandler(error);
+      if (errorMessage) {
+        toast.error(errorMessage);
+      }
     }
   };
 
@@ -128,15 +130,8 @@ const DeleteBetHistory = () => {
     setMarketHistory((prev) => ({ ...prev, currentPage: pageNumber }));
   };
 
-  // const handleEntriesChange = (e) => {
-  //   setPagination({
-  //     currentPage: 1,
-  //     totalEntries: parseInt(e.target.value, 10),
-  //   });
-  // };
-
   const handleClearSearch = () => {
-    setMarketHistory((prev) => ({ ...prev, search: "" }));
+    setSearchTerm("");
   };
 
   const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
@@ -221,11 +216,16 @@ const DeleteBetHistory = () => {
                     >
                       <div className="d-flex justify-content-between w-100">
                         <h6 className="fw-bolder">
-                        Game Name: <h6 className="fw-bold text-danger">{market.gameName}</h6>
+                          Game Name:{" "}
+                          <h6 className="fw-bold text-danger">
+                            {market.gameName}
+                          </h6>
                         </h6>
                         <h6 className="fw-bolder px-3">
-                          Market Name:<h6 className="fw-bold text-danger">{market.marketName}</h6>
-
+                          Market Name:
+                          <h6 className="fw-bold text-danger">
+                            {market.marketName}
+                          </h6>
                         </h6>
                       </div>
                     </button>
@@ -241,8 +241,8 @@ const DeleteBetHistory = () => {
                         <GetBetTrash
                           selectedMarketDetails={selectedMarketDetails}
                           marketName={selectedMarketName}
-                          deleteMarketTrash={deleteMarketTrash}
-                          restoreMarketTrash={restoreMarketTrash}
+                          handleDeleteMarketTrash={handleDeleteMarketTrash}
+                          handleRestoreMarketTrash={handleRestoreMarketTrash}
                           setSelectedMarketDetails={setSelectedMarketDetails}
                         />
                       )}
@@ -251,16 +251,8 @@ const DeleteBetHistory = () => {
                 </div>
               ))
             ) : (
-              <div className="accordion-item">
-                <h2 className="accordion-header">
-                  <button
-                    className="accordion-button text-danger fw-bold"
-                    type="button"
-                    disabled
-                  >
-                    No Deleted Markets Found.
-                  </button>
-                </h2>
+              <div className="alert alert-warning text-center fw-bold shadow rounded-pill px-4 py-3">
+                🚫 No Deleted Markets Found.
               </div>
             )}
           </div>
