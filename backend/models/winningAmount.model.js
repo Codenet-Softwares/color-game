@@ -33,6 +33,10 @@ const WinningAmount = sequelize.define(
             type: DataTypes.BOOLEAN,
             defaultValue: false,
         },
+        isPermanentDeleted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false,
+        },
         
     },
     {

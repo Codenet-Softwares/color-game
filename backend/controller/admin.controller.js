@@ -2093,10 +2093,19 @@ export const deleteBetAfterWin = async (req, res) => {
       { where: { userId, marketId }, transaction: t }
     );
 
+   const [ updateRows ] = await WinningAmount.update({ isPermanentDeleted : true}, {
+      where: { userId, marketId, type: "win" },
+      transaction: t,
+    })
+
+    if(updateRows > 0)
+    {
     await WinningAmount.destroy({
       where: { userId, marketId, type: "win" },
       transaction: t,
     });
+
+  }
 
     await t.commit();
     return res

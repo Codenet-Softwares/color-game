@@ -925,6 +925,7 @@ export const filterMarketData = async (req, res) => {
         where: {
           userId,
           marketId,
+          isLiveDeleted : false,
         },
       });
 
@@ -987,7 +988,7 @@ export const filterMarketData = async (req, res) => {
         apiResponseSuccess(marketDataObj, true, statusCode.success, "Success")
       );
   } catch (error) {
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(

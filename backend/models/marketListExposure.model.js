@@ -15,6 +15,10 @@ const MarketListExposure = sequelize.define('MarketListExposuers', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    RunnerId: {
+        type: DataTypes.STRING,
+        allowNull: true,
+    },
     exposure: {
         type: DataTypes.FLOAT,
         allowNull: false,
