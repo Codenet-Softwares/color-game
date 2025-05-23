@@ -5,78 +5,33 @@ import { useAuth } from "../../Utils/Auth";
 
 const GetBetTrash = ({
   selectedMarketDetails,
-  marketName,
   handleRestoreMarketTrash,
   handleDeleteMarketTrash,
   setSelectedMarketDetails,
 }) => {
   const auth = useAuth();
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalEntries: 10,
-  });
 
-  const totalPages = Math.ceil(
-    selectedMarketDetails.length / pagination.totalEntries
-  );
+  console.log("selectedMarketDetails", selectedMarketDetails);
 
   const handlePageChange = (pageNumber) => {
-    setPagination((prev) => ({ ...prev, currentPage: pageNumber }));
+    setSelectedMarketDetails((prev) => ({ ...prev, currentPage: pageNumber }));
   };
 
   const handleEntriesChange = (e) => {
-    setPagination({
+    setSelectedMarketDetails((prev) => ({
+      ...prev,
       currentPage: 1,
       totalEntries: parseInt(e.target.value, 10),
-    });
+    }));
   };
 
-  //   const handleDelete = async (trashMarketId) => {
-  //     const isConfirmed = window.confirm(
-  //         "Are you sure you want to Delete this market?"
-  //     );
-  //     if (!isConfirmed) return; // Exit if the user cancels
-
-  //     auth.showLoader(); // Show loader only when the user confirms
-  //     try {
-  //         await deleteMarketTrash(trashMarketId);
-  //         // Remove the deleted item from selectedMarketDetails
-  //         setSelectedMarketDetails((prevDetails) =>
-  //             prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
-  //         );
-  //     } catch (error) {
-  //         console.error("Error deleting market:", error);
-  //     } finally {
-  //         auth.hideLoader(); // Hide loader after completion
-  //     }
-  // };
-
-  // const handleRestore = async (trashMarketId) => {
-  //   const isConfirmed = window.confirm(
-  //       "Are you sure you want to Restore this market?"
-  //   );
-  //   if (!isConfirmed) return; // Exit if the user cancels
-
-  //   auth.showLoader(); // Show loader only when the user confirms
-  //   try {
-  //       await restoreMarketTrash(trashMarketId);
-  //       // Remove the restored item from selectedMarketDetails
-  //       setSelectedMarketDetails((prevDetails) =>
-  //           prevDetails.filter((detail) => detail.trashMarketId !== trashMarketId)
-  //       );
-  //   } catch (error) {
-  //       console.error("Error restoring market:", error);
-  //   } finally {
-  //       auth.hideLoader(); // Hide loader after completion
-  //   }
-  // };
-
-  const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
+  const startIndex =
+    (selectedMarketDetails.currentPage - 1) *
+    selectedMarketDetails.totalEntries;
   const endIndex = Math.min(
-    startIndex + pagination.totalEntries,
-    selectedMarketDetails.length
+    startIndex + selectedMarketDetails.totalEntries,
+    selectedMarketDetails.markets.length
   );
-  const paginatedData = selectedMarketDetails.slice(startIndex, endIndex);
 
   return (
     <div
@@ -87,7 +42,7 @@ const GetBetTrash = ({
         <label className="me-2 fw-bold">Show</label>
         <select
           className="form-select d-inline-block w-auto"
-          value={pagination.totalEntries}
+          value={selectedMarketDetails.totalEntries}
           onChange={handleEntriesChange}
           style={{
             borderRadius: "50px",
@@ -114,8 +69,8 @@ const GetBetTrash = ({
             </tr>
           </thead>
           <tbody>
-            {paginatedData.length > 0 ? (
-              paginatedData.map((detail, index) => (
+            {selectedMarketDetails?.markets?.length > 0 ? (
+              selectedMarketDetails?.markets?.map((detail, index) => (
                 <tr key={index}>
                   <td>{detail.runnerName}</td>
                   <td>{detail.userName}</td>
@@ -171,12 +126,20 @@ const GetBetTrash = ({
         </table>
       </div>
       <Pagination
-        currentPage={pagination.currentPage}
-        totalPages={totalPages}
+        currentPage={selectedMarketDetails.currentPage}
+        totalPages={selectedMarketDetails.totalPages}
         handlePageChange={handlePageChange}
-        startIndex={startIndex + 1}
-        endIndex={endIndex}
-        totalData={selectedMarketDetails.length}
+        startIndex={
+          (selectedMarketDetails.currentPage - 1) *
+            selectedMarketDetails.totalEntries +
+          1
+        }
+        endIndex={Math.min(
+          selectedMarketDetails.currentPage *
+            selectedMarketDetails.totalEntries,
+          selectedMarketDetails.totalData
+        )}
+        totalData={selectedMarketDetails.totalData}
       />
     </div>
   );

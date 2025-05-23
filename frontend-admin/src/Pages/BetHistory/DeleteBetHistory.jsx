@@ -10,10 +10,15 @@ import { customErrorHandler } from "../../Utils/helper";
 
 const DeleteBetHistory = () => {
   const auth = useAuth();
-  const [selectedMarketName, setSelectedMarketName] = useState("");
-  const [selectedMarketDetails, setSelectedMarketDetails] = useState([]);
+  const [selectedMarketDetails, setSelectedMarketDetails] = useState({
+    markets: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 10,
+    totalData: 0,
+  });
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [marketId, setMarketId] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalEntries: 10,
@@ -26,88 +31,45 @@ const DeleteBetHistory = () => {
     search: "",
     totalData: 0,
   });
+  const [refresh, setRefresh] = useState({});
 
-  // Debounce search term
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
+  console.log("marketId", marketHistory);
 
-  // Memoized fetch function
-  const fetchMarketHistory = useCallback(() => {
-    GameService.trashLiveBetHistory(
-      auth.user,
-      marketHistory.currentPage,
-      marketHistory.totalEntries,
-      debouncedSearchTerm
-    )
-      .then((res) => {
-        setMarketHistory((prev) => ({
-          ...prev,
-          markets: res.data?.data || [],
-          totalPages: res?.data.pagination?.totalPages,
-          totalData: res?.data.pagination?.totalItems,
-        }));
-      })
-      .catch((err) => {
-        toast.error(customErrorHandler(err));
-      });
-  }, [
-    auth.user,
-    marketHistory.currentPage,
-    marketHistory.totalEntries,
-    debouncedSearchTerm,
-  ]);
+  const fetchMarketHistory = useCallback(
+    (term, page = 1, entries = 10) => {
+      GameService.trashLiveBetHistory(auth.user, page, entries, term)
+        .then((res) => {
+          setMarketHistory((prev) => ({
+            ...prev,
+            markets: res.data?.data || [],
+            totalPages: res?.data.pagination?.totalPages,
+            totalData: res?.data.pagination?.totalItems,
+          }));
+        })
+        .catch((err) => {
+          toast.error(customErrorHandler(err));
+        });
+    },
+    [auth.user]
+  );
 
-  // Main API call effect
-  useEffect(() => {
-    fetchMarketHistory();
-  }, [fetchMarketHistory]);
-
-  const handleDeleteMarketTrash = (data) => {
-    GameService.deleteTrashMarket(auth.user, data)
-      .then((response) => {
-        if (response.data.success) {
-          toast.success(response.data.message);
-          fetchMarketHistory();
-        } else {
-          toast.error("Failed to delete market trash");
-        }
-      })
-      .catch((error) => {
-        toast.error("Error deleting market trash");
-      });
-  };
-
-  const handleRestoreMarketTrash = (data) => {
-    GameService.restoreTrashMarket(auth.user, data)
-      .then((response) => {
-        if (response.data.success) {
-          toast.success(response.data.message);
-          fetchMarketHistory();
-        } else {
-          toast.error("Failed to restore market trash");
-        }
-      })
-      .catch((error) => {
-        toast.error("Error restoring market trash");
-      });
-  };
-
-  const fetchMarketDetails = async (marketId) => {
+  const fetchMarketDetails = async () => {
     try {
       const response = await GameService.getBetTrash(
         auth.user,
         marketId,
-        1,
-        10,
+        selectedMarketDetails.currentPage,
+        selectedMarketDetails.totalEntries,
         ""
       );
       if (response.data.success) {
-        setSelectedMarketDetails(response.data.data || []);
-      } 
+        setSelectedMarketDetails((prev) => ({
+          ...prev,
+          markets: response.data?.data || [],
+          totalPages: response?.data.pagination?.totalPages,
+          totalData: response?.data.pagination?.totalItems,
+        }));
+      }
     } catch (error) {
       const errorMessage = customErrorHandler(error);
       if (errorMessage) {
@@ -116,33 +78,75 @@ const DeleteBetHistory = () => {
     }
   };
 
-  const handleAccordionChange = (marketId) => {
-    const selectedMarket = marketHistory.markets.find(
-      (market) => market.marketId === marketId
-    );
-    setSelectedMarketName(selectedMarket ? selectedMarket.marketName : "");
+  useEffect(() => {
     if (marketId) {
-      fetchMarketDetails(marketId);
+      fetchMarketDetails();
     }
+  }, [
+    marketId,
+    refresh,
+    selectedMarketDetails.currentPage,
+    selectedMarketDetails.totalEntries,
+  ]);
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchMarketHistory(searchTerm, 1, marketHistory.totalEntries);
+      setMarketHistory((prev) => ({ ...prev, currentPage: 1 }));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const handleDeleteMarketTrash = (data) => {
+    GameService.deleteTrashMarket(auth.user, data)
+      .then((response) => {
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setRefresh(response);
+        } else {
+          toast.error("Failed to delete market trash");
+        }
+      })
+      .catch((error) => {
+        customErrorHandler(error);
+      });
+  };
+
+  const handleRestoreMarketTrash = (data) => {
+    GameService.restoreTrashMarket(auth.user, data)
+      .then((response) => {
+        if (response.data.success) {
+          toast.success(response.data.message);
+          setRefresh(response);
+        } else {
+          toast.error("Failed to restore market trash");
+        }
+      })
+      .catch((error) => {
+        customErrorHandler(error);
+      });
+  };
+
+  const handleAccordionChange = (marketId) => {
+    setMarketId(marketId);
   };
 
   const handlePageChange = (pageNumber) => {
     setMarketHistory((prev) => ({ ...prev, currentPage: pageNumber }));
+    fetchMarketHistory(searchTerm, pageNumber, marketHistory.totalEntries);
   };
 
   const handleClearSearch = () => {
     setSearchTerm("");
   };
 
-  const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
+  const startIndex =
+    (marketHistory.currentPage - 1) * marketHistory.totalEntries;
   const endIndex = Math.min(
-    startIndex + pagination.totalEntries,
+    startIndex + marketHistory.totalEntries,
     marketHistory.markets.length
   );
-  const totalData = marketHistory.markets.length;
-  const totalPages = Math.ceil(totalData / pagination.totalEntries);
-
-  const paginatedMarkets = marketHistory.markets.slice(startIndex, endIndex);
 
   return (
     <div>
@@ -195,8 +199,8 @@ const DeleteBetHistory = () => {
           style={{ background: "#E1D1C7" }}
         >
           <div className="accordion" id="marketAccordion">
-            {paginatedMarkets.length > 0 ? (
-              paginatedMarkets.map((market) => (
+            {marketHistory.markets.length > 0 ? (
+              marketHistory.markets.map((market) => (
                 <div
                   className="accordion-item m-2 bg-light shadow-lg"
                   key={market.marketId}
@@ -237,15 +241,12 @@ const DeleteBetHistory = () => {
                     data-bs-parent="#marketAccordion"
                   >
                     <div className="accordion-body">
-                      {selectedMarketName === market.marketName && (
-                        <GetBetTrash
-                          selectedMarketDetails={selectedMarketDetails}
-                          marketName={selectedMarketName}
-                          handleDeleteMarketTrash={handleDeleteMarketTrash}
-                          handleRestoreMarketTrash={handleRestoreMarketTrash}
-                          setSelectedMarketDetails={setSelectedMarketDetails}
-                        />
-                      )}
+                      <GetBetTrash
+                        selectedMarketDetails={selectedMarketDetails}
+                        handleDeleteMarketTrash={handleDeleteMarketTrash}
+                        handleRestoreMarketTrash={handleRestoreMarketTrash}
+                        setSelectedMarketDetails={setSelectedMarketDetails}
+                      />
                     </div>
                   </div>
                 </div>
