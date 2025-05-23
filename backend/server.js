@@ -5,7 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { sequelize } from './db.js';
+import { sequelize, sequelizeArchive } from './db.js';
 
 // Route imports
 import { AdminRoute } from './routes/admin.route.js';
@@ -79,8 +79,8 @@ Market.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
 Market.hasMany(Runner, { foreignKey: 'marketId', sourceKey: 'marketId' });
 Runner.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
 
-CurrentOrder.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
-BetHistory.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
+// CurrentOrder.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
+// BetHistory.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
 
 Market.hasMany(MarketBalance, { foreignKey: 'marketId', sourceKey: 'marketId' });
 MarketBalance.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
