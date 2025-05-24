@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getGifImg } from "../../utils/apiService";
+import { sGif } from "../../utils/dummyData";
 
 const Gif = () => {
   const [gifData, setGifData] = useState([]);
@@ -11,7 +12,7 @@ const Gif = () => {
         setGifData(response.data);
       } else {
         console.error("Invalid data format received:", response);
-        setGifData([]);
+        setGifData(sGif);
       }
     } catch (error) {
       console.error("Error fetching GIF data:", error);
