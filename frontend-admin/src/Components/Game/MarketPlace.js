@@ -283,7 +283,6 @@ const MarketPlace = () => {
                 style={{ marginLeft: "-10px" }}
               >
                 <div className="search_inner">
-                  <form Active="#">
                     <div className="search_field">
                       <input
                         value={search}
@@ -298,7 +297,6 @@ const MarketPlace = () => {
                       {" "}
                       <i className="ti-search"></i>{" "}
                     </button>
-                  </form>
                 </div>
               </div>
             </div>

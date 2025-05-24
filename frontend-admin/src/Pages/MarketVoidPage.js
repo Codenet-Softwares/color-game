@@ -14,7 +14,7 @@ const MarketVoidPage = () => {
     gamelist: [],
     currentPage: 1,
     totalPages: "",
-    totalEntries: 5,
+    totalEntries: 10,
     name: "",
     totalData: "",
   });
@@ -23,6 +23,10 @@ const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setVoidGame((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
     }, 500);
   
     return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
@@ -186,7 +190,7 @@ const [searchTerm, setSearchTerm] = useState("");
                   {voidGame?.gamelist?.length > 0 ? (
                     <>
                       {voidGame.gamelist.map((data, index) => (
-                        <tr key={index}>
+                        <tr key={index} className="accordion p-2" id={`voidAccordion-${index}`}>
                           <td colSpan="4" style={{ background:"#E1D1C7"}}>
                             <div
                               className="accordion p-2"
@@ -231,7 +235,7 @@ const [searchTerm, setSearchTerm] = useState("");
                                   id={`flush-collapseOne-${index}`}
                                   className="accordion-collapse collapse"
                                   aria-labelledby={`flush-headingOne-${index}`}
-                                  data-bs-parent={`#accordionExample-${index}`}
+                                  data-bs-parent={`#voidAccordion-${index}`}
                                 >
                                   <div className="accordion-body">
                                     {/* Accordion Body Content */}

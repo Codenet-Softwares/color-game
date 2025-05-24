@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "../Pagination";
+import { customErrorHandler } from "../../Utils/helper";
+import { toast } from "react-toastify";
 
 const ReusableTable = ({
   columns,
@@ -7,6 +9,7 @@ const ReusableTable = ({
   showSearch,
   paginationVisible,
   fetchData, // Function to fetch data dynamically
+  setInnerDataLength
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,11 +24,12 @@ const ReusableTable = ({
       setLoading(true);
       try {
         const response = await fetchData(currentPage, itemsPerPage);
-        setData(response.data || []);
-        setTotalPages(response.pagination?.totalPages || 1);
-        setTotalData(response.pagination?.totalItems || 0);
+        setData(response?.data || []);
+        setTotalPages(response?.pagination?.totalPages || 1);
+        setTotalData(response?.pagination?.totalItems || 0);
+        setInnerDataLength(response?.data?.length)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        toast.error(customErrorHandler(error));
       } finally {
         setLoading(false);
       }
@@ -90,8 +94,8 @@ const ReusableTable = ({
                     {column.key === "serialNumber"
                       ? calculateSerialNumber(index) // Dynamically calculate serial number
                       : column.render
-                      ? column.render(row)
-                      : row[column.key]}
+                        ? column.render(row)
+                        : row[column.key]}
                   </td>
                 ))}
               </tr>

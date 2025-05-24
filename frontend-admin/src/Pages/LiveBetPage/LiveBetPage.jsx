@@ -24,6 +24,10 @@ const LiveBetPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setLiveBets((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
     }, 500);
 
     return () => clearTimeout(timer);
@@ -70,6 +74,8 @@ const LiveBetPage = () => {
     Number(liveBets.currentPage) * Number(liveBets.totalEntries),
     Number(liveBets.totalData)
   );
+
+  
   const navigate = useNavigate();
 
   const handleNavigate = (marketId) => {

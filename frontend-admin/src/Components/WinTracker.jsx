@@ -24,6 +24,10 @@ const WinTracker = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setWinBetTracker((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
     }, 500);
     return () => clearTimeout(timer);
   }, [searchTerm]);

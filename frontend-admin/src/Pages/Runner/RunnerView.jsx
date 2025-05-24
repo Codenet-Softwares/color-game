@@ -49,7 +49,6 @@ const RunnerView = () => {
   const [runnerDeleteRes, setRunnerDeleteRes] = useState("");
   const [mostRecentPath, setMostRecentPath] = useState(pathdata[1] || "");
 
-
   const [runnerId, setRunnerId] = useState("");
 
   const marketid = searchParams.get("marketId");
@@ -77,20 +76,20 @@ const RunnerView = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
-      }).finally(() => {
+      })
+      .finally(() => {
         auth.hideLoader();
       });
   };
   useEffect(() => {
-      const timer = setTimeout(() => {
-        setDebouncedSearchTerm(searchTerm);
-      }, 500);
-    
-      return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
-    }, [searchTerm]);
-      
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
+  }, [searchTerm]);
+
   useEffect(() => {
-    
     fetchDataPathName();
   }, []);
 
@@ -166,7 +165,7 @@ const RunnerView = () => {
   };
 
   const handleAnnounceWin = (runnerId) => {
-    auth.showLoader()
+    auth.showLoader();
     const data = {
       marketId: pathdata[1]?.id,
       runnerId: runnerId,
@@ -174,7 +173,7 @@ const RunnerView = () => {
     };
 
     AccountServices.announceWin(data, auth.user)
-    
+
       .then((res) => {
         toast.success(res.data.message);
         setIsWin(true);
@@ -182,16 +181,15 @@ const RunnerView = () => {
       })
       .catch((err) => {
         toast.error(customErrorHandler(err));
-      }).finally(() => {
+      })
+      .finally(() => {
         auth.hideLoader();
       });
   };
 
   const handleSetGameInactive = (marketId) => {
     AccountServices.setGameInactive({ marketId }, auth.user)
-      .then((res) => {
-
-      })
+      .then((res) => {})
       .catch((err) => {
         toast.error(customErrorHandler(err));
       });
@@ -208,6 +206,8 @@ const RunnerView = () => {
         toast.error(customErrorHandler(err));
       });
   };
+
+  console.log("first====>", runner.length);
   const handleRunnerSearchChange = (e) => {
     setSearchTerm(e.target.value); // Update the search term
     setRunners((prev) => ({ ...prev, currentPage: 1 })); // Reset pagination
@@ -402,22 +402,23 @@ const RunnerView = () => {
               </div>
             ))
           ) : (
-            <div className="col">
-              <h4 className="text-danger fw-bold text-center">No Runners Found.</h4>
+            <div className="alert alert-warning text-center fw-bold shadow rounded-pill px-4 py-3">
+              🚫 No Runner Found.
             </div>
           )}
         </div>
-
-        <div className="d-flex justify-content-center mt-5">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={totalData}
-          />
-        </div>
+        {runners.length > 0 && (
+          <div className="d-flex justify-content-center mt-5">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              handlePageChange={handlePageChange}
+              startIndex={startIndex}
+              endIndex={endIndex}
+              totalData={totalData}
+            />
+          </div>
+        )}
       </>
       <CreateRate
         show={rateShow.createRate}
