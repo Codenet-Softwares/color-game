@@ -34,7 +34,22 @@ export function initialLotteryPurchaseState() {
 const LotteryPurchaseHistory = ({ MarketId }) => {
   const [state, setState] = useState(initialLotteryPurchaseState());
   const today = format(new Date(), "yyyy-MM-dd");
-  const visibleCount = 5;
+  const [visibleCount, setVisibleCount] = useState(5);
+
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      const width = window.innerWidth;
+      if (width < 992) {
+        setVisibleCount(1);
+      } else {
+        setVisibleCount(5);
+      }
+    };
+
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
+    return () => window.removeEventListener("resize", updateVisibleCount);
+  }, []);
 
   // Initialize with prop if provided
   useEffect(() => {
@@ -207,9 +222,9 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
 
   return (
     <div
-      className="container mt-5 p-3"
+      className="container mt-5"
       style={{
-        background: "linear-gradient(135deg, #f0f9ff, #cce7f6)",
+        background: "#2CB3D1",
         borderRadius: "10px",
         boxShadow: "0 0 15px rgba(0,0,0,0.1)",
       }}
@@ -240,31 +255,32 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       </div>
 
       {/* Market Navigation */}
-      <div
-        className="d-flex justify-content-between align-items-center mb-3 p-2 rounded shadow"
-        style={{
-          backgroundColor: "#f9f9f9",
-          border: "1px solid #ddd",
-        }}
-      >
+      <div className="d-flex flex-column align-items-center mb-3 p-2 rounded shadow mt-5">
+        <h5 className="fw-bold " style={{ color: "#284B63" }}>
+          LOTTERY MARKETS
+        </h5>
         {visibleMarkets.length > 0 ? (
           <>
-            <h4 className="fw-bold" style={{ color: "#284B63" }}>
-              LOTTERY MARKETS
-            </h4>
-            <div className="d-flex align-items-center">
+            <div className="d-flex align-items-center justify-content-center flex-wrap mb-2 shadow-lg px-2 rounded">
               <button
-                className="btn btn-sm btn-outline-primary me-3"
+                className="btn btn-sm me-2"
                 onClick={handleLeftClick}
                 disabled={state.visibleStartIndex === 0}
                 style={{
-                  borderRadius: "50%",
+                  // borderRadius: "50%",
                   width: "35px",
                   height: "35px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   padding: 0,
+                  backgroundColor:
+                    state.visibleStartIndex === 0 ? "#ccc" : "#0d6efd",
+                  color: "#fff",
+                  border: "none",
+                  cursor:
+                    state.visibleStartIndex === 0 ? "not-allowed" : "pointer",
+                  opacity: state.visibleStartIndex === 0 ? 0.6 : 1,
                 }}
               >
                 <span style={{ fontSize: "16px", fontWeight: "bold" }}>
@@ -272,7 +288,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                 </span>
               </button>
 
-              <div className="d-flex flex-wrap justify-content-center">
+              <div className="d-flex flex-wrap justify-content-center mt-2">
                 {visibleMarkets.map((market) => (
                   <span
                     key={market.marketId}
@@ -287,6 +303,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                       fontSize: "14px",
                       borderRadius: "20px",
                       transition: "all 0.3s ease-in-out",
+                      borderRadius:"5px"
                     }}
                     onClick={() => handleMarketClick(market.marketId)}
                   >
@@ -296,19 +313,36 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
               </div>
 
               <button
-                className="btn btn-sm btn-outline-primary ms-3"
+                className="btn btn-sm"
                 onClick={handleRightClick}
                 disabled={
                   state.visibleStartIndex + visibleCount >= state.markets.length
                 }
                 style={{
-                  borderRadius: "50%",
+                  // borderRadius: "50%",
                   width: "35px",
                   height: "35px",
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   padding: 0,
+                  backgroundColor:
+                    state.visibleStartIndex + visibleCount >=
+                    state.markets.length
+                      ? "#ccc"
+                      : "#0d6efd",
+                  color: "#fff",
+                  border: "none",
+                  cursor:
+                    state.visibleStartIndex + visibleCount >=
+                    state.markets.length
+                      ? "not-allowed"
+                      : "pointer",
+                  opacity:
+                    state.visibleStartIndex + visibleCount >=
+                    state.markets.length
+                      ? 0.6
+                      : 1,
                 }}
               >
                 <span style={{ fontSize: "16px", fontWeight: "bold" }}>
@@ -331,15 +365,18 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
 
       {visibleMarkets.length > 0 ? (
         <>
-          <div className="d-flex justify-content-between align-items-center mb-3">
-            <h3 className="fw-bold" style={{ color: "#284B63" }}>
-              PURCHASED LOTTERY TICKETS
-            </h3>
-            <div className="w-50">
+          <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 text-center text-md-start">
+            <div className="order-2 order-md-1 mt-2 mt-md-0">
+              <h5 className="fw-bold" style={{ color: "#284B63" }}>
+                PURCHASED LOTTERY TICKETS
+              </h5>
+            </div>
+
+            <div className="w-100 w-md-50 order-1 order-md-2">
               <input
                 type="text"
                 className="form-control"
-                placeholder="Search purchased tickets by SEM.."
+                placeholder="Search Purchased Tickets By SEM.."
                 aria-label="Search tickets"
                 value={state.searchTerm}
                 onChange={handleSearchChange}
@@ -393,17 +430,39 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                       <td>{ticket.sem || "N/A"}</td>
                       <td>
                         <div
-                          className="dropdown"
-                          style={{ position: "relative" }}
+                          className="dropdown d-flex justify-content-center w-100"
+                          style={{ position: "relative", width: "100%" }}
                         >
                           <button
-                            className="btn btn-outline-dark fw-semibold px-4 py-2 rounded-5 shadow-sm border-1"
+                            className="btn btn-sm btn-outline-dark fw-semibold rounded-5 shadow-sm border-1 d-flex align-items-center justify-content-center"
                             type="button"
                             onClick={() => openModalWithTickets(ticket.tickets)}
                           >
-                            <i className="bi bi-ticket-perforated me-2"></i>
-                            View Tickets
+                            <i
+                              className="bi bi-ticket-perforated me-0 me-lg-2"
+                              style={{ fontSize: "14px" }}
+                            ></i>
+                            <span
+                              className="d-inline-block"
+                              style={{
+                                fontSize: "13px",
+                                padding: "6px 10px",
+                                lineHeight: "1.2",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              <span className="d-inline d-lg-none">
+                                View Tickets
+                              </span>
+                              <span
+                                className="d-none d-lg-inline"
+                                style={{ fontSize: "14px", padding: "0 8px" }}
+                              >
+                                View Tickets
+                              </span>
+                            </span>
                           </button>
+
                           <ViewTicketsModal
                             isOpen={state.modalOpen}
                             onClose={() =>
@@ -423,7 +482,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                 ) : (
                   <tr>
                     <td colSpan="6" className="text-center">
-                      No tickets Found.
+                      No Tickets Found.
                     </td>
                   </tr>
                 )}
@@ -433,15 +492,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         </>
       ) : (
         <div className="d-flex flex-column align-items-center mt-5">
-          <div
-            className="d-flex justify-content-center align-items-center mt-3"
-            style={{
-              background: "#e6f7ff",
-              padding: "20px",
-              borderRadius: "10px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-            }}
-          >
+          <div className="d-flex justify-content-center align-items-center mt-3 mb-4">
             <div>
               <h5 className="text-secondary text-center">
                 No Purchases To Display

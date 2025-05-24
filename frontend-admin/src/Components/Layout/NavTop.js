@@ -63,7 +63,7 @@ const NavTop = () => {
   const validateForm = () => {
     let validationErrors = {};
 
-    if (!oldPassword) validationErrors.oldPassword = "Old password is required";
+    if (!oldPassword) validationErrors.oldPassword = "Old password Is Required";
 
     if (!newPassword) {
       validationErrors.newPassword = "New password is required";

@@ -37,6 +37,7 @@ function AppDrawer({
   const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
   const { dispatch, store } = useAppContext();
+  
   const location = useLocation();
   useEffect(() => {
     user_getAllGames();
@@ -119,8 +120,10 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className={`sidebar border ${store.user.isLogin ? "mt-4" : "mt-1"}`}
-        style={{ overflowY: "auto", height: "83vh" }}
+        className={`sidebar border-top-0 border-end ${
+          store.user.isLogin ? "mt-4" : "mt-1"
+        }`}
+        style={{ overflowY: "auto" }}
       >
         <span
           style={{
@@ -136,7 +139,7 @@ function AppDrawer({
             className="btn-close d-xl-none d-lg-none d-md-none"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
-            style={{ marginLeft: "70%" }}
+            style={{ marginLeft: "70%", position: "absolute", top: "0" }}
           />
         </span>
 
@@ -161,7 +164,11 @@ function AppDrawer({
                 {lotteryNewDrawTimes.map((market) => (
                   <li
                     key={market.marketId}
-                    className="subMenuHead mt-2 text-info text-uppercase"
+                    className="subMenuHead mt-2 text-info text-uppercase text-wrap"
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "normal",
+                    }}
                   >
                     <Link
                       to={`/lottoPurchase/${market.marketId}`}
@@ -204,7 +211,11 @@ function AppDrawer({
                     ? gameObj?.markets?.map((marketObj, marketIndex) => {
                         return (
                           <li
-                            className="subMenuItems"
+                            className="subMenuItems text-wrap"
+                            style={{
+                              wordBreak: "break-word",
+                              whiteSpace: "normal",
+                            }}
                             key={marketIndex}
                             onClick={() =>
                               handleAllId(gameObj?.gameId, marketObj?.marketId)

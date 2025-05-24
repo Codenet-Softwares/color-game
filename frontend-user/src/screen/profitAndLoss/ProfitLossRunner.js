@@ -1,6 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import Pagination from "../common/Pagination";
+import { formatDateForUi } from "../../utils/helper";
 
 const ProfitAndLossRunner = ({
   data,
@@ -119,9 +120,6 @@ const ProfitAndLossRunner = ({
                             Event Name
                           </th>
                           <th scope="col">
-                            Market Id
-                          </th>
-                          <th scope="col">
                             Market Name
                           </th>
                           <th scope="col">
@@ -142,7 +140,6 @@ const ProfitAndLossRunner = ({
                             <tr key={index} align="center">
                               <td>{data?.gameName}</td>
                               <td>{data?.marketName}</td>
-                              <td>{data?.marketId || "NDS"}</td>
                               <td
                                 className="text-primary fw-bold"
                                 style={{ cursor: "pointer" }}
@@ -166,7 +163,7 @@ const ProfitAndLossRunner = ({
                                 {data?.profitLoss}
                               </td>
                               <td>0</td>
-                              <td>{"NDS"}</td>
+                              <td>{formatDateForUi(data?.settleTime)}</td>
                             </tr>
                           ))
                         ) : (
@@ -187,7 +184,7 @@ const ProfitAndLossRunner = ({
                 </div>
               )}
             </div>
-          <li className="list-group-item overflow-auto">
+          <li className="list-group-item ">
             {/* Pagination */}
             {data?.data?.length > 0 && (
               <Pagination

@@ -489,7 +489,13 @@ const GetMarketDetailByMarketId = () => {
               >
                 {/* Left side: Market Name and Countdown Timer */}
                 <div className="d-flex flex-wrap align-items-center ">
-                  <div className="me-3">
+                  <div
+                    className="me-3 text-wrap"
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "normal",
+                    }}
+                  >
                     {user_marketWithRunnerData.marketName}
                   </div>
                   {new Date(
