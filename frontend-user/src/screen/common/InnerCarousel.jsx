@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getInnerImg } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
+import { aAdvertisement } from "../../utils/dummyData";
 
 const InnerCarousel = () => {
   const {  store } = useAppContext();
@@ -13,7 +14,7 @@ const InnerCarousel = () => {
         setSliderData(response.data);
       } else {
         console.error("error", response);
-        setSliderData([]);
+        setSliderData(aAdvertisement);
       }
     } catch (error) {
       console.error("error", error);
