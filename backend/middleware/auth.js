@@ -4,6 +4,7 @@ import { string } from '../constructor/string.js';
 import admins from '../models/admin.model.js';
 import { statusCode } from '../helper/statusCodes.js';
 import userSchema from '../models/user.model.js';
+import { user_Balance } from '../controller/admin.controller.js';
 export const authorize = (roles, permissions) => {
   return async (req, res, next) => {
     try {
@@ -89,7 +90,18 @@ export const authorize = (roles, permissions) => {
         return res.status(statusCode.unauthorize).json(apiResponseErr(null, false, statusCode.unauthorize, 'Token mismatch. Unauthorized access.'));
       }
 
-      req.user = existingUser;
+      const userBalance = await user_Balance(existingUser.userId, true);
+
+      const exposureList = userBalance?.[1] ?? [];
+
+      const marketListExposure = exposureList.map((exposure) => ({
+        [exposure.MarketId]: exposure.exposure,
+      }));
+
+      req.user = {
+        ...existingUser.toJSON(),
+        marketListExposure
+      };
       next();
     } catch (err) {
       console.error('Authorization Error:', err.message);

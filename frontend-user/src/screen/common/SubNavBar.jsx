@@ -19,17 +19,17 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     wallet: null,
   });
 
- useEffect(() => {
-   let currentExposure = null;
-   store.user.wallet?.marketListExposure.forEach((entry) => {
-     currentExposure += Object.values(entry)[0];
-   });
+  useEffect(() => {
+    let currentExposure = null;
+    store.user.wallet?.marketListExposure.forEach((entry) => {
+      currentExposure += Object.values(entry)[0];
+    });
 
-   setExposureAndWallet({
-     ...exposureAndWallet,
-     exposure: currentExposure,
-   });
- }, [store.user.wallet?.marketListExposure]);
+    setExposureAndWallet({
+      ...exposureAndWallet,
+      exposure: currentExposure,
+    });
+  }, [store.user.wallet?.marketListExposure]);
 
   const fetchAnnouncement = async () => {
     try {
@@ -75,19 +75,19 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
           className="container-fluid d-flex align-items-center justify-content-between"
           style={{ maxWidth: "100%", padding: "5px 10px" }}
         >
-          <div className="d-flex flex-column">
-            <button
-              className="btn btn-primary d-lg-none hambargerIcon d-md-none"
-              type="button"
-              data-bs-toggle="offcanvas"
-              data-bs-target="#offcanvasScrolling"
-              aria-controls="offcanvasScrolling"
-            >
-              ☰
-            </button>
-            {store.user.isLogin && (
+          {store.user.isLogin && (
+            <div className="d-flex flex-column">
               <button
-                className="btn btn-primary mt-2 d-lg-none hambargerIcon "
+                className="btn btn-primary d-lg-none hambargerIcon d-md-none"
+                type="button"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvasScrolling"
+                aria-controls="offcanvasScrolling"
+              >
+                ☰
+              </button>
+              <button
+                className="btn btn-primary mt-2 d-lg-none hambargerIcon"
                 type="button"
                 data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasTop"
@@ -109,8 +109,8 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 </small>
                 <FaDollarSign size={15} color="white" />
               </button>
-            )}
-          </div>
+            </div>
+          )}
 
           <OpenBetsOffCanvas
             handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}

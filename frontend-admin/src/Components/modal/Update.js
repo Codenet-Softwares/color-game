@@ -299,7 +299,7 @@ const Update = ({ show, setShow, data, Update }) => {
             <input
               type="text"
               className="form-control"
-              placeholder="Type here"
+              placeholder="Type Here"
               name={
                 Update === "Game"
                   ? "gameName"

@@ -16,6 +16,7 @@ import {
   deleteRunner,
   gameActiveInactive,
   updateGameStatus,
+  trashDeleteGame,
 } from '../controller/game.controller.js';
 import { authorize } from '../middleware/auth.js';
 import customErrorHandler from '../middleware/customErrorHandler.js';
@@ -72,6 +73,8 @@ export const GameRoute = (app) => {
   app.put('/api/update/rate', updateRateSchema, customErrorHandler, authorize([string.Admin]), updateRate);
   // done
   app.delete('/api/game-delete/:gameId', gameIdValidate, customErrorHandler, authorize([string.Admin]), deleteGame);
+
+  app.delete('/api/game-delete-trash/:gameId', gameIdValidate, customErrorHandler, authorize([string.Admin]), trashDeleteGame);
   // done
   app.delete(
     '/api/market-delete/:marketId',

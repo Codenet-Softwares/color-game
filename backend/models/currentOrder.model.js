@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db.js';
+import { sequelize } from '../db.js';
 class CurrentOrder extends Model {}
 CurrentOrder.init(
   {
@@ -74,6 +74,26 @@ CurrentOrder.init(
       type: DataTypes.CHAR(150),
       allowNull: false,
     },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isPermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isLiveDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+      isLivePermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    }
   },
   {
     sequelize,

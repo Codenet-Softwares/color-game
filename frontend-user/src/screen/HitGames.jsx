@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getGameImg } from "../utils/apiService";
 import Login from "./loginModal/loginModal";
+import { dHitGames } from "../utils/dummyData";
 
 const HitGames = () => {
   const [sliderData, setSliderData] = useState([]);
@@ -13,7 +14,7 @@ const HitGames = () => {
         setSliderData(response.data);
       } else {
         console.error("Error fetching slider data", response);
-        setSliderData([]);
+        setSliderData(dHitGames);
       }
     } catch (error) {
       console.error("Error fetching slider data", error);

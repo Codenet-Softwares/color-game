@@ -1,6 +1,6 @@
 const dSlider = [
   {
-    image: 'http://sportsthenandnow.com/wp/wp-content/uploads/2019/10/online-sports-betting.jpg',
+    image: 'https://c0.wallpaperflare.com/preview/106/116/848/lottery-bingo-sweepstakes-winner.jpg',
   },
   {
     image:

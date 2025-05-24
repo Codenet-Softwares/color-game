@@ -128,9 +128,11 @@ const GetwholeMarket = () => {
                               {/* Market Header */}
                               <div className="row align-items-center">
                                 <span
-                                  className="col-12 font-weight-bold text-uppercase text-primary fw-bold"
+                                  className="col-12 font-weight-bold text-uppercase text-primary fw-bold text-wrap"
                                   style={{
                                     fontSize: "16px",
+                                    wordBreak: "break-word",
+                                    whiteSpace: "normal",
                                   }}
                                 >
                                   💹{marketData?.marketName ?? "Unknown"} |{" "}
@@ -246,7 +248,13 @@ const GetwholeMarket = () => {
                                       {formatDate(marketData.startTime)}
                                     </span>
                                     |{" "}
-                                    <h6 className="text-primary px-1">
+                                    <h6
+                                      className="text-primary px-1 text-wrap"
+                                      style={{
+                                        wordBreak: "break-word",
+                                        whiteSpace: "normal",
+                                      }}
+                                    >
                                       {marketData?.marketName}
                                     </h6>
                                   </span>

@@ -20,8 +20,8 @@ const Login = () => {
     event.preventDefault();
     let validationErrors = {};
 
-    if (!userName) validationErrors.userName = "Username is required";
-    if (!password) validationErrors.password = "Password is required";
+    if (!userName) validationErrors.userName = "Username Is Required";
+    if (!password) validationErrors.password = "Password Is Required";
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);

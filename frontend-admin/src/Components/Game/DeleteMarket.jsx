@@ -114,7 +114,10 @@ const DeleteMarket = () => {
   return (
     <div className="container my-5 ">
       <div className="card shadow-sm">
-        <div className="card-header text-white text-center text-uppercase" style={{ background: "#3E5879" }}>
+        <div
+          className="card-header text-white text-center text-uppercase"
+          style={{ background: "#3E5879" }}
+        >
           <h3 className="mb-0 fw-bold">Deleted Markets</h3>
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
@@ -123,7 +126,10 @@ const DeleteMarket = () => {
               <div className="input-group">
                 <span
                   className="input-group-text bg-light border-2"
-                  style={{ borderRadius: "30px 0 0 30px", border: "2px solid #3E5879" }}
+                  style={{
+                    borderRadius: "30px 0 0 30px",
+                    border: "2px solid #3E5879",
+                  }}
                 >
                   <FaSearch className="fw-bold" />
                 </span>
@@ -133,7 +139,10 @@ const DeleteMarket = () => {
                   placeholder="Search By Market Name..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)} // Set search term on change
-                  style={{ borderRadius: "0 30px 30px 0", border: "2px solid #3E5879" }}
+                  style={{
+                    borderRadius: "0 30px 30px 0",
+                    border: "2px solid #3E5879",
+                  }}
                 />
                 {searchTerm && (
                   <button
@@ -146,7 +155,6 @@ const DeleteMarket = () => {
                       transform: "translateY(-50%)",
                       zIndex: 1,
                       padding: "0 10px",
-
                     }}
                   >
                     <FaTimes className="text-muted" />
@@ -181,7 +189,10 @@ const DeleteMarket = () => {
               }}
             >
               <div className="table-responsive mx-auto">
-                <table className="table table-striped table-hover" style={{ border: "2px solid #3E5879" }}>
+                <table
+                  className="table table-striped table-hover"
+                  style={{ border: "2px solid #3E5879" }}
+                >
                   <thead className="table-primary text-center text-uppercase">
                     <tr>
                       <th>Serial Number</th>
@@ -208,13 +219,17 @@ const DeleteMarket = () => {
                         <td>
                           <button
                             className="btn btn-danger me-2"
-                            onClick={() => handleDelete(market.approvalMarketId)}
+                            onClick={() =>
+                              handleDelete(market.approvalMarketId)
+                            }
                           >
                             Delete
                           </button>
                           <button
                             className="btn btn-info"
-                            onClick={() => handleRestore(market.approvalMarketId)}
+                            onClick={() =>
+                              handleRestore(market.approvalMarketId)
+                            }
                           >
                             Restore
                           </button>
@@ -226,7 +241,9 @@ const DeleteMarket = () => {
               </div>
             </SingleCard>
           ) : (
-            <p className="text-center fw-bold text-danger h5">No Markets Found.</p>
+            <div className="alert alert-warning text-center fw-bold shadow rounded-pill px-4 py-3">
+              🚫 No Deleted Markets Found.
+            </div>
           )}
 
           {/* Pagination */}

@@ -1,9 +1,8 @@
 import { Op, Sequelize } from "sequelize";
 import { statusCode } from "../helper/statusCodes.js";
 import { apiResponseErr, apiResponseSuccess } from "../middleware/serverError.js";
-import MarketDeleteApproval from "../models/marketApproval.model.js";
 import Market from "../models/market.model.js";
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 import Runner from "../models/runner.model.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import rateSchema from "../models/rate.model.js";
@@ -13,25 +12,25 @@ export const getDeleteMarket = async (req, res) => {
         const { page = 1, limit = 10, search = "" } = req.query;
         const offset = (page - 1) * limit;
 
-        const where = search
-            ? Sequelize.literal(`JSON_SEARCH(approvalMarkets, 'one', '%${search}%', NULL, '$[*].marketName') IS NOT NULL`)
-            : {};
+        const where = { isDeleted: true };
 
-        const { rows: deleteMarket, count: totalItems } = await MarketDeleteApproval.findAndCountAll({
-            attributes: ["approvalMarketId", "approvalMarkets"],
+        if (search) {
+          where.marketName = { [Op.like]: `%${search}%` };
+        }
+
+        const { rows: existingMarket, count: totalItems } =
+          await Market.findAndCountAll({
             where,
             limit: parseInt(limit),
             offset: parseInt(offset),
-            order : [["createdAt", "DESC"]],
-        });
+            order: [["createdAt", "DESC"]],
+          });
 
-        const response = deleteMarket.map((approval) => {
-            const market = approval.approvalMarkets[0];
+        const response = existingMarket.map((item) => {
             return {
-                approvalMarketId: approval.approvalMarketId,
-                marketName: market.marketName,
-                marketId: market.marketId,
-                isActive: market.isActive,
+                marketName: item.marketName,
+                marketId: item.marketId,
+                isActive: item.isActive,
             };
         });
 
@@ -56,10 +55,10 @@ export const getDeleteMarket = async (req, res) => {
 
 export const restoreDeleteMarket = async (req, res) => {
     try {
-        const { approvalMarketId } = req.params;
+        const { marketId } = req.params;
 
-        const restoreDeletedMarket = await MarketDeleteApproval.findOne({
-            where: { approvalMarketId }
+        const restoreDeletedMarket = await Market.findOne({
+            where: { marketId }
         });
 
         if (!restoreDeletedMarket) {
@@ -68,16 +67,10 @@ export const restoreDeleteMarket = async (req, res) => {
                 .send(apiResponseErr(null, false, statusCode.notFound, "Market not found"));
         }
 
-        const marketData = restoreDeletedMarket.approvalMarkets[0];
-
         await Market.update(
-            { deleteApproval: false },
-            { where: { marketId: marketData.marketId } }
+            { isDeleted: false },
+            { where: { marketId } }
         );
-
-        await MarketDeleteApproval.destroy({
-            where: { approvalMarketId }
-        });
 
         return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market restored successfully"));
     } catch (error) {
@@ -91,56 +84,50 @@ export const restoreDeleteMarket = async (req, res) => {
 export const deleteMarket = async (req, res) => {
     const transaction = await sequelize.transaction();
     try {
-        const { approvalMarketId } = req.params;
+        const { marketId } = req.params;
 
-        const deletedMarket = await MarketDeleteApproval.findOne({
-            where: { approvalMarketId }
-        });
-
-        const marketData = deletedMarket.approvalMarkets[0];
-        const runners = await Runner.findAll({
-            where: { marketId: marketData.marketId },
+        const existingMarket = await Market.findOne({
+            where: { marketId },
             transaction,
         });
 
+        if (!existingMarket) {
+            return res
+                .status(statusCode.notFound)
+                .send(apiResponseErr([], false, statusCode.notFound, "Market not found"));
+        }
+
+        const runners = await Runner.findAll({ where: { marketId }, transaction });
         const runnerIds = runners.map((runner) => runner.runnerId);
 
-        if (runnerIds.length) {
-            await rateSchema.destroy({
-                where: { runnerId: { [Op.in]: runnerIds } },
-                transaction,
-            });
-
-            await Runner.destroy({
-                where: { marketId: marketData.marketId },
-                transaction,
-            });
+        if (runnerIds.length > 0) {
+            await rateSchema.update({ isPermanentDeleted: true }, { where: { runnerId: runnerIds }, transaction });
         }
 
-        await CurrentOrder.destroy({
-            where: { marketId: marketData.marketId },
-            transaction,
-        });
+        await Runner.update({ isPermanentDeleted: true }, { where: { marketId }, transaction });
+        await CurrentOrder.update({ isPermanentDeleted: true }, { where: { marketId }, transaction });
+        await Market.update({ isPermanentDeleted: true }, { where: { marketId }, transaction });
 
-        const deletedMarketCount = await Market.destroy({
-            where: { marketId: marketData.marketId },
-            transaction,
-        });
+        if (runnerIds.length > 0) {
+            await rateSchema.destroy({ where: { runnerId: { [Op.in]: runnerIds } }, transaction });
+        }
+
+        await Runner.destroy({ where: { marketId }, transaction });
+        await CurrentOrder.destroy({ where: { marketId }, transaction });
+
+        const deletedMarketCount = await Market.destroy({ where: { marketId }, transaction });
 
         if (deletedMarketCount === 0) {
-            res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market deletion failed"));
+            await transaction.rollback();
+            return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market deletion failed"));
         }
 
-        await MarketDeleteApproval.destroy({
-            where: { approvalMarketId }
-        });
-
         await transaction.commit();
-
         return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market deleted successfully"));
 
     } catch (error) {
-        transaction.rollback();
+        console.error("Error deleting market:", error);
+        await transaction.rollback();
         return res
             .status(statusCode.internalServerError)
             .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));

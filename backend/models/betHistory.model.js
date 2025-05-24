@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db.js';
+import { sequelize } from '../db.js';
 
 class BetHistory extends Model {}
 
@@ -88,6 +88,16 @@ BetHistory.init(
     betId: {
       type: DataTypes.CHAR(150),
       allowNull: false,
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isPermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {

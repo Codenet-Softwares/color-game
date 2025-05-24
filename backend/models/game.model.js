@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 
 class Game extends Model {}
 
@@ -27,7 +27,17 @@ Game.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue:true,
-    }
+    },
+     isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isPermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,

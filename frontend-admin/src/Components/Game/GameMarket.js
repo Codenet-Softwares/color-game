@@ -180,14 +180,7 @@ const GameMarket = ({ marketId }) => {
                   Game Market
                 </h3>
               </div>
-              {
-                auth.user.roles === "admin" && <button className="btn btn-primary" onClick={handleShow}>
-                  <span className="me-2">
-                    <i className="fa fa-plus " aria-hidden="true"></i>
-                  </span>
-                  Create Game
-                </button>
-              }
+             
 
             </div>
           </div>
@@ -425,7 +418,6 @@ const GameMarket = ({ marketId }) => {
         handleClose={handleCloseLatestAnnouncementModal}
         latestAnnouncements={latestAnnouncements}
       />
-      <CreateGame show={show} setShow={setShow} />
       <Update
         show={showUpdateModal}
         setShow={setShowUpdateModal}

@@ -7,10 +7,11 @@ import {
 } from "../middleware/serverError.js";
 import userSchema from "../models/user.model.js";
 import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 import { user_Balance } from "./admin.controller.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import { Op } from "sequelize";
+import MarketListExposure from "../models/marketListExposure.model.js";
 
 export const searchTicket = async (req, res) => {
   try {
@@ -53,7 +54,6 @@ export const purchaseLottery = async (req, res) => {
     const { userId, userName, roles, marketListExposure } = req.user;
     const { marketId } = req.params;
     const baseURL = process.env.LOTTERY_URL;
-    const whiteLabelUrl = process.env.WHITE_LABEL_URL;
 
     const token = jwt.sign({ roles }, process.env.JWT_SECRET_KEY, {
       expiresIn: "1h",
@@ -69,53 +69,54 @@ export const purchaseLottery = async (req, res) => {
 
     const user = await userSchema.findOne({ where: { userId }, transaction: t });
 
-    let updatedMarketListExposure;
-
-    if (!marketListExposure || marketListExposure.length === 0) {
-      updatedMarketListExposure = [{ [marketId]: lotteryPrice }];
-    } else {
-      updatedMarketListExposure = marketListExposure.map(exposure => {
-        if (exposure.hasOwnProperty(marketId)) {
-          exposure[marketId] += lotteryPrice;
-        }
-        return exposure;
-      });
-    }
-
-    if (!updatedMarketListExposure.some(exposure => exposure.hasOwnProperty(marketId))) {
-      const newExposure = { [marketId]: lotteryPrice };
-      updatedMarketListExposure.push(newExposure);
-    }
-
-    user.marketListExposure = updatedMarketListExposure;
-    await user.save({ fields: ["marketListExposure"], transaction: t });
-
-    const marketExposure = user.marketListExposure;
-
-    let totalExposure = 0;
-    marketExposure.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
+    let marketExposureRecord = await MarketListExposure.findOne({
+      where: { UserId: userId, MarketId: marketId },
+      transaction: t,
     });
 
+    if (marketExposureRecord) {
+      marketExposureRecord.exposure += lotteryPrice;
+      await marketExposureRecord.save({ transaction: t });
+    } else {
+      await MarketListExposure.create(
+        { UserId: userId, MarketId: marketId, exposure: lotteryPrice },
+        { transaction: t }
+      );
+    }
 
-    const [rs1] = await Promise.all([
-      axios.post(
-        `${baseURL}/api/purchase-lottery/${marketId}`,
-        { generateId, userId, userName, lotteryPrice },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      ),
+    const updatedExposureList = [...marketListExposure];
+    const foundIndex = updatedExposureList.findIndex(
+      (ex) => ex.MarketId === marketId
+    );
 
-    ]);
+    if (foundIndex !== -1) {
+      updatedExposureList[foundIndex].exposure += lotteryPrice;
+    } else {
+      updatedExposureList.push({ MarketId: marketId, exposure: lotteryPrice });
+    }
+
+    const totalExposure = updatedExposureList.reduce(
+      (sum, ex) => sum + ex.exposure,
+      0
+    );
+
+
+    const rs1 = await axios.post(
+      `${baseURL}/api/purchase-lottery/${marketId}`,
+      { generateId, userId, userName, lotteryPrice },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     if (!rs1.data.success) {
       return res.status(statusCode.success).send(rs1.data);
     }
 
     await t.commit();
-    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.create, "Lottery purchased successfully"));
+    return res.status(statusCode.success).send(
+      apiResponseSuccess(null, true, statusCode.create, "Lottery purchased successfully")
+    );
   } catch (error) {
     await t.rollback();
 
@@ -302,22 +303,10 @@ export const updateBalance = async (req, res) => {
       type: "win",
       marketId,
     });
-
-     const users = await userSchema.findAll({
-      where: { marketListExposure: { [Op.ne]: null } },
+     await MarketListExposure.destroy({
+      where: { MarketId: marketId }
     });
-
-    for (const user of users) {
-      if (user.marketListExposure) {
-        let updatedExposure = user.marketListExposure.filter((entry) => !entry[marketId]);
-
-        await userSchema.update(
-          { marketListExposure: updatedExposure },
-          { where: { userId: user.userId } }
-        );
-      }
-    }
-
+   
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Balance Update"));
   } catch (error) {

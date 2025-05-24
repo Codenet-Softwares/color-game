@@ -12,6 +12,7 @@ import Runner from "../models/runner.model.js";
 import { Op } from "sequelize";
 import BetHistory from "../models/betHistory.model.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
+import { sequelizeArchive } from "../db.js"
 
 export const voidMarket = async (req, res) => {
   try {
@@ -21,11 +22,14 @@ export const voidMarket = async (req, res) => {
     if (!market) {
       return res
         .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, "Market not found"));
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
+        );
     }
 
-    market.isVoid = true;
-    await market.save();
+    const [ marketUpdate ] = await Market.update(
+      { isVoid: true, isDeleted: true, isPermanentDeleted : true },{ where: { marketId }, }
+    );
 
     const users = await MarketBalance.findAll({ where: { marketId } });
 
@@ -85,6 +89,15 @@ export const voidMarket = async (req, res) => {
       }
     }
 
+    
+    if (marketUpdate > 0) {
+      await Market.destroy({
+        where: {
+          marketId
+        },
+      });
+    };
+
     return res
       .status(statusCode.success)
       .send(apiResponseSuccess(null, true, statusCode.success, "Market voided successfully"));
@@ -99,58 +112,71 @@ export const voidMarket = async (req, res) => {
 
 export const getAllVoidMarkets = async (req, res) => {
   try {
-    let { page = 1, pageSize = 10, search = '' } = req.query;
+    let { page = 1, pageSize = 10, search = "" } = req.query;
     page = parseInt(page);
     pageSize = parseInt(pageSize);
 
     const offset = (page - 1) * pageSize;
-    const whereClause = { isVoid: true };
-    if (search.trim() !== '') {
-      whereClause.marketName = { [Op.like]: `%${search}%` };
+
+    let query = `
+  SELECT 
+    m.id,
+    m.marketId,
+    m.marketName,
+    m.gameId,
+    g.gameName,
+    r.runnerId,
+    r.runnerName,
+    r.back,
+    r.lay
+  FROM colorgame_refactor_archive.market m
+  LEFT JOIN colorgame_refactor_archive.game g ON m.gameId = g.gameId
+  LEFT JOIN colorgame_refactor_archive.runner r ON m.marketId = r.marketId
+  WHERE m.isVoid = 1
+`;
+
+    if (search && search.trim() !== "") {
+      query += ` AND m.marketName LIKE :search`;
     }
 
-    const totalItems = await Market.count({
-      where: whereClause,
-      include: [
-        {
-          model: Game
-        }
-      ]
+    query += ` ORDER BY m.id DESC`;
+
+    const markets = await sequelizeArchive.query(query, {
+      replacements: { search: `%${search}%` },
+      type: sequelizeArchive.QueryTypes.SELECT,
     });
 
-    const markets = await Market.findAll({
-      where: whereClause,
-      include: [
-        {
-          model: Game,
-          attributes: ['gameId', 'gameName'],
-        },
-        {
-          model: Runner,
-          attributes: ['runnerId', 'runnerName', 'back', 'lay']
-        }
-      ],
-      attributes: ['marketId', 'marketName', 'gameId'],
+    console.log("markets",markets)
+    // Group markets by marketId to structure them with runners
+    const groupedMarkets = {};
+
+    markets.forEach(market => {
+      if (!groupedMarkets[market.marketId]) {
+        groupedMarkets[market.marketId] = {
+          gameId: market.gameId,
+          gameName: market.gameName,
+          marketId: market.marketId,
+          marketName: market.marketName,
+          Runners: []
+        };
+      }
+
+      if (market.runnerId) {
+        groupedMarkets[market.marketId].Runners.push({
+          runnerId: market.runnerId,
+          runnerName: market.runnerName,
+          back: market.back,
+          lay: market.lay
+        });
+      }
     });
+    
 
-    const formattedMarkets = markets.map(market => ({
-      gameId: market.Game.gameId,
-      gameName: market.Game.gameName,
-      marketId: market.marketId,
-      marketName: market.marketName,
-      Runners: market.Runners.map(runner => ({
-        runnerId: runner.runnerId,
-        runnerName: runner.runnerName,
-        back: runner.back,
-        lay: runner.lay
-      }))
-    }));
+    const formattedMarkets = Object.values(groupedMarkets);
 
+    const totalItems = formattedMarkets.length;
     const totalPages = Math.ceil(totalItems / pageSize);
-
-    const reversedData = formattedMarkets.reverse();
-
-    const paginatedData = reversedData.slice(offset, offset + pageSize);
+    const paginatedData = formattedMarkets.slice(offset, offset + pageSize);
 
     return res
       .status(statusCode.success)
@@ -164,7 +190,8 @@ export const getAllVoidMarkets = async (req, res) => {
           pageSize,
           totalItems,
           totalPages
-        }));
+        }
+      ));
   } catch (error) {
     console.error('Error retrieving voided markets:', error);
     return res
@@ -172,6 +199,7 @@ export const getAllVoidMarkets = async (req, res) => {
       .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
   }
 };
+
 
 
 

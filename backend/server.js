@@ -5,14 +5,12 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import sequelize from './db.js';
+import { sequelize, sequelizeArchive } from './db.js';
 
 // Route imports
 import { AdminRoute } from './routes/admin.route.js';
 import { UserRoute } from './routes/user.route.js';
 import { GameRoute } from './routes/game.route.js';
-import { SliderRoute } from './routes/slider.route.js';
-import { AnnouncementRoute } from './routes/announcement.route.js';
 import { authRoute } from './routes/auth.route.js';
 import { InactiveGameRoute } from './routes/inactiveGame.route.js';
 import { externalApisRoute } from './routes/externalApis.route.js';
@@ -28,11 +26,12 @@ import Runner from './models/runner.model.js';
 import CurrentOrder from './models/currentOrder.model.js';
 import BetHistory from './models/betHistory.model.js';
 import MarketBalance from './models/marketBalance.js';
-import InactiveGame from './models/inactiveGame.model.js';
+import InactiveGame from './models/inactiveGame.models.js';
 
 // Helpers
 import { checkAndManageIndexes } from './helper/indexManager.js';
 import { updateColorGame } from './helper/cgCron.js';
+import { wlExternalRoute } from './routes/wl.external.route.js';
 
 // Env config
 const __filename = fileURLToPath(import.meta.url);
@@ -65,14 +64,13 @@ AdminRoute(app);
 authRoute(app);
 UserRoute(app);
 GameRoute(app);
-AnnouncementRoute(app);
-SliderRoute(app);
 InactiveGameRoute(app);
 externalApisRoute(app);
 lotteryRoute(app);
 voidGameRoute(app);
 DeleteRoutes(app);
 MarketDeleteApprovalRoute(app);
+wlExternalRoute(app)
 
 // Model Associations
 Game.hasMany(Market, { foreignKey: 'gameId', sourceKey: 'gameId' });
@@ -81,20 +79,20 @@ Market.belongsTo(Game, { foreignKey: 'gameId', targetKey: 'gameId' });
 Market.hasMany(Runner, { foreignKey: 'marketId', sourceKey: 'marketId' });
 Runner.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
 
-CurrentOrder.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
-BetHistory.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
+// CurrentOrder.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
+// BetHistory.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId', as: 'market' });
 
 Market.hasMany(MarketBalance, { foreignKey: 'marketId', sourceKey: 'marketId' });
 MarketBalance.belongsTo(Market, { foreignKey: 'marketId', targetKey: 'marketId' });
 
-InactiveGame.belongsTo(Game, { foreignKey: 'gameId' });
-Game.hasMany(InactiveGame, { foreignKey: 'gameId' });
+// InactiveGame.belongsTo(Game, { foreignKey: 'gameId' });
+// Game.hasMany(InactiveGame, { foreignKey: 'gameId' });
 
-InactiveGame.belongsTo(Market, { foreignKey: 'marketId' });
-Market.hasMany(InactiveGame, { foreignKey: 'marketId' });
+// InactiveGame.belongsTo(Market, { foreignKey: 'marketId' });
+// Market.hasMany(InactiveGame, { foreignKey: 'marketId' });
 
-InactiveGame.belongsTo(Runner, { foreignKey: 'runnerId' });
-Runner.hasMany(InactiveGame, { foreignKey: 'runnerId' });
+// InactiveGame.belongsTo(Runner, { foreignKey: 'runnerId' });
+// Runner.hasMany(InactiveGame, { foreignKey: 'runnerId' });
 
 // Index Management
 checkAndManageIndexes('game');

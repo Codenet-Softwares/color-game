@@ -2,7 +2,6 @@
   list-style-type: none;
   padding: 0;
 }
-
 .sidebar ul li {
   display: block;
   /* border-bottom: 2px solid rgb(226, 225, 225); */
@@ -12,35 +11,31 @@
   overflow-y: auto; /* Enable scrolling for sidebar */
   margin-top: 35px;
 }
-
 .subMenuItems {
   max-height: none; /* Remove any max-height limit */
   overflow-y: visible; /* Ensure content isn't hidden */
 }
-
 .sidebar ul li a {
   display: block;
   padding: 8px;
   text-decoration: none;
-  color: #034e52;
+  color: #034E52;
   position: relative;
   font-weight: 700;
   transition: background-color 0.3s, color 0.3s;
 }
-
 .sidebar ul li.subMenuItems a {
   display: block;
   text-decoration: none;
-  color: #034e52;
+  color: #034E52;
   position: relative;
   transition: background-color 0.3s, color 0.3s;
   margin: 10px;
   text-align: center;
   border: 1px solid rgb(211, 208, 208);
-  background: linear-gradient(135deg, #e6f7ff, #fff);
-
+  background: linear-gradient(135deg, #E6F7FF, #fff);
 }
-/* 
+/*
 .sidebar ul li.MenuHead a::after {
   content: "\2193";
   position: absolute;
@@ -48,14 +43,12 @@
   right: 10px;
   font-size: 0.8em;
 }
-
 .sidebar ul li.subMenuItems a::after {
   position: absolute;
   bottom: 10px;
   right: 10px;
   font-size: 0.8em;
 }
-
 .sidebar ul li.subMenuHead a::after {
   content: " \2191";
   position: absolute;
@@ -64,19 +57,16 @@
   font-size: 0.8em;
   font-weight: 700;
 } */
-
 .sidebar ul li a:hover {
-  background-color: #e6f7ff;
+  background-color: #E6F7FF;
   color: hsl(216, 5%, 57%);
 }
-
 .sidebar ul li.subMenuItems a:hover {
-  /* background-color: #2cb3d1; */
+  /* background-color: #2CB3D1; */
   /* color: #fff; */
    color: #444;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
 }
-
 /* lottery section  */
 .lottery-section {
   position: relative;
@@ -88,12 +78,10 @@
   cursor: pointer; /* Change cursor to pointer for better UX */
   transition: background-color 0.3s; /* Smooth transition on hover */
 }
-
 .lottery-section:hover {
-  background-color: #f1f5f8;
-  color: #f8f9fa !important; /* Off-white for contrast */
+  background-color: #F1F5F8;
+  color: #F8F9FA !important; /* Off-white for contrast */
 }
-
 .lottery-wrapper {
   display: flex;
   align-items: center;
@@ -116,23 +104,19 @@
   animation: blink 1s infinite;
 }
 .sidebar ul:hover{
-  background-color: #f1f5f8;
-
+  background-color: #F1F5F8;
 }
 .dropdown-icon {
   margin-left: 10px; /* Space between text and icon */
   transition: transform 0.3s; /* Smooth transition for rotation */
 }
-
 .dropdown-icon.active {
   transform: rotate(180deg); /* Rotate icon when active */
 }
-
 .subMenuItems {
   list-style-type: none; /* Remove default bullets */
-  margin: 10px;
+  margin: 8px;
 }
-
 .subMenuHead {
   font-size: 15px;
   /* color: #444; */
@@ -140,27 +124,23 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background: linear-gradient(135deg, #e6f7ff, #fff);
+  background: linear-gradient(135deg, #E6F7FF, #fff);
   transition: all 0.3s ease;
   cursor: pointer;
   border: 1px solid rgb(211, 208, 208);
 }
-
 .subMenuHead:hover {
   color: #444;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow on hover */
 }
-
 /* Draw date icon styling */
 .draw-date-icon {
   font-size: 18px;
-  color: #ff6347; /* Coral color for a vibrant look */
+  color: #FF6347; /* Coral color for a vibrant look */
 }
-
 .lottery-section a::after {
   content: none !important; /* Prevent any default arrow icon */
 }
-
 @keyframes blink {
   0% {
     opacity: 1;
@@ -170,5 +150,20 @@
   }
   100% {
     opacity: 1;
+  }
+}
+.sidebar {
+  height: 90vh;
+  overflow-y: auto; 
+}
+
+@media (max-width: 991.98px) {
+  .sidebar {
+    height: 100vh;
+  }
+}
+@media (min-width: 768px) {
+  .sidebar {
+    height: 84vh;
   }
 }

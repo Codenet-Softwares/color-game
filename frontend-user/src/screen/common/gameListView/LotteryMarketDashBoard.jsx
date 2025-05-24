@@ -88,7 +88,13 @@ const LotteryMarketDashBoard = () => {
                     (e.currentTarget.style.color = "#F1C40F")
                   }
                 >
-                  <h6 className="fw-bold text-warning">
+                  <h6
+                    className="fw-bold text-warning text-wrap"
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "normal",
+                    }}
+                  >
                     Market: {marketDataItem?.marketName ?? "Unknown"}
                   </h6>
                 </span>
