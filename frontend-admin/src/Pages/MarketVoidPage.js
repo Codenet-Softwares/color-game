@@ -90,7 +90,7 @@ const [searchTerm, setSearchTerm] = useState("");
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase ">Void Game</h3>
         </div>
-        <div className="card-body shadow-lg" style={{background:"#E1D1C7"}}>
+        <div className="card-body shadow-lg" style={{ background: "#E1D1C7" }}>
           {/* Search and Entries Selection */}
           <div className="row mb-4">
             <div className="col-md-6 position-relative">
@@ -159,7 +159,7 @@ const [searchTerm, setSearchTerm] = useState("");
             className=" mb-5 "
             style={{
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
-              
+
             }}
           >
             <div className="table-responsive">
@@ -168,7 +168,7 @@ const [searchTerm, setSearchTerm] = useState("");
                 style={{
                   border: "2px solid #3E5879",
                   borderRadius: "10px",
-                 
+
                 }}
               >
                 <thead
@@ -190,18 +190,18 @@ const [searchTerm, setSearchTerm] = useState("");
                   {voidGame?.gamelist?.length > 0 ? (
                     <>
                       {voidGame.gamelist.map((data, index) => (
-                        <tr key={index} className="accordion p-2" id={`voidAccordion-${index}`}>
-                          <td colSpan="4" style={{ background:"#E1D1C7"}}>
+                        <tr key={index}>
+                          <td colSpan="4" style={{ background: "#E1D1C7" }}>
                             <div
                               className="accordion p-2"
                               id={`accordionExample-${index}`}
-                             
+
                             >
                               <div className="accordion-item ">
                                 <h2
                                   className="accordion-header"
                                   id={`flush-headingOne-${index}`}
-                                  
+
                                 >
                                   <button
                                     className="accordion-button collapsed"
@@ -235,7 +235,7 @@ const [searchTerm, setSearchTerm] = useState("");
                                   id={`flush-collapseOne-${index}`}
                                   className="accordion-collapse collapse"
                                   aria-labelledby={`flush-headingOne-${index}`}
-                                  data-bs-parent={`#voidAccordion-${index}`}
+                                  data-bs-parent={`#accordionExample-${index}`}
                                 >
                                   <div className="accordion-body">
                                     {/* Accordion Body Content */}
@@ -298,7 +298,7 @@ const [searchTerm, setSearchTerm] = useState("");
                   ) : (
                     <tr>
                       <td colSpan="4" className="text-center fw-bold text-danger">
-                       Void Games Not Available.
+                        Void Games Not Available.
                       </td>
                     </tr>
                   )}
