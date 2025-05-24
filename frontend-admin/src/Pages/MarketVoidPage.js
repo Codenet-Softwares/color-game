@@ -183,122 +183,110 @@ const [searchTerm, setSearchTerm] = useState("");
                   </tr>
                 </thead>
                 <tbody>
-                  {voidGame?.gamelist?.length > 0 ? (
-                    <>
-                      {voidGame.gamelist.map((data, index) => (
-                        <tr key={index}>
-                          <td colSpan="4" style={{ background:"#E1D1C7"}}>
-                            <div
-                              className="accordion p-2"
-                              id={`accordionExample-${index}`}
-                             
-                            >
-                              <div className="accordion-item ">
-                                <h2
-                                  className="accordion-header"
-                                  id={`flush-headingOne-${index}`}
-                                  
-                                >
-                                  <button
-                                    className="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target={`#flush-collapseOne-${index}`}
-                                    aria-expanded="false"
-                                    aria-controls={`flush-collapseOne-${index}`}
-                                    style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      width: "100%",
-                                      padding: "0.75rem 1.25rem",
-                                    }}
-                                  >
-                                    <span style={{ width: "50%" }}>
-                                      {index + 1}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.gameName}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.marketName}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.action}
-                                    </span>
-                                  </button>
-                                </h2>
-                                <div
-                                  id={`flush-collapseOne-${index}`}
-                                  className="accordion-collapse collapse"
-                                  aria-labelledby={`flush-headingOne-${index}`}
-                                  data-bs-parent={`#accordionExample-${index}`}
-                                >
-                                  <div className="accordion-body">
-                                    {/* Accordion Body Content */}
-                                    <div className="table-responsive">
-                                      <table
-                                        className="table table-striped table-hover rounded-table"
-                                        style={{
-                                          border: "2px solid #3E5879",
-                                          borderRadius: "10px",
-                                        }}
-                                      >
-                                        <thead
-                                          className="table-primary text-uppercase "
-                                          style={{
-                                            position: "sticky",
-                                            top: 0,
-                                            zIndex: 1,
-                                          }}
-                                        >
-                                          <tr>
-                                            <th>Runnner Name</th>
-                                            <th>Back</th>
-                                            <th>Lay</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {data.Runners.length > 0 ? (
-                                            data.Runners.map((data, index) => {
-                                              return (
-                                                <React.Fragment key={index}>
-                                                  <tr>
-                                                    <td>{data.runnerName}</td>
-                                                    <td className="text-success fw-bold">{data.back}</td>
-                                                    <td className="text-danger fw-bold">{data.lay}</td>
-                                                  </tr>
-                                                </React.Fragment>
-                                              );
-                                            })
-                                          ) : (
-                                            <tr>
-                                              <td
-                                                colSpan="4"
-                                                className="text-center text-danger fw-bold"
-                                              >
-                                                No inactive games found.
-                                              </td>
-                                            </tr>
-                                          )}
-                                        </tbody>
-                                      </table>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </>
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center fw-bold text-danger">
-                       Void Games Not Available.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
+  {voidGame?.gamelist?.length > 0 ? (
+    <>
+      <tr >
+        <td colSpan="4" style={{ background: "#E1D1C7" }}>
+          <div className="accordion p-2" id="accordionExample">
+            {voidGame.gamelist.map((data, index) => (
+              <div className="accordion-item p-1" key={index} style={{background:"#E1D1C7"}}>
+                <h2
+                  className="accordion-header"
+                  id={`flush-headingOne-${index}`}
+                >
+                  <button
+                    className="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target={`#flush-collapseOne-${index}`}
+                    aria-expanded="false"
+                    aria-controls={`flush-collapseOne-${index}`}
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      padding: "0.75rem 1.25rem",
+                    }}
+                  >
+                    <span style={{ width: "50%" }}>{startIndex+index}</span>
+                    <span style={{ width: "50%" }}>{data.gameName}</span>
+                    <span style={{ width: "50%" }}>{data.marketName}</span>
+                    <span style={{ width: "50%" }}>{data.action}</span>
+                  </button>
+                </h2>
+                <div
+                  id={`flush-collapseOne-${index}`}
+                  className="accordion-collapse collapse"
+                  aria-labelledby={`flush-headingOne-${index}`}
+                  data-bs-parent="#accordionExample"
+                >
+                  <div className="accordion-body">
+                    {/* Accordion Body Content */}
+                    <div className="table-responsive">
+                      <table
+                        className="table table-striped table-hover rounded-table"
+                        style={{
+                          border: "2px solid #3E5879",
+                          borderRadius: "10px",
+                        }}
+                      >
+                        <thead
+                          className="table-primary text-uppercase"
+                          style={{
+                            position: "sticky",
+                            top: 0,
+                            zIndex: 1,
+                          }}
+                        >
+                          <tr>
+                            <th>Runnner Name</th>
+                            <th>Back</th>
+                            <th>Lay</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {data.Runners.length > 0 ? (
+                            data.Runners.map((runner, rIndex) => (
+                              <tr key={rIndex}>
+                                <td>{runner.runnerName}</td>
+                                <td className="text-success fw-bold">
+                                  {runner.back}
+                                </td>
+                                <td className="text-danger fw-bold">
+                                  {runner.lay}
+                                </td>
+                              </tr>
+                            ))
+                          ) : (
+                            <tr>
+                              <td
+                                colSpan="4"
+                                className="text-center text-danger fw-bold"
+                              >
+                                No inactive games found.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </td>
+      </tr>
+    </>
+  ) : (
+    <tr>
+      <td colSpan="4" className="text-center fw-bold text-danger">
+        Void Games Not Available.
+      </td>
+    </tr>
+  )}
+</tbody>
+
               </table>
             </div>
           </SingleCard>
