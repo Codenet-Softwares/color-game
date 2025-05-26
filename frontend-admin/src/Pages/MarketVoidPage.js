@@ -189,19 +189,14 @@ const [searchTerm, setSearchTerm] = useState("");
                 <tbody>
                   {voidGame?.gamelist?.length > 0 ? (
                     <>
-                      {voidGame.gamelist.map((data, index) => (
-                        <tr key={index}>
-                          <td colSpan="4" style={{ background: "#E1D1C7" }}>
-                            <div
-                              className="accordion p-2"
-                              id={`accordionExample-${index}`}
-
-                            >
-                              <div className="accordion-item ">
+                      <tr >
+                        <td colSpan="4" style={{ background: "#E1D1C7" }}>
+                          <div className="accordion p-2" id="accordionExample">
+                            {voidGame.gamelist.map((data, index) => (
+                              <div className="accordion-item p-1" key={index} style={{ background: "#E1D1C7" }}>
                                 <h2
                                   className="accordion-header"
                                   id={`flush-headingOne-${index}`}
-
                                 >
                                   <button
                                     className="accordion-button collapsed"
@@ -217,25 +212,17 @@ const [searchTerm, setSearchTerm] = useState("");
                                       padding: "0.75rem 1.25rem",
                                     }}
                                   >
-                                    <span style={{ width: "50%" }}>
-                                      {index + 1}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.gameName}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.marketName}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.action}
-                                    </span>
+                                    <span style={{ width: "50%" }}>{startIndex + index}</span>
+                                    <span style={{ width: "50%" }}>{data.gameName}</span>
+                                    <span style={{ width: "50%" }}>{data.marketName}</span>
+                                    <span style={{ width: "50%" }}>{data.action}</span>
                                   </button>
                                 </h2>
                                 <div
                                   id={`flush-collapseOne-${index}`}
                                   className="accordion-collapse collapse"
                                   aria-labelledby={`flush-headingOne-${index}`}
-                                  data-bs-parent={`#accordionExample-${index}`}
+                                  data-bs-parent="#accordionExample"
                                 >
                                   <div className="accordion-body">
                                     {/* Accordion Body Content */}
@@ -248,7 +235,7 @@ const [searchTerm, setSearchTerm] = useState("");
                                         }}
                                       >
                                         <thead
-                                          className="table-primary text-uppercase "
+                                          className="table-primary text-uppercase"
                                           style={{
                                             position: "sticky",
                                             top: 0,
@@ -263,17 +250,17 @@ const [searchTerm, setSearchTerm] = useState("");
                                         </thead>
                                         <tbody>
                                           {data.Runners.length > 0 ? (
-                                            data.Runners.map((data, index) => {
-                                              return (
-                                                <React.Fragment key={index}>
-                                                  <tr>
-                                                    <td>{data.runnerName}</td>
-                                                    <td className="text-success fw-bold">{data.back}</td>
-                                                    <td className="text-danger fw-bold">{data.lay}</td>
-                                                  </tr>
-                                                </React.Fragment>
-                                              );
-                                            })
+                                            data.Runners.map((runner, rIndex) => (
+                                              <tr key={rIndex}>
+                                                <td>{runner.runnerName}</td>
+                                                <td className="text-success fw-bold">
+                                                  {runner.back}
+                                                </td>
+                                                <td className="text-danger fw-bold">
+                                                  {runner.lay}
+                                                </td>
+                                              </tr>
+                                            ))
                                           ) : (
                                             <tr>
                                               <td
@@ -290,11 +277,11 @@ const [searchTerm, setSearchTerm] = useState("");
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                  </>
                   ) : (
                     <tr>
                       <td colSpan="4" className="text-center fw-bold text-danger">
