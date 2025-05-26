@@ -20,6 +20,15 @@ export const getSliderTextImg = async (req, res) => {
     );
 
   } catch (error) {
+    if (error.response && error.response.data) {
+      const errMessage = error.response.data.errMessage || "Something went wrong";
+      const responseCode = error.response.data.responseCode || statusCode.internalServerError;
+
+      return res.status(responseCode).send(
+        apiResponseErr([], true, responseCode, errMessage)
+      );
+    }
+
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
@@ -47,6 +56,15 @@ export const getGif = async (req, res) => {
     );
 
   } catch (error) {
+    if (error.response && error.response.data) {
+      const errMessage = error.response.data.errMessage || "Something went wrong";
+      const responseCode = error.response.data.responseCode || statusCode.internalServerError;
+
+      return res.status(responseCode).send(
+        apiResponseErr([], true, responseCode, errMessage)
+      );
+    }
+
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
@@ -72,6 +90,15 @@ export const getGameImg = async (req, res) => {
     );
 
   } catch (error) {
+    if (error.response && error.response.data) {
+      const errMessage = error.response.data.errMessage || "Something went wrong";
+      const responseCode = error.response.data.responseCode || statusCode.internalServerError;
+
+      return res.status(responseCode).send(
+        apiResponseErr([], true, responseCode, errMessage)
+      );
+    }
+
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
@@ -96,6 +123,15 @@ export const getInnerImg = async (req, res) => {
     );
 
   } catch (error) {
+    if (error.response && error.response.data) {
+      const errMessage = error.response.data.errMessage || "Something went wrong";
+      const responseCode = error.response.data.responseCode || statusCode.internalServerError;
+
+      return res.status(responseCode).send(
+        apiResponseErr([], true, responseCode, errMessage)
+      );
+    }
+
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
@@ -120,6 +156,15 @@ export const getAnnouncement = async (req, res) => {
     );
 
   } catch (error) {
+    if (error.response && error.response.data) {
+      const errMessage = error.response.data.errMessage || "Something went wrong";
+      const responseCode = error.response.data.responseCode || statusCode.internalServerError;
+
+      return res.status(responseCode).send(
+        apiResponseErr([], true, responseCode, errMessage)
+      );
+    }
+
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
@@ -144,6 +189,15 @@ export const getInnerAnnouncement = async (req, res) => {
     );
 
   } catch (error) {
+    if (error.response && error.response.data) {
+      const errMessage = error.response.data.errMessage || "Something went wrong";
+      const responseCode = error.response.data.responseCode || statusCode.internalServerError;
+
+      return res.status(responseCode).send(
+        apiResponseErr([], true, responseCode, errMessage)
+      );
+    } 
+    
     return res.status(statusCode.internalServerError).send(
       apiResponseErr(null, false, statusCode.internalServerError, error.message)
     );
