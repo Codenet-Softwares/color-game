@@ -305,7 +305,7 @@ export async function getProfitLossEvent(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getProfitLossEvent}/${body.gameId}?page=${body.pageNumber}&limit=${body.dataLimit}&searchMarketName=${body.searchName}`, ///((by search sending blank server is not giving data))
+      `${urls.getProfitLossEvent}/${body.gameId}?page=${body.pageNumber}&limit=${body.dataLimit}&search=${body.searchName}`, ///((by search sending blank server is not giving data))
       callParams,
       isToast
     );
@@ -578,7 +578,7 @@ export async function getProfitLossLotteryEvent(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getProfitLossLotteryEvent}?page=${body.pageNumber}&limit=${body.dataLimit}&searchMarketName=${body.searchName}`,
+      `${urls.getProfitLossLotteryEvent}?page=${body.pageNumber}&limit=${body.dataLimit}&search=${body.searchName}`,
       callParams,
       isToast
     );
@@ -592,7 +592,7 @@ export const getUserLotteryBetHistory_api = async (body = {}, isToast = false) =
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
     const response = await makeCall(
-      `${urls.getUserLotteryBetList}/${body.marketId}`,
+      `${urls.getUserLotteryBetList}/${body.marketId}?page=${body.pageNumber}&limit=${body.dataLimit}&search=${body.searchName}`,
       callParams,
       isToast
     );

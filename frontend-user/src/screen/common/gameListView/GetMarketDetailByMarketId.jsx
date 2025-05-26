@@ -80,25 +80,6 @@ const GetMarketDetailByMarketId = () => {
       payload: { runnerId: id },
     });
   };
-  // const formatDate = (dateStr) => {
-  //   const date = new Date(dateStr);
-
-  //   if (isNaN(date)) {
-  //     return "Invalid Date";
-  //   }
-
-  //   const day = date.getDate();
-  //   const month = date.toLocaleString("default", { month: "short" });
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th";
-  //   const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${
-  //     minutes < 10 ? "0" + minutes : minutes
-  //   }`;
-  //   return formattedTime;
-  // };
-
-
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -382,7 +363,7 @@ const GetMarketDetailByMarketId = () => {
               ...response.data,
             },
           });
-          toast.info(`Wallet updated: ${response.message}`);
+          // toast.info(`Wallet updated: ${response.message}`);
         } else {
           toast.error(`Wallet update failed: ${response.message}`);
         }

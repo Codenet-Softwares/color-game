@@ -255,7 +255,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       </div>
 
       {/* Market Navigation */}
-      <div className="d-flex flex-column align-items-center mb-3 p-2 rounded shadow mt-5">
+      <div className={`d-flex flex-column align-items-center mb-3 p-2 rounded shadow mt-5 ${visibleMarkets.length > 0 ? "" : "bg-white"}`}>
         <h5 className="fw-bold " style={{ color: "#284B63" }}>
           LOTTERY MARKETS
         </h5>
@@ -292,18 +292,17 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                 {visibleMarkets.map((market) => (
                   <span
                     key={market.marketId}
-                    className={`badge text-white me-2 mb-2 ${
-                      state.selectedMarketId === market.marketId
-                        ? "bg-success"
-                        : "bg-primary"
-                    }`}
+                    className={`badge text-white me-2 mb-2 ${state.selectedMarketId === market.marketId
+                      ? "bg-success"
+                      : "bg-primary"
+                      }`}
                     style={{
                       cursor: "pointer",
                       padding: "10px 15px",
                       fontSize: "14px",
                       borderRadius: "20px",
                       transition: "all 0.3s ease-in-out",
-                      borderRadius:"5px"
+                      borderRadius: "5px"
                     }}
                     onClick={() => handleMarketClick(market.marketId)}
                   >
@@ -328,19 +327,19 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   padding: 0,
                   backgroundColor:
                     state.visibleStartIndex + visibleCount >=
-                    state.markets.length
+                      state.markets.length
                       ? "#ccc"
                       : "#0d6efd",
                   color: "#fff",
                   border: "none",
                   cursor:
                     state.visibleStartIndex + visibleCount >=
-                    state.markets.length
+                      state.markets.length
                       ? "not-allowed"
                       : "pointer",
                   opacity:
                     state.visibleStartIndex + visibleCount >=
-                    state.markets.length
+                      state.markets.length
                       ? 0.6
                       : 1,
                 }}

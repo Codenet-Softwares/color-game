@@ -41,7 +41,7 @@ const ProfitLoss = ({
   profitLossData
 }) => {
   //Pagination
-  const startIndex = Math.min((currentPage - 1) * 10 + 1);
+  const startIndex = Math.min((currentPage - 1) * 10 + 1,totalData);
   const endIndex = Math.min(currentPage * 10, totalData);
 
   const [profitLossEventData, SetProfitLossEventData] = useState(
@@ -286,6 +286,7 @@ const ProfitLoss = ({
         gameId={gameId}
         profitLossEventData={profitLossEventData}
         getProfitLossEventWise={getProfitLossEventWise}
+
       />
     );
   } else if (component === "UserBetHistory") {
@@ -523,7 +524,7 @@ const ProfitLoss = ({
                   <tr align="center">
                     <td colspan="4">
                       <div
-                        className="alert alert-info fw-bold text-danger"
+                          className="alert alert-danger fw-bold text-danger"
                         role="alert"
                       >
                         No Data Found !!
@@ -538,13 +539,7 @@ const ProfitLoss = ({
           {/* Table */}
 
           {/* No Data Found */}
-          {/* {props.length === 0 && (
-                <div className="alert text-dark bg-light mt-3" role="alert">
-                  <div className="alert-text d-flex justify-content-center">
-                    <b> &#128680; No Data Found !! </b>
-                  </div>
-                </div>
-              )} */}
+          
           {/* End of No Data Found */}
           <li
             className="list-group-item"

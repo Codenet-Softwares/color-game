@@ -139,7 +139,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
                 <td colSpan="10">
                   {" "}
                   {/* Fixed typo from colspan="10" to colSpan="10" */}
-                  <div className="alert alert-info fw-bold" role="alert">
+                    <div className="alert alert-danger fw-bold" role="alert">
                     No Data Found !!
                   </div>
                 </td>
