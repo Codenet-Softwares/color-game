@@ -239,12 +239,12 @@ const MarketPlace = () => {
                     GameMarket
                   </span>
                   {pathdata.map((data) => (
-                    <Link
+                    <Link 
                       to={{
                         pathname: `/gameMarket/${data.id}`,
                       }}
                     >
-                      <span style={{ cursor: "pointer" }}>
+                      <span style={{ cursor: "pointer" }} className="link-fix">
                         &nbsp;/&nbsp;{data.name}
                       </span>
                     </Link>
@@ -283,7 +283,6 @@ const MarketPlace = () => {
                 style={{ marginLeft: "-10px" }}
               >
                 <div className="search_inner">
-                  <form Active="#">
                     <div className="search_field">
                       <input
                         value={search}
@@ -298,7 +297,6 @@ const MarketPlace = () => {
                       {" "}
                       <i className="ti-search"></i>{" "}
                     </button>
-                  </form>
                 </div>
               </div>
             </div>

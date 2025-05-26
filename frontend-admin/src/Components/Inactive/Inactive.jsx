@@ -6,6 +6,7 @@ import AccountServices from "../../Services/AccountServices";
 import { useAuth } from "../../Utils/Auth";
 import Pagination from "../Pagination"; // Adjust the import as needed
 import { toast } from "react-toastify";
+import { customErrorHandler } from "../../Utils/helper";
 
 const Inactive = () => {
   const auth = useAuth();
@@ -43,6 +44,7 @@ const Inactive = () => {
         setTotalPages(res.data.pagination.totalPages);
       })
       .catch((err) => {
+          toast.error(customErrorHandler(err));
       })
       .finally(() => {
         auth.hideLoader();

@@ -180,7 +180,7 @@ const GameMarket = ({ marketId }) => {
                   Game Market
                 </h3>
               </div>
-             
+
 
             </div>
           </div>
@@ -208,21 +208,19 @@ const GameMarket = ({ marketId }) => {
                 style={{ marginLeft: "-10px" }}
               >
                 <div className="search_inner">
-                  <form Active="#">
-                    <div className="search_field">
-                      <input
-                        value={search}
-                        onChange={(e) => {
-                          setSearch(e.target.value);
-                        }}
-                        type="text"
-                        placeholder="Search Content Here..."
-                      />
-                    </div>
-                    <button type="submit">
-                      <i className="ti-search"></i>{" "}
-                    </button>
-                  </form>
+                  <div className="search_field">
+                    <input
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                      }}
+                      type="text"
+                      placeholder="Search Content Here..."
+                    />
+                  </div>
+                  <button type="submit">
+                    <i className="ti-search"></i>{" "}
+                  </button>
                 </div>
               </div>
             </div>
@@ -355,7 +353,7 @@ const GameMarket = ({ marketId }) => {
                                             {game.gameName}
                                           </a> */}
                                           </div></>}
-                                        
+
                                       </div>
                                     </div>
                                     {/* Side Nav 3 dots Ending here */}

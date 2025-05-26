@@ -203,7 +203,7 @@ const NavTop = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title fw-bold text-uppercase">Reset Password</h5>
-                  <button type="button" className="close" onClick={closeModal}>
+                  <button type="button " className="close fs-2 border-0 bg-white" onClick={closeModal}>
                     &times;
                   </button>
                 </div>

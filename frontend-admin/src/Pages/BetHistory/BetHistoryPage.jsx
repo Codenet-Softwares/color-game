@@ -19,11 +19,15 @@ const BetHistoryPage = () => {
     name: "",
     totalData: 0,
   });
- const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setBetHistory((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
     }, 500);
 
     return () => clearTimeout(timer);
@@ -35,7 +39,7 @@ const BetHistoryPage = () => {
 
   const fetchBetHistory = () => {
     auth.showLoader();
-    const trimmedSearchTerm = debouncedSearchTerm.trim(); 
+    const trimmedSearchTerm = debouncedSearchTerm.trim();
     GameService.betHistory(
       auth.user,
       betHistory.currentPage,
@@ -57,9 +61,9 @@ const BetHistoryPage = () => {
         auth.hideLoader();
       });
   };
-  
+
   const handleClearSearch = () => {
-    setSearchTerm(""); 
+    setSearchTerm("");
     setBetHistory((prev) => ({ ...prev, name: "" }));
   };
   const handlePageChange = (pageNumber) => {
@@ -89,9 +93,11 @@ const BetHistoryPage = () => {
               color: "#FFFFFF",
             }}
           >
-            <h3 className="mb-0 fw-bold text-center text-uppercase">Bet History</h3>
+            <h3 className="mb-0 fw-bold text-center text-uppercase">
+              Bet History
+            </h3>
           </div>
-          <div className="card-body" style={{background:"#E1D1C7",}}>
+          <div className="card-body" style={{ background: "#E1D1C7" }}>
             {/* Search and Entries Selection */}
             <div className="row mb-4">
               <div className="col-md-6 position-relative">
@@ -192,7 +198,7 @@ const BetHistoryPage = () => {
                       <>
                         {betHistory.betHistory.map((bet, index) => (
                           <tr key={index}>
-                            <td>{startIndex+index }</td>
+                            <td>{startIndex + index}</td>
                             <td>{bet.gameName}</td>
                             <td>{bet.marketName}</td>
                             <td>
@@ -208,7 +214,10 @@ const BetHistoryPage = () => {
                       </>
                     ) : (
                       <tr>
-                        <td colSpan="4" className="text-center text-danger fw-bold">
+                        <td
+                          colSpan="4"
+                          className="text-center text-danger fw-bold"
+                        >
                           No Data Found
                         </td>
                       </tr>
