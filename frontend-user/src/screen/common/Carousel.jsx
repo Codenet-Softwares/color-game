@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getSliderImgText } from "../../utils/apiService";
+import { dSlider } from "../../utils/dummyData";
+
 
 const Carousel = () => {
   const [sliderData, setSliderData] = useState([]);
@@ -11,11 +13,11 @@ const Carousel = () => {
         setSliderData(response.data);
       } else {
         console.error("error", response);
-        setSliderData([]);
+        setSliderData(dSlider);
       }
     } catch (error) {
       console.error("error", error);
-      setSliderData([]);
+      setSliderData(dSlider);
     }
   };
 
