@@ -10,7 +10,6 @@ import Carousel from "../common/Carousel";
 import HitGames from "../HitGames";
 import Gif from "../common/Gif";
 import DownloadApp from "../DownloadApp";
-// import Footer from "../common/Footer";
 import Login from "../loginModal/loginModal";
 import AOS from "aos";
 import GetwholeMarket from "../common/gameListView/GetwholeMarket";

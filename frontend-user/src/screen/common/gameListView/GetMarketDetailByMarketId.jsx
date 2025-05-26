@@ -98,39 +98,7 @@ const GetMarketDetailByMarketId = () => {
   //   return formattedTime;
   // };
 
-  // color game cron ......
-  // useEffect(() => {
-  //   const eventSource = updateMarketEventEmitter();
 
-  //   eventSource.onmessage = function (event) {
-  //     const updates = JSON.parse(event.data);
-
-  //     if (updates?.length) {
-  //       updates.forEach((market) => {
-  //         if (market.clientMessage) {
-  //           handleNaviagteHome();
-  //         }
-  //         if (market.isActive) {
-  //           setIsActive(true);
-  //           setIsSuspend(true);
-  //           toast.success(`${market.marketName} is now Active`);
-  //         } else {
-  //           setIsActive(false);
-  //           toast.info(`${market.marketName} has been Suspended`);
-  //         }
-  //       });
-  //     }
-  //   };
-
-  //   eventSource.onerror = (err) => {
-  //     console.error("[SSE] Connection error:", err);
-  //     eventSource.close();
-  //   };
-
-  //   return () => {
-  //     eventSource.close();
-  //   };
-  // }, []);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -543,7 +511,7 @@ const GetMarketDetailByMarketId = () => {
                 </div>
                 <div
                   className="col-4 rounded-top-3 p-1 fw-bold"
-                  style={{ backgroundColor: "#FAA9BA" }}
+                  style={{ backgroundColor: "#FAA9BA"}}
                 >
                   LAY
                 </div>
@@ -704,7 +672,7 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#80C2F1" }}
+                              style={{ backgroundColor: "#80C2F1",cursor:"pointer" }}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,
@@ -720,7 +688,7 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#FAA9BA" }}
+                              style={{ backgroundColor: "#FAA9BA",cursor:"pointer" }}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,
