@@ -239,12 +239,12 @@ const MarketPlace = () => {
                     GameMarket
                   </span>
                   {pathdata.map((data) => (
-                    <Link
+                    <Link 
                       to={{
                         pathname: `/gameMarket/${data.id}`,
                       }}
                     >
-                      <span style={{ cursor: "pointer" }}>
+                      <span style={{ cursor: "pointer" }} className="link-fix">
                         &nbsp;/&nbsp;{data.name}
                       </span>
                     </Link>
