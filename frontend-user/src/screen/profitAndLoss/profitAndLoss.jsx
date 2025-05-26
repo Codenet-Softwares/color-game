@@ -111,6 +111,7 @@ const ProfitAndLoss = () => {
             handlePageChange={handlePageChange}
             SetProfitLossData={SetProfitLossData}
             handleDateForProfitLoss={handleDateForProfitLoss}
+            profitLossData={profitLossData}
           />
         </div>
       </AppDrawer>

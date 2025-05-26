@@ -57,8 +57,8 @@ class UrlConstant {
   getGifImg = `${this.url_dev}/get-gif`;
   getGameImg = `${this.url_dev}/get-game-img`;
   getInnerImg = `${this.url_dev}/get-inner-game-img`;
-  getAannouncement = `${this.url_dev}/admin/get-announcements`;
-  getInnerAannouncement = `${this.url_dev}/admin/get-inner-announcements`;
+  getAannouncement = `${this.url_dev}/get-announcements`;
+  getInnerAannouncement = `${this.url_dev}/get-inner-announcements`;
   anonymousMarkets = `${this.url_dev}/external/get-allLottery-game`;
 }
 

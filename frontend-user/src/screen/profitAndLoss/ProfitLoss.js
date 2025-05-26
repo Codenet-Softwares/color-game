@@ -38,6 +38,7 @@ const ProfitLoss = ({
   totalPages,
   SetProfitLossData,
   handleDateForProfitLoss,
+  profitLossData
 }) => {
   //Pagination
   const startIndex = Math.min((currentPage - 1) * 10 + 1);
@@ -389,6 +390,7 @@ const ProfitLoss = ({
                     onChange={(date) => setStartDate(date)}
                     placeholderText={"Select Start Date"}
                     className="form-control"
+                    disabled={profitLossData.dataSource === "live"}
                   />
                 </div>
                 <div class="col-9 col-md-6 d-flex flex-column text-center">
@@ -399,6 +401,7 @@ const ProfitLoss = ({
                     onChange={(date) => setEndDate(date)}
                     placeholderText={"Select End Date"}
                     className="form-control"
+                    disabled={profitLossData.dataSource === "live"}
                   />
                 </div>
                 <div class="col-12 col-md-9 d-flex align-items-end mt-3">

@@ -335,43 +335,50 @@ const RunnerView = () => {
                             <></>
                           ) : (
                             <>
-                              <a
-                                className="dropdown-item fw-bold"
-                                href="#"
-                                onClick={() => {
-                                  handleShowUpdateModal(runner, "rate");
-                                }}
-                              >
-                                <i className="ti-arrow-circle-right"></i> Update
-                                Rate for {runner.runnerName}
-                              </a>
-                              <a
-                                className="dropdown-item fw-bold"
-                                href="#"
-                                onClick={() => {
-                                  handleViewRateModal(
-                                    runner.runnerName,
-                                    runner.rates
-                                  );
-                                }}
-                              >
-                                <i className="ti-arrow-circle-right"></i> View
-                                Rate for {runner.runnerName}
-                              </a>
+                              {auth?.user?.roles === "admin" && (
+                                <>
+                                  <a
+                                    className="dropdown-item fw-bold"
+                                    href="#"
+                                    onClick={() => {
+                                      handleShowUpdateModal(runner, "rate");
+                                    }}
+                                  >
+                                    <i className="ti-arrow-circle-right"></i>{" "}
+                                    Update Rate for {runner.runnerName}
+                                  </a>
+                                  <a
+                                    className="dropdown-item fw-bold"
+                                    href="#"
+                                    onClick={() => {
+                                      handleViewRateModal(
+                                        runner.runnerName,
+                                        runner.rates
+                                      );
+                                    }}
+                                  >
+                                    <i className="ti-arrow-circle-right"></i>{" "}
+                                    View Rate for {runner.runnerName}
+                                  </a>
+                                </>
+                              )}
                             </>
                           ))}
 
-                        <a
-                          className="dropdown-item fw-bold"
-                          href="#"
-                          onClick={() => {
-                            handleShowUpdateModal(runners[index], "runner");
-                          }}
-                        >
-                          {" "}
-                          <i className="ti-arrow-circle-right"></i>&nbsp;Edit
-                          Runner Name
-                        </a>
+                        {auth?.user?.roles === "admin" && (
+                          <a
+                            className="dropdown-item fw-bold"
+                            href="#"
+                            onClick={() => {
+                              handleShowUpdateModal(runners[index], "runner");
+                            }}
+                          >
+                            {" "}
+                            <i className="ti-arrow-circle-right"></i>&nbsp;Edit
+                            Runner Name
+                          </a>
+                        )}
+
                         {runner.isBidding && (
                           <a
                             // key={runner.runnerId}
@@ -385,16 +392,18 @@ const RunnerView = () => {
                           </a>
                         )}
 
-                        <a
-                          key={runner.runnerId}
-                          className="dropdown-item fw-bold"
-                          href="#"
-                          onClick={() => handleDelete(runner.runnerId)}
-                        >
-                          {" "}
-                          <i className="ti-arrow-circle-right"></i>
-                          &nbsp;Delete {runner.runnerName}
-                        </a>
+                        {auth?.user?.roles === "admin" && (
+                          <a
+                            key={runner.runnerId}
+                            className="dropdown-item fw-bold"
+                            href="#"
+                            onClick={() => handleDelete(runner.runnerId)}
+                          >
+                            {" "}
+                            <i className="ti-arrow-circle-right"></i>
+                            &nbsp;Delete {runner.runnerName}
+                          </a>
+                        )}
                       </div>
                     </div>
                   </div>

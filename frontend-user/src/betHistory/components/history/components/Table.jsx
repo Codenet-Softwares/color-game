@@ -47,7 +47,7 @@ const Table = ({
           {/* Show entries dropdown */}
           <div className="mb-3">
             <label htmlFor="showEntriesDropdown" className="form-label">
-              Show entries
+              Show Entries
             </label>
             <select
               className="form-select"
@@ -130,7 +130,6 @@ const Table = ({
                       <th scope="col">Type</th>
                       <th scope="col">Odds Req.</th>
                       <th scope="col">Stack</th>
-                      <th scope="col">Place Time</th>
                       <th scope="col">Settle Time</th>
                     </tr>
                   </thead>
@@ -151,7 +150,6 @@ const Table = ({
                         </td>
                         <td>{item?.rate}</td>
                         <td className="fw-bold">{item?.value}</td>
-                        <td>{formatDateForUi(item?.placeDate)}</td>
                         <td>{formatDateForUi(item?.date)}</td>
                       </tr>
                     ))}
