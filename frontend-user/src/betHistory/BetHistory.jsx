@@ -71,7 +71,7 @@ const BetHistory = () => {
     handleGetSelectData();
     openBetsGame();
   }, []);
-  console.log("first===========>", betHistoryData.tempEndDate === betHistoryData.endDate);
+  console.log("first===========>", betHistoryData );
 
   async function handleGetHistory() {
     const response = await user_getBetHistory_api({
@@ -181,13 +181,6 @@ const BetHistory = () => {
             setBetHistoryData={setBetHistoryData}
           />
         </div>
-
-        {/* <div className="col-lg-3">
-          <OpenBets
-            betHistoryData={betHistoryData}
-            handleBetHistorySelectionMenu={handleBetHistorySelectionMenu}
-          />
-        </div> */}
       </div>
     </AppDrawer>
   );

@@ -54,7 +54,10 @@ const Table = ({
               id="showEntriesDropdown"
               name="totalEntries"
               value={betHistoryData.totalEntries}
-              onChange={(e) => handleBetHistorySelectionMenu(e)}
+              onChange={(e) => {
+                handleBetHistorySelectionMenu(e);
+                handlePageChange(1);
+              }}
             >
               <option value="10" selected>
                 10 Entries

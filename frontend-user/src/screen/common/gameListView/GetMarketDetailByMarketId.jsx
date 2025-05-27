@@ -82,6 +82,7 @@ const GetMarketDetailByMarketId = () => {
   };
 
   useEffect(() => {
+    console.log("Messages Data:");
     const unsubscribe = onSnapshot(
       collection(db, "color-game-db"),
       (snapshot) => {

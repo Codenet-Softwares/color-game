@@ -384,7 +384,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
           </div>
 
           <div
-            style={{ maxHeight: "300px", overflowY: "auto" }}
+            style={{ maxHeight: "320px", overflowY: "auto" }}
             className="custom-scrollbar"
           >
             <Table striped hover responsive bordered>
@@ -506,14 +506,16 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       )}
 
       {state.purchasedTickets?.length > 0 && visibleMarkets?.length > 0 && (
-        <Pagination
-          currentPage={state.pagination.page}
-          totalPages={state.pagination.totalPages}
-          handlePageChange={handlePageChange}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          totalData={state.pagination.totalItems}
-        />
+        <div className="mt-2">
+          <Pagination
+            currentPage={state.pagination.page}
+            totalPages={state.pagination.totalPages}
+            handlePageChange={handlePageChange}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalData={state.pagination.totalItems}
+          />
+        </div>
       )}
     </div>
   );

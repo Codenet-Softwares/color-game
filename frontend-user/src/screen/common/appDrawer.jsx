@@ -26,7 +26,7 @@ function AppDrawer({
   openBetData,
   handleOpenBetsSelectionMenu,
 }) {
-  const [toggleStates, setToggleStates] = useState({});
+  const [colorgameToggle, setColorgameToggle] = useState(false);
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
   );
@@ -58,6 +58,7 @@ function AppDrawer({
   }
   const handleLotteryNewToggle = () => {
     setLotteryNewToggle(!lotteryNewToggle);
+    setColorgameToggle(false);
   };
   const handleGameNewToggle = () => {
     setGameNewToggle(!gameNewToggle);
@@ -76,14 +77,9 @@ function AppDrawer({
     }
   }
 
-  const handleToggle = (index) => {
-    setToggleStates((prevState) => ({
-      [index]: !prevState[index],
-    }));
-
-    if (isMobile) {
-      // close app drawer logic should call here
-    }
+  const handleToggle = () => {
+    setColorgameToggle(!colorgameToggle);
+    setLotteryNewToggle(false);
   };
 
   useEffect(() => {
@@ -191,15 +187,15 @@ function AppDrawer({
               ) : (
                 <>
                   <li
-                    className={toggleStates[index] ? "" : "MenuHead"}
-                    onClick={() => handleToggle(index)}
+                    className={colorgameToggle ? "" : "MenuHead"}
+                    onClick={() => handleToggle()}
                   >
                     {/* <Link>{gameObj?.gameName}</Link> */}
                     <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
                       {gameObj?.gameName}
                       <span
                         className={`dropdown-icon ${
-                          toggleStates[index] ? "active" : ""
+                          colorgameToggle ? "active" : ""
                         }`}
                       >
                         ▼
@@ -207,7 +203,7 @@ function AppDrawer({
                     </div>
                   </li>
                   {/* Mapping over markets inside each gameName */}
-                  {toggleStates[index] && gameObj.markets.length > 0
+                  {colorgameToggle && gameObj.markets.length > 0
                     ? gameObj?.markets?.map((marketObj, marketIndex) => {
                         return (
                           <li

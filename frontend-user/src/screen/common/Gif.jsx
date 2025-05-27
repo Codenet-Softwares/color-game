@@ -8,7 +8,7 @@ const Gif = () => {
   const fetchGifData = async () => {
     try {
       const response = await getGifImg();
-      if (response && response.data) {
+      if (response.data.length > 0) {
         setGifData(response.data);
       } else {
         console.error("Invalid data format received:", response);

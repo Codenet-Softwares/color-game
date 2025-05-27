@@ -48,6 +48,7 @@ const FilterBlock = ({
 
   useEffect(() => {
     if (isLiveData && isAllFieldsSelected && !hasFetched) {
+      console.log("first", isLiveData, isAllFieldsSelected, !hasFetched);
       if (betHistoryData.selectGame === "lottery") {
         getHistoryForLotteryBetHistory();
       } else {
@@ -64,11 +65,18 @@ const FilterBlock = ({
       }
       setHasFetched(true);
     }
-  }, [betHistoryData.dataSource, isAllFieldsSelected]);
+  }, [
+    betHistoryData.dataSource,
+    betHistoryData.selectGame, 
+    betHistoryData.selectMenu, 
+    isAllFieldsSelected,
+    betHistoryData.startDate,
+    betHistoryData.endDate,
+  ]);
 
   const isButtonDisabled = () => {
     if (!isAllFieldsSelected || dateError) return true;
-    if (isLiveData) return true; // Live triggers automatically, so button is always disabled
+    if (isLiveData) return true; 
     if (
       isBackupOrOld &&
       (!betHistoryData.startDate || !betHistoryData.endDate || !isDateValid())

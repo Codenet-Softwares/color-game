@@ -88,7 +88,7 @@ const ProfitAndLoss = () => {
     <div data-aos="zoom-in">
       <AppDrawer showCarousel={false}>
         <Layout />
-        <div style={{ marginTop: "120px" }}>
+        <div style={{ marginTop: "140px" }}>
           <ProfitLoss
             dataGameWise={profitLossData.dataGameWise}
             startDate={profitLossData.backupStartDate}
