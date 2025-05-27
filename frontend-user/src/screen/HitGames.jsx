@@ -13,7 +13,6 @@ const HitGames = () => {
       if (response.data.length > 0) {
         setSliderData(response.data);
       } else {
-        console.error("Error fetching slider data", response);
         setSliderData(dHitGames);
       }
     } catch (error) {

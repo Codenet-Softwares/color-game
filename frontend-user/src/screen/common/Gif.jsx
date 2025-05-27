@@ -11,7 +11,6 @@ const Gif = () => {
       if (response.data.length > 0) {
         setGifData(response.data);
       } else {
-        console.error("Invalid data format received:", response);
         setGifData(sGif);
       }
     } catch (error) {

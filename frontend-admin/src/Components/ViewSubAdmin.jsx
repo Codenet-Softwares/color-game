@@ -220,7 +220,8 @@ const ViewSubAdmin = () => {
                           {subadmin?.userName?.toUpperCase()}
                         </td>
                         <td className="text-dark fw-bold text-start">
-                          {subadmin?.permissions?.toUpperCase()}
+                          {subadmin?.permissions === "resultAnnouncement" &&
+                            "Result-Announcement"}
                         </td>
 
                         <td>
