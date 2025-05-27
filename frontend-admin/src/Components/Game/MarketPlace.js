@@ -43,7 +43,6 @@ const MarketPlace = () => {
   const [data, setData] = useState([]);
   const [marketDeleteRes, setMarketDeleteRes] = useState("");
   const [refresh, setRefresh] = useState(false);
-
   const [showMarketDetailsModal, setShowMarketDetailsModal] = useState(false);
   const [showMarketName, setShowMarketName] = useState(null);
   const [selectedMarketDetails, setSelectedMarketDetails] = useState(null);
@@ -75,7 +74,6 @@ const MarketPlace = () => {
     endTime,
     marketName
   ) => {
-    console.log("line 51", market, participants, isActive, startTime, marketName);
     setShowMarketName(marketName);
     setIsActive(hideMarketUser);
     setSelectedMarketDetails(market);
@@ -169,7 +167,6 @@ const MarketPlace = () => {
     showUpdateModal,
     refresh,
   ]);
-  console.log("line 7 game data", gameMarketData);
 
   let startIndex = Math.min((currentPage - 1) * totalEntries + 1);
   let endIndex = Math.min(currentPage * totalEntries, totalData);
@@ -239,7 +236,7 @@ const MarketPlace = () => {
                     GameMarket
                   </span>
                   {pathdata.map((data) => (
-                    <Link 
+                    <Link
                       to={{
                         pathname: `/gameMarket/${data.id}`,
                       }}
@@ -267,7 +264,8 @@ const MarketPlace = () => {
                 <select
                   className="form-select form-select-sm"
                   aria-label=".form-select-sm example"
-                  onChange={(e) => setTotalEntries(e.target.value)}
+                  onChange={(e) => { setTotalEntries(e.target.value); setCurrentPage(1); }}
+
                 >
                   <option selected value="10">
                     Showing 10 Entries

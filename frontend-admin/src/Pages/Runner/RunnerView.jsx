@@ -258,7 +258,10 @@ const RunnerView = () => {
           <div className="col-md-6">
             <select
               className="form-select mb-3"
-              onChange={(e) => setTotalEntries(parseInt(e.target.value))}
+              onChange={(e) => {
+                setTotalEntries(parseInt(e.target.value));
+                setCurrentPage(1);
+              }}
             >
               <option value="10">Showing 10 Entries </option>
               <option value="25">25 Entries</option>

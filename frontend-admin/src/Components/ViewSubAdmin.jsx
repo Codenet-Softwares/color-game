@@ -162,6 +162,7 @@ const ViewSubAdmin = () => {
                   setViewSubadmin((prev) => ({
                     ...prev,
                     totalEntries: parseInt(e.target.value),
+                    currentPage: 1,
                   }))
                 }
               >
