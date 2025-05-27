@@ -37,7 +37,7 @@ function AppDrawer({
   const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
   const { dispatch, store } = useAppContext();
-  
+
   const location = useLocation();
   useEffect(() => {
     user_getAllGames();
@@ -271,7 +271,10 @@ function AppDrawer({
             } `}
             style={{
               overflowY: "auto",
-              height: "calc(100vh - 40px)",
+              height:
+                location?.pathname === "/lottery-home"
+                  ? "calc(100vh - 5px)"
+                  : "calc(100vh - 40px)",
             }}
           >
             <div className="col-12">{showCarousel && <InnerCarousel />}</div>
