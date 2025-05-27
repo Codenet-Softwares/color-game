@@ -490,7 +490,7 @@ export const marketExternalProfitLoss = async (req, res) => {
       );
   } catch (error) {
     console.error("Error from API:", error.message);
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -960,14 +960,22 @@ export const liveUserBet = async (req, res) => {
 export const getExternalLotteryP_L = async (req, res) => {
   try {
     const userName = req.params.userName;
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1, limit = 10, search } = req.query;
 
     const currentPage = parseInt(page);
     const parsedLimit = parseInt(limit);
     const offset = (currentPage - 1) * parsedLimit;
 
+const whereClause = { userName};
+
+if (search) {
+    whereClause.marketName = {
+        [Op.like]: `%${search}%`
+    };
+}
+
     const lotteryProfitLossRecords = await LotteryProfit_Loss.findAll({
-      where: { userName },
+      where: whereClause,
       attributes: ['gameName', 'marketName', 'marketId', 'profitLoss'],
     });
 
