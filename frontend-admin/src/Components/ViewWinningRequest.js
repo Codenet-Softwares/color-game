@@ -40,7 +40,7 @@ const ViewWinningRequest = () => {
       setDebouncedSearchTerm(searchTerm);
       setViewWinningRequest((prev) => ({
         ...prev,
-        currentPage: 1, 
+        currentPage: 1,
       }));
     }, 500);
 
@@ -86,13 +86,13 @@ const ViewWinningRequest = () => {
   };
   let startIndex = Math.min(
     (Number(viewWinningRequest?.currentPage) - 1) *
-      Number(viewWinningRequest?.totalEntries) +
-      1,
+    Number(viewWinningRequest?.totalEntries) +
+    1,
     Number(viewWinningRequest?.totalData)
   );
   let endIndex = Math.min(
     Number(viewWinningRequest?.currentPage) *
-      Number(viewWinningRequest?.totalEntries),
+    Number(viewWinningRequest?.totalEntries),
     Number(viewWinningRequest?.totalData)
   );
 
@@ -164,6 +164,7 @@ const ViewWinningRequest = () => {
                   setViewWinningRequest((prev) => ({
                     ...prev,
                     totalEntries: parseInt(e.target.value),
+                    currentPage: 1
                   }))
                 }
               >

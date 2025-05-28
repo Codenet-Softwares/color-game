@@ -213,6 +213,7 @@ const GameMarket = ({ marketId }) => {
                       value={search}
                       onChange={(e) => {
                         setSearch(e.target.value);
+                        setCurrentPage(1);
                       }}
                       type="text"
                       placeholder="Search Content Here..."

@@ -151,6 +151,7 @@ const BetHistoryPage = () => {
                     setBetHistory((prev) => ({
                       ...prev,
                       totalEntries: parseInt(e.target.value),
+                      currentPage: 1,
                     }))
                   }
                 >

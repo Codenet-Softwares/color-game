@@ -36,7 +36,7 @@ const DeleteMarket = () => {
         totalData: response.data.pagination.totalItems || 0,
       }));
     } catch (error) {
-       toast.error(customErrorHandler(error));
+      toast.error(customErrorHandler(error));
     } finally {
       auth.hideLoader();
     }
@@ -44,11 +44,7 @@ const DeleteMarket = () => {
 
   useEffect(() => {
     fetchMarkets(debouncedSearchTerm);
-  }, [
-    refresh,
-    deleteMarket.currentPage,
-    deleteMarket.totalEntries,
-  ]);
+  }, [refresh, deleteMarket.currentPage, deleteMarket.totalEntries]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -110,6 +106,15 @@ const DeleteMarket = () => {
       }));
     }
   };
+
+  const handlePageSize = (value) => {
+    setDeleteMarket((prev) => ({
+      ...prev,
+      totalEntries: value,
+      currentPage: 1,
+    }));
+  };
+
   let startIndex = Math.min(
     (Number(deleteMarket.currentPage) - 1) * Number(deleteMarket.totalEntries) +
       1,
@@ -177,8 +182,8 @@ const DeleteMarket = () => {
               <label className="me-2 fw-bold">Show</label>
               <select
                 className="form-select d-inline-block w-auto fw-bold"
-                // value={pagination.pageSize}
-                // onChange={handlePageSizeChange}
+                value={deleteMarket.totalEntries}
+                onChange={(e) => handlePageSize(e.target.value)}
                 style={{ borderRadius: "30px", border: "2px solid #3E5879" }}
               >
                 <option value={10}>10</option>

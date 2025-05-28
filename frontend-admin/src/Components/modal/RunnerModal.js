@@ -25,15 +25,20 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const hasInvalidData = runnername.some(
-      (runner) =>
-        runner.runnerName.trim() === "" ||
-        Number(runner.back) <= 0 ||
-        Number(runner.lay) <= 0
-    );
+    const hasInvalidData = runnername.some((runner) => {
+      const name = runner.runnerName.trim();
+      const containsLetter = /[a-zA-Z]/.test(name);
+
+      return (
+        name === "" ||                  // Name should not be empty
+        !containsLetter ||             // Name must have at least one alphabet
+        Number(runner.back) <= 0 ||    // Back rate must be > 0
+        Number(runner.lay) <= 0        // Lay rate must be > 0
+      );
+    });
 
     if (hasInvalidData) {
-      toast.error("Please ensure all runner names are filled and rates are greater than 0.");
+      toast.error("Runner name must contain at least one letter and rates must be greater than 0.");
       return;
     }
 
@@ -41,7 +46,7 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
     const hasDuplicate = runnername.some((runner) => {
       const name = runner.runnerName.trim().toLowerCase();
       if (nameMap.has(name)) {
-        return true; 
+        return true;
       }
       nameMap.set(name, true);
       return false;
@@ -66,6 +71,7 @@ const RunnerModal = ({ show, setShow, marketId, numberOfParticipants }) => {
         toast.error(customErrorHandler(err));
       });
   };
+  
 
 
   const handleRunnerNameChange = (index, field, value) => {

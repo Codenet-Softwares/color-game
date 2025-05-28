@@ -14,8 +14,9 @@ const ProfitAndLossLotteryEvent = ({
   profitLossLotteryEventData,
   getProfitLossLotteryEventWise,
 }) => {
-  const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
-  const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
+  const startIndex = Math.min((profitLossLotteryEventData.currentPage - 1) * profitLossLotteryEventData.itemPerPage + 1, profitLossLotteryEventData.totalData);
+  const endIndex = Math.min(profitLossLotteryEventData.currentPage * profitLossLotteryEventData.itemPerPage, profitLossLotteryEventData.totalData);
+  console.log("startIndex", startIndex)
   const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoLotteryBetHistory = (componentName, id) => {
@@ -189,7 +190,7 @@ const ProfitAndLossLotteryEvent = ({
                           <tr align="center">
                             <td colspan="5">
                               <div
-                                class="alert alert-info fw-bold"
+                                    class="alert alert-danger fw-bold"
                                 role="alert"
                               >
                                 No Data Found !!

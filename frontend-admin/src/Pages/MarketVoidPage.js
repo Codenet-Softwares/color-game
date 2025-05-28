@@ -138,7 +138,7 @@ const [searchTerm, setSearchTerm] = useState("");
                 className="form-select rounded-pill d-inline-block w-auto"
                 value={voidGame.totalEntries}
                 onChange={(e) =>
-                  setVoidGame({ ...voidGame, totalEntries: e.target.value })
+                  setVoidGame({ ...voidGame, totalEntries: e.target.value, currentPage: 1, })
                 }
                 style={{
                   borderRadius: "50px",
