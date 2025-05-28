@@ -796,11 +796,11 @@ export const getExternalUserBetList = async (req, res) => {
       ],
     });
 
-    res
+    return res
       .status(statusCode.success)
       .send(apiResponseSuccess(rows, true, statusCode.success, "Success"));
   } catch (error) {
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
