@@ -44,6 +44,7 @@ function AppDrawer({
 
     fetchLotteryNewMarkets();
   }, [lotteryNewToggle, isLotteryUpdate, isColorgameUpdate]);
+  console.log("isColorgameUpdate", isColorgameUpdate);
 
   // function for new page fetch
   async function fetchLotteryNewMarkets() {

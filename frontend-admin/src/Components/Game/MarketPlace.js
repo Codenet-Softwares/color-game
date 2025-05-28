@@ -325,10 +325,7 @@ const MarketPlace = () => {
 
                                     <div className=" col-md-2 ">
                                       <div className="d-flex justify-content-between align-items-center w-100">
-                                        {/* <span className="text-dark fw-bold ml-5">
-                                          Start time :
-                                          {formatTime(market.startTime)}
-                                        </span> */}
+                                        
                                         <span
                                           className={`badge rounded-pill fw-bold text-uppercase ${!market.hideMarketUser
                                             ? "bg-success"
@@ -339,9 +336,7 @@ const MarketPlace = () => {
                                             ? "Active"
                                             : "Inactive"}
                                         </span>
-                                        {/* <span className="text-dark fw-bold">
-                                          End time :{formatTime(market.endTime)}
-                                        </span> */}
+                                       
                                       </div>
                                     </div>
                                     <div className="col-md-4">

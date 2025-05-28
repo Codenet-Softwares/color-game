@@ -101,7 +101,7 @@ const GetMarketDetailByMarketId = () => {
             );
             setIsActive(message.isActive);
             setIsUpdate(message.updatedAt);
-            if (message.hideMarketUser === false) {
+            if (message.hideMarketUser) {
               window.location.href = "/home";
             }
           }
@@ -493,7 +493,7 @@ const GetMarketDetailByMarketId = () => {
                 </div>
                 <div
                   className="col-4 rounded-top-3 p-1 fw-bold"
-                  style={{ backgroundColor: "#FAA9BA"}}
+                  style={{ backgroundColor: "#FAA9BA" }}
                 >
                   LAY
                 </div>
@@ -654,7 +654,10 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#80C2F1",cursor:"pointer" }}
+                              style={{
+                                backgroundColor: "#80C2F1",
+                                cursor: "pointer",
+                              }}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,
@@ -670,7 +673,10 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#FAA9BA",cursor:"pointer" }}
+                              style={{
+                                backgroundColor: "#FAA9BA",
+                                cursor: "pointer",
+                              }}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,

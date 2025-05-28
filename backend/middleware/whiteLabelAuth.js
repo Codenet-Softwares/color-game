@@ -26,7 +26,12 @@ export const authenticateSuperAdmin = (req, res, next) => {
             string.whiteLabel,
             string.hyperAgent,
             string.superAgent,
-            string.masterAgent
+            string.masterAgent,
+            string.subAdmin,
+            string.subWhiteLabel,
+            string.subHyperAgent,
+            string.subMasterAgent,
+            string.subSuperAgent
         ];
 
         const userRole = decoded.role;
