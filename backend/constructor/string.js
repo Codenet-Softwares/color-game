@@ -8,6 +8,10 @@ class stringConst {
     this.hyperAgent = 'hyperAgent';
     this.superAgent = 'superAgent';
     this.masterAgent = 'masterAgent';
+    this.subHyperAgent = 'subHyperAgent';
+    this.subSuperAgent = 'subSuperAgent';
+    this.subMasterAgent = 'subMasterAgent';
+    this.subWhiteLabel = 'subWhiteLabel';
   }
 }
 
