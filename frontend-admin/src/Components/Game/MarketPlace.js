@@ -327,12 +327,12 @@ const MarketPlace = () => {
                                       <div className="d-flex justify-content-between align-items-center w-100">
                                         
                                         <span
-                                          className={`badge rounded-pill fw-bold text-uppercase ${!market.hideMarketUser
+                                          className={`badge rounded-pill fw-bold text-uppercase ${market.hideMarketUser
                                             ? "bg-success"
                                             : "bg-danger"
                                             }`}
                                         >
-                                          {!market.hideMarketUser
+                                          {market.hideMarketUser
                                             ? "Active"
                                             : "Inactive"}
                                         </span>
@@ -407,7 +407,7 @@ const MarketPlace = () => {
 
                                             {!market.isDisplay && (
                                               <>
-                                                {auth?.user?.roles === "admin" && <>{!market.hideMarketUser ? (
+                                                {auth?.user?.roles === "admin" && <>{market.hideMarketUser ? (
                                                   <a
                                                     className="dropdown-item"
                                                     onClick={(e) =>

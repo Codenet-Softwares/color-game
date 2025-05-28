@@ -249,7 +249,6 @@ export const createMarket = async (req, res) => {
       announcementResult: false,
       isActive: false,
       isDisplay: true,
-      hideMarketUser: true
     });
 
      // Save data to Firestore

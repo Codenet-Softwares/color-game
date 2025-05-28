@@ -1027,8 +1027,6 @@ export const inActiveMarketStatus = async (req, res) => {
   const { marketId } = req.params;
   const {status} = req.body
 
-  console.log("marketId", marketId);
-
   try {
     const market = await Market.findOne({ where: { marketId } });
 
@@ -1040,13 +1038,13 @@ export const inActiveMarketStatus = async (req, res) => {
 
     if(status){
       await Market.update(
-        { hideMarketUser: false},
+        { hideMarketUser: true},
         { where: { marketId } }
       );
       }
       else{
         await Market.update(
-          { hideMarketUser: true},
+          { hideMarketUser: false},
           { where: { marketId } }
         );
       }
@@ -1063,7 +1061,7 @@ export const inActiveMarketStatus = async (req, res) => {
     await marketRef.set(
       {
         isActive: market.isActive ,
-        hideMarketUser: market.hideMarketUser, // Changed to match SQL DB update
+        hideMarketUser: status, // Changed to match SQL DB update
         isRevoke: market.isRevoke,
         updatedAt: new Date().toISOString()
       },

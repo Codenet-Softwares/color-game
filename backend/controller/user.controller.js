@@ -494,7 +494,7 @@ export const getAllGameData = async (req, res) => {
     isBlink: game.isBlink,
     createdAt: game.createdAt, // Ensure createdAt is included
     markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
+      .filter((market) => market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
       .map((market) => ({
         marketId: market.marketId,
@@ -641,7 +641,7 @@ export const filteredGameData = async (req, res) => {
       description: game.description,
       isBlink: game.isBlink,
       markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
+      .filter((market) => market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .map((market) => ({
         marketId: market.marketId,
         marketName: market.marketName,
