@@ -31,7 +31,7 @@ export async function updateColorGame() {
       if (currentTime >= startTime && currentTime <= endTime) {
         if (!data.isActive) {
           updates.isActive = true;
-          updates.hideMarketUser = true;
+          updates.hideMarketUser = false;
           updates.updatedAt = new Date().toISOString();
           shouldUpdate = true;
         }
