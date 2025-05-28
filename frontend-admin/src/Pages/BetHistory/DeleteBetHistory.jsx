@@ -179,19 +179,6 @@ const DeleteBetHistory = () => {
               border: "2px solid  #3E5879",
             }}
           />
-          {searchTerm && (
-            <FaTimes
-              onClick={handleClearSearch}
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "20px",
-                transform: "translateY(-50%)",
-                color: " #3E5879",
-                cursor: "pointer",
-              }}
-            />
-          )}
         </div>
 
         <div
