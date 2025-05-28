@@ -14,7 +14,7 @@ const MarketVoidPage = () => {
     gamelist: [],
     currentPage: 1,
     totalPages: "",
-    totalEntries: 5,
+    totalEntries: 10,
     name: "",
     totalData: "",
   });
@@ -23,6 +23,10 @@ const [searchTerm, setSearchTerm] = useState("");
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setVoidGame((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
     }, 500);
   
     return () => clearTimeout(timer); // Cleanup timer on component unmount or searchTerm change
@@ -86,7 +90,7 @@ const [searchTerm, setSearchTerm] = useState("");
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase ">Void Game</h3>
         </div>
-        <div className="card-body shadow-lg" style={{background:"#E1D1C7"}}>
+        <div className="card-body shadow-lg" style={{ background: "#E1D1C7" }}>
           {/* Search and Entries Selection */}
           <div className="row mb-4">
             <div className="col-md-6 position-relative">
@@ -134,7 +138,7 @@ const [searchTerm, setSearchTerm] = useState("");
                 className="form-select rounded-pill d-inline-block w-auto"
                 value={voidGame.totalEntries}
                 onChange={(e) =>
-                  setVoidGame({ ...voidGame, totalEntries: e.target.value })
+                  setVoidGame({ ...voidGame, totalEntries: e.target.value, currentPage: 1, })
                 }
                 style={{
                   borderRadius: "50px",
@@ -155,7 +159,7 @@ const [searchTerm, setSearchTerm] = useState("");
             className=" mb-5 "
             style={{
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 1)",
-              
+
             }}
           >
             <div className="table-responsive">
@@ -164,7 +168,7 @@ const [searchTerm, setSearchTerm] = useState("");
                 style={{
                   border: "2px solid #3E5879",
                   borderRadius: "10px",
-                 
+
                 }}
               >
                 <thead
@@ -185,19 +189,14 @@ const [searchTerm, setSearchTerm] = useState("");
                 <tbody>
                   {voidGame?.gamelist?.length > 0 ? (
                     <>
-                      {voidGame.gamelist.map((data, index) => (
-                        <tr key={index}>
-                          <td colSpan="4" style={{ background:"#E1D1C7"}}>
-                            <div
-                              className="accordion p-2"
-                              id={`accordionExample-${index}`}
-                             
-                            >
-                              <div className="accordion-item ">
+                      <tr >
+                        <td colSpan="4" style={{ background: "#E1D1C7" }}>
+                          <div className="accordion p-2" id="accordionExample">
+                            {voidGame.gamelist.map((data, index) => (
+                              <div className="accordion-item p-1" key={index} style={{ background: "#E1D1C7" }}>
                                 <h2
                                   className="accordion-header"
                                   id={`flush-headingOne-${index}`}
-                                  
                                 >
                                   <button
                                     className="accordion-button collapsed"
@@ -213,25 +212,17 @@ const [searchTerm, setSearchTerm] = useState("");
                                       padding: "0.75rem 1.25rem",
                                     }}
                                   >
-                                    <span style={{ width: "50%" }}>
-                                      {index + 1}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.gameName}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.marketName}
-                                    </span>
-                                    <span style={{ width: "50%" }}>
-                                      {data.action}
-                                    </span>
+                                    <span style={{ width: "50%" }}>{startIndex + index}</span>
+                                    <span style={{ width: "50%" }}>{data.gameName}</span>
+                                    <span style={{ width: "50%" }}>{data.marketName}</span>
+                                    <span style={{ width: "50%" }}>{data.action}</span>
                                   </button>
                                 </h2>
                                 <div
                                   id={`flush-collapseOne-${index}`}
                                   className="accordion-collapse collapse"
                                   aria-labelledby={`flush-headingOne-${index}`}
-                                  data-bs-parent={`#accordionExample-${index}`}
+                                  data-bs-parent="#accordionExample"
                                 >
                                   <div className="accordion-body">
                                     {/* Accordion Body Content */}
@@ -244,7 +235,7 @@ const [searchTerm, setSearchTerm] = useState("");
                                         }}
                                       >
                                         <thead
-                                          className="table-primary text-uppercase "
+                                          className="table-primary text-uppercase"
                                           style={{
                                             position: "sticky",
                                             top: 0,
@@ -259,17 +250,17 @@ const [searchTerm, setSearchTerm] = useState("");
                                         </thead>
                                         <tbody>
                                           {data.Runners.length > 0 ? (
-                                            data.Runners.map((data, index) => {
-                                              return (
-                                                <React.Fragment key={index}>
-                                                  <tr>
-                                                    <td>{data.runnerName}</td>
-                                                    <td className="text-success fw-bold">{data.back}</td>
-                                                    <td className="text-danger fw-bold">{data.lay}</td>
-                                                  </tr>
-                                                </React.Fragment>
-                                              );
-                                            })
+                                            data.Runners.map((runner, rIndex) => (
+                                              <tr key={rIndex}>
+                                                <td>{runner.runnerName}</td>
+                                                <td className="text-success fw-bold">
+                                                  {runner.back}
+                                                </td>
+                                                <td className="text-danger fw-bold">
+                                                  {runner.lay}
+                                                </td>
+                                              </tr>
+                                            ))
                                           ) : (
                                             <tr>
                                               <td
@@ -286,15 +277,15 @@ const [searchTerm, setSearchTerm] = useState("");
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </>
+                            ))}
+                          </div>
+                        </td>
+                      </tr>
+                  </>
                   ) : (
                     <tr>
                       <td colSpan="4" className="text-center fw-bold text-danger">
-                       Void Games Not Available.
+                        Void Games Not Available.
                       </td>
                     </tr>
                   )}

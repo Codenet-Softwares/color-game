@@ -11,8 +11,7 @@ const Modal = ({ show, handleClose, title, body, footerButtons = [] }) => {
         left: 0,
         width: "100%",
         height: "100%",
-        background: "rgba(0, 0, 0, 0.3)",
-        backdropFilter: "blur(5px)",
+        background: "transparent",
         zIndex: 1040,
       }}
     >

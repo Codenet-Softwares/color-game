@@ -80,59 +80,9 @@ const GetMarketDetailByMarketId = () => {
       payload: { runnerId: id },
     });
   };
-  // const formatDate = (dateStr) => {
-  //   const date = new Date(dateStr);
-
-  //   if (isNaN(date)) {
-  //     return "Invalid Date";
-  //   }
-
-  //   const day = date.getDate();
-  //   const month = date.toLocaleString("default", { month: "short" });
-  //   const hours = date.getHours();
-  //   const minutes = date.getMinutes();
-  //   const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th";
-  //   const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${
-  //     minutes < 10 ? "0" + minutes : minutes
-  //   }`;
-  //   return formattedTime;
-  // };
-
-  // color game cron ......
-  // useEffect(() => {
-  //   const eventSource = updateMarketEventEmitter();
-
-  //   eventSource.onmessage = function (event) {
-  //     const updates = JSON.parse(event.data);
-
-  //     if (updates?.length) {
-  //       updates.forEach((market) => {
-  //         if (market.clientMessage) {
-  //           handleNaviagteHome();
-  //         }
-  //         if (market.isActive) {
-  //           setIsActive(true);
-  //           setIsSuspend(true);
-  //           toast.success(`${market.marketName} is now Active`);
-  //         } else {
-  //           setIsActive(false);
-  //           toast.info(`${market.marketName} has been Suspended`);
-  //         }
-  //       });
-  //     }
-  //   };
-
-  //   eventSource.onerror = (err) => {
-  //     console.error("[SSE] Connection error:", err);
-  //     eventSource.close();
-  //   };
-
-  //   return () => {
-  //     eventSource.close();
-  //   };
-  // }, []);
 
   useEffect(() => {
+    console.log("Messages Data:");
     const unsubscribe = onSnapshot(
       collection(db, "color-game-db"),
       (snapshot) => {
@@ -414,7 +364,7 @@ const GetMarketDetailByMarketId = () => {
               ...response.data,
             },
           });
-          toast.info(`Wallet updated: ${response.message}`);
+          // toast.info(`Wallet updated: ${response.message}`);
         } else {
           toast.error(`Wallet update failed: ${response.message}`);
         }
@@ -489,7 +439,13 @@ const GetMarketDetailByMarketId = () => {
               >
                 {/* Left side: Market Name and Countdown Timer */}
                 <div className="d-flex flex-wrap align-items-center ">
-                  <div className="me-3">
+                  <div
+                    className="me-3 text-wrap"
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "normal",
+                    }}
+                  >
                     {user_marketWithRunnerData.marketName}
                   </div>
                   {new Date(
@@ -537,7 +493,7 @@ const GetMarketDetailByMarketId = () => {
                 </div>
                 <div
                   className="col-4 rounded-top-3 p-1 fw-bold"
-                  style={{ backgroundColor: "#FAA9BA" }}
+                  style={{ backgroundColor: "#FAA9BA"}}
                 >
                   LAY
                 </div>
@@ -698,7 +654,7 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#80C2F1" }}
+                              style={{ backgroundColor: "#80C2F1",cursor:"pointer" }}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,
@@ -714,7 +670,7 @@ const GetMarketDetailByMarketId = () => {
 
                             <div
                               className="col-4 rounded p-1"
-                              style={{ backgroundColor: "#FAA9BA" }}
+                              style={{ backgroundColor: "#FAA9BA",cursor:"pointer" }}
                               onClick={() =>
                                 handleToggle(
                                   runnerData.id,

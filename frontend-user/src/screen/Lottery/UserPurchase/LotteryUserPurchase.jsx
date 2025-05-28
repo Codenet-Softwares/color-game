@@ -48,7 +48,15 @@ const LotteryUserPurchase = ({ MarketId }) => {
             </div>
 
             <h4>
-              <span className="market-name">{lotteryData.marketName}</span>
+              <span
+                className="market-name text-wrap"
+                style={{
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
+                }}
+              >
+                {lotteryData.marketName}
+              </span>
               <div className="time-display-container">
                 <div className="time-box">
                   <div className="time-title">Start Time:</div>

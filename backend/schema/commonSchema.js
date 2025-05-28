@@ -8,14 +8,14 @@ export const testValidator = [
 ];
 
 export const bidTypeSchema = [
-  body("userId").exists().withMessage("User ID is required."),
-  body("gameId").exists().withMessage("Game ID is required."),
-  body("marketId").exists().withMessage("Market ID is required."),
-  body("runnerId").exists().withMessage("Runner ID is required."),
-  body("value").exists().withMessage("Value is required."),
+  body("userId").exists().withMessage("User ID Is Required."),
+  body("gameId").exists().withMessage("Game ID Is Required."),
+  body("marketId").exists().withMessage("Market ID Is Required."),
+  body("runnerId").exists().withMessage("Runner ID Is Required."),
+  body("value").exists().withMessage("Value Is Required."),
   body("bidType")
     .exists()
-    .withMessage("Bid Type is required.")
+    .withMessage("Bid Type Is Required.")
     .notEmpty()
     .withMessage("Bidding type must not be empty.")
     .isIn(["back", "lay"])
@@ -23,7 +23,7 @@ export const bidTypeSchema = [
 ];
 
 export const bidHistorySchema = [
-  param("gameId").exists().withMessage("Game ID is required."),
+  param("gameId").exists().withMessage("Game ID Is Required."),
   query("page")
     .optional()
     .toInt()
@@ -37,37 +37,37 @@ export const bidHistorySchema = [
 ];
 
 // export const currentOrderSchema = [
-//   param("marketId").exists().withMessage("Market ID is required."),
+//   param("marketId").exists().withMessage("Market ID Is Required."),
 // ];
 
 export const winningSchema = [
-  body("marketId").notEmpty().withMessage("Market ID is required"),
-  body("runnerId").notEmpty().withMessage("Runner ID is required"),
+  body("marketId").notEmpty().withMessage("Market ID Is Required"),
+  body("runnerId").notEmpty().withMessage("Runner ID Is Required"),
   body("isWin")
     .notEmpty()
-    .withMessage("isWin field is required")
+    .withMessage("isWin field Is Required")
     .isBoolean()
     .withMessage("isWin must be a boolean value"),
 ];
 
 export const loginSchema = [
-  body("userName").trim().notEmpty().withMessage("Username is required"),
-  body("password").notEmpty().withMessage("Password is required"),
+  body("userName").trim().notEmpty().withMessage("Username Is Required"),
+  body("password").notEmpty().withMessage("Password Is Required"),
 ];
 
 export const resetPasswordSchema = [
   body("userName")
     .trim()
     .notEmpty()
-    .withMessage("Username is required"),
+    .withMessage("Username Is Required"),
   body("oldPassword")
     .trim()
     .notEmpty()
-    .withMessage("Old Password is required"),
+    .withMessage("Old Password Is Required"),
   body("newPassword")
     .trim()
     .notEmpty()
-    .withMessage("New Password is required")
+    .withMessage("New Password Is Required")
     .isLength({ min: 8 })
     .withMessage("New Password must be at least 8 characters long")
     .isAlphanumeric()
@@ -300,19 +300,19 @@ export const validateGameId = [
 ];
 
 export const validateAnnouncementsId = [
-  param("announceId").notEmpty().withMessage("Announcement ID is required"),
+  param("announceId").notEmpty().withMessage("Announcement ID Is Required"),
 ];
 
 export const validateUserResetPassword = [
-  body("oldPassword").notEmpty().withMessage("Old Password is required"),
+  body("oldPassword").notEmpty().withMessage("Old Password Is Required"),
   body("password")
     .notEmpty()
-    .withMessage("New Password is required")
+    .withMessage("New Password Is Required")
     .isLength({ min: 6 })
     .withMessage("New Password must be at least 6 characters long"),
   body("confirmPassword")
     .notEmpty()
-    .withMessage("Confirm Password is required")
+    .withMessage("Confirm Password Is Required")
     .custom((value, { req }) => value === req.body.password)
     .withMessage("Confirm Password does not match with Password"),
 ];
@@ -321,11 +321,11 @@ export const validateUserResetPassword = [
 
 
 export const exUpdateBalanceSchema = [
-  body("userId").notEmpty().withMessage("user ID is required"),
-  body("amount").notEmpty().withMessage("amount is required"),
+  body("userId").notEmpty().withMessage("user ID Is Required"),
+  body("amount").notEmpty().withMessage("amount Is Required"),
   body("type")
     .notEmpty()
-    .withMessage("type is required")
+    .withMessage("type Is Required")
     .isIn(["credit", "withdrawal"])
     .withMessage('type must be either "credit" or "withdrawal".'),
 ];
@@ -333,31 +333,31 @@ export const exUpdateBalanceSchema = [
 export const validateRevokeWinningAnnouncement = [
   body("marketId")
     .notEmpty()
-    .withMessage("marketId is required")
+    .withMessage("marketId Is Required")
     .isUUID(4)
     .withMessage("marketId is not a valid."),
   body("runnerId")
     .notEmpty()
-    .withMessage("runnerId is required")
+    .withMessage("runnerId Is Required")
     .isUUID(4)
     .withMessage("runnerId is not a valid."),
 ];
 
 export const userUpdateSchema = [
-  param("userId").notEmpty().withMessage("User ID is required"),
-  body("firstName").optional().notEmpty().withMessage("First name is required"),
-  body("lastName").optional().notEmpty().withMessage("Last name is required"),
-  body("userName").optional().notEmpty().withMessage("Username is required"),
+  param("userId").notEmpty().withMessage("User ID Is Required"),
+  body("firstName").optional().notEmpty().withMessage("First name Is Required"),
+  body("lastName").optional().notEmpty().withMessage("Last name Is Required"),
+  body("userName").optional().notEmpty().withMessage("Username Is Required"),
   body("phoneNumber")
     .optional()
     .notEmpty()
-    .withMessage("Phone number is required")
+    .withMessage("Phone number Is Required")
     .isMobilePhone()
     .withMessage("Invalid phone number format"),
   body("password")
     .optional()
     .notEmpty()
-    .withMessage("Password is required")
+    .withMessage("Password Is Required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
   body("balance")
@@ -367,56 +367,56 @@ export const userUpdateSchema = [
 ];
 
 export const validateDeleteRunner = [
-  param("runnerId").notEmpty().withMessage("Runner ID is required"),
+  param("runnerId").notEmpty().withMessage("Runner ID Is Required"),
 ];
 
 export const calculateProfitLossSchema = [
-  param("userName").notEmpty().withMessage("Username is required"),
+  param("userName").notEmpty().withMessage("Username Is Required"),
 ];
 
 export const marketProfitLossSchema = [
-  param("userName").notEmpty().withMessage("Username is required"),
-  param("gameId").notEmpty().withMessage("Game ID is required"),
+  param("userName").notEmpty().withMessage("Username Is Required"),
+  param("gameId").notEmpty().withMessage("Game ID Is Required"),
 ];
 
 export const runnerProfitLossSchema = [
-  param("userName").notEmpty().withMessage("Username is required"),
-  param("marketId").notEmpty().withMessage("Market ID is required"),
+  param("userName").notEmpty().withMessage("Username Is Required"),
+  param("marketId").notEmpty().withMessage("Market ID Is Required"),
 ];
 
 export const gameActiveInactiveValidate = [
   body("status")
     .notEmpty()
-    .withMessage("Status is required.")
+    .withMessage("Status Is Required.")
     .isBoolean()
     .withMessage("Status must be a boolean (true or false)."),
   body("gameId")
     .notEmpty()
-    .withMessage("Game Id is required.")
+    .withMessage("Game Id Is Required.")
     .isUUID(4)
     .withMessage("Game Id is not a valid."),
 ];
 
 export const logOutValidate = [
-  body("userId").notEmpty().withMessage("User ID is required.").isUUID(4).withMessage("User Id is not a valid."),
+  body("userId").notEmpty().withMessage("User ID Is Required.").isUUID(4).withMessage("User Id is not a valid."),
 ];
 
 export const betHistorySchema = [
   param("userName")
     .notEmpty()
-    .withMessage("Username is required."),
+    .withMessage("Username Is Required."),
   param("gameId")
     .notEmpty()
-    .withMessage("Game Id is required.")
+    .withMessage("Game Id Is Required.")
 ];
 
 export const createUserValidate = [
-  body("userId").notEmpty().withMessage("User ID is required"),
-  body("userName").optional().notEmpty().withMessage("Username is required"),
+  body("userId").notEmpty().withMessage("User ID Is Required"),
+  body("userName").optional().notEmpty().withMessage("Username Is Required"),
   body("password")
     .optional()
     .notEmpty()
-    .withMessage("Password is required")
+    .withMessage("Password Is Required")
     .isLength({ min: 6 })
     .withMessage("Password must be at least 6 characters"),
 ]
@@ -424,27 +424,27 @@ export const createUserValidate = [
 export const calculateProfitLossValidate = [
   query("startDate")
     .notEmpty()
-    .withMessage("Start date is required.")
+    .withMessage("Start date Is Required.")
     .isISO8601()
     .withMessage("Invalid start date format."),
   query("endDate")
     .notEmpty()
-    .withMessage("End date is required.")
+    .withMessage("End date Is Required.")
     .isISO8601()
     .withMessage("Invalid end date format."),
 ];
 
 export const marketProfitLossValidate = [
-  param("gameId").notEmpty().withMessage("Game ID is required"),
+  param("gameId").notEmpty().withMessage("Game ID Is Required"),
 ];
 
 export const runnerProfitLossValidate = [
-  param("marketId").notEmpty().withMessage("Market ID is required"),
+  param("marketId").notEmpty().withMessage("Market ID Is Required"),
 ];
 
 export const validateUpdateGameStatus = [
   param('gameId').isUUID().withMessage('Game ID must be a valid UUID'),
-  body('status').notEmpty().withMessage("status is required.").isBoolean().withMessage('Status must be a boolean'),
+  body('status').notEmpty().withMessage("status Is Required.").isBoolean().withMessage('Status must be a boolean'),
 ];
 
 export const validatePurchaseLotteryTicket = [
@@ -454,40 +454,40 @@ export const validatePurchaseLotteryTicket = [
 ];
 
 export const validateVoidGame = [
-  body('marketId').notEmpty().withMessage("Market Id is required.").isUUID().withMessage('Market ID must be a valid UUID'),
+  body('marketId').notEmpty().withMessage("Market Id Is Required.").isUUID().withMessage('Market ID must be a valid UUID'),
 ];
 
 export const validateSearchTickets = [
-  body('group').notEmpty().withMessage('Group is required').isInt({ min: 0 }).withMessage('Group must be a positive integer'),
-  body('series').notEmpty().withMessage('Series is required').isLength({ min: 1, max: 1 }).withMessage('Series must be a single character'),
-  body('number').notEmpty().withMessage('Number is required').isString().isLength({ min: 1 }).withMessage('Number must be a non-empty string'),
+  body('group').notEmpty().withMessage('Group Is Required').isInt({ min: 0 }).withMessage('Group must be a positive integer'),
+  body('series').notEmpty().withMessage('Series Is Required').isLength({ min: 1, max: 1 }).withMessage('Series must be a single character'),
+  body('number').notEmpty().withMessage('Number Is Required').isString().isLength({ min: 1 }).withMessage('Number must be a non-empty string'),
   body('sem')
     .notEmpty()
-    .withMessage('Sem is required')
+    .withMessage('Sem Is Required')
     .bail()
     .isNumeric()
     .withMessage('Sem must be a numeric value')
     .bail()
     .isIn([5, 10, 25, 50, 100, 200])
     .withMessage('Sem must be one of the following values: 5, 10, 25, 50, 100, 200'),
-  body('marketId').notEmpty().withMessage('marketId is required').isUUID().withMessage('MarketId must be a valid UUID'),
+  body('marketId').notEmpty().withMessage('marketId Is Required').isUUID().withMessage('MarketId must be a valid UUID'),
 
 ];
 
 export const validatePurchaseLottery = [
   param('marketId')
     .exists()
-    .withMessage('Market ID is required')
+    .withMessage('Market ID Is Required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
   body('generateId')
     .exists()
-    .withMessage('Generate ID is required')
+    .withMessage('Generate ID Is Required')
     .isUUID()
     .withMessage('Generate ID must be a valid UUID'),
   body('lotteryPrice')
     .exists()
-    .withMessage('Lottery price is required')
+    .withMessage('Lottery price Is Required')
     .isNumeric()
     .withMessage('Lottery price must be a numeric value')
     .custom((value) => value > 0)
@@ -497,7 +497,7 @@ export const validatePurchaseLottery = [
 export const validatePurchaseHistory = [
   param('marketId')
     .exists()
-    .withMessage('Market ID is required')
+    .withMessage('Market ID Is Required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
   query('page')
@@ -513,17 +513,17 @@ export const validatePurchaseHistory = [
 export const validateUpdateBalance = [
   body('userId')
     .exists()
-    .withMessage('User ID is required')
+    .withMessage('User ID Is Required')
     .isUUID()
     .withMessage('User ID must be a valid UUID'),
   body('prizeAmount')
     .exists()
-    .withMessage('Prize amount is required')
+    .withMessage('Prize amount Is Required')
     .isInt()
     .withMessage('Prize amount must be a positive number'),
   body('marketId')
     .exists()
-    .withMessage('Market ID is required')
+    .withMessage('Market ID Is Required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
 ];
@@ -531,17 +531,17 @@ export const validateUpdateBalance = [
 export const validateRemoveExposer = [
   body('userId')
     .exists()
-    .withMessage('User ID is required')
+    .withMessage('User ID Is Required')
     .isUUID()
     .withMessage('User ID must be a valid UUID'),
   body('marketId')
     .exists()
-    .withMessage('Market ID is required')
+    .withMessage('Market ID Is Required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
   // body('marketName')
   //   .exists()
-  //   .withMessage('Market name is required')
+  //   .withMessage('Market name Is Required')
   //   .isString()
   //   .withMessage('Market name must be a string')
   //   .notEmpty()
@@ -549,7 +549,7 @@ export const validateRemoveExposer = [
 ];
 
 export const validateMarketId = [
-  param("marketId").notEmpty().withMessage('marketId is required')
+  param("marketId").notEmpty().withMessage('marketId Is Required')
     .isUUID()
     .withMessage("Invalid marketId. It should be a valid UUID."),
 ];
@@ -558,24 +558,24 @@ export const validateMarketId = [
 export const validateCreateLotteryP_L = [
   body('userId')
     .exists()
-    .withMessage('User ID is required')
+    .withMessage('User ID Is Required')
     .isUUID()
     .withMessage('User ID must be a valid UUID'),
   // body('userName')
   //   .exists()
-  //   .withMessage('User name is required')
+  //   .withMessage('User name Is Required')
   //   .isString()
   //   .withMessage('User name must be a string')
   //   .isLength({ max: 255 })
   //   .withMessage('User name must not exceed 255 characters'),
   body('marketId')
     .exists()
-    .withMessage('Market ID is required')
+    .withMessage('Market ID Is Required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
   body('marketName')
     .exists()
-    .withMessage('Market name is required')
+    .withMessage('Market name Is Required')
     .isString()
     .withMessage('Market name must be a string')
     .isLength({ max: 255 })
@@ -590,7 +590,7 @@ export const validateCreateLotteryP_L = [
   //   .withMessage('Sem must be one of the values: 5, 10, 25, 50, 100, 200'),
   // body('profitLoss')
   //   .exists()
-  //   .withMessage('Profit or loss is required')
+  //   .withMessage('Profit or loss Is Required')
   //   .isDecimal({ decimal_digits: '0,2' })
   //   .withMessage('Profit or loss must be a decimal with up to 2 digits after the decimal point'),
 ];
@@ -598,7 +598,7 @@ export const validateCreateLotteryP_L = [
 export const validateDateWiseMarkets = [
   query('date')
     .exists()
-    .withMessage('Date is required')
+    .withMessage('Date Is Required')
     .isISO8601()
     .withMessage('Date must be in a valid ISO 8601 format (e.g., YYYY-MM-DD)'),
 ];
@@ -607,7 +607,7 @@ export const validateGetLiveUserBet = [
   param("marketId")
     .trim()
     .notEmpty()
-    .withMessage("Market ID is required.")
+    .withMessage("Market ID Is Required.")
     .isUUID()
     .withMessage("Market ID must be a valid UUID."),
 ];
@@ -615,7 +615,7 @@ export const validateGetLiveUserBet = [
 export const validateProfitLossInput = [
   query("dataType")
     .exists()
-    .withMessage("dataType is required.")
+    .withMessage("dataType Is Required.")
     .isIn(["live", "olddata", "backup"])
     .withMessage("Valid values are 'live', 'olddata', or 'backup'."),
   query("page")
@@ -631,16 +631,16 @@ export const validateProfitLossInput = [
 
 export const validateVoidMarket = [
   body('marketId')
-    .notEmpty().withMessage('Market ID is required')
+    .notEmpty().withMessage('Market ID Is Required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
   body('userId')
-    .notEmpty().withMessage('userId is required')
+    .notEmpty().withMessage('userId Is Required')
     .isUUID().withMessage('userId must be a valid UUID')
 ];
 
 export const validateRevokeMarket = [
   body('marketId')
-    .notEmpty().withMessage('Market ID is required')
+    .notEmpty().withMessage('Market ID Is Required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
 
 ];
@@ -649,26 +649,26 @@ export const externalResetPasswordSchema = [
   body("userName")
     .trim()
     .notEmpty()
-    .withMessage("Username is required"),
+    .withMessage("Username Is Required"),
   body("password")
     .trim()
     .notEmpty()
-    .withMessage("New Password is required")
+    .withMessage("New Password Is Required")
 ];
 
 export const validateResetPassword = [
   body("userName")
     .trim()
     .notEmpty()
-    .withMessage("Username is required"),
+    .withMessage("Username Is Required"),
   body("oldPassword")
     .trim()
     .notEmpty()
-    .withMessage("Old Password is required"),
+    .withMessage("Old Password Is Required"),
   body("newPassword")
     .trim()
     .notEmpty()
-    .withMessage("New Password is required")
+    .withMessage("New Password Is Required")
 ];
 
 export const validateLiveUsersBet = [
@@ -709,12 +709,12 @@ export const validateBetsAfterWin = [
 export const validateApproveResult = [
   body('marketId')
     .notEmpty()
-    .withMessage('Market ID is required')
+    .withMessage('Market ID Is Required')
     .isUUID()
     .withMessage('Market ID must be a valid UUID'),
   body('action')
     .notEmpty()
-    .withMessage('Action is required')
+    .withMessage('Action Is Required')
     .isString()
     .trim()
     .isIn(['approve', 'reject'])
@@ -723,16 +723,16 @@ export const validateApproveResult = [
 
 export const validatesDeleteBetAfterWin = [
   body("userId")
-    .notEmpty().withMessage("User ID is required")
+    .notEmpty().withMessage("User ID Is Required")
     .isUUID().withMessage("User ID must be a valid UUID"),
   body("marketId")
-    .notEmpty().withMessage("Market ID is required")
+    .notEmpty().withMessage("Market ID Is Required")
     .isUUID().withMessage("Market ID must be a valid UUID"),
 ];
 
 export const validateAfterWinVoidMarket = [
   body("marketId")
-    .notEmpty().withMessage("Market ID is required")
+    .notEmpty().withMessage("Market ID Is Required")
     .isUUID().withMessage("Market ID must be a valid UUID"),
 ];
 
@@ -740,35 +740,35 @@ export const validateAfterWinVoidMarket = [
 export const validateDeleteLiveBet = [
   body('marketId')
     .notEmpty()
-    .withMessage('marketId is required')
+    .withMessage('marketId Is Required')
     .isUUID()
     .withMessage('marketId must be a valid UUID'),
   body('runnerId')
     .notEmpty()
-    .withMessage('runnerId is required')
+    .withMessage('runnerId Is Required')
     .isUUID()
     .withMessage('runnerId must be a valid UUID'),
   body('userId')
     .notEmpty()
-    .withMessage('userId is required')
+    .withMessage('userId Is Required')
     .isUUID()
     .withMessage('userId must be a valid UUID'),
   body('betId')
     .notEmpty()
-    .withMessage('betId is required')
+    .withMessage('betId Is Required')
     .isUUID()
     .withMessage('betId must be a valid UUID'),
 ];
 
 export const validateDeleteLiveMarket= [
   body('marketId')
-    .notEmpty().withMessage('Market ID is required')
+    .notEmpty().withMessage('Market ID Is Required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
   body('userId')
-    .notEmpty().withMessage('userId is required')
+    .notEmpty().withMessage('userId Is Required')
     .isUUID().withMessage('userId must be a valid UUID'),
   body('price')
-    .notEmpty().withMessage('price is required')
+    .notEmpty().withMessage('price Is Required')
 ]
 
 export const validateTrashMarketId = [
@@ -785,19 +785,19 @@ export const validateTrashMarket = [
 
 export const validateRevokeLiveMarket= [
   body('marketId')
-    .notEmpty().withMessage('Market ID is required')
+    .notEmpty().withMessage('Market ID Is Required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
   body('userId')
-    .notEmpty().withMessage('userId is required')
+    .notEmpty().withMessage('userId Is Required')
     .isUUID().withMessage('userId must be a valid UUID'),
   body('lotteryPrice')
-    .notEmpty().withMessage('lotteryPrice is required')
+    .notEmpty().withMessage('lotteryPrice Is Required')
 ]
 
 export const validateApprovalMarket = [
-  param("approvalMarketId")
+  param("marketId")
     .isUUID()
-    .withMessage("Invalid Approval ID."),
+    .withMessage("Invalid Market ID."),
 ];
 
 export const validateUserLiveBet = [
@@ -808,39 +808,39 @@ export const validateUserLiveBet = [
 
 export const validateDeleteBetAfterWin = [
   body('marketId')
-    .notEmpty().withMessage('Market ID is required')
+    .notEmpty().withMessage('Market ID Is Required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
   body('userId')
-    .notEmpty().withMessage('userId is required')
+    .notEmpty().withMessage('userId Is Required')
     .isUUID().withMessage('userId must be a valid UUID'),
   body('sem')
-    .notEmpty().withMessage('sem is required'),
+    .notEmpty().withMessage('sem Is Required'),
   body('prizeAmount')
-    .notEmpty().withMessage('prizeAmount is required'),
+    .notEmpty().withMessage('prizeAmount Is Required'),
   body('prizeCategory')
-    .notEmpty().withMessage('prizeCategory is required')
+    .notEmpty().withMessage('prizeCategory Is Required')
 ]
 
 
 export const validateVoidAfterWin = [
   body('marketId')
-    .notEmpty().withMessage('Market ID is required')
+    .notEmpty().withMessage('Market ID Is Required')
     .isUUID().withMessage('Market ID must be a valid UUID'),
   body('userId')
-    .notEmpty().withMessage('userId is required')
+    .notEmpty().withMessage('userId Is Required')
     .isUUID().withMessage('userId must be a valid UUID'),
 ]
 
 export const activeInactive = [
-  param('userId').trim().notEmpty().withMessage('User id is required'),
+  param('userId').trim().notEmpty().withMessage('User id Is Required'),
   body('isActive')
     .notEmpty()
-    .withMessage('isActive is required')
+    .withMessage('isActive Is Required')
     .isBoolean()
     .withMessage('isActive must be a boolean'),
   body('locked')
     .notEmpty()
-    .withMessage('locked is required')
+    .withMessage('locked Is Required')
     .isBoolean()
     .withMessage('locked must be a boolean'),
 ];

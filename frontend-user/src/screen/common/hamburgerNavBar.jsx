@@ -33,7 +33,6 @@ const HamburgerNavBar = () => {
           borderTopLeftRadius: "15px",
           borderTopRightRadius: "15px",
           background: "#25616a",
-        
         }}
       >
         <div

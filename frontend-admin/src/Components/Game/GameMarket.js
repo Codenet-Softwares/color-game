@@ -180,14 +180,7 @@ const GameMarket = ({ marketId }) => {
                   Game Market
                 </h3>
               </div>
-              {
-                auth.user.roles === "admin" && <button className="btn btn-primary" onClick={handleShow}>
-                  <span className="me-2">
-                    <i className="fa fa-plus " aria-hidden="true"></i>
-                  </span>
-                  Create Game
-                </button>
-              }
+
 
             </div>
           </div>
@@ -215,21 +208,20 @@ const GameMarket = ({ marketId }) => {
                 style={{ marginLeft: "-10px" }}
               >
                 <div className="search_inner">
-                  <form Active="#">
-                    <div className="search_field">
-                      <input
-                        value={search}
-                        onChange={(e) => {
-                          setSearch(e.target.value);
-                        }}
-                        type="text"
-                        placeholder="Search Content Here..."
-                      />
-                    </div>
-                    <button type="submit">
-                      <i className="ti-search"></i>{" "}
-                    </button>
-                  </form>
+                  <div className="search_field">
+                    <input
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      type="text"
+                      placeholder="Search Content Here..."
+                    />
+                  </div>
+                  <button type="submit">
+                    <i className="ti-search"></i>{" "}
+                  </button>
                 </div>
               </div>
             </div>
@@ -362,7 +354,7 @@ const GameMarket = ({ marketId }) => {
                                             {game.gameName}
                                           </a> */}
                                           </div></>}
-                                        
+
                                       </div>
                                     </div>
                                     {/* Side Nav 3 dots Ending here */}
@@ -425,7 +417,6 @@ const GameMarket = ({ marketId }) => {
         handleClose={handleCloseLatestAnnouncementModal}
         latestAnnouncements={latestAnnouncements}
       />
-      <CreateGame show={show} setShow={setShow} />
       <Update
         show={showUpdateModal}
         setShow={setShowUpdateModal}

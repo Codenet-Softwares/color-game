@@ -139,7 +139,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
                 <td colSpan="10">
                   {" "}
                   {/* Fixed typo from colspan="10" to colSpan="10" */}
-                  <div className="alert alert-info fw-bold" role="alert">
+                    <div className="alert alert-danger fw-bold" role="alert">
                     No Data Found !!
                   </div>
                 </td>
@@ -149,7 +149,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
         </table>
       </div>
       {data?.data?.length > 0 && (
-        <div className="d-flex justify-content-center p-2 overflow-auto ">
+        <div className="d-flex justify-content-center p-2">
           <Pagination
             currentPage={data.currentPage}
             totalPages={data.totalPages}

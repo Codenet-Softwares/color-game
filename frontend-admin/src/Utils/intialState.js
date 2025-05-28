@@ -60,3 +60,16 @@ export function getViewSubadmin(body = {}) {
   };
 }
 
+export function getDeleteMarket(body = {}) {
+  return {
+    data: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 10,
+    name: "",
+    totalData: 0,
+    searchTerm: "",
+    debouncedSearchTerm: "",
+  };
+}
+

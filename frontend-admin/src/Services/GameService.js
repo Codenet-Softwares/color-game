@@ -181,8 +181,8 @@ class GameService {
     });
   }
 
-// from here the api that i am fetching is to show the each users bet for live bet that is unsettled bets
-  userLiveBetGameList(user,marketId,userName,   page, pageSize) {
+  // from here the api that i am fetching is to show the each users bet for live bet that is unsettled bets
+  userLiveBetGameList(user, marketId, userName, page, pageSize) {
     return axios({
       method: "GET",
       url: `${API_HOST}/api/live-users-bet-history/${marketId}/${userName}?page=${page}&pageSize=${pageSize}`,
@@ -194,7 +194,7 @@ class GameService {
 
 
   // from here the api that i am fetching is to show the each users bet for live bet that is unsettled bets
-  userLiveBetGameListhistory(user,marketId,userName,   page, pageSize) {
+  userLiveBetGameListhistory(user, marketId, userName, page, pageSize) {
     return axios({
       method: "GET",
       url: `${API_HOST}/api/get-bets-afterWin-history/${marketId}/${userName}?page=${page}&pageSize=${pageSize}`,
@@ -262,20 +262,22 @@ class GameService {
     });
   }
 
-  deleteTrashMarket(user, trashMarketId, page, pageSize) {
+  deleteTrashMarket(user, data) {
     return axios({
       method: "DELETE",
-      url: `${API_HOST}/api/delete-market-trash/${trashMarketId}?page=${page}&pageSize=${pageSize}`,
+      url: `${API_HOST}/api/delete-market-trash`,
+      data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
   }
 
-  restoreTrashMarket(user, trashMarketId) {
+  restoreTrashMarket(user, data) {
     return axios({
       method: "POST",
-      url: API_HOST + `/api/re-store/market/${trashMarketId}`,
+      url: API_HOST + `/api/re-store/market`,
+      data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -356,9 +358,9 @@ class GameService {
       },
     });
   }
-  
+
   // GAME SLIDER IMAGE
-  gameSliderImage(user,data){
+  gameSliderImage(user, data) {
     return axios({
       method: "POST",
       url: API_HOST + `/api/admin/create-game-img`,
@@ -402,7 +404,7 @@ class GameService {
   }
 
   // GIF SLIDER START
-  gifSliderImage(user,data){
+  gifSliderImage(user, data) {
     return axios({
       method: "POST",
       url: API_HOST + `/api/admin/create-gif`,
@@ -424,17 +426,17 @@ class GameService {
   deleteCreateGif(user, imageId) {
     return axios({
       method: "DELETE",
-      url: API_HOST + `/api/delete/gif/${imageId}`, 
+      url: API_HOST + `/api/delete/gif/${imageId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
   }
-  
+
   activeInactiveGameGif(user, imageId, isActive) {
     return axios({
       method: "POST",
-      url: API_HOST +`/api/admin/active-gif/${imageId}`,
+      url: API_HOST + `/api/admin/active-gif/${imageId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -443,10 +445,10 @@ class GameService {
       },
     });
   }
-  
 
-// INNER SLIDER IMAGE  START
-  innerSliderImage(user,data){
+
+  // INNER SLIDER IMAGE  START
+  innerSliderImage(user, data) {
     return axios({
       method: "POST",
       url: API_HOST + `/api/admin/create-inner-img`,
@@ -488,7 +490,7 @@ class GameService {
   }
 
   // OUTER announcement 
-  CreateOuterAnnouncement(user,data){
+  CreateOuterAnnouncement(user, data) {
     return axios({
       method: "POST",
       url: API_HOST + `/api/admin/announcements-create`,
@@ -499,7 +501,7 @@ class GameService {
     })
   }
 
-  getOuterAnnouncement(user){
+  getOuterAnnouncement(user) {
     return axios({
       method: "GET",
       url: API_HOST + `/api/admin/get-admin-announcements`,
@@ -518,8 +520,8 @@ class GameService {
     });
   }
 
-   // INNER announcement 
-   CreateInnerAnnouncement(user,data){
+  // INNER announcement 
+  CreateInnerAnnouncement(user, data) {
     return axios({
       method: "POST",
       url: API_HOST + `/api/admin/inner-announcements-create`,
@@ -530,7 +532,7 @@ class GameService {
     })
   }
 
-  getInnerAnnouncement(user){
+  getInnerAnnouncement(user) {
     return axios({
       method: "GET",
       url: API_HOST + `/api/admin/get-inner-announcements`,
@@ -549,16 +551,16 @@ class GameService {
     });
   }
 
-  winBetTracker(user, page, pageSize,search) {
+  winBetTracker(user, page, pageSize, search) {
     return axios({
       method: "GET",
-      url: `${API_HOST}/api/get-after-winning-data?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url: `${API_HOST}/api/get-after-winning-data?page=${page}&limit=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
   }
-  getWinBetTracker(user,marketId, page, pageSize,search) {
+  getWinBetTracker(user, marketId, page, pageSize, search) {
     return axios({
       method: "GET",
       url: `${API_HOST}/api/getDetails-winning-data/${marketId}?page=${page}&pageSize=${pageSize}&search=${search}`,
@@ -567,8 +569,8 @@ class GameService {
       },
     });
   }
-// showing the list of bets userwise afterWin
-  getWinBetTrackerList(user,marketId,userName,page, pageSize) {
+  // showing the list of bets userwise afterWin
+  getWinBetTrackerList(user, marketId, userName, page, pageSize) {
     return axios({
       method: "GET",
       url: `${API_HOST}/api/get-Details-winning-bet/${marketId}/${userName}?page=${page}&pageSize=${pageSize}`,
@@ -577,21 +579,21 @@ class GameService {
       },
     });
   }
-  
 
-  AfterWinDeleteBet(user,data) {
-    console.log("data",data)
+
+  AfterWinDeleteBet(user, data) {
+    console.log("data", data)
     return axios({
       method: "POST",
       url: `${API_HOST}/api/delete-bet-after-win`,
-      data:data,
+      data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
   }
 
-  getSubAdminHistory(user, page, pageSize,search,status) {
+  getSubAdminHistory(user, page, pageSize, search, status) {
     return axios({
       method: "GET",
       url: `${API_HOST}/api/subAdmin/get-subAdmin-history?page=${page}&pageSize=${pageSize}&search=${search}&status=${status || ""}`,

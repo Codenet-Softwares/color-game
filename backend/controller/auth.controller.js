@@ -69,9 +69,9 @@ import { string } from '../constructor/string.js';
 // };
 
 export const adminLogin = async (req, res) => {
-  const { userName, password } = req.body;
-
   try {
+    const { userName, password } = req.body;
+
     const existingUser = await admins.findOne({ where: { userName } });
 
     if (!existingUser) {
