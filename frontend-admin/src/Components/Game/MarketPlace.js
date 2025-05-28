@@ -43,7 +43,6 @@ const MarketPlace = () => {
   const [data, setData] = useState([]);
   const [marketDeleteRes, setMarketDeleteRes] = useState("");
   const [refresh, setRefresh] = useState(false);
-
   const [showMarketDetailsModal, setShowMarketDetailsModal] = useState(false);
   const [showMarketName, setShowMarketName] = useState(null);
   const [selectedMarketDetails, setSelectedMarketDetails] = useState(null);
@@ -75,7 +74,6 @@ const MarketPlace = () => {
     endTime,
     marketName
   ) => {
-    console.log("line 51", market, participants,isActive,startTime,marketName);
     setShowMarketName(marketName);
     setIsActive(hideMarketUser);
     setSelectedMarketDetails(market);
@@ -155,7 +153,7 @@ const MarketPlace = () => {
         }
       }
     };
-  
+
     fetchGameMarketData();
   }, [
     auth,
@@ -169,7 +167,6 @@ const MarketPlace = () => {
     showUpdateModal,
     refresh,
   ]);
-  console.log("line 7 game data", gameMarketData);
 
   let startIndex = Math.min((currentPage - 1) * totalEntries + 1);
   let endIndex = Math.min(currentPage * totalEntries, totalData);
@@ -244,7 +241,7 @@ const MarketPlace = () => {
                         pathname: `/gameMarket/${data.id}`,
                       }}
                     >
-                      <span style={{ cursor: "pointer" }}>
+                      <span style={{ cursor: "pointer" }} className="link-fix">
                         &nbsp;/&nbsp;{data.name}
                       </span>
                     </Link>
@@ -267,7 +264,8 @@ const MarketPlace = () => {
                 <select
                   className="form-select form-select-sm"
                   aria-label=".form-select-sm example"
-                  onChange={(e) => setTotalEntries(e.target.value)}
+                  onChange={(e) => { setTotalEntries(e.target.value); setCurrentPage(1); }}
+
                 >
                   <option selected value="10">
                     Showing 10 Entries
@@ -283,22 +281,21 @@ const MarketPlace = () => {
                 style={{ marginLeft: "-10px" }}
               >
                 <div className="search_inner">
-                  <form Active="#">
-                    <div className="search_field">
-                      <input
-                        value={search}
-                        onChange={(e) => {
-                          setSearch(e.target.value);
-                        }}
-                        type="text"
-                        placeholder="Search Content Here..."
-                      />
-                    </div>
-                    <button type="submit">
-                      {" "}
-                      <i className="ti-search"></i>{" "}
-                    </button>
-                  </form>
+                  <div className="search_field">
+                    <input
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        setCurrentPage(1)
+                      }}
+                      type="text"
+                      placeholder="Search Content Here..."
+                    />
+                  </div>
+                  <button type="submit">
+                    {" "}
+                    <i className="ti-search"></i>{" "}
+                  </button>
                 </div>
               </div>
             </div>
@@ -328,10 +325,7 @@ const MarketPlace = () => {
 
                                     <div className=" col-md-2 ">
                                       <div className="d-flex justify-content-between align-items-center w-100">
-                                        {/* <span className="text-dark fw-bold ml-5">
-                                          Start time :
-                                          {formatTime(market.startTime)}
-                                        </span> */}
+                                        
                                         <span
                                           className={`badge rounded-pill fw-bold text-uppercase ${!market.hideMarketUser
                                             ? "bg-success"
@@ -342,15 +336,13 @@ const MarketPlace = () => {
                                             ? "Active"
                                             : "Inactive"}
                                         </span>
-                                        {/* <span className="text-dark fw-bold">
-                                          End time :{formatTime(market.endTime)}
-                                        </span> */}
+                                       
                                       </div>
                                     </div>
                                     <div className="col-md-4">
                                       <div className="header_more_tool d-flex justify-content-end">
                                         <div className="dropdown">
-                                          <button className="btn btn-info text-uppercase fw-bold me-3" 
+                                          <button className="btn btn-info text-uppercase fw-bold me-3"
                                             onClick={() =>
                                               handleMarketDetailsModalOpen(
                                                 market.marketId,
@@ -362,9 +354,9 @@ const MarketPlace = () => {
                                               )
                                             }
                                           >
-                                          info
+                                            info
                                           </button>
-                                    
+
                                           <span
                                             className="dropdown-toggle"
                                             id="dropdownMenuButton"
@@ -386,7 +378,7 @@ const MarketPlace = () => {
                                               left: "0px",
                                             }}
                                           >
-                                            {market.isDisplay && (
+                                            {auth?.user?.roles === "admin" && <> {market.isDisplay && (
                                               <a
                                                 className="dropdown-item"
                                                 href="#"
@@ -400,8 +392,8 @@ const MarketPlace = () => {
                                                 <i className="fas fa-edit"></i>{" "}
                                                 Create Runner
                                               </a>
-                                            )}
-                                            <a
+                                            )}</>}
+                                            {auth?.user?.roles === "admin" && <a
                                               className="dropdown-item"
                                               href="#"
                                               onClick={(e) =>
@@ -410,11 +402,12 @@ const MarketPlace = () => {
                                             >
                                               <i className="ti-trash"></i>{" "}
                                               Delete
-                                            </a>
+                                            </a>}
+
 
                                             {!market.isDisplay && (
                                               <>
-                                                {!market.hideMarketUser ? (
+                                                {auth?.user?.roles === "admin" && <>{!market.hideMarketUser ? (
                                                   <a
                                                     className="dropdown-item"
                                                     onClick={(e) =>
@@ -456,7 +449,8 @@ const MarketPlace = () => {
                                                       Active
                                                     </a>
                                                   </>
-                                                )}
+                                                )}</>}
+
                                                 <Link
                                                   to={`${market.marketId}`}
                                                   state={{
@@ -468,7 +462,7 @@ const MarketPlace = () => {
                                                   <i className="ti-eye"></i>{" "}
                                                   View runner
                                                 </Link>
-                                                <a
+                                                {auth?.user?.roles === "admin" && <a
                                                   className="dropdown-item"
                                                   href="#"
                                                   onClick={(e) =>
@@ -480,7 +474,8 @@ const MarketPlace = () => {
                                                 >
                                                   <i className="fas fa-edit"></i>{" "}
                                                   Void
-                                                </a>
+                                                </a>}
+
 
                                                 {/* <a
                                                   className="dropdown-item"

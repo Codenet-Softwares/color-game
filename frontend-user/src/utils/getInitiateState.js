@@ -245,7 +245,7 @@ export function getBetHistory(body = {}) {
     totalData: 0,
     currentPage: 1,
     totalEntries: 10,
-    endDate: new Date(),
+    endDate: new Date().setDate(new Date().getDate()),
     startDate: new Date().setDate(new Date().getDate() - 1),
     dataSource: "live",
     selectGame: "",
@@ -257,7 +257,8 @@ export function getBetHistory(body = {}) {
     openBet: [],
     gameSelectionData: [],
     selectedTickets: [],
-    modalOpen: false
+    modalOpen: false,
+    tempStartDate: new Date().setDate(new Date().getDate() - 1),
   };
 }
 

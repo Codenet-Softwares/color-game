@@ -158,12 +158,18 @@ const LotteryMarketDashBoard = () => {
 
   // Main return
   return (
-    <div className="mt-5 mb-2">
-      <AppDrawer showCarousel={true}>
-        <Layout />
-        {getBody()}
-      </AppDrawer>
-    </div>
+    <>
+      <Layout />
+      <div
+        className={`global-margin-top${
+          store.user.isLogin ? "-logged" : ""
+        } mb-5`}
+      >
+        <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
+          {getBody()}
+        </AppDrawer>
+      </div>
+    </>
   );
 };
 

@@ -554,7 +554,7 @@ class GameService {
   winBetTracker(user, page, pageSize, search) {
     return axios({
       method: "GET",
-      url: `${API_HOST}/api/get-after-winning-data?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url: `${API_HOST}/api/get-after-winning-data?page=${page}&limit=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },

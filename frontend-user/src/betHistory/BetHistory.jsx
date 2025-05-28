@@ -71,14 +71,21 @@ const BetHistory = () => {
     handleGetSelectData();
     openBetsGame();
   }, []);
+  console.log("first===========>", betHistoryData );
 
   async function handleGetHistory() {
     const response = await user_getBetHistory_api({
       gameId: betHistoryData.selectGame,
       pageNumber: betHistoryData.currentPage,
       dataLimit: betHistoryData.totalEntries,
-      startDate: formatDate(betHistoryData.startDate),
-      endDate: formatDate(betHistoryData.endDate),
+      startDate:
+        betHistoryData.tempStartDate === betHistoryData.startDate
+          ? ""
+          : formatDate(betHistoryData.startDate),
+      endDate:
+        betHistoryData.tempStartDate === betHistoryData.startDate
+          ? ""
+          : formatDate(betHistoryData.endDate),
       dataSource: betHistoryData.dataSource,
       type: betHistoryData.selectMenu,
     });
@@ -101,8 +108,14 @@ const BetHistory = () => {
       gameId: betHistoryData.selectGame,
       pageNumber: betHistoryData.currentPage,
       dataLimit: betHistoryData.totalEntries,
-      startDate: formatDate(betHistoryData.startDate),
-      endDate: formatDate(betHistoryData.endDate),
+      startDate:
+        betHistoryData.tempStartDate === betHistoryData.startDate
+          ? ""
+          : formatDate(betHistoryData.startDate),
+      endDate:
+        betHistoryData.tempStartDate === betHistoryData.startDate
+          ? ""
+          : formatDate(betHistoryData.endDate),
       dataSource: betHistoryData.dataSource,
       type: betHistoryData.selectMenu,
     });
@@ -168,13 +181,6 @@ const BetHistory = () => {
             setBetHistoryData={setBetHistoryData}
           />
         </div>
-
-        {/* <div className="col-lg-3">
-          <OpenBets
-            betHistoryData={betHistoryData}
-            handleBetHistorySelectionMenu={handleBetHistorySelectionMenu}
-          />
-        </div> */}
       </div>
     </AppDrawer>
   );

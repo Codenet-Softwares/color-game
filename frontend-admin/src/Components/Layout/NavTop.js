@@ -151,7 +151,8 @@ const NavTop = () => {
                   <div className="profile_info_iner">
                     <div className="profile_author_name">
                       {/* <p>{auth.user.roles[0].role} </p> */}
-                      <h5>{auth.user.userName}</h5>
+                      <h5>{auth.user.userName.toUpperCase()}</h5>
+                      <p>ROLE: {auth?.user?.roles.toUpperCase()}</p>
                     </div>
 
                     <div className="profile_info_details">
@@ -203,7 +204,7 @@ const NavTop = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title fw-bold text-uppercase">Reset Password</h5>
-                  <button type="button" className="close" onClick={closeModal}>
+                  <button type="button " className="close fs-2 border-0 bg-white" onClick={closeModal}>
                     &times;
                   </button>
                 </div>

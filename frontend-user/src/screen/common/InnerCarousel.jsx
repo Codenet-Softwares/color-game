@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getInnerImg } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
+import { aAdvertisement } from "../../utils/dummyData";
 
 const InnerCarousel = () => {
   const {  store } = useAppContext();
@@ -9,11 +10,11 @@ const InnerCarousel = () => {
   const fetchSliderImgText = async () => {
     try {
       const response = await getInnerImg();
-      if (response && response.data) {
+      if (response.data.length > 0) {
         setSliderData(response.data);
       } else {
         console.error("error", response);
-        setSliderData([]);
+        setSliderData(aAdvertisement);
       }
     } catch (error) {
       console.error("error", error);
