@@ -392,6 +392,7 @@ const ProfitLoss = ({
                     placeholderText={"Select Start Date"}
                     className="form-control"
                     disabled={profitLossData.dataSource === "live"}
+                    onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                   />
                 </div>
                 <div class="col-9 col-md-6 d-flex flex-column text-center">
@@ -403,6 +404,7 @@ const ProfitLoss = ({
                     placeholderText={"Select End Date"}
                     className="form-control"
                     disabled={profitLossData.dataSource === "live"}
+                    onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                   />
                 </div>
                 <div class="col-12 col-md-9 d-flex align-items-end mt-3">
@@ -444,12 +446,12 @@ const ProfitLoss = ({
               </select>
             </div>
             <div className="col-12 col-md-auto ms-auto">
-              <input
+              {/* <input
                 type="search"
                 className="form-control"
                 placeholder="Search..."
                 onChange={handleSearch}
-              />
+              /> */}
             </div>
           </div>
           {/* Table */}

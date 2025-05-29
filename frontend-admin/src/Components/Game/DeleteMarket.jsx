@@ -16,7 +16,7 @@ const DeleteMarket = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [refresh, setRefresh] = useState({});
 
-  console.log("deleteMarket", deleteMarket);
+  console.log("deleteMarket", searchTerm);
 
   const fetchMarkets = async (search = "") => {
     auth.showLoader();
@@ -44,7 +44,13 @@ const DeleteMarket = () => {
 
   useEffect(() => {
     fetchMarkets(debouncedSearchTerm);
-  }, [refresh, deleteMarket.currentPage, deleteMarket.totalEntries]);
+  }, [
+    refresh,
+    deleteMarket.currentPage,
+    deleteMarket.totalEntries,
+    debouncedSearchTerm,
+  ]);
+  
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -65,11 +71,12 @@ const DeleteMarket = () => {
         auth.user,
         approvalMarketId
       );
-      setDeleteMarket((prevMarkets) =>
-        prevMarkets?.data?.filter(
+      setDeleteMarket((prevMarkets) => ({
+        ...prevMarkets,
+        data: prevMarkets?.data?.filter(
           (market) => market.approvalMarketId !== approvalMarketId
-        )
-      );
+        ),
+      }));
 
       setRefresh(res);
       alert("Market deleted successfully!");
@@ -114,6 +121,11 @@ const DeleteMarket = () => {
       currentPage: 1,
     }));
   };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
+  
 
   let startIndex = Math.min(
     (Number(deleteMarket.currentPage) - 1) * Number(deleteMarket.totalEntries) +
@@ -163,7 +175,7 @@ const DeleteMarket = () => {
                 {searchTerm && (
                   <button
                     className="btn btn-light border-2"
-                    // onClick={handleClearSearch}
+                    onClick={handleClearSearch}
                     style={{
                       position: "absolute",
                       right: "10px",

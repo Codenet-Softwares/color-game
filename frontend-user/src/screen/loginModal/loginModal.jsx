@@ -151,7 +151,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   }
 
   return (
-    <Modal show={showLogin} onHide={setShowLogin} centered >
+    <Modal show={showLogin} onHide={setShowLogin} centered backdrop={false}>
       {header && (
         <Modal.Header className="custom-header" closeButton>
           <Modal.Title className="m-auto">{header()}</Modal.Title>

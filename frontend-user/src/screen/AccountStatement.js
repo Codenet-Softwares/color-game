@@ -5,7 +5,7 @@ import Pagination from "./common/Pagination";
 import DatePicker from "react-datepicker";
 import { customErrorHandler } from "../utils/helper";
 import AppDrawer from "./common/appDrawer";
-import Layout from "./layout/layout";
+import Layout from "./layout/layout";  
 
 const AccountStatement = () => {
   // Initialize state using getAccountStatement function
@@ -172,6 +172,7 @@ const AccountStatement = () => {
                         disabled={getAccountstatement.dataSource === "live"} // Disable if live data
                         placeholderText="Select Start Date"
                         className="form-control form-control-sm w-100"
+                        onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                       />
                     </div>
                     {/* End Date */}
@@ -183,6 +184,7 @@ const AccountStatement = () => {
                         disabled={getAccountstatement.dataSource === "live"} // Disable if live data
                         placeholderText="Select Start Date"
                         className="form-control form-control-sm w-100"
+                        onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                       />
                     </div>
                     {/* Get Statement Button */}
