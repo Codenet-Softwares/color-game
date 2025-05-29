@@ -14,6 +14,7 @@ import Footer from "./Footer";
 import OpenBets from "../../betHistory/components/openBets/OpenBets";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../Lottery/firebaseStore/lotteryFirebase";
+import Login from "../loginModal/loginModal";
 
 function AppDrawer({
   children,
@@ -31,6 +32,7 @@ function AppDrawer({
   );
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
   const [toggleMap, setToggleMap] = useState({});
+  const [showLogin, setShowLogin] = useState(false);
 
   const { dispatch, store } = useAppContext();
 
@@ -178,12 +180,29 @@ function AppDrawer({
                           whiteSpace: "normal",
                         }}
                       >
-                        <Link
-                          to={`/lottoPurchase/${marketObj.marketId}`}
-                          onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
-                        >
-                          {marketObj.marketName}
-                        </Link>
+                        {store.user.isLogin ? (
+                          <Link
+                            to={`/lottoPurchase/${marketObj.marketId}`}
+                            onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                          >
+                            {marketObj.marketName}
+                          </Link>
+                        ) : (
+                          <Link
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowLogin(true);
+                            }} // Prevents dropdown collapse
+                          >
+                            {marketObj.marketName}
+                          </Link>
+                        )}
+                        {showLogin && (
+                          <Login
+                            showLogin={showLogin}
+                            setShowLogin={setShowLogin}
+                          />
+                        )}
                       </li>
                     ) : null
                   )}
