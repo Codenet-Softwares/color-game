@@ -10,7 +10,6 @@ import Carousel from "../common/Carousel";
 import HitGames from "../HitGames";
 import Gif from "../common/Gif";
 import DownloadApp from "../DownloadApp";
-// import Footer from "../common/Footer";
 import Login from "../loginModal/loginModal";
 import AOS from "aos";
 import GetwholeMarket from "../common/gameListView/GetwholeMarket";
@@ -19,6 +18,7 @@ import {
   getOpenBetsGame,
   user_getBackLayData_api,
 } from "../../utils/apiService";
+import strings from "../../utils/constant/stringConstant";
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -26,6 +26,10 @@ const Home = () => {
   const [openBetData, setOpenBetData] = useState(getOpenBet());
 
   const { store } = useAppContext();
+
+  const accessTokenFromStore = JSON.parse(
+    localStorage.getItem(strings.LOCAL_STORAGE_KEY)
+  )?.user?.accessToken;
 
   useEffect(() => {
     AOS.init();
@@ -62,8 +66,8 @@ const Home = () => {
     }
   };
   useEffect(() => {
-    if (store.user.isLogin) openBetsGame();
-  }, []);
+    if (store.user.isLogin && accessTokenFromStore) openBetsGame();
+  }, [accessTokenFromStore]);
 
   useEffect(() => {
     if (openBetData?.selectColorGame != "") {

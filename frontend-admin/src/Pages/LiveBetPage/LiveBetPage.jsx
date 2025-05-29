@@ -24,13 +24,17 @@ const LiveBetPage = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setLiveBets((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
     }, 500);
 
     return () => clearTimeout(timer);
   }, [searchTerm]);
   useEffect(() => {
     fetchLiveBets();
-  }, [liveBets.currentPage, liveBets.totalEntries,debouncedSearchTerm]);
+  }, [liveBets.currentPage, liveBets.totalEntries, debouncedSearchTerm]);
 
   const fetchLiveBets = () => {
     auth.showLoader();
@@ -63,13 +67,14 @@ const LiveBetPage = () => {
     setLiveBets({ ...liveBets, currentPage: pageNumber });
   };
   let startIndex = Math.min(
-    (Number(liveBets.currentPage) - 1) * Number(liveBets.totalEntries) + 1 , 
+    (Number(liveBets.currentPage) - 1) * Number(liveBets.totalEntries) + 1,
     Number(liveBets.totalData)
   );
   let endIndex = Math.min(
     Number(liveBets.currentPage) * Number(liveBets.totalEntries),
     Number(liveBets.totalData)
   );
+
   const navigate = useNavigate();
 
   const handleNavigate = (marketId) => {
@@ -88,7 +93,7 @@ const LiveBetPage = () => {
         >
           <h3 className="mb-0 fw-bold text-center text-uppercase">Live Bets</h3>
         </div>
-        <div className="card-body"  style={{background:"#E1D1C7"}}>
+        <div className="card-body" style={{ background: "#E1D1C7" }}>
           {/* Search and Entries Selection */}
           <div className="row mb-4">
             <div className="col-md-6 position-relative">
@@ -108,7 +113,6 @@ const LiveBetPage = () => {
                 placeholder="Search By Market Name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-
                 style={{
                   paddingLeft: "40px",
                   borderRadius: "30px",
@@ -143,6 +147,7 @@ const LiveBetPage = () => {
                   setLiveBets((prev) => ({
                     ...prev,
                     totalEntries: parseInt(e.target.value),
+                    currentPage: 1,
                   }))
                 }
               >
@@ -186,34 +191,35 @@ const LiveBetPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  
-                    {liveBets.liveBets.length > 0 ? (
-                      <>
-                        {liveBets.liveBets.map((bet, index) => (
-                          <tr key={index}>
-                            <td>{startIndex+index}</td>
-                            <td>{bet.gameName}</td>
-                            <td>{bet.marketName}</td>
-                            <td>
-                              <button
-                                className="btn btn-primary text-uppercase fw-bold "
-                                onClick={() => handleNavigate(bet.marketId)}
-                              >
-                                live stats
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </>
-                    ) : (
-                      <tr>
-                        <td colSpan="4" className="text-center text-danger fw-bold">
-                          No Data Found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-            
+                  {liveBets.liveBets.length > 0 ? (
+                    <>
+                      {liveBets.liveBets.map((bet, index) => (
+                        <tr key={index}>
+                          <td>{startIndex + index}</td>
+                          <td>{bet.gameName}</td>
+                          <td>{bet.marketName}</td>
+                          <td>
+                            <button
+                              className="btn btn-primary text-uppercase fw-bold "
+                              onClick={() => handleNavigate(bet.marketId)}
+                            >
+                              live stats
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  ) : (
+                    <tr>
+                      <td
+                        colSpan="4"
+                        className="text-center text-danger fw-bold"
+                      >
+                        No Data Found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
               </table>
             </div>
           </SingleCard>

@@ -122,7 +122,13 @@ const GetSingleMarket = () => {
                             <span className="fw-bold me-2">
                               {formatDate(marketData.startTime)}
                             </span>
-                            <span className="fw-bold text-primary">
+                            <span
+                              className="fw-bold text-primary text-wrap"
+                              style={{
+                                wordBreak: "break-word",
+                                whiteSpace: "normal",
+                              }}
+                            >
                               💹{marketData.marketName}
                             </span>
                           </div>

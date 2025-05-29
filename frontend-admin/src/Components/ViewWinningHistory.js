@@ -20,7 +20,7 @@ const ViewWinningHistory = () => {
       setDebouncedSearchTerm(searchTerm);
       setViewWinningHistory((prev) => ({
         ...prev,
-        currentPage: 1, 
+        currentPage: 1,
       }));
     }, 500);
 
@@ -77,11 +77,9 @@ const ViewWinningHistory = () => {
       });
   };
   const handleRevokeAnnouncement = (marketId, runnerId) => {
-    auth.showLoader();
+    
     const isConfirmed = window.confirm("Are you sure you want to Revoke?");
     if (!isConfirmed) return;
-    console.log("runnerId=============", runnerId);
-    console.log("marketId=============", marketId);
 
     AccountServices.revokeAnnounceWin(
       {
@@ -151,7 +149,7 @@ const ViewWinningHistory = () => {
         </div>
         <div className="card-body" style={{ background: "#E1D1C7" }}>
           {/* Search and Entries Selection */}
-         <div className="row mb-4">
+          <div className="row mb-4">
             <div className="col-md-6 position-relative">
               <FaSearch
                 style={{
@@ -189,7 +187,7 @@ const ViewWinningHistory = () => {
                 />
               )}
             </div>
-{/* 
+            {/* 
             <div className="col-md-6 text-end">
               <label className="me-2 fw-bold">Show</label>
               <select

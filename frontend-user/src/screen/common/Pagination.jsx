@@ -8,6 +8,14 @@ const Pagination = ({
   endIndex,
   totalData,
 }) => {
+  console.log(
+    "getProfitLossEvent",
+    currentPage,
+    totalPages,
+    startIndex,
+    endIndex,
+    totalData
+  );
   const renderPageNumbers = () => {
     const pageNumbers = [];
 
@@ -43,7 +51,7 @@ const Pagination = ({
             {/* Showing entries part */}
             <div className="col-12 col-lg-6 text-center text-lg-start mb-3 mb-lg-0">
               <p>
-                Showing {startIndex} to {endIndex} of {totalData} entries
+                Showing {startIndex} to {endIndex} of {totalData} Entries
               </p>
             </div>
 

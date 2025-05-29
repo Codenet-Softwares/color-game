@@ -168,7 +168,7 @@ const UserLotteryBetHistory = ({ data, SetComponent }) => {
                                         // Display message if no data is available
                                         <tr align="center">
                                             <td colSpan="10">
-                                                <div className="alert alert-info fw-bold" role="alert">
+                                                    <div className="alert alert-danger fw-bold" role="alert">
                                                     No Data Found !!
                                                 </div>
                                             </td>
@@ -180,6 +180,18 @@ const UserLotteryBetHistory = ({ data, SetComponent }) => {
                     </div>
                 </li>
             </ul>
+            {/* {data?.data?.length > 0 && (
+                <div className="d-flex justify-content-center p-2">
+                    <Pagination
+                        currentPage={data.currentPage}
+                        totalPages={data.totalPages}
+                        handlePageChange={handlePageChange}
+                        startIndex={startIndex}
+                        endIndex={endIndex}
+                        totalData={data.totalData}
+                    />
+                </div>
+            )} */}
         </div>
     );
 };

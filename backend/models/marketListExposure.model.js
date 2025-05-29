@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../db.js";
+import { sequelize } from "../db.js";
 
 const MarketListExposure = sequelize.define('MarketListExposuers', {
     id: {
@@ -14,6 +14,10 @@ const MarketListExposure = sequelize.define('MarketListExposuers', {
     MarketId: {
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    RunnerId: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     exposure: {
         type: DataTypes.FLOAT,

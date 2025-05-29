@@ -162,6 +162,7 @@ const ViewSubAdmin = () => {
                   setViewSubadmin((prev) => ({
                     ...prev,
                     totalEntries: parseInt(e.target.value),
+                    currentPage: 1,
                   }))
                 }
               >
@@ -216,29 +217,13 @@ const ViewSubAdmin = () => {
                           className="fw-bold text-start"
                           style={{ color: "#DC686E" }}
                         >
-                          {subadmin?.userName}
+                          {subadmin?.userName?.toUpperCase()}
                         </td>
                         <td className="text-dark fw-bold text-start">
-                          {subadmin?.permissions}
+                          {subadmin?.permissions === "resultAnnouncement" &&
+                            "Result-Announcement"}
                         </td>
-                        {/* <td>
-                          <button
-                            className="btn btn-info me-2"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            title="Edit"
-                          >
-                            <FaEdit className="" />
-                          </button>
-                          <button
-                            className="btn btn-danger"
-                            data-bs-toggle="tooltip"
-                            data-bs-placement="bottom"
-                            title="Delete"
-                          >
-                            <FaTrashAlt />
-                          </button>
-                        </td> */}
+
                         <td>
                           <button
                             className="btn btn-primary"

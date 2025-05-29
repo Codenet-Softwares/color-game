@@ -17,7 +17,7 @@ export const authenticateSuperAdmin = (req, res, next) => {
             return res.status(statusCode.unauthorize).send(apiResponseErr(null, false, statusCode.unauthorize, 'Unauthorized Access'));
         }
 
-        if (!decoded.role) {
+        if (!decoded.role || decoded.role.length === 0) {
             return res.status(statusCode.unauthorize).send(apiResponseErr(null, false, statusCode.unauthorize, 'Invalid token or roles not found.'));
         }
 
@@ -26,7 +26,12 @@ export const authenticateSuperAdmin = (req, res, next) => {
             string.whiteLabel,
             string.hyperAgent,
             string.superAgent,
-            string.masterAgent
+            string.masterAgent,
+            string.subAdmin,
+            string.subWhiteLabel,
+            string.subHyperAgent,
+            string.subMasterAgent,
+            string.subSuperAgent
         ];
 
         const userRole = decoded.role;

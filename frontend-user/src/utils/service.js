@@ -79,18 +79,11 @@ export async function makeCall(callName, callParams, isToast) {
       // will update after backend api will provide proper response structure
       toast.info(json.message);
     }
-    // if (response && response.ok) {
-    //   return json;
-    // }
-    //  else {
-    //   throw new Error('Something went wrong');
-    // }
+  
 
     return json;
   } catch (error) {
-    // if (await checkStatus(error)) {
-    //   // throw notifiers.LOGGEDOUT;
-    // }
+  
     toast.error(error.message);
     return null;
   }

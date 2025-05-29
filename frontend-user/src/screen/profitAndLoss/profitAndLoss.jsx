@@ -38,8 +38,10 @@ const ProfitAndLoss = () => {
 
   // Debounce for search
   useEffect(() => {
-    let timer = setTimeout(() => {
-      getProfitLossGameWise();
+    const timer = setTimeout(() => {
+      if (profitLossData.searchItem.trim() !== "") {
+        getProfitLossGameWise();
+      }
     }, 300);
     return () => clearTimeout(timer);
   }, [profitLossData.searchItem]);
@@ -63,18 +65,29 @@ const ProfitAndLoss = () => {
         dataGameWise: response?.data,
         totalPages: response?.pagination?.totalPages,
         totalData: response?.pagination?.totalItems,
+        isLoading: true,
       }));
     } catch (error) {
       // Handle any errors during the API call
       toast.error(customErrorHandler(error));
+    } finally {
+      SetProfitLossData((prev) => ({ ...prev, isLoading: false }));
     }
   }
 
   const handleDateForProfitLoss = () => {
+    const start = new Date(profitLossData.backupStartDate);
+    const end = new Date(profitLossData.backupEndDate);
+
+    if (end < start) {
+      toast.warn("End date cannot be earlier than start date.");
+      return;
+    }
+
     SetProfitLossData((prevState) => ({
       ...prevState,
-      startDate: formatDate(profitLossData.backupStartDate),
-      endDate: formatDate(profitLossData.backupEndDate),
+      startDate: formatDate(start),
+      endDate: formatDate(end),
     }));
   };
 
@@ -88,7 +101,7 @@ const ProfitAndLoss = () => {
     <div data-aos="zoom-in">
       <AppDrawer showCarousel={false}>
         <Layout />
-        <div style={{ marginTop: "120px" }}>
+        <div style={{ marginTop: "140px" }}>
           <ProfitLoss
             dataGameWise={profitLossData.dataGameWise}
             startDate={profitLossData.backupStartDate}
@@ -111,6 +124,7 @@ const ProfitAndLoss = () => {
             handlePageChange={handlePageChange}
             SetProfitLossData={SetProfitLossData}
             handleDateForProfitLoss={handleDateForProfitLoss}
+            profitLossData={profitLossData}
           />
         </div>
       </AppDrawer>

@@ -5,7 +5,7 @@ import Pagination from "./common/Pagination";
 import DatePicker from "react-datepicker";
 import { customErrorHandler } from "../utils/helper";
 import AppDrawer from "./common/appDrawer";
-import Layout from "./layout/layout";
+import Layout from "./layout/layout";  
 
 const AccountStatement = () => {
   // Initialize state using getAccountStatement function
@@ -51,9 +51,9 @@ const AccountStatement = () => {
     }
   }
 
-  const startIndex = Math.min((getAccountstatement.currentPage - 1) * 10 + 1);
+  const startIndex = Math.min((getAccountstatement.currentPage - 1) * 10 + 1, getAccountstatement.totalData);
   const endIndex = Math.min(
-    getAccountstatement.currentPage * 10,
+    getAccountstatement.currentPage * getAccountstatement.totalEntries,
     getAccountstatement.totalData
   );
 
@@ -118,29 +118,29 @@ const AccountStatement = () => {
               <div className="form-group mb-3 px-2 mt-2 fw-bold">
                 <div className="container-fluid">
                   <div className="row g-sm-1 align-items-end justify-content-center text-center">
-                     {/* Total Entries */}
+                    {/* Total Entries */}
                     <div className="col-12 col-sm-2 col-md-5 col-lg-2 me-sm-3 mb-3 mb-sm-0">
-                    <label className="fw-bold d-block">Total Entries</label>
-                    <select
+                      <label className="fw-bold d-block">Total Entries</label>
+                      <select
                         className="form-select form-select-sm w-100 fw-bold"
                         onChange={(e) =>
                           setGetAccountstatement((prevState) => ({
                             ...prevState,
                             totalEntries: e.target.value,
-                            currentPage: 1, 
+                            currentPage: 1,
                           }))
                         }
                       >
-                        <option value="10">10 entries</option>
-                        <option value="25">25 entries</option>
-                        <option value="50">50 entries</option>
-                        <option value="100">100 entries</option>
+                        <option value="10">10 Entries</option>
+                        <option value="25">25 Entries</option>
+                        <option value="50">50 Entries</option>
+                        <option value="100">100 Entries</option>
                       </select>
                     </div>
-                      {/* Data Source */}
+                    {/* Data Source */}
                     <div className="col-12 col-sm-2 col-md-5 col-lg-2 mb-3 mb-sm-0">
-                    <label className="fw-bold d-block">Data Source</label>
-                    <select
+                      <label className="fw-bold d-block">Data Source</label>
+                      <select
                         className="form-select form-select-sm w-100 fw-bold"
                         onChange={(e) => {
                           setGetAccountstatement((prevState) => ({
@@ -165,28 +165,30 @@ const AccountStatement = () => {
                     </div>
                     {/* Start Date */}
                     <div className="col-12 col-sm-2 col-md-5 col-lg-2 mb-3 mb-sm-0">
-                    <label className="fw-bold d-block">From</label>
-                    <DatePicker
+                      <label className="fw-bold d-block">From</label>
+                      <DatePicker
                         selected={backupDate.startDate}
                         onChange={setStartDate}
                         disabled={getAccountstatement.dataSource === "live"} // Disable if live data
                         placeholderText="Select Start Date"
                         className="form-control form-control-sm w-100"
+                        onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                       />
                     </div>
-                      {/* End Date */}
+                    {/* End Date */}
                     <div className="col-12 col-sm-2 col-md-5 col-lg-2 mb-3 mb-sm-0">
-                    <label className="fw-bold d-block">To</label>
-                    <DatePicker
+                      <label className="fw-bold d-block">To</label>
+                      <DatePicker
                         selected={backupDate.endDate}
                         onChange={setEndDate}
                         disabled={getAccountstatement.dataSource === "live"} // Disable if live data
                         placeholderText="Select Start Date"
                         className="form-control form-control-sm w-100"
+                        onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
                       />
                     </div>
-                     {/* Get Statement Button */}
-                     <div className="col-12 col-sm-2 col-md-6 col-lg-2 d-flex align-items-end mb-3 mb-sm-0 mt-2">
+                    {/* Get Statement Button */}
+                    <div className="col-12 col-sm-2 col-md-6 col-lg-2 d-flex align-items-end mb-3 mb-sm-0 mt-2">
                       <button
                         className="btn btn-primary w-100 btn-sm"
                         disabled={
@@ -198,7 +200,7 @@ const AccountStatement = () => {
                       </button>
                     </div>
                   </div>
-                </div>              
+                </div>
               </div>
 
               {/* Transaction Table */}
@@ -208,82 +210,82 @@ const AccountStatement = () => {
                     <div className="QA_section">
                       <div className="QA_table mb-3">
                         <div className="table-responsive"
-                         style={{
+                          style={{
                             overflowX: "auto",
                             WebkitOverflowScrolling: "touch",
                             whiteSpace: "nowrap",
                           }}
                         >
-                        <table className="table lms_table_active3 table-bordered text-center">
-                          <thead>
-                            <tr
-                              style={{ backgroundColor: "#e6e9ed" }}
-                              align="center"
-                            >
-                              <th scope="col">
-                                <h6 className="fw-bold">Date/Time</h6>
-                              </th>
-                              <th scope="col">
-                                <h6 className="fw-bold">Deposit</h6>
-                              </th>
-                              <th scope="col">
-                                <h6 className="fw-bold">Withdraw</h6>
-                              </th>
-                              <th scope="col">
-                                <h6 className="fw-bold">Balance</h6>
-                              </th>
-                              <th scope="col">
-                                <h6 className="fw-bold">Remark</h6>
-                              </th>
-                              <th scope="col">
-                                <h6 className="fw-bold">From &rarr; To</h6>
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {/* Loop through statement data */}
-                            {getAccountstatement?.statement?.map(
-                              (transaction) => (
-                                <tr key={transaction._id} align="center">
-                                  <td>{formatDateForUi(transaction.date)}</td>
-                                  <td>
-                                    {transaction.transactionType === "credit" ||
-                                    transaction.transactionType ===
-                                      "deposit" ? (
-                                      <span className="fw-bold text-success">
-                                        {transaction.amount}
-                                      </span>
-                                    ) : null}
-                                  </td>
-                                  <td>
-                                    {transaction.transactionType ===
-                                    "withdrawal" ? (
-                                      <span className="text-danger fw-bold">
-                                        {transaction.amount}
-                                      </span>
-                                    ) : null}
-                                  </td>
-                                  <td className="fw-bold">
-                                    {transaction.balance}
-                                  </td>
-                                  <td>{transaction.remarks}</td>
-                                  <td>
-                                    {transaction.hasOwnProperty(
-                                      "transferFromUserAccount"
-                                    ) &&
-                                    transaction.hasOwnProperty(
-                                      "transferToUserAccount"
-                                    )
-                                      ? `${transaction.transferFromUserAccount} → ${transaction.transferToUserAccount}`
-                                      : "Self-Transaction"}
-                                  </td>
-                                </tr>
-                              )
-                            )}
-                          </tbody>
-                        </table>
+                          <table className="table lms_table_active3 table-bordered text-center">
+                            <thead>
+                              <tr
+                                style={{ backgroundColor: "#e6e9ed" }}
+                                align="center"
+                              >
+                                <th scope="col">
+                                  <h6 className="fw-bold">Date/Time</h6>
+                                </th>
+                                <th scope="col">
+                                  <h6 className="fw-bold">Deposit</h6>
+                                </th>
+                                <th scope="col">
+                                  <h6 className="fw-bold">Withdraw</h6>
+                                </th>
+                                <th scope="col">
+                                  <h6 className="fw-bold">Balance</h6>
+                                </th>
+                                <th scope="col">
+                                  <h6 className="fw-bold">Remark</h6>
+                                </th>
+                                <th scope="col">
+                                  <h6 className="fw-bold">From &rarr; To</h6>
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {/* Loop through statement data */}
+                              {getAccountstatement?.statement?.map(
+                                (transaction) => (
+                                  <tr key={transaction._id} align="center">
+                                    <td>{formatDateForUi(transaction.date)}</td>
+                                    <td>
+                                      {transaction.transactionType === "credit" ||
+                                        transaction.transactionType ===
+                                        "deposit" ? (
+                                        <span className="fw-bold text-success">
+                                          {transaction.amount}
+                                        </span>
+                                      ) : null}
+                                    </td>
+                                    <td>
+                                      {transaction.transactionType ===
+                                        "withdrawal" ? (
+                                        <span className="text-danger fw-bold">
+                                          {transaction.amount}
+                                        </span>
+                                      ) : null}
+                                    </td>
+                                    <td className="fw-bold">
+                                      {transaction.balance}
+                                    </td>
+                                    <td>{transaction.remarks}</td>
+                                    <td>
+                                      {transaction.hasOwnProperty(
+                                        "transferFromUserAccount"
+                                      ) &&
+                                        transaction.hasOwnProperty(
+                                          "transferToUserAccount"
+                                        )
+                                        ? `${transaction.transferFromUserAccount} → ${transaction.transferToUserAccount}`
+                                        : "Self-Transaction"}
+                                    </td>
+                                  </tr>
+                                )
+                              )}
+                            </tbody>
+                          </table>
                         </div>
-                      
+
                       </div>
                     </div>
 

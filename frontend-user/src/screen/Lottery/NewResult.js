@@ -143,7 +143,7 @@ const NewResult = () => {
               onKeyDown={(e) => e.preventDefault()} // Block manual input from keyboard
             />
           </div>
-          <div className="d-flex align-items-center justify-content-between shadow-lg p-2 rounded-3 mt-2">
+          <div className="d-flex align-items-center justify-content-between shadow-lg p-2 rounded-3 mt-4">
             {/* Left Arrow */}
             <button
               className="btn btn-light arrow-btn me-2"

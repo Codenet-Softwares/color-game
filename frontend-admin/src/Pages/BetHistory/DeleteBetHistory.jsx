@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { toast } from "react-toastify";
 import { useAuth } from "../../Utils/Auth";
@@ -10,10 +10,15 @@ import { customErrorHandler } from "../../Utils/helper";
 
 const DeleteBetHistory = () => {
   const auth = useAuth();
-  const [selectedMarketName, setSelectedMarketName] = useState("");
-  const [selectedMarketDetails, setSelectedMarketDetails] = useState([]);
+  const [selectedMarketDetails, setSelectedMarketDetails] = useState({
+    markets: [],
+    currentPage: 1,
+    totalPages: 1,
+    totalEntries: 10,
+    totalData: 0,
+  });
   const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [marketId, setMarketId] = useState("");
   const [pagination, setPagination] = useState({
     currentPage: 1,
     totalEntries: 10,
@@ -26,128 +31,122 @@ const DeleteBetHistory = () => {
     search: "",
     totalData: 0,
   });
+  const [refresh, setRefresh] = useState({});
+
+  console.log("marketId", marketHistory);
+
+  const fetchMarketHistory = useCallback(
+    (term, page = 1, entries = 10) => {
+      GameService.trashLiveBetHistory(auth.user, page, entries, term)
+        .then((res) => {
+          setMarketHistory((prev) => ({
+            ...prev,
+            markets: res.data?.data || [],
+            totalPages: res?.data.pagination?.totalPages,
+            totalData: res?.data.pagination?.totalItems,
+          }));
+        })
+        .catch((err) => {
+          toast.error(customErrorHandler(err));
+        });
+    },
+    [auth.user]
+  );
+
+  const fetchMarketDetails = async () => {
+    try {
+      const response = await GameService.getBetTrash(
+        auth.user,
+        marketId,
+        selectedMarketDetails.currentPage,
+        selectedMarketDetails.totalEntries,
+        ""
+      );
+      if (response.data.success) {
+        setSelectedMarketDetails((prev) => ({
+          ...prev,
+          markets: response.data?.data || [],
+          totalPages: response?.data.pagination?.totalPages,
+          totalData: response?.data.pagination?.totalItems,
+        }));
+      }
+    } catch (error) {
+      const errorMessage = customErrorHandler(error);
+      if (errorMessage) {
+        toast.error(errorMessage);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (marketId) {
+      fetchMarketDetails();
+    }
+  }, [
+    marketId,
+    refresh,
+    selectedMarketDetails.currentPage,
+    selectedMarketDetails.totalEntries,
+  ]);
+
+  // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      fetchMarketHistory(searchTerm, 1, marketHistory.totalEntries);
+      setMarketHistory((prev) => ({ ...prev, currentPage: 1 }));
     }, 500);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  useEffect(() => {
-    fetchMarketHistory();
-  }, [
-    marketHistory.currentPage,
-    marketHistory.totalEntries,
-    debouncedSearchTerm,
-  ]);
-
-  const fetchMarketHistory = () => {
-    GameService.trashLiveBetHistory(
-      auth.user,
-      marketHistory.currentPage,
-      marketHistory.totalEntries,
-      debouncedSearchTerm
-    )
-      .then((res) => {
-        setMarketHistory((prev) => ({
-          ...prev,
-          markets: res.data?.data || [],
-          totalPages: res?.data.pagination?.totalPages,
-          totalData: res?.data.pagination?.totalItems,
-        }));
-      })
-      .catch((err) => {
-        toast.error(customErrorHandler(err));
-      });
-  };
-
-  const deleteMarketTrash = (trashMarketId) => {
-    GameService.deleteTrashMarket(auth.user, trashMarketId)
+  const handleDeleteMarketTrash = (data) => {
+    GameService.deleteTrashMarket(auth.user, data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
-          fetchMarketHistory();
+          setRefresh(response);
         } else {
           toast.error("Failed to delete market trash");
         }
       })
       .catch((error) => {
-        toast.error("Error deleting market trash");
+        customErrorHandler(error);
       });
   };
 
-  const restoreMarketTrash = (trashMarketId) => {
-    GameService.restoreTrashMarket(auth.user, trashMarketId)
+  const handleRestoreMarketTrash = (data) => {
+    GameService.restoreTrashMarket(auth.user, data)
       .then((response) => {
         if (response.data.success) {
           toast.success(response.data.message);
-          fetchMarketHistory();
+          setRefresh(response);
         } else {
           toast.error("Failed to restore market trash");
         }
       })
       .catch((error) => {
-        toast.error("Error restoring market trash");
+        customErrorHandler(error);
       });
   };
 
-  useEffect(() => {
-    fetchMarketHistory();
-  }, [debouncedSearchTerm]);
-
-  const fetchMarketDetails = async (marketId) => {
-    try {
-      const response = await GameService.getBetTrash(
-        auth.user,
-        marketId,
-        1,
-        1000,
-        ""
-      );
-      if (response.data.success) {
-        setSelectedMarketDetails(response.data.data || []);
-      } else {
-        toast.error("Failed to fetch market details");
-      }
-    } catch (error) {
-      toast.error("Error fetching market details");
-    }
-  };
-
   const handleAccordionChange = (marketId) => {
-    const selectedMarket = marketHistory.markets.find(
-      (market) => market.marketId === marketId
-    );
-    setSelectedMarketName(selectedMarket ? selectedMarket.marketName : "");
-    if (marketId) {
-      fetchMarketDetails(marketId);
-    }
+    setMarketId(marketId);
   };
 
   const handlePageChange = (pageNumber) => {
     setMarketHistory((prev) => ({ ...prev, currentPage: pageNumber }));
+    fetchMarketHistory(searchTerm, pageNumber, marketHistory.totalEntries);
   };
-
-  // const handleEntriesChange = (e) => {
-  //   setPagination({
-  //     currentPage: 1,
-  //     totalEntries: parseInt(e.target.value, 10),
-  //   });
-  // };
 
   const handleClearSearch = () => {
-    setMarketHistory((prev) => ({ ...prev, search: "" }));
+    setSearchTerm("");
   };
 
-  const startIndex = (pagination.currentPage - 1) * pagination.totalEntries;
+  const startIndex =
+    (marketHistory.currentPage - 1) * marketHistory.totalEntries;
   const endIndex = Math.min(
-    startIndex + pagination.totalEntries,
+    startIndex + marketHistory.totalEntries,
     marketHistory.markets.length
   );
-  const totalData = marketHistory.markets.length;
-  const totalPages = Math.ceil(totalData / pagination.totalEntries);
-
-  const paginatedMarkets = marketHistory.markets.slice(startIndex, endIndex);
 
   return (
     <div>
@@ -180,19 +179,6 @@ const DeleteBetHistory = () => {
               border: "2px solid  #3E5879",
             }}
           />
-          {searchTerm && (
-            <FaTimes
-              onClick={handleClearSearch}
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "20px",
-                transform: "translateY(-50%)",
-                color: " #3E5879",
-                cursor: "pointer",
-              }}
-            />
-          )}
         </div>
 
         <div
@@ -200,8 +186,8 @@ const DeleteBetHistory = () => {
           style={{ background: "#E1D1C7" }}
         >
           <div className="accordion" id="marketAccordion">
-            {paginatedMarkets.length > 0 ? (
-              paginatedMarkets.map((market) => (
+            {marketHistory.markets.length > 0 ? (
+              marketHistory.markets.map((market) => (
                 <div
                   className="accordion-item m-2 bg-light shadow-lg"
                   key={market.marketId}
@@ -221,11 +207,16 @@ const DeleteBetHistory = () => {
                     >
                       <div className="d-flex justify-content-between w-100">
                         <h6 className="fw-bolder">
-                        Game Name: <h6 className="fw-bold text-danger">{market.gameName}</h6>
+                          Game Name:{" "}
+                          <h6 className="fw-bold text-danger">
+                            {market.gameName}
+                          </h6>
                         </h6>
                         <h6 className="fw-bolder px-3">
-                          Market Name:<h6 className="fw-bold text-danger">{market.marketName}</h6>
-
+                          Market Name:
+                          <h6 className="fw-bold text-danger">
+                            {market.marketName}
+                          </h6>
                         </h6>
                       </div>
                     </button>
@@ -237,30 +228,19 @@ const DeleteBetHistory = () => {
                     data-bs-parent="#marketAccordion"
                   >
                     <div className="accordion-body">
-                      {selectedMarketName === market.marketName && (
-                        <GetBetTrash
-                          selectedMarketDetails={selectedMarketDetails}
-                          marketName={selectedMarketName}
-                          deleteMarketTrash={deleteMarketTrash}
-                          restoreMarketTrash={restoreMarketTrash}
-                          setSelectedMarketDetails={setSelectedMarketDetails}
-                        />
-                      )}
+                      <GetBetTrash
+                        selectedMarketDetails={selectedMarketDetails}
+                        handleDeleteMarketTrash={handleDeleteMarketTrash}
+                        handleRestoreMarketTrash={handleRestoreMarketTrash}
+                        setSelectedMarketDetails={setSelectedMarketDetails}
+                      />
                     </div>
                   </div>
                 </div>
               ))
             ) : (
-              <div className="accordion-item">
-                <h2 className="accordion-header">
-                  <button
-                    className="accordion-button text-danger fw-bold"
-                    type="button"
-                    disabled
-                  >
-                    No Deleted Markets Found.
-                  </button>
-                </h2>
+              <div className="alert alert-warning text-center fw-bold shadow rounded-pill px-4 py-3">
+                🚫 No Deleted Markets Found.
               </div>
             )}
           </div>

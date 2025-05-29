@@ -28,6 +28,7 @@ const LiveUserBet = () => {
   const [selectedUserId, setSelectedUserId] = useState(""); // State to store selected user ID
   const [selectedUsername, setSelectedUsername] = useState(""); // State to store selected username
   const [showReusableTable, setShowReusableTable] = useState(false); // State to toggle ReusableTable view
+  const [innerDataLength, setInnerDataLength] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -222,12 +223,14 @@ const LiveUserBet = () => {
           {showReusableTable ? (
             <>
               {/* Back Button */}
-              <button
-                className="btn btn-secondary mb-3"
-                onClick={handleBackToLiveBets}
-              >
-                <FaArrowLeft /> Back to Live Bets - {marketName}
-              </button>
+              {innerDataLength > 0 && (
+                <button
+                  className="btn btn-secondary mb-3"
+                  onClick={handleBackToLiveBets}
+                >
+                  <FaArrowLeft /> Back to Live Bets - {marketName}
+                </button>
+              )}
 
               {/* Reusable Table */}
               <ReusableTable
@@ -236,6 +239,7 @@ const LiveUserBet = () => {
                 showSearch={false}
                 paginationVisible={true}
                 fetchData={fetchUserSpecificBets} // Pass the fetch function
+                setInnerDataLength={setInnerDataLength}
               />
             </>
           ) : (

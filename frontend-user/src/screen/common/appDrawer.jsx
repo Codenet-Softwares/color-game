@@ -14,6 +14,7 @@ import Footer from "./Footer";
 import OpenBets from "../../betHistory/components/openBets/OpenBets";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../Lottery/firebaseStore/lotteryFirebase";
+import Login from "../loginModal/loginModal";
 
 function AppDrawer({
   children,
@@ -26,41 +27,21 @@ function AppDrawer({
   openBetData,
   handleOpenBetsSelectionMenu,
 }) {
-  const [toggleStates, setToggleStates] = useState({});
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
   );
-
-  const [lotteryNewDrawTimes, setLotteryNewDrawTimes] = useState([]);
-  const [lotteryNewToggle, setLotteryNewToggle] = useState(false); // New state for toggling draw times
-  const [gameNewToggle, setGameNewToggle] = useState(false);
-  const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
+  const [toggleMap, setToggleMap] = useState({});
+  const [showLogin, setShowLogin] = useState(false);
+
   const { dispatch, store } = useAppContext();
+
   const location = useLocation();
   useEffect(() => {
     user_getAllGames();
+  }, [isColorgameUpdate]);
+  console.log("isColorgameUpdate", isColorgameUpdate);
 
-    fetchLotteryNewMarkets();
-  }, [lotteryNewToggle, isLotteryUpdate, isColorgameUpdate]);
-
-  // function for new page fetch
-  async function fetchLotteryNewMarkets() {
-    const response = await getLotteryMarketsApi(store);
-    if (response?.success) {
-      setLotteryNewDrawTimes(response.data);
-      // window.location.reload();
-    } else {
-      console.warn("Failed to fetch lottery markets. Response:", response);
-      setLotteryNewDrawTimes([]);
-    }
-  }
-  const handleLotteryNewToggle = () => {
-    setLotteryNewToggle(!lotteryNewToggle);
-  };
-  const handleGameNewToggle = () => {
-    setGameNewToggle(!gameNewToggle);
-  };
   const handleAllId = (gameId, marketId) => {
     dispatch({
       type: strings.placeBidding,
@@ -75,14 +56,15 @@ function AppDrawer({
     }
   }
 
-  const handleToggle = (index) => {
-    setToggleStates((prevState) => ({
-      [index]: !prevState[index],
-    }));
-
-    if (isMobile) {
-      // close app drawer logic should call here
-    }
+  const handleToggle = (gameId) => {
+    setToggleMap((prevState) => {
+      const newState = {};
+      Object.keys(prevState).forEach((id) => {
+        newState[id] = false; // Close all first
+      });
+      newState[gameId] = !prevState[gameId]; // Toggle only the clicked one
+      return newState;
+    });
   };
 
   useEffect(() => {
@@ -93,7 +75,7 @@ function AppDrawer({
       }));
 
       console.log("Messages Data:", messagesData);
-      setIsLotteryUpdate(messagesData);
+      setIsColorgameUpdate(messagesData);
     });
 
     return () => unsubscribe();
@@ -119,8 +101,10 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className={`sidebar border ${store.user.isLogin ? "mt-4" : "mt-1"}`}
-        style={{ overflowY: "auto", height: "83vh" }}
+        className={`sidebar border-top-0 border-end ${
+          store.user.isLogin ? "mt-4" : "mt-1"
+        }`}
+        style={{ overflowY: "auto" }}
       >
         <span
           style={{
@@ -136,99 +120,95 @@ function AppDrawer({
             className="btn-close d-xl-none d-lg-none d-md-none"
             data-bs-dismiss="offcanvas"
             aria-label="Close"
-            style={{ marginLeft: "70%" }}
+            style={{ marginLeft: "70%", position: "absolute", top: "0" }}
           />
         </span>
 
-        {lotteryNewDrawTimes && (
-          <li
-            className="MenuHead lottery-section text-center"
-            onClick={handleLotteryNewToggle}
-          >
-            <div className="lottery-wrapper text-dark mt-2 text-uppercase">
-              {/* <span className="new-tag">New</span> */}
-              Lottery
-              <span
-                className={`dropdown-icon ${lotteryNewToggle ? "active" : ""}`}
-              >
-                ▼
-              </span>
-            </div>
-
-            {/* Display lottery draw times only when toggled */}
-            {lotteryNewToggle && lotteryNewDrawTimes.length > 0 && (
-              <ul className="subMenuItems text-info mt-4 ">
-                {lotteryNewDrawTimes.map((market) => (
-                  <li
-                    key={market.marketId}
-                    className="subMenuHead mt-2 text-info text-uppercase"
-                  >
-                    <Link
-                      to={`/lottoPurchase/${market.marketId}`}
-                      onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
-                    >
-                      {market.marketName}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        )}
-
         <ul className="overflow-auto">
-          {user_allGames?.map((gameObj, index) => (
-            <React.Fragment key={index}>
-              {gameObj?.gameName === "Lottery" ? (
-                <> </>
-              ) : (
-                <>
-                  <li
-                    className={toggleStates[index] ? "" : "MenuHead"}
-                    onClick={() => handleToggle(index)}
-                  >
-                    {/* <Link>{gameObj?.gameName}</Link> */}
-                    <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
-                      {gameObj?.gameName}
-                      <span
-                        className={`dropdown-icon ${
-                          toggleStates[index] ? "active" : ""
-                        }`}
+          {user_allGames?.map((gameObj, index) => {
+            const isToggled = toggleMap[gameObj.gameId];
+            console.log("gameObj", gameObj);
+
+            return (
+              <React.Fragment key={index}>
+                <li
+                  className={isToggled ? "" : "MenuHead"}
+                  onClick={() => handleToggle(gameObj.gameId)}
+                >
+                  <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
+                    {gameObj?.gameName}
+                    <span
+                      className={`dropdown-icon ${isToggled ? "active" : ""}`}
+                    >
+                      ▼
+                    </span>
+                  </div>
+                </li>
+
+                {isToggled &&
+                  gameObj.markets?.map((marketObj, marketIndex) =>
+                    gameObj.gameName.toLowerCase() === "colorgame" ? (
+                      <li
+                        className="subMenuItems text-wrap"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "normal",
+                        }}
+                        key={marketIndex}
+                        onClick={() =>
+                          handleAllId(gameObj?.gameId, marketObj?.marketId)
+                        }
                       >
-                        ▼
-                      </span>
-                    </div>
-                  </li>
-                  {/* Mapping over markets inside each gameName */}
-                  {toggleStates[index] && gameObj.markets.length > 0
-                    ? gameObj?.markets?.map((marketObj, marketIndex) => {
-                        return (
-                          <li
-                            className="subMenuItems"
-                            key={marketIndex}
-                            onClick={() =>
-                              handleAllId(gameObj?.gameId, marketObj?.marketId)
-                            }
+                        <Link
+                          to={`/gameView/${gameObj?.gameName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                        >
+                          {marketObj.marketName}
+                        </Link>
+                      </li>
+                    ) : gameObj.gameName.toLowerCase() === "lottery" ? (
+                      <li
+                        key={marketObj.marketId}
+                        className="subMenuItems  text-wrap"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "normal",
+                        }}
+                      >
+                        {store.user.isLogin ? (
+                          <Link
+                            to={`/lottoPurchase/${marketObj.marketId}`}
+                            onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
                           >
-                            <Link
-                              to={`/gameView/${gameObj?.gameName?.replace(
-                                /\s/g,
-                                ""
-                              )}/${marketObj?.marketName?.replace(
-                                /\s/g,
-                                ""
-                              )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
-                            >
-                              {marketObj.marketName}
-                            </Link>
-                          </li>
-                        );
-                      })
-                    : null}
-                </>
-              )}
-            </React.Fragment>
-          ))}
+                            {marketObj.marketName}
+                          </Link>
+                        ) : (
+                          <Link
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowLogin(true);
+                            }} // Prevents dropdown collapse
+                          >
+                            {marketObj.marketName}
+                          </Link>
+                        )}
+                        {showLogin && (
+                          <Login
+                            showLogin={showLogin}
+                            setShowLogin={setShowLogin}
+                          />
+                        )}
+                      </li>
+                    ) : null
+                  )}
+              </React.Fragment>
+            );
+          })}
         </ul>
       </div>
     );
@@ -260,7 +240,10 @@ function AppDrawer({
             } `}
             style={{
               overflowY: "auto",
-              height: "calc(100vh - 40px)",
+              height:
+                location?.pathname === "/lottery-home"
+                  ? "calc(100vh - 5px)"
+                  : "calc(100vh - 40px)",
             }}
           >
             <div className="col-12">{showCarousel && <InnerCarousel />}</div>

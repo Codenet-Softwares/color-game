@@ -15,7 +15,6 @@ export async function updateColorGame() {
       let endTime = data.endTime;
 
       if (!startTime || !endTime) {
-        // console.warn(`Missing startTime or endTime for document: ${doc.id}`);
         continue;
       }
 
@@ -30,9 +29,9 @@ export async function updateColorGame() {
       let shouldUpdate = false;
 
       if (currentTime >= startTime && currentTime <= endTime) {
-        if (!data.isActive) {
+        if (!data.isActive  || data.hideMarketUser) {
           updates.isActive = true;
-          updates.hideMarketUser = true;
+          updates.hideMarketUser = false;
           updates.updatedAt = new Date().toISOString();
           shouldUpdate = true;
         }

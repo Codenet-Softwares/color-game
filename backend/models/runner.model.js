@@ -1,5 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db.js';
+import { sequelize } from '../db.js';
 
 class Runner extends Model { }
 
@@ -66,7 +66,17 @@ Runner.init(
     clientMessage: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
-    }
+    },
+    isDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    isPermanentDeleted: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
   },
   {
     sequelize,

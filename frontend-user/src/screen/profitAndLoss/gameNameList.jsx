@@ -113,90 +113,97 @@ const GameNameList = () => {
     return (
       <>
         <div style={{ marginTop: "120px" }}>
-
-        {runnerGameData.length > 0 ? (
-        <div className="card p-0 section" style={{ marginTop: "15px" }}>
-          <div
-            className="table-container overflow-x-scroll"
-            style={{ overflowX: "auto", margin: "10px" }}
-          >
-            <div className="mb-3">
-              <label htmlFor="showEntriesDropdown" className="form-label">
-                Show entries
-              </label>
-              <select
-                className="form-select"
-                id="showEntriesDropdown"
-                value={totalEntries}
-                onChange={handleEntriesChange}
+          {runnerGameData.length > 0 ? (
+            <div className="card p-0 section" style={{ marginTop: "15px" }}>
+              <div
+                className="table-container overflow-x-scroll"
+                style={{ overflowX: "auto", margin: "10px" }}
               >
-                <option value="3">3</option>
-                <option value="5">5</option>
-                <option value="10">10</option>
-              </select>
+                <div className="mb-3">
+                  <label htmlFor="showEntriesDropdown" className="form-label">
+                    Show entries
+                  </label>
+                  <select
+                    className="form-select"
+                    id="showEntriesDropdown"
+                    value={totalEntries}
+                    onChange={handleEntriesChange}
+                  >
+                    <option value="3">3</option>
+                    <option value="5">5</option>
+                    <option value="10">10</option>
+                  </select>
+                </div>
+                <table className="table table-bordered">
+                  <thead style={{ textAlign: "center" }}>
+                    <tr>
+                      <th
+                        scope="col"
+                        style={{ backgroundColor: "#2CB3D1", color: "white" }}
+                      >
+                        GameName
+                      </th>
+                      <th
+                        scope="col"
+                        style={{ backgroundColor: "#2CB3D1", color: "white" }}
+                      >
+                        MarketName
+                      </th>
+                      <th
+                        scope="col"
+                        style={{ backgroundColor: "#2CB3D1", color: "white" }}
+                      >
+                        ProfitLoss
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody style={{ textAlign: "center" }}>
+                    {runnerGameData.map((item, index) => (
+                      <tr key={index}>
+                        <td>{item.gameName}</td>
+                        <td style={{ cursor: "pointer", fontWeight: "bold" }}>
+                          <Link to={`/marketNameList/${item.marketId}`}>
+                            {item.marketName}
+                          </Link>
+                        </td>
+                        <td
+                          style={{
+                            color: item.totalProfitLoss >= 0 ? "green" : "red",
+                          }}
+                        >
+                          {item.totalProfitLoss}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div
+                style={{
+                  margin: "10px",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Pagination
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  handlePageChange={handlePageChange}
+                  startIndex={startIndex}
+                  endIndex={endIndex}
+                  totalData={pagination.totalItems}
+                />
+              </div>
             </div>
-            <table className="table table-bordered">
-              <thead style={{ textAlign: "center" }}>
-                <tr>
-                  <th
-                    scope="col"
-                    style={{ backgroundColor: "#2CB3D1", color: "white" }}
-                  >
-                    GameName
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ backgroundColor: "#2CB3D1", color: "white" }}
-                  >
-                    MarketName
-                  </th>
-                  <th
-                    scope="col"
-                    style={{ backgroundColor: "#2CB3D1", color: "white" }}
-                  >
-                    ProfitLoss
-                  </th>
-                </tr>
-              </thead>
-              <tbody style={{ textAlign: "center" }}>
-                {runnerGameData.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item.gameName}</td>
-                    <td style={{ cursor: "pointer", fontWeight: "bold" }}>
-                      <Link to={`/marketNameList/${item.marketId}`}>{item.marketName}</Link>
-                    </td>
-                    <td style={{ color: item.totalProfitLoss >= 0 ? "green" : "red" }}>{item.totalProfitLoss}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div
-            style={{
-              margin: "10px",
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Pagination
-              currentPage={pagination.currentPage}
-              totalPages={pagination.totalPages}
-              handlePageChange={handlePageChange}
-              startIndex={startIndex}
-              endIndex={endIndex}
-              totalData={pagination.totalItems}
-            />
-          </div>
-        </div>
-      ) : (
-        <div
-          className="alert alert-info"
-          role="alert"
-          style={{ textAlign: "center" }}
-        >
-          NO DATA FOUND !!
-        </div>
-      )}
+          ) : (
+            <div
+              className="alert alert-danger"
+              role="alert"
+              style={{ textAlign: "center" }}
+            >
+              NO DATA FOUND !!
+            </div>
+          )}
         </div>
       </>
     );

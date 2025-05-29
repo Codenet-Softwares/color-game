@@ -9,12 +9,10 @@ import "./App.css";
 import RulesPage from "./screen/common/rulesPage";
 import ForgotPassword from "./screen/chnagePassword/forgotPassword";
 import PrivateRoute from "./globlaCommon/privateRoute";
-// import BetHistory from "./screen/history/BetHistory";
 import Loading from "./globlaCommon/loading";
 import GameNameList from "./screen/profitAndLoss/gameNameList";
 import MarketNameList from "./screen/profitAndLoss/marketNameList";
 import ResetPassword from "./screen/common/ResetPassword";
-
 import LotteryPurchaseLayout from "./screen/Lottery/LotteryPurchaseLayout";
 import ProfitAndLoss from "./screen/profitAndLoss/profitAndLoss";
 import AccountStatement from "./screen/AccountStatement";
@@ -23,13 +21,8 @@ import ResultLayout from "./screen/Lottery/ResultLayout";
 import GetMarketDetailByMarketId from "./screen/common/gameListView/GetMarketDetailByMarketId";
 import GetSingleMarket from "./screen/common/gameListView/GetSingleMarket";
 import LotteryMarketDashBoard from "./screen/common/gameListView/LotteryMarketDashBoard";
-
 import LotteryBuyLayout from "./screen/Lottery/UserPurchase/LotteryBuyLayout";
-
-
 import BetHistory from "./betHistory/BetHistory";
-
-// import GameWithMarketList from "./screen/common/gameListView/gameWithMarketList";
 import LivegameList from "./screen/common/gameListView/LivegameList";
 
 function App() {
