@@ -1706,9 +1706,6 @@ export const getResultRequests = async (req, res) => {
     }, {});
 
     const formattedResultRequests = Object.values(groupedData);
-
-    console.log("formattedResultRequests..",formattedResultRequests)
-
     let filteredResults = formattedResultRequests;
     
     if (search) {
