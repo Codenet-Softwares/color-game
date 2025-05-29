@@ -1038,13 +1038,13 @@ export const inActiveMarketStatus = async (req, res) => {
 
     if(status){
       await Market.update(
-        { hideMarketUser: true},
+        { hideMarketWithUser: true},
         { where: { marketId } }
       );
       }
       else{
         await Market.update(
-          { hideMarketUser: false},
+          { hideMarketWithUser: false},
           { where: { marketId } }
         );
       }
@@ -1061,7 +1061,7 @@ export const inActiveMarketStatus = async (req, res) => {
     await marketRef.set(
       {
         isActive: market.isActive ,
-        hideMarketUser: status, // Changed to match SQL DB update
+        hideMarketWithUser: status, // Changed to match SQL DB update
         isRevoke: market.isRevoke,
         updatedAt: new Date().toISOString()
       },
@@ -1073,7 +1073,7 @@ export const inActiveMarketStatus = async (req, res) => {
       .send(apiResponseSuccess([], true, statusCode.success, "Market updated successfully"));
   } catch (error) {
     console.error("Error updating market status:", error);
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
