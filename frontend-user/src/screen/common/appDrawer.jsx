@@ -26,44 +26,20 @@ function AppDrawer({
   openBetData,
   handleOpenBetsSelectionMenu,
 }) {
-  const [colorgameToggle, setColorgameToggle] = useState(false);
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
   );
-
-  const [lotteryNewDrawTimes, setLotteryNewDrawTimes] = useState([]);
-  const [lotteryNewToggle, setLotteryNewToggle] = useState(false); // New state for toggling draw times
-  const [gameNewToggle, setGameNewToggle] = useState(false);
-  const [isLotteryUpdate, setIsLotteryUpdate] = useState(null); // New state for toggling draw times
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
+  const [toggleMap, setToggleMap] = useState({});
+
   const { dispatch, store } = useAppContext();
 
   const location = useLocation();
   useEffect(() => {
     user_getAllGames();
-
-    fetchLotteryNewMarkets();
-  }, [lotteryNewToggle, isLotteryUpdate, isColorgameUpdate]);
+  }, [isColorgameUpdate]);
   console.log("isColorgameUpdate", isColorgameUpdate);
 
-  // function for new page fetch
-  async function fetchLotteryNewMarkets() {
-    const response = await getLotteryMarketsApi(store);
-    if (response?.success) {
-      setLotteryNewDrawTimes(response.data);
-      // window.location.reload();
-    } else {
-      console.warn("Failed to fetch lottery markets. Response:", response);
-      setLotteryNewDrawTimes([]);
-    }
-  }
-  const handleLotteryNewToggle = () => {
-    setLotteryNewToggle(!lotteryNewToggle);
-    setColorgameToggle(false);
-  };
-  const handleGameNewToggle = () => {
-    setGameNewToggle(!gameNewToggle);
-  };
   const handleAllId = (gameId, marketId) => {
     dispatch({
       type: strings.placeBidding,
@@ -78,9 +54,15 @@ function AppDrawer({
     }
   }
 
-  const handleToggle = () => {
-    setColorgameToggle(!colorgameToggle);
-    setLotteryNewToggle(false);
+  const handleToggle = (gameId) => {
+    setToggleMap((prevState) => {
+      const newState = {};
+      Object.keys(prevState).forEach((id) => {
+        newState[id] = false; // Close all first
+      });
+      newState[gameId] = !prevState[gameId]; // Toggle only the clicked one
+      return newState;
+    });
   };
 
   useEffect(() => {
@@ -91,7 +73,7 @@ function AppDrawer({
       }));
 
       console.log("Messages Data:", messagesData);
-      setIsLotteryUpdate(messagesData);
+      setIsColorgameUpdate(messagesData);
     });
 
     return () => unsubscribe();
@@ -140,103 +122,74 @@ function AppDrawer({
           />
         </span>
 
-        {lotteryNewDrawTimes && (
-          <li
-            className="MenuHead lottery-section text-center"
-            onClick={handleLotteryNewToggle}
-          >
-            <div className="lottery-wrapper text-dark mt-2 text-uppercase">
-              {/* <span className="new-tag">New</span> */}
-              Lottery
-              <span
-                className={`dropdown-icon ${lotteryNewToggle ? "active" : ""}`}
-              >
-                ▼
-              </span>
-            </div>
-
-            {/* Display lottery draw times only when toggled */}
-            {lotteryNewToggle && lotteryNewDrawTimes.length > 0 && (
-              <ul className="subMenuItems text-info mt-4 ">
-                {lotteryNewDrawTimes.map((market) => (
-                  <li
-                    key={market.marketId}
-                    className="subMenuHead mt-2 text-info text-uppercase text-wrap"
-                    style={{
-                      wordBreak: "break-word",
-                      whiteSpace: "normal",
-                    }}
-                  >
-                    <Link
-                      to={`/lottoPurchase/${market.marketId}`}
-                      onClick={(e) => e.stopPropagation()} // Prevents closing when submenu is clicked
-                    >
-                      {market.marketName}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        )}
-
         <ul className="overflow-auto">
-          {user_allGames?.map((gameObj, index) => (
-            <React.Fragment key={index}>
-              {gameObj?.gameName === "Lottery" ? (
-                <> </>
-              ) : (
-                <>
-                  <li
-                    className={colorgameToggle ? "" : "MenuHead"}
-                    onClick={() => handleToggle()}
-                  >
-                    {/* <Link>{gameObj?.gameName}</Link> */}
-                    <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
-                      {gameObj?.gameName}
-                      <span
-                        className={`dropdown-icon ${
-                          colorgameToggle ? "active" : ""
-                        }`}
+          {user_allGames?.map((gameObj, index) => {
+            const isToggled = toggleMap[gameObj.gameId];
+            console.log("gameObj", gameObj);
+
+            return (
+              <React.Fragment key={index}>
+                <li
+                  className={isToggled ? "" : "MenuHead"}
+                  onClick={() => handleToggle(gameObj.gameId)}
+                >
+                  <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
+                    {gameObj?.gameName}
+                    <span
+                      className={`dropdown-icon ${isToggled ? "active" : ""}`}
+                    >
+                      ▼
+                    </span>
+                  </div>
+                </li>
+
+                {isToggled &&
+                  gameObj.markets?.map((marketObj, marketIndex) =>
+                    gameObj.gameName.toLowerCase() === "colorgame" ? (
+                      <li
+                        className="subMenuItems text-wrap"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "normal",
+                        }}
+                        key={marketIndex}
+                        onClick={() =>
+                          handleAllId(gameObj?.gameId, marketObj?.marketId)
+                        }
                       >
-                        ▼
-                      </span>
-                    </div>
-                  </li>
-                  {/* Mapping over markets inside each gameName */}
-                  {colorgameToggle && gameObj.markets.length > 0
-                    ? gameObj?.markets?.map((marketObj, marketIndex) => {
-                        return (
-                          <li
-                            className="subMenuItems text-wrap"
-                            style={{
-                              wordBreak: "break-word",
-                              whiteSpace: "normal",
-                            }}
-                            key={marketIndex}
-                            onClick={() =>
-                              handleAllId(gameObj?.gameId, marketObj?.marketId)
-                            }
-                          >
-                            <Link
-                              to={`/gameView/${gameObj?.gameName?.replace(
-                                /\s/g,
-                                ""
-                              )}/${marketObj?.marketName?.replace(
-                                /\s/g,
-                                ""
-                              )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
-                            >
-                              {marketObj.marketName}
-                            </Link>
-                          </li>
-                        );
-                      })
-                    : null}
-                </>
-              )}
-            </React.Fragment>
-          ))}
+                        <Link
+                          to={`/gameView/${gameObj?.gameName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketName?.replace(
+                            /\s/g,
+                            ""
+                          )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                        >
+                          {marketObj.marketName}
+                        </Link>
+                      </li>
+                    ) : gameObj.gameName.toLowerCase() === "lottery" ? (
+                      <li
+                        key={marketObj.marketId}
+                        className="subMenuItems  text-wrap"
+                        style={{
+                          wordBreak: "break-word",
+                          whiteSpace: "normal",
+                        }}
+                      >
+                        <Link
+                          to={`/lottoPurchase/${marketObj.marketId}`}
+                          onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                        >
+                          {marketObj.marketName}
+                        </Link>
+                      </li>
+                    ) : null
+                  )}
+              </React.Fragment>
+            );
+          })}
         </ul>
       </div>
     );
