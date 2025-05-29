@@ -227,7 +227,7 @@ const GetwholeMarket = () => {
                         )}
                       {gameWithMarketData &&
                         gameWithMarketData.markets
-                          .slice(0, store.user.isLogin ? 5 : 3)
+                          .slice(0, store.user.isLogin ? 4 : 3)
                           .map((marketData) => {
                             return (
                               <div

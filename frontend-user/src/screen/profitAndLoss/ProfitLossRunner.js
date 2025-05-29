@@ -94,7 +94,7 @@ const ProfitAndLossRunner = ({
                     <span className="sr-only">Loading...</span>
                   </div> */}
                   <div
-                    class="alert alert-info fw-bold"
+                class="alert alert-danger fw-bold"
                     role="alert"
                   >
                     No Data Found !!
@@ -170,7 +170,7 @@ const ProfitAndLossRunner = ({
                           <tr align="center">
                             <td colspan="8">
                               <div
-                                class="alert alert-info fw-bold"
+                                class="alert alert-danger fw-bold"
                                 role="alert"
                               >
                                 No Data Found !!

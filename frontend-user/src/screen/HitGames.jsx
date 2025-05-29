@@ -10,10 +10,9 @@ const HitGames = () => {
   const fetchSliderImgText = async () => {
     try {
       const response = await getGameImg();
-      if (response && response.data) {
+      if (response.data.length > 0) {
         setSliderData(response.data);
       } else {
-        console.error("Error fetching slider data", response);
         setSliderData(dHitGames);
       }
     } catch (error) {

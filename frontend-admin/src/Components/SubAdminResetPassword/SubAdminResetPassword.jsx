@@ -17,21 +17,21 @@ const SubAdminResetPassword = ({ handleClose, userName }) => {
   const validateForm = () => {
     let validationErrors = {};
 
-    if (!oldPassword) validationErrors.oldPassword = "Old password is required";
+    if (!oldPassword) validationErrors.oldPassword = "Old Password Is Required";
 
     if (!newPassword) {
-      validationErrors.newPassword = "New password is required";
+      validationErrors.newPassword = "New Password Is Required";
     } else if (newPassword.length < 6) {
-      validationErrors.newPassword = "Password must be at least 6 characters";
+      validationErrors.newPassword = "Password Must Be Atleast 6 Mharacters";
     } else if (newPassword === oldPassword) {
       validationErrors.newPassword =
-        "New password cannot be the same as old password";
+        "New Password Cannot Be The Same As Old Password";
     }
 
     if (!confirmPassword) {
-      validationErrors.confirmPassword = "Confirm password is required";
+      validationErrors.confirmPassword = "Confirm Password Is Required";
     } else if (confirmPassword !== newPassword) {
-      validationErrors.confirmPassword = "Passwords do not match";
+      validationErrors.confirmPassword = "Passwords Do Not Match";
     }
 
     setErrors(validationErrors);

@@ -15,8 +15,8 @@ const ProfitAndLossEvent = ({
   gameId,
   profitLossEventData
 }) => {
-  const startIndex = Math.min((data.currentPage - 1) * data.itemPerPage + 1);
-  const endIndex = Math.min(data.currentPage * data.itemPerPage, data.totalData);
+  const startIndex = Math.min((profitLossEventData.currentPage - 1) * profitLossEventData.itemPerPage + 1, profitLossEventData.totalData);
+  const endIndex = Math.min(profitLossEventData.currentPage * profitLossEventData.itemPerPage, profitLossEventData.totalData);
   const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoRunnerWiseProfitLoss = (marketId, componentName) => {
@@ -42,6 +42,7 @@ const ProfitAndLossEvent = ({
   useEffect(() => {
     let timer = setTimeout(() => {
       getProfitLossEventWise(gameId, "ProfitAndLossEvent", profitLossEventData.searchItem);
+      
     }, 300);
     return () => clearTimeout(timer);
   }, [profitLossEventData.searchItem]);
@@ -190,7 +191,7 @@ const ProfitAndLossEvent = ({
                           <tr align="center">
                             <td colspan="8">
                               <div
-                                class="alert alert-info fw-bold"
+                                    class="alert alert-danger fw-bold"
                                 role="alert"
                               >
                                 No Data Found !!

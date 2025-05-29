@@ -1,7 +1,6 @@
 import React from 'react'
 
-const Pagination = ({ currentPage, totalPages, handlePageChange, startIndex, endIndex, totalData}) => {
-
+const Pagination = ({ currentPage, totalPages, handlePageChange, startIndex, endIndex, totalData }) => {
 
   const renderPageNumbers = () => {
     const pageNumbers = [];

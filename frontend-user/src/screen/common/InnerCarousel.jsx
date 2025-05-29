@@ -10,7 +10,7 @@ const InnerCarousel = () => {
   const fetchSliderImgText = async () => {
     try {
       const response = await getInnerImg();
-      if (response && response.data) {
+      if (response.data.length > 0) {
         setSliderData(response.data);
       } else {
         console.error("error", response);

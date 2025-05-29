@@ -180,7 +180,7 @@ const GameMarket = ({ marketId }) => {
                   Game Market
                 </h3>
               </div>
-             
+
 
             </div>
           </div>
@@ -208,21 +208,20 @@ const GameMarket = ({ marketId }) => {
                 style={{ marginLeft: "-10px" }}
               >
                 <div className="search_inner">
-                  <form Active="#">
-                    <div className="search_field">
-                      <input
-                        value={search}
-                        onChange={(e) => {
-                          setSearch(e.target.value);
-                        }}
-                        type="text"
-                        placeholder="Search Content Here..."
-                      />
-                    </div>
-                    <button type="submit">
-                      <i className="ti-search"></i>{" "}
-                    </button>
-                  </form>
+                  <div className="search_field">
+                    <input
+                      value={search}
+                      onChange={(e) => {
+                        setSearch(e.target.value);
+                        setCurrentPage(1);
+                      }}
+                      type="text"
+                      placeholder="Search Content Here..."
+                    />
+                  </div>
+                  <button type="submit">
+                    <i className="ti-search"></i>{" "}
+                  </button>
                 </div>
               </div>
             </div>
@@ -266,13 +265,7 @@ const GameMarket = ({ marketId }) => {
                                             className="dropdown-menu dropdown-menu-right"
                                             aria-labelledby="dropdownMenuButton"
                                             x-placement="bottom-end"
-                                            // style={{
-                                            //   position: "absolute",
-                                            //   transform:
-                                            //     "translate3d(-148px, 20px, 0px)",
-                                            //   top: "0px",
-                                            //   left: "0px",
-                                            // }}
+                                           
                                             style={{
                                               position: "absolute",
                                               right: 0, // Align dropdown to the right of its container
@@ -304,58 +297,8 @@ const GameMarket = ({ marketId }) => {
                                               <i className="fas fa-edit"></i> Edit
                                             </a>
 
-                                            {/* {!game.announceId ? (
-                                            <a
-                                              className="dropdown-item"
-                                              onClick={(e) =>
-                                                handleCreateAnnounceClick(
-                                                  e,
-                                                  game.gameId,
-                                                  game.gameName
-                                                )
-                                              }
-                                            >
-                                              {" "}
-                                              <i className="ti-announcement"></i>{" "}
-                                              Create Announcement for{" "}
-                                              {game.gameName}
-                                            </a>
-                                          ) : (
-                                            <a
-                                              className="dropdown-item"
-                                              onClick={(e) =>
-                                                handleUpdateAnnouncementClick(
-                                                  e,
-                                                  game.gameId,
-                                                  game.gameName,
-                                                  game.announceId,
-                                                  game.announcement
-                                                )
-                                              }
-                                            >
-                                              {" "}
-                                              <i className="ti-announcement"></i>{" "}
-                                              Update Announcement for{" "}
-                                              {game.gameName}
-                                            </a>
-                                          )} */}
-
-                                            {/* <a
-                                            className="dropdown-item"
-                                            onClick={(e) =>
-                                              handleShowLatestAnnouncementModal(
-                                                e,
-                                                game.announcement
-                                              )
-                                            }
-                                          >
-                                            {" "}
-                                            <i className="ti-announcement"></i>
-                                            Latest Announcement for{" "}
-                                            {game.gameName}
-                                          </a> */}
                                           </div></>}
-                                        
+
                                       </div>
                                     </div>
                                     {/* Side Nav 3 dots Ending here */}
@@ -368,16 +311,7 @@ const GameMarket = ({ marketId }) => {
                               </div>
                             );
                           })}
-                          {/* <div>
-                            <Pagination
-                              currentPage={currentPage}
-                              totalPages={totalPages}
-                              handlePageChange={handlePageChange}
-                              startIndex={startIndex}
-                              endIndex={endIndex}
-                              totalData={totalData}
-                            />
-                          </div> */}
+                          
                         </div>
                       ) : (
                         <div className="board_card_list">

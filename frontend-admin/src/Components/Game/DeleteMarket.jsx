@@ -5,93 +5,80 @@ import SingleCard from "../../Components/common/singleCard";
 import Pagination from "../Pagination";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { getDeleteMarket } from "../../Utils/intialState";
+import { customErrorHandler } from "../../Utils/helper";
+import { toast } from "react-toastify";
 
 const DeleteMarket = () => {
   const auth = useAuth();
-  const [markets, setMarkets] = useState([]);
-  const [pagination, setPagination] = useState({
-    page: 1,
-    pageSize: 10,
-    totalPages: 1,
-    totalItems: 0,
-  });
+  const [deleteMarket, setDeleteMarket] = useState(getDeleteMarket());
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
-    }, 500);
+  const [refresh, setRefresh] = useState({});
 
-    return () => clearTimeout(timer);
-  }, [searchTerm]);
-  const fetchMarkets = async (page = 1, pageSize = 10, search = "") => {
+  console.log("deleteMarket", searchTerm);
+
+  const fetchMarkets = async (search = "") => {
     auth.showLoader();
     try {
       const response = await GameService.deleteGameMarket(
         auth.user,
         "",
-        page,
-        pageSize,
-        search
+        deleteMarket.currentPage,
+        deleteMarket.totalEntries,
+        debouncedSearchTerm
       );
-      setMarkets(response.data.data || []);
-      setPagination({
-        page: response.data.pagination.page || 1,
-        // pageSize: response.data.pagination.pageSize || 10,
+
+      setDeleteMarket((prevData) => ({
+        ...prevData,
+        data: response.data.data || [],
         totalPages: response.data.pagination.totalPages || 1,
-        totalItems: response.data.pagination.totalItems || 0,
-      });
+        totalData: response.data.pagination.totalItems || 0,
+      }));
     } catch (error) {
-      console.error("Error fetching markets:", error);
+      toast.error(customErrorHandler(error));
     } finally {
       auth.hideLoader();
     }
   };
 
-  const handleRestore = async (approvalMarketId) => {
-    auth.showLoader();
-    try {
-      await GameService.restoreDeletedMarket(auth.user, approvalMarketId);
-      fetchMarkets(pagination.page, pagination.pageSize, searchTerm);
-      alert("Market restored successfully!");
-    } catch (error) {
-      console.error("Error restoring market:", error);
-      alert("Failed to restore market.");
-    } finally {
-      auth.hideLoader();
-    }
-  };
-  const handleSearch = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-    fetchMarkets(1, pagination.pageSize, value);
-  };
+  useEffect(() => {
+    fetchMarkets(debouncedSearchTerm);
+  }, [
+    refresh,
+    deleteMarket.currentPage,
+    deleteMarket.totalEntries,
+    debouncedSearchTerm,
+  ]);
+  
 
-  const handleClearSearch = () => {
-    setSearchTerm("");
-    fetchMarkets(1, pagination.pageSize, "");
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setDeleteMarket((prev) => ({
+        ...prev,
+        currentPage: 1,
+      }));
+    }, 500);
 
-  const handlePageChange = (newPage) => {
-    fetchMarkets(newPage, pagination.pageSize, debouncedSearchTerm);
-  };
-
-  const handlePageSizeChange = (event) => {
-    const newPageSize = Number(event.target.value);
-    setPagination((prev) => ({ ...prev, pageSize: newPageSize, page: 1 }));
-    fetchMarkets(1, newPageSize, debouncedSearchTerm);
-  };
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const handleDelete = async (approvalMarketId) => {
     auth.showLoader();
     try {
-      await GameService.gameMarketDelete(auth.user, approvalMarketId);
-      setMarkets((prevMarkets) =>
-        prevMarkets.filter((market) => market.approvalMarketId !== approvalMarketId)
+      const res = await GameService.gameMarketDelete(
+        auth.user,
+        approvalMarketId
       );
+      setDeleteMarket((prevMarkets) => ({
+        ...prevMarkets,
+        data: prevMarkets?.data?.filter(
+          (market) => market.approvalMarketId !== approvalMarketId
+        ),
+      }));
 
-      fetchMarkets(pagination.page, pagination.totalPages, searchTerm);
-
+      setRefresh(res);
       alert("Market deleted successfully!");
     } catch (error) {
       console.error("Error deleting market:", error);
@@ -101,15 +88,56 @@ const DeleteMarket = () => {
     }
   };
 
-  useEffect(() => {
-    fetchMarkets(pagination.page, pagination.totalItems, debouncedSearchTerm);
-  }, [debouncedSearchTerm, pagination.page, pagination.totalItems]);
+  const handleRestore = async (approvalMarketId) => {
+    auth.showLoader();
+    try {
+      const res = await GameService.restoreDeletedMarket(
+        auth.user,
+        approvalMarketId
+      );
+      setRefresh(res);
+      alert("Market restored successfully!");
+    } catch (error) {
+      console.error("Error restoring market:", error);
+      alert("Failed to restore market.");
+    } finally {
+      auth.hideLoader();
+    }
+  };
 
-  const startIndex = (pagination.page - 1) * pagination.totalItems + 1;
-  const endIndex = Math.min(
-    pagination.page * pagination.totalItems,
-    pagination.totalItems
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= deleteMarket?.totalPages) {
+      setDeleteMarket((prev) => ({
+        ...prev,
+        currentPage: page,
+      }));
+    }
+  };
+
+  const handlePageSize = (value) => {
+    setDeleteMarket((prev) => ({
+      ...prev,
+      totalEntries: value,
+      currentPage: 1,
+    }));
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+  };
+  
+
+  let startIndex = Math.min(
+    (Number(deleteMarket.currentPage) - 1) * Number(deleteMarket.totalEntries) +
+      1,
+    Number(deleteMarket.totalData)
   );
+  let endIndex = Math.min(
+    Number(deleteMarket.currentPage) * Number(deleteMarket.totalEntries),
+    Number(deleteMarket.totalData)
+  );
+
+  console.log(startIndex, endIndex);
 
   return (
     <div className="container my-5 ">
@@ -166,8 +194,8 @@ const DeleteMarket = () => {
               <label className="me-2 fw-bold">Show</label>
               <select
                 className="form-select d-inline-block w-auto fw-bold"
-                value={pagination.pageSize}
-                onChange={handlePageSizeChange}
+                value={deleteMarket.totalEntries}
+                onChange={(e) => handlePageSize(e.target.value)}
                 style={{ borderRadius: "30px", border: "2px solid #3E5879" }}
               >
                 <option value={10}>10</option>
@@ -181,7 +209,7 @@ const DeleteMarket = () => {
 
           {/* Table */}
 
-          {markets.length > 0 ? (
+          {deleteMarket?.data?.length > 0 ? (
             <SingleCard
               className=" mb-5 text-center"
               style={{
@@ -202,7 +230,7 @@ const DeleteMarket = () => {
                     </tr>
                   </thead>
                   <tbody className="text-center">
-                    {markets.map((market, index) => (
+                    {deleteMarket?.data?.map((market, index) => (
                       <tr key={market.approvalMarketId}>
                         <td>{startIndex + index}</td>
                         <td>{market.marketName}</td>
@@ -219,17 +247,13 @@ const DeleteMarket = () => {
                         <td>
                           <button
                             className="btn btn-danger me-2"
-                            onClick={() =>
-                              handleDelete(market.approvalMarketId)
-                            }
+                            onClick={() => handleDelete(market.marketId)}
                           >
                             Delete
                           </button>
                           <button
                             className="btn btn-info"
-                            onClick={() =>
-                              handleRestore(market.approvalMarketId)
-                            }
+                            onClick={() => handleRestore(market.marketId)}
                           >
                             Restore
                           </button>
@@ -247,14 +271,14 @@ const DeleteMarket = () => {
           )}
 
           {/* Pagination */}
-          {markets.length > 0 && (
+          {deleteMarket?.data?.length > 0 && (
             <Pagination
-              currentPage={pagination.page}
-              totalPages={pagination.totalPages}
+              currentPage={deleteMarket?.currentPage}
+              totalPages={deleteMarket?.totalPages}
               handlePageChange={handlePageChange}
               startIndex={startIndex}
               endIndex={endIndex}
-              totalData={pagination.totalItems}
+              totalData={deleteMarket?.totalData}
             />
           )}
         </div>

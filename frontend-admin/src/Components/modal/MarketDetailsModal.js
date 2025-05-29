@@ -11,7 +11,6 @@ const MarketDetailsModal = ({
   endTime,
   marketName 
 }) => {
-  console.log("line 5", marketDetails);
   const convertToUTC = (time) => {
     if (!time) return "N/A"; 
     const date = new Date(time);

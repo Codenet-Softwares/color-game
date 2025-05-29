@@ -796,11 +796,11 @@ export const getExternalUserBetList = async (req, res) => {
       ],
     });
 
-    res
+    return res
       .status(statusCode.success)
       .send(apiResponseSuccess(rows, true, statusCode.success, "Success"));
   } catch (error) {
-    res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -966,13 +966,13 @@ export const getExternalLotteryP_L = async (req, res) => {
     const parsedLimit = parseInt(limit);
     const offset = (currentPage - 1) * parsedLimit;
 
-const whereClause = { userName};
+    const whereClause = { userName };
 
-if (search) {
-    whereClause.marketName = {
+    if (search) {
+      whereClause.marketName = {
         [Op.like]: `%${search}%`
-    };
-}
+      };
+    }
 
     const lotteryProfitLossRecords = await LotteryProfit_Loss.findAll({
       where: whereClause,
@@ -1145,27 +1145,40 @@ export const getRevokeMarket = async (req, res) => {
     }
 
     for (const user of users) {
-      if (!userProfitLossMap[user.userId]) {
-        console.log(`User ${user.userId} not found in profit/loss map.`);
+      const userId = user.userId;
+      if (!userProfitLossMap[userId]) {
+        console.log(`User ${userId} not found in profit/loss map.`);
         continue;
       }
 
-      const { exposurePrice } = userProfitLossMap[user.userId];
+      const { exposurePrice } = userProfitLossMap[userId];
+      
+      const existingExposure = await MarketListExposure.findOne({
+        where: {
+          UserId: userId,
+          MarketId: marketId,
+        },
+      });
 
-      let marketListExposure = user.marketListExposure || [];
-
-      let existingMarket = marketListExposure.find(market => market[marketId] !== undefined);
-
-      if (existingMarket) {
-        existingMarket[marketId] += exposurePrice;
+      if (existingExposure) {
+        await MarketListExposure.update(
+          {
+            exposure: existingExposure.exposure + exposurePrice,
+          },
+          {
+            where: {
+              UserId: userId,
+              MarketId: marketId,
+            },
+          }
+        );
       } else {
-        marketListExposure.push({ [marketId]: exposurePrice });
+        await MarketListExposure.create({
+          UserId: userId,
+          MarketId: marketId,
+          exposure: exposurePrice,
+        });
       }
-
-      await userSchema.update(
-        { marketListExposure },
-        { where: { userId: user.userId } }
-      );
     }
 
     await WinningAmount.destroy({ where: { marketId } });
@@ -1224,7 +1237,7 @@ export const getDeleteLiveMarket = async (req, res) => {
     totalMarketExposures.forEach((item) => {
       totalExposureValue += Number(item.exposure);
     });
-   
+
 
     const matchedExposure = await MarketListExposure.findOne({
       where: {
@@ -1232,7 +1245,7 @@ export const getDeleteLiveMarket = async (req, res) => {
         MarketId: marketId,
       },
     });
-   
+
 
     if (matchedExposure) {
       let newExposure = matchedExposure.exposure - price;
@@ -1400,7 +1413,7 @@ export const deleteBetAfterWin = async (req, res) => {
       complementaryPrize,
       price
     } = req.body;
-   
+
 
     let subtractAmount;
     if (prizeCategory === "First Prize") {

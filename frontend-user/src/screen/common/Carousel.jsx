@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { getSliderImgText } from "../../utils/apiService";
 import { dSlider } from "../../utils/dummyData";
 
-
 const Carousel = () => {
   const [sliderData, setSliderData] = useState([]);
 
   const fetchSliderImgText = async () => {
     try {
       const response = await getSliderImgText();
-      if (response && response.data) {
+      if (response.data.length > 0) {
         setSliderData(response.data);
       } else {
         console.error("error", response);

@@ -25,10 +25,10 @@ const ResetPassword = () => {
   const validateForm = () => {
     let validationErrors = {};
 
-    if (!newPassword) validationErrors.newPassword = "New password is required";
-    if (!confirmPassword) validationErrors.confirmPassword = "Confirm password is required";
+    if (!newPassword) validationErrors.newPassword = "New Password Is Required";
+    if (!confirmPassword) validationErrors.confirmPassword = "Confirm Password Is Required";
     if (newPassword && confirmPassword && newPassword !== confirmPassword) {
-      validationErrors.confirmPassword = "Passwords do not match";
+      validationErrors.confirmPassword = "Passwords Do Not Match";
     }
 
     setErrors(validationErrors);
