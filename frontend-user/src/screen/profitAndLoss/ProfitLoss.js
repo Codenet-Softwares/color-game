@@ -446,12 +446,12 @@ const ProfitLoss = ({
               </select>
             </div>
             <div className="col-12 col-md-auto ms-auto">
-              <input
+              {/* <input
                 type="search"
                 className="form-control"
                 placeholder="Search..."
                 onChange={handleSearch}
-              />
+              /> */}
             </div>
           </div>
           {/* Table */}

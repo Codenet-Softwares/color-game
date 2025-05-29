@@ -66,12 +66,12 @@ const Login = () => {
           {/* Username Input */}
           <input
             type="text"
-            placeholder="Enter your Username"
+            placeholder="Enter Your Username"
             value={userName}
             onChange={(e) => setUserName(e.target.value)}
             className="login-input mt-3"
           />
-          <p className="text-danger">{errors.userName || "\u00A0"}</p> 
+          <p className="text-danger">{errors.userName || "\u00A0"}</p>
 
           {/* Password Input with Eye Icon */}
           <div className="password-wrapper">
@@ -86,7 +86,7 @@ const Login = () => {
               className="eye-icon"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
+              {showPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
           <p className="text-danger">{errors.password || "\u00A0"}</p>
