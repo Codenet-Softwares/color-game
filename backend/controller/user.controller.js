@@ -835,29 +835,29 @@ export const filterMarketData = async (req, res) => {
       ],
     });
 
-    const currentTime = getISTTime();
+    // const currentTime = getISTTime();
 
-    await Market.update(
-      { isActive: false },
-      {
-        where: {
-          [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } },
-            { endTime: { [Op.lt]: currentTime } }   
-          ]
-        },
-      }
-    );
+    // await Market.update(
+    //   { isActive: false },
+    //   {
+    //     where: {
+    //       [Op.or]: [
+    //         { startTime: { [Op.gt]: currentTime } },
+    //         { endTime: { [Op.lt]: currentTime } }   
+    //       ]
+    //     },
+    //   }
+    // );
 
-    await Market.update(
-      { isActive: true, hideMarketUser: false },
-      {
-        where: {
-          startTime: { [Op.lte]: currentTime },
-          endTime: { [Op.gte]: currentTime },
-        },
-      }
-    );
+    // await Market.update(
+    //   { isActive: true, hideMarketUser: false },
+    //   {
+    //     where: {
+    //       startTime: { [Op.lte]: currentTime },
+    //       endTime: { [Op.gte]: currentTime },
+    //     },
+    //   }
+    // );
 
     const markets = await Market.findOne({
       where: { marketId },

@@ -25,20 +25,24 @@ export async function updateColorGame() {
         continue;
       }
 
+      // console.log("currentTime", currentTime.toISOString())
+      // console.log("startTime", startTime)
+      // console.log("endTime", endTime)
+
       let updates = {};
       let shouldUpdate = false;
 
       if (currentTime >= startTime && currentTime <= endTime) {
-        if (!data.isActive  || data.hideMarketUser) {
+        if (!data.isActive) {
           updates.isActive = true;
-          updates.hideMarketUser = true;
-          updates.updatedAt = new Date().toISOString();
+          updates.hideMarketWithUser = true;
+          updates.updatedAt = currentTime.toISOString();
           shouldUpdate = true;
         }
       } else if (currentTime >= endTime) {
         if (data.isActive) {
           updates.isActive = false;
-          updates.updatedAt = new Date().toISOString();
+          updates.updatedAt = currentTime.toISOString();
           shouldUpdate = true;
         }
       }
@@ -55,7 +59,7 @@ export async function updateColorGame() {
             {
               isActive: updates.isActive ?? data.isActive,
               hideMarketUser: updates.hideMarketUser ?? data.hideMarketUser,
-              updatedAt: new Date(),
+              updatedAt: currentTime.toISOString()
             },
             {
               where: { marketId: doc.id },

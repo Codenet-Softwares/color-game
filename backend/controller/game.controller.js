@@ -263,7 +263,7 @@ export const createMarket = async (req, res) => {
       announcementResult : newMarket.announcementResult,
       isActive : newMarket.isActive,
       isDisplay : newMarket.isDisplay,
-      hideMarketUser : newMarket.hideMarketUser,
+      hideMarketWithUser : newMarket.hideMarketWithUser,
     });
 
     return res
