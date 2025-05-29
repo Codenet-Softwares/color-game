@@ -155,7 +155,7 @@ const BetWinTracker = () => {
 
   // Function to fetch user-specific bets for ReusableTable
   const fetchUserSpecificBets = async (page, pageSize) => {
-    try {
+   
       const response = await GameService.getWinBetTrackerList(
         auth.user,
         marketId,
@@ -164,10 +164,7 @@ const BetWinTracker = () => {
         pageSize
       );
       return response.data; // Return the API response
-    } catch (error) {
-      toast.error(customErrorHandler(error));
-      return { data: [], pagination: { totalPages: 1, totalItems: 0 } }; // Return empty data on error
-    }
+
   };
   const columns = [
     {

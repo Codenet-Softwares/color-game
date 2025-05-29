@@ -9,7 +9,7 @@ const ReusableTable = ({
   showSearch,
   paginationVisible,
   fetchData, // Function to fetch data dynamically
-  setInnerDataLength
+  setInnerDataLength = () => { }
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
