@@ -122,7 +122,7 @@ export const getExternalUserBetHistory = async (req, res) => {
     const pageSize = limit;
     const totalItems = count;
 
-    res.status(statusCode.success).send(
+    return res.status(statusCode.success).send(
       apiResponseSuccess(rows, true, statusCode.success, "Success", {
         totalPages,
         pageSize,
@@ -132,7 +132,7 @@ export const getExternalUserBetHistory = async (req, res) => {
     );
   } catch (error) {
     console.log("error", error)
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1121,27 +1121,49 @@ export const getRevokeMarket = async (req, res) => {
     if (!usersFromProfitLoss.length) {
       return res
         .status(statusCode.notFound)
-        .send(apiResponseErr(null, false, statusCode.notFound, "No profit/loss data found"));
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.notFound,
+            "No profit/loss data found"
+          )
+        );
     }
 
-    // we are removing duplicate entries based on userId 
+    // we are removing duplicate entries based on userId
     const userProfitLossMap = {};
     usersFromProfitLoss.forEach(({ userId, price, profitLoss }) => {
       if (!userProfitLossMap[userId]) {
-        userProfitLossMap[userId] = { totalProfitLoss: 0, totalPrice: 0, exposurePrice: 0 };
+        userProfitLossMap[userId] = {
+          totalProfitLoss: 0,
+          totalPrice: 0,
+          exposurePrice: 0,
+        };
       }
-      userProfitLossMap[userId].totalProfitLoss += Number(profitLoss) > 0 ? Number(profitLoss) : 0;
+      userProfitLossMap[userId].totalProfitLoss +=
+        Number(profitLoss) > 0 ? Number(profitLoss) : 0;
       userProfitLossMap[userId].totalPrice += Number(price);
       userProfitLossMap[userId].exposurePrice += Number(price);
     });
 
     const userIds = Object.keys(userProfitLossMap);
-    const users = await userSchema.findAll({ where: { userId: userIds }, raw: true });
+    const users = await userSchema.findAll({
+      where: { userId: userIds },
+      raw: true,
+    });
 
     if (!users.length) {
       return res
         .status(statusCode.notFound)
-        .send(apiResponseErr(null, false, statusCode.notFound, "No matching users found"));
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.notFound,
+            "No matching users found"
+          )
+        );
     }
 
     for (const user of users) {
@@ -1152,7 +1174,7 @@ export const getRevokeMarket = async (req, res) => {
       }
 
       const { exposurePrice } = userProfitLossMap[userId];
-      
+
       const existingExposure = await MarketListExposure.findOne({
         where: {
           UserId: userId,
@@ -1187,12 +1209,26 @@ export const getRevokeMarket = async (req, res) => {
 
     return res
       .status(statusCode.success)
-      .send(apiResponseSuccess(null, true, statusCode.success, "Market exposure updated successfully"));
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Market exposure updated successfully"
+        )
+      );
   } catch (error) {
     console.error("Error in getRevokeMarket:", error);
     return res
       .status(statusCode.internalServerError)
-      .send(apiResponseErr(null, false, statusCode.internalServerError, "An error occurred while revoking the market"));
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          "An error occurred while revoking the market"
+        )
+      );
   }
 };
 
@@ -1231,13 +1267,11 @@ export const getDeleteLiveMarket = async (req, res) => {
     const totalMarketExposures = userExposures.filter(
       (item) => item.MarketId === marketId
     );
-    console.log(totalMarketExposures)
     let totalExposureValue = 0;
 
     totalMarketExposures.forEach((item) => {
       totalExposureValue += Number(item.exposure);
     });
-
 
     const matchedExposure = await MarketListExposure.findOne({
       where: {
@@ -1245,7 +1279,6 @@ export const getDeleteLiveMarket = async (req, res) => {
         MarketId: marketId,
       },
     });
-
 
     if (matchedExposure) {
       let newExposure = matchedExposure.exposure - price;
@@ -1304,17 +1337,29 @@ export const revokeLiveBet = async (req, res) => {
         );
     }
 
-    const newExposure = { [marketId]: Math.abs(lotteryPrice) };
-    user.marketListExposure = [...(user.marketListExposure || []), newExposure];
+    const newExposure = Math.abs(lotteryPrice);
 
-    const marketExposure = user.marketListExposure;
-    let totalExposure = 0;
-    marketExposure.forEach(market => {
-      const exposure = Object.values(market)[0];
-      totalExposure += exposure;
+    const existingExposure = await MarketListExposure.findOne({
+      where: {
+        UserId: userId,
+        MarketId: marketId,
+      },
     });
 
-    await user.save();
+    if (existingExposure) {
+      const existing = Number(existingExposure.dataValues.exposure);
+      const newExposureValue = existing + Math.abs(Number(lotteryPrice));
+
+      await existingExposure.update({
+        exposure: newExposureValue,
+      });
+    } else {
+      await MarketListExposure.create({
+        UserId: userId,
+        MarketId: marketId,
+        exposure: Math.abs(Number(lotteryPrice)),
+      });
+    }
 
     return res
       .status(statusCode.success)
@@ -1343,52 +1388,93 @@ export const revokeLiveBet = async (req, res) => {
 
 export const userLiveBte = async (req, res) => {
   try {
-    const { marketId } = req.params
+    const { marketId } = req.params;
 
     const currentOrders = await CurrentOrder.findAll({
       where: { marketId },
-      attributes: ['userName', 'userId', 'marketName', 'marketId', 'runnerId', 'runnerName', 'rate', 'value', 'type'],
+      attributes: [
+        "userName",
+        "userId",
+        "marketName",
+        "marketId",
+        "runnerId",
+        "runnerName",
+        "rate",
+        "value",
+        "type",
+      ],
     });
 
     if (currentOrders.length === 0) {
-      return res.status(statusCode.success).send(apiResponseSuccess([], true, statusCode.success, 'No current orders found'));
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "No current orders found"
+          )
+        );
     }
 
-    return res.status(statusCode.success).send(apiResponseSuccess(currentOrders, true, statusCode.success, "Success"));
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(currentOrders, true, statusCode.success, "Success")
+      );
   } catch (error) {
-    return res.status(statusCode.internalServerError).send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
   }
 };
 
 export const getAllLotteryMarket = async (req, res) => {
   try {
     const baseURL = process.env.LOTTERY_URL;
-    const response = await axios.get(
-      `${baseURL}/api/get-active-market`,
-    );
-    const data = response.data.data
+    const response = await axios.get(`${baseURL}/api/get-active-market`);
+    const data = response.data.data;
     res
       .status(statusCode.success)
-      .json(
-        apiResponseSuccess(
-          data,
-          true,
-          statusCode.success,
-          "Success"
-        )
-      );
+      .json(apiResponseSuccess(data, true, statusCode.success, "Success"));
   } catch (error) {
     if (error.response) {
-      return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
+      return res
+        .status(error.response.status)
+        .json(
+          apiResponseErr(
+            null,
+            false,
+            error.response.status,
+            error.response.data.message || error.response.data.errMessage
+          )
+        );
     } else {
-      return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
-    };
+      return res
+        .status(statusCode.internalServerError)
+        .json(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.internalServerError,
+            error.message
+          )
+        );
+    }
   }
 };
 
 export const getExposure = async (req, res) => {
   try {
-    const { userId } = req.params
+    const { userId } = req.params;
     const userBalance = await user_Balance(userId, true);
     const exposureList = userBalance?.[1] ?? [];
     const marketListExposure = exposureList.map((exposure) => ({
@@ -1396,10 +1482,18 @@ export const getExposure = async (req, res) => {
     }));
     res.json({ marketListExposure });
   } catch (error) {
-    return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
-
+    return res
+      .status(statusCode.internalServerError)
+      .json(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
   }
-}
+};
 
 export const deleteBetAfterWin = async (req, res) => {
   const t = await sequelize.transaction();
@@ -1411,17 +1505,15 @@ export const deleteBetAfterWin = async (req, res) => {
       prizeAmount,
       prizeCategory,
       complementaryPrize,
-      price
+      price,
     } = req.body;
-
 
     let subtractAmount;
     if (prizeCategory === "First Prize") {
       subtractAmount = prizeAmount - price;
     } else if (complementaryPrize > 0) {
       subtractAmount = complementaryPrize - price;
-    }
-    else {
+    } else {
       subtractAmount = sem * prizeAmount - price;
     }
     const winningAmount = await WinningAmount.findOne({
@@ -1500,14 +1592,20 @@ export const deleteBetAfterWin = async (req, res) => {
   }
 };
 
-
 export const afterWinVoidMarket = async (req, res) => {
   try {
     const { marketId, userId } = req.body;
     if (!Array.isArray(userId) || userId.length === 0) {
       return res
         .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, "Invalid userId format"));
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "Invalid userId format"
+          )
+        );
     }
 
     await WinningAmount.update(
@@ -1516,12 +1614,15 @@ export const afterWinVoidMarket = async (req, res) => {
         where: {
           userId: userId,
           marketId,
-          type: 'win',
+          type: "win",
         },
       }
     );
 
-    await WinningAmount.update({ isVoidAfterWin: true }, { where: { marketId } })
+    await WinningAmount.update(
+      { isVoidAfterWin: true },
+      { where: { marketId } }
+    );
 
     await LotteryProfit_Loss.destroy({
       where: { marketId, userId },
@@ -1550,4 +1651,3 @@ export const afterWinVoidMarket = async (req, res) => {
       );
   }
 };
-
