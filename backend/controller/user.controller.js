@@ -826,7 +826,7 @@ export const filterMarketData = async (req, res) => {
 
     // Fetch market data
     const marketDataRows = await Market.findAll({
-      where: { marketId, hideMarketUser: false, isVoid: false,announcementResult: false  },
+      where: { marketId, hideMarketWithUser: false, isVoid: false,announcementResult: false  },
       include: [
         {
           model: Runner,
@@ -850,7 +850,7 @@ export const filterMarketData = async (req, res) => {
     // );
 
     // await Market.update(
-    //   { isActive: true, hideMarketUser: false },
+    //   { isActive: true, hideMarketWithUser: false },
     //   {
     //     where: {
     //       startTime: { [Op.lte]: currentTime },
@@ -880,7 +880,7 @@ export const filterMarketData = async (req, res) => {
       throw new CustomError(`Market is void`, null, 0, statusPanelCodes.void);
     }
 
-    if (markets.hideMarketUser) {
+    if (markets.hideMarketWithUser) {
       throw new CustomError(
         `Market is announcement`,
         null,

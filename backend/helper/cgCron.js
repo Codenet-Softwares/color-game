@@ -25,10 +25,6 @@ export async function updateColorGame() {
         continue;
       }
 
-      // console.log("currentTime", currentTime.toISOString())
-      // console.log("startTime", startTime)
-      // console.log("endTime", endTime)
-
       let updates = {};
       let shouldUpdate = false;
 

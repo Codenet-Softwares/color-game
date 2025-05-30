@@ -69,13 +69,13 @@ const MarketPlace = () => {
   const handleMarketDetailsModalOpen = (
     market,
     participants,
-    hideMarketUser,
+    hideMarketWithUser,
     startTime,
     endTime,
     marketName
   ) => {
     setShowMarketName(marketName);
-    setIsActive(hideMarketUser);
+    setIsActive(hideMarketWithUser);
     setSelectedMarketDetails(market);
     setParticipants(participants);
     setStartTime(startTime);

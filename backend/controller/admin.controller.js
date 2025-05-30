@@ -756,7 +756,7 @@ export const afterWining = async (req, res) => {
       await Market.update(
         {
           isRevoke: false,
-          hideMarketUser: true,
+          hideMarketWithUser: true,
           hideRunnerUser: true,
           hideMarket: true,
           hideRunner: true,
@@ -870,7 +870,7 @@ export const revokeWinningAnnouncement = async (req, res) => {
       {
         isRevoke: true,
         isActive: false,
-        hideMarketUser: false,
+        hideMarketWithUser: false,
         hideMarket: false,
         announcementResult: false,
       },
@@ -1528,7 +1528,7 @@ export const approveResult = async (req, res) => {
       await Market.update(
         {
           isRevoke: false,
-          hideMarketUser: true,
+          hideMarketWithUser: true,
           hideRunnerUser: true,
           hideMarket: true,
           hideRunner: true,
