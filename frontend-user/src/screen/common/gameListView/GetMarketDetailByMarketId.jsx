@@ -101,7 +101,7 @@ const GetMarketDetailByMarketId = () => {
             );
             setIsActive(message.isActive);
             setIsUpdate(message.updatedAt);
-            if (message.hideMarketUser) {
+            if (message.hideMarketWithUser === false) {
               window.location.href = "/home";
             }
           }

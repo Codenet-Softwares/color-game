@@ -58,6 +58,10 @@ Market.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    hideMarketWithUser :{
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     isRevoke :{
     type: DataTypes.BOOLEAN,
     defaultValue: false,

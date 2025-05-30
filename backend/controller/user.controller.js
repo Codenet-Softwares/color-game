@@ -458,7 +458,7 @@ export const getAllGameData = async (req, res) => {
             "endTime",
             "announcementResult",
             "isActive",
-            "hideMarketUser",
+            "hideMarketWithUser",
             "isVoid",
             "isDeleted",
             "createdAt",
@@ -494,7 +494,7 @@ export const getAllGameData = async (req, res) => {
     isBlink: game.isBlink,
     createdAt: game.createdAt, // Ensure createdAt is included
     markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
+      .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
       .map((market) => ({
         marketId: market.marketId,
@@ -593,7 +593,7 @@ export const filteredGameData = async (req, res) => {
             "endTime",
             "createdAt",
             "announcementResult",
-            "hideMarketUser",
+            "hideMarketWithUser",
             "isActive",
             "isDeleted",
             "isVoid"
@@ -641,7 +641,7 @@ export const filteredGameData = async (req, res) => {
       description: game.description,
       isBlink: game.isBlink,
       markets: game.Markets
-      .filter((market) => !market.hideMarketUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
+      .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
       .map((market) => ({
         marketId: market.marketId,
         marketName: market.marketName,
@@ -826,7 +826,7 @@ export const filterMarketData = async (req, res) => {
 
     // Fetch market data
     const marketDataRows = await Market.findAll({
-      where: { marketId, hideMarketUser: false, isVoid: false,announcementResult: false  },
+      where: { marketId, hideMarketWithUser: false, isVoid: false,announcementResult: false  },
       include: [
         {
           model: Runner,
@@ -835,29 +835,29 @@ export const filterMarketData = async (req, res) => {
       ],
     });
 
-    const currentTime = getISTTime();
+    // const currentTime = getISTTime();
 
-    await Market.update(
-      { isActive: false },
-      {
-        where: {
-          [Op.or]: [
-            { startTime: { [Op.gt]: currentTime } },
-            { endTime: { [Op.lt]: currentTime } }   
-          ]
-        },
-      }
-    );
+    // await Market.update(
+    //   { isActive: false },
+    //   {
+    //     where: {
+    //       [Op.or]: [
+    //         { startTime: { [Op.gt]: currentTime } },
+    //         { endTime: { [Op.lt]: currentTime } }   
+    //       ]
+    //     },
+    //   }
+    // );
 
-    await Market.update(
-      { isActive: true, hideMarketUser: false },
-      {
-        where: {
-          startTime: { [Op.lte]: currentTime },
-          endTime: { [Op.gte]: currentTime },
-        },
-      }
-    );
+    // await Market.update(
+    //   { isActive: true, hideMarketWithUser: false },
+    //   {
+    //     where: {
+    //       startTime: { [Op.lte]: currentTime },
+    //       endTime: { [Op.gte]: currentTime },
+    //     },
+    //   }
+    // );
 
     const markets = await Market.findOne({
       where: { marketId },
@@ -880,7 +880,7 @@ export const filterMarketData = async (req, res) => {
       throw new CustomError(`Market is void`, null, 0, statusPanelCodes.void);
     }
 
-    if (markets.hideMarketUser) {
+    if (markets.hideMarketWithUser) {
       throw new CustomError(
         `Market is announcement`,
         null,

@@ -756,7 +756,7 @@ export const afterWining = async (req, res) => {
       await Market.update(
         {
           isRevoke: false,
-          hideMarketUser: true,
+          hideMarketWithUser: true,
           hideRunnerUser: true,
           hideMarket: true,
           hideRunner: true,
@@ -870,7 +870,7 @@ export const revokeWinningAnnouncement = async (req, res) => {
       {
         isRevoke: true,
         isActive: false,
-        hideMarketUser: false,
+        hideMarketWithUser: false,
         hideMarket: false,
         announcementResult: false,
       },
@@ -1027,8 +1027,6 @@ export const inActiveMarketStatus = async (req, res) => {
   const { marketId } = req.params;
   const {status} = req.body
 
-  console.log("marketId", marketId);
-
   try {
     const market = await Market.findOne({ where: { marketId } });
 
@@ -1040,13 +1038,13 @@ export const inActiveMarketStatus = async (req, res) => {
 
     if(status){
       await Market.update(
-        { hideMarketUser: false},
+        { hideMarketWithUser: true},
         { where: { marketId } }
       );
       }
       else{
         await Market.update(
-          { hideMarketUser: true},
+          { hideMarketWithUser: false},
           { where: { marketId } }
         );
       }
@@ -1063,7 +1061,7 @@ export const inActiveMarketStatus = async (req, res) => {
     await marketRef.set(
       {
         isActive: market.isActive ,
-        hideMarketUser: market.hideMarketUser, // Changed to match SQL DB update
+        hideMarketWithUser: status, // Changed to match SQL DB update
         isRevoke: market.isRevoke,
         updatedAt: new Date().toISOString()
       },
@@ -1075,7 +1073,7 @@ export const inActiveMarketStatus = async (req, res) => {
       .send(apiResponseSuccess([], true, statusCode.success, "Market updated successfully"));
   } catch (error) {
     console.error("Error updating market status:", error);
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1530,7 +1528,7 @@ export const approveResult = async (req, res) => {
       await Market.update(
         {
           isRevoke: false,
-          hideMarketUser: true,
+          hideMarketWithUser: true,
           hideRunnerUser: true,
           hideMarket: true,
           hideRunner: true,

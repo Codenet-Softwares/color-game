@@ -29,24 +29,28 @@ export async function updateColorGame() {
       let shouldUpdate = false;
 
       if (currentTime >= startTime && currentTime <= endTime) {
-        if (!data.isActive  || data.hideMarketUser) {
+        if (!data.isActive) {
           updates.isActive = true;
-          updates.hideMarketUser = false;
-          updates.updatedAt = new Date().toISOString();
+          updates.hideMarketWithUser = true;
+          updates.updatedAt = currentTime.toISOString();
           shouldUpdate = true;
+          console.log("Suman In")
         }
-      } else if (currentTime >= endTime) {
+      }
+      
+      if (currentTime >= endTime) {
         if (data.isActive) {
           updates.isActive = false;
-          updates.updatedAt = new Date().toISOString();
+          updates.updatedAt = currentTime.toISOString();
           shouldUpdate = true;
+          console.log("Suman In")
         }
       }
 
       if (shouldUpdate) {
         const shouldActuallyUpdate =
           (typeof updates.isActive !== 'undefined' && updates.isActive !== data.isActive) ||
-          (typeof updates.hideMarketUser !== 'undefined' && updates.hideMarketUser !== data.hideMarketUser);
+          (typeof updates.hideMarketWithUser !== 'undefined' && updates.hideMarketWithUser !== data.hideMarketWithUser);
 
         if (shouldActuallyUpdate) {
           await db.collection("color-game-db").doc(doc.id).update(updates);
@@ -54,8 +58,8 @@ export async function updateColorGame() {
           await Market.update(
             {
               isActive: updates.isActive ?? data.isActive,
-              hideMarketUser: updates.hideMarketUser ?? data.hideMarketUser,
-              updatedAt: new Date(),
+              hideMarketWithUser: updates.hideMarketWithUser ?? data.hideMarketWithUser,
+              updatedAt: currentTime.toISOString()
             },
             {
               where: { marketId: doc.id },

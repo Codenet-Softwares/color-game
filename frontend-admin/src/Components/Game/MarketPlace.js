@@ -69,13 +69,13 @@ const MarketPlace = () => {
   const handleMarketDetailsModalOpen = (
     market,
     participants,
-    hideMarketUser,
+    hideMarketWithUser,
     startTime,
     endTime,
     marketName
   ) => {
     setShowMarketName(marketName);
-    setIsActive(hideMarketUser);
+    setIsActive(hideMarketWithUser);
     setSelectedMarketDetails(market);
     setParticipants(participants);
     setStartTime(startTime);
@@ -327,12 +327,12 @@ const MarketPlace = () => {
                                       <div className="d-flex justify-content-between align-items-center w-100">
                                         
                                         <span
-                                          className={`badge rounded-pill fw-bold text-uppercase ${!market.hideMarketUser
+                                          className={`badge rounded-pill fw-bold text-uppercase ${market.hideMarketWithUser
                                             ? "bg-success"
                                             : "bg-danger"
                                             }`}
                                         >
-                                          {!market.hideMarketUser
+                                          {market.hideMarketWithUser
                                             ? "Active"
                                             : "Inactive"}
                                         </span>
@@ -347,7 +347,7 @@ const MarketPlace = () => {
                                               handleMarketDetailsModalOpen(
                                                 market.marketId,
                                                 market.participants,
-                                                market.hideMarketUser,
+                                                market.hideMarketWithUser,
                                                 market.startTime,
                                                 market.endTime,
                                                 market.marketName
@@ -407,7 +407,7 @@ const MarketPlace = () => {
 
                                             {!market.isDisplay && (
                                               <>
-                                                {auth?.user?.roles === "admin" && <>{!market.hideMarketUser ? (
+                                                {auth?.user?.roles === "admin" && <>{market.hideMarketWithUser ? (
                                                   <a
                                                     className="dropdown-item"
                                                     onClick={(e) =>
