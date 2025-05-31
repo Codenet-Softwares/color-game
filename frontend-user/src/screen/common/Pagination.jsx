@@ -8,14 +8,7 @@ const Pagination = ({
   endIndex,
   totalData,
 }) => {
-  console.log(
-    "getProfitLossEvent",
-    currentPage,
-    totalPages,
-    startIndex,
-    endIndex,
-    totalData
-  );
+  
   const renderPageNumbers = () => {
     const pageNumbers = [];
 

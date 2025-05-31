@@ -2,7 +2,6 @@ import React from "react";
 import "./openBets.css"; // Import external CSS file
 
 const RenderLayTable = ({ betHistoryData }) => {
-  console.log("first", betHistoryData);
 
   return (
     <div

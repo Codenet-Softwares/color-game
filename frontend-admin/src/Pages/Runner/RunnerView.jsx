@@ -207,7 +207,6 @@ const RunnerView = () => {
       });
   };
 
-  console.log("first====>", runner.length);
   const handleRunnerSearchChange = (e) => {
     setSearchTerm(e.target.value); // Update the search term
     setRunners((prev) => ({ ...prev, currentPage: 1 })); // Reset pagination

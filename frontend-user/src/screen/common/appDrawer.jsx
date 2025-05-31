@@ -40,7 +40,6 @@ function AppDrawer({
   useEffect(() => {
     user_getAllGames();
   }, [isColorgameUpdate]);
-  console.log("isColorgameUpdate", isColorgameUpdate);
 
   const handleAllId = (gameId, marketId) => {
     dispatch({
@@ -74,7 +73,6 @@ function AppDrawer({
         ...doc.data(),
       }));
 
-      console.log("Messages Data:", messagesData);
       setIsColorgameUpdate(messagesData);
     });
 
@@ -90,7 +88,6 @@ function AppDrawer({
           ...doc.data(),
         }));
 
-        console.log("Messages Data:", messagesData);
         setIsColorgameUpdate(messagesData);
       }
     );
@@ -127,7 +124,6 @@ function AppDrawer({
         <ul className="overflow-auto">
           {user_allGames?.map((gameObj, index) => {
             const isToggled = toggleMap[gameObj.gameId];
-            console.log("gameObj", gameObj);
 
             return (
               <React.Fragment key={index}>

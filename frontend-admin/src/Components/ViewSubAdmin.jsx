@@ -35,7 +35,6 @@ const ViewSubAdmin = () => {
     setShowModal(false);
   };
   const auth = useAuth();
-  console.log("isopen", viewSubadmin);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= viewSubadmin?.totalPages) {
@@ -47,7 +46,6 @@ const ViewSubAdmin = () => {
   };
 
   useEffect(() => {
-    console.log("Fetching data for page:", viewSubadmin?.currentPage); // Debugging
     fetchViewWinningRequest();
   }, [
     viewSubadmin?.currentPage,
@@ -64,7 +62,6 @@ const ViewSubAdmin = () => {
       debouncedSearchTerm
     )
       .then((res) => {
-        console.log("API Response:", res.data); // Debugging
 
         setViewSubadmin((prev) => ({
           ...prev,

@@ -16,7 +16,6 @@ const DeleteMarket = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [refresh, setRefresh] = useState({});
 
-  console.log("deleteMarket", searchTerm);
 
   const fetchMarkets = async (search = "") => {
     auth.showLoader();
@@ -137,7 +136,6 @@ const DeleteMarket = () => {
     Number(deleteMarket.totalData)
   );
 
-  console.log(startIndex, endIndex);
 
   return (
     <div className="container my-5 ">

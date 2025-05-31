@@ -6,7 +6,6 @@ import { use } from "react";
 
 const Navside = () => {
   const auth = useAuth();
-  console.log("line 09 for roles", auth.user.roles === "subAdmin");
   const [isUser, setIsUser] = useState(true);
   const [isGame, setIsGame] = useState(true);
   const [isSubAdmin, setIsSubAdmin] = useState(true);

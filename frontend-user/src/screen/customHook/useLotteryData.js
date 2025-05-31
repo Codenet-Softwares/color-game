@@ -76,7 +76,6 @@ const useLotteryData = (MarketId) => {
     fetchLotteryData();
   }, [MarketId, lotteryData.isUpdate]);
 
-  console.log("isupdate.........", lotteryData.isUpdate)
   // Firebase work happening here 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "lottery-db"), (snapshot) => {
@@ -85,11 +84,9 @@ const useLotteryData = (MarketId) => {
         ...doc.data(),
       }));
 
-      console.log("Messages Data:", messagesData);
 
       messagesData.map((message) => {
         if (MarketId === message.id) {
-          console.log("Filtered Message ID:", message.id);
           setLotteryData((prevData) => ({
             ...prevData,
             isSuspend: !message.isActive,

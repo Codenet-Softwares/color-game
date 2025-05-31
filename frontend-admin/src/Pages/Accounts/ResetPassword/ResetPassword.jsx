@@ -10,9 +10,7 @@ const ResetPassword = () => {
   const auth = useAuth();
   const user = auth.user;
   const location = useLocation();
-  console.log("location====",location)
   const {password,userName} = location?.state || {}; 
-  console.log("oldpaass=========",password,userName)
   const navigate = useNavigate();
 
   const [newPassword, setNewPassword] = useState("");
@@ -49,11 +47,9 @@ const ResetPassword = () => {
       confirmPassword,
     };
     
-    console.log("requestData==============", requestData); 
   
     AccountServices.SubAdminResetPassword(requestData, user)
       .then((response) => {
-        console.log("response",response)
         if (response?.data?.success) {
           toast.success(response.data.message || "Password reset successfully!");
           navigate("/");

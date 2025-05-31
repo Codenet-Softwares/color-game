@@ -12,7 +12,6 @@ import SearchResultsNew from "./SearchResultsNew";
 const LotteryUserPurchase = ({ MarketId }) => {
   const { lotteryData, handleSubmit, handleBuy, handleBack, DROPDOWN_FIELDS } =
     useLotteryData(MarketId);
-  console.log("line 15---------------", lotteryData.isSuspend);
   return (
     <div className="outer-container">
       {lotteryData?.searchResult &&
