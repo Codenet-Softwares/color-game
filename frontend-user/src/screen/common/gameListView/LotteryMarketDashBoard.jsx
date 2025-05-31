@@ -58,7 +58,7 @@ const LotteryMarketDashBoard = () => {
               style={{
                 backgroundColor: "#2CB3D1",
                 borderRadius: "16px",
-                // boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
+                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
                 // transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 cursor: "pointer",
                 overflow: "hidden",
@@ -163,7 +163,7 @@ const LotteryMarketDashBoard = () => {
       <div
         className={`global-margin-top${
           store.user.isLogin ? "-logged" : ""
-        } mb-5`}
+        } mb-0`}
       >
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           {getBody()}

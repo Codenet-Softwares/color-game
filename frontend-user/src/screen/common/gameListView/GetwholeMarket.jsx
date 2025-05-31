@@ -93,7 +93,15 @@ const GetwholeMarket = () => {
   return (
     <>
       {/* <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}> */}
-      <div className="row m-1">
+      <div
+        className="row m-1 p-0"
+        style={{
+          marginTop: 0,
+          paddingTop: 0,
+          position: "relative",
+          top: "-13px",
+        }}
+      >
         {user_allGamesWithMarketData &&
           user_allGamesWithMarketData
             .slice(0, store.user.isLogin ? 5 : 3)
@@ -103,7 +111,7 @@ const GetwholeMarket = () => {
                   {gameWithMarketData.gameName === "Lottery" ? (
                     <>
                       <div
-                        className="col-12 p-1 mt-3  text-white"
+                        className="col-12 p-1 fw-bold h6 text-white shadow-lg"
                         style={{
                           backgroundColor: "#18ADC5",
                           fontSize: "18px",
@@ -135,7 +143,7 @@ const GetwholeMarket = () => {
                                     whiteSpace: "normal",
                                   }}
                                 >
-                                  💹{marketData?.marketName ?? "Unknown"} |{" "}
+                                  {marketData?.marketName ?? "Unknown"} |{" "}
                                   <span
                                     className=""
                                     style={{ color: "#022C44" }}
@@ -178,13 +186,9 @@ const GetwholeMarket = () => {
 
                       {gameWithMarketData.markets.length > 0 ? (
                         <Link
-                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold`}
-                          // to={`/gameView/${gameWithMarketData?.gameName?.replace(
-                          //   /\s/g,
-                          //   ""
-                          // )}/${gameWithMarketData?.marketId}`}
+                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold p-0`}
                           to={`/lottery-home`}
-                          style={{ textAlign: "right", margin: "16px" }}
+                          style={{ textAlign: "right" }}
                         >
                           View more...
                         </Link>
@@ -200,7 +204,7 @@ const GetwholeMarket = () => {
                   ) : (
                     <>
                       <div
-                        className="col-12 p-2 fw-bold h6 text-white shadow-lg"
+                        className="col-12 p-1 fw-bold h6 text-white shadow-lg"
                         style={{ backgroundColor: "#18ADC5" }}
                       >
                         {gameWithMarketData.gameName}
@@ -283,7 +287,7 @@ const GetwholeMarket = () => {
                           })}
                       {gameWithMarketData.markets.length > 0 ? (
                         <a
-                          className={`col-12 text-dark text-decoration-none text-nowrap border-top fw-bold`}
+                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold p-0`}
                           href={`/gameView/${gameWithMarketData?.gameName?.replace(
                             /\s/g,
                             ""

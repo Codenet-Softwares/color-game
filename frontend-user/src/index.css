@@ -11,10 +11,6 @@
   right: 24px;
 }
 
-.global-margin-top {
-  margin-top: 150px;
-  overflow: hidden;
-}
 
 .global-margin-top-logged {
   margin-top: 95px;
@@ -27,7 +23,17 @@
 button[disabled] {
   background-color: #f0f0f0;
 }
- /* body{
+
+body {
+  background-color: #f0f0f0 !important;
+  overflow-y: hidden;
+}
+
+h1,
+h2 {
+  font-family: "Georgia", serif;
+}
+/* body{
 overflow-y: scroll;
  } */
 /* .timer-loader {

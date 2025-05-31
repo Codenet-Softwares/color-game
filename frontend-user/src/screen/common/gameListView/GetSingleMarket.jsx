@@ -129,7 +129,7 @@ const GetSingleMarket = () => {
                                 whiteSpace: "normal",
                               }}
                             >
-                              💹{marketData.marketName}
+                              {marketData.marketName}
                             </span>
                           </div>
                         </Link>

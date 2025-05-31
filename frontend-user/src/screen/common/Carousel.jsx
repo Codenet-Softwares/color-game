@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getSliderImgText } from "../../utils/apiService";
 import { dSlider } from "../../utils/dummyData";
+import './Carrousel.css'
 
 const Carousel = () => {
   const [sliderData, setSliderData] = useState([]);
@@ -27,8 +28,8 @@ const Carousel = () => {
   return (
     <div
       id="carouselExampleCaptions"
-      className="carousel slide"
-      data-bs-ride="carousel"
+      className="carousel slide mt-5"
+    
     >
       <div className="carousel-indicators">
         {sliderData.map((item, index) => (
@@ -43,7 +44,7 @@ const Carousel = () => {
           />
         ))}
       </div>
-      <div className="carousel-inner">
+      <div className="carousel-inner mt-5">
         {sliderData.map((item, index) => (
           <div
             key={item.id}

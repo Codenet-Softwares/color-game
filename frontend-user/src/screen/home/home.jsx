@@ -19,6 +19,7 @@ import {
   user_getBackLayData_api,
 } from "../../utils/apiService";
 import strings from "../../utils/constant/stringConstant";
+import Footer from "../common/Footer";
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -92,14 +93,18 @@ const Home = () => {
   );
 
   const homePage = () => (
-    <div className="global-margin-top">
-      <Carousel />
-      <HitGames />
-      <Gif />
-      <GetwholeMarket />
-      <DownloadApp />
-      {/* <Footer /> */}
-      <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+    <div className="home-scroll-wrapper">
+      <div className="home-scroll-content">
+        <div className="carousel-wrapper">
+          <Carousel />
+        </div>
+        <HitGames />
+        <Gif />
+        <GetwholeMarket />
+        <DownloadApp />
+        <Footer />
+        <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+      </div>
     </div>
   );
 

@@ -101,7 +101,7 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className={`sidebar border-top-0 border-end ${
+        className={`border-top-0 border-end ${
           store.user.isLogin ? "mt-4" : "mt-1"
         }`}
         style={{ overflowY: "auto" }}
@@ -124,7 +124,7 @@ function AppDrawer({
           />
         </span>
 
-        <ul className="overflow-auto">
+        <ul className="overflow-auto list-group list-group-flush">
           {user_allGames?.map((gameObj, index) => {
             const isToggled = toggleMap[gameObj.gameId];
             console.log("gameObj", gameObj);
@@ -139,6 +139,7 @@ function AppDrawer({
                     {gameObj?.gameName}
                     <span
                       className={`dropdown-icon ${isToggled ? "active" : ""}`}
+                      style={{ cursor: "pointer" }}
                     >
                       ▼
                     </span>
@@ -149,7 +150,7 @@ function AppDrawer({
                   gameObj.markets?.map((marketObj, marketIndex) =>
                     gameObj.gameName.toLowerCase() === "colorgame" ? (
                       <li
-                        className="subMenuItems text-wrap"
+                        className="list-group-item text-wrap"
                         style={{
                           wordBreak: "break-word",
                           whiteSpace: "normal",
@@ -160,6 +161,7 @@ function AppDrawer({
                         }
                       >
                         <Link
+                          className="text-uppercase fw-semibold"
                           to={`/gameView/${gameObj?.gameName?.replace(
                             /\s/g,
                             ""
@@ -167,6 +169,11 @@ function AppDrawer({
                             /\s/g,
                             ""
                           )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                          style={{
+                            color: "#333",
+                            textDecoration: "none",
+                            display: "block",
+                          }}
                         >
                           {marketObj.marketName}
                         </Link>
@@ -174,7 +181,7 @@ function AppDrawer({
                     ) : gameObj.gameName.toLowerCase() === "lottery" ? (
                       <li
                         key={marketObj.marketId}
-                        className="subMenuItems  text-wrap"
+                        className="list-group-item  text-wrap"
                         style={{
                           wordBreak: "break-word",
                           whiteSpace: "normal",
@@ -182,8 +189,14 @@ function AppDrawer({
                       >
                         {store.user.isLogin ? (
                           <Link
+                            className="text-uppercase fw-semibold "
                             to={`/lottoPurchase/${marketObj.marketId}`}
                             onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                            style={{
+                              color: "#333",
+                              textDecoration: "none",
+                              display: "block",
+                            }}
                           >
                             {marketObj.marketName}
                           </Link>
@@ -193,6 +206,11 @@ function AppDrawer({
                               e.stopPropagation();
                               setShowLogin(true);
                             }} // Prevents dropdown collapse
+                            style={{
+                              color: "#333",
+                              textDecoration: "none",
+                              display: "block",
+                            }}
                           >
                             {marketObj.marketName}
                           </Link>
@@ -218,7 +236,14 @@ function AppDrawer({
     return isMobile ? (
       getLeftNavBar()
     ) : (
-      <div className="container-fluid">
+      <div
+        className="container-fluid custom-scrollbar"
+        style={{
+          height: "100vh",
+          overflowY: "auto",
+          overflowX: "hidden",
+        }}
+      >
         <div className="row" style={{ height: "100vh", display: "flex" }}>
           {/* LEFT NAVBAR - md: 4, lg: 2 */}
           <div

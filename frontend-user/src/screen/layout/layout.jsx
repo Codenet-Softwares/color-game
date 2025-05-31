@@ -95,6 +95,7 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           openBetData={openBetData}
         />
         {user_allGames && getNavBarOption()}
+     
       </div>
       {store?.user?.isLogin && (
         <div className="fixed-bottom">
