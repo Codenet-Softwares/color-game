@@ -880,7 +880,7 @@ export const filterMarketData = async (req, res) => {
       throw new CustomError(`Market is void`, null, 0, statusPanelCodes.void);
     }
 
-    if (markets.hideMarketWithUser) {
+    if (!markets.hideMarketWithUser) {
       throw new CustomError(
         `Market is announcement`,
         null,
