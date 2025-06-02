@@ -35,8 +35,9 @@ function AppDrawer({
   const [showLogin, setShowLogin] = useState(false);
 
   const { dispatch, store } = useAppContext();
-
+  
   const location = useLocation();
+  console.log("location",location?.pathname)
   useEffect(() => {
     user_getAllGames();
   }, [isColorgameUpdate]);
@@ -239,7 +240,7 @@ function AppDrawer({
       <div
         className="container-fluid custom-scrollbar"
         style={{
-          height: "100vh",
+          height: location?.pathname==="/home"?"85vh":"100vh",
           overflowY: "none",
           overflowX: "hidden",
         }}
