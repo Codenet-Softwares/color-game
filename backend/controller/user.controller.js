@@ -826,7 +826,7 @@ export const filterMarketData = async (req, res) => {
 
     // Fetch market data
     const marketDataRows = await Market.findAll({
-      where: { marketId, hideMarketWithUser: false, isVoid: false,announcementResult: false  },
+      where: { marketId, hideMarketWithUser: true, isVoid: false, announcementResult: false  },
       include: [
         {
           model: Runner,
@@ -835,6 +835,8 @@ export const filterMarketData = async (req, res) => {
       ],
     });
 
+    console.log("Market Data Rows:", marketDataRows);
+    
     // const currentTime = getISTTime();
 
     // await Market.update(
