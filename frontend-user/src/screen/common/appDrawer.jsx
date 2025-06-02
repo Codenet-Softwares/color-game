@@ -253,7 +253,7 @@ function AppDrawer({
               height: "100vh",
               zIndex: 1020,
               marginTop: isHomePage
-                ? store.user.isLogin
+                ? store.user.isLogin && location.pathname === "/lottery-home"
                   ? "110px"
                   : ""
                 : "93px",
