@@ -55,7 +55,9 @@ const GetSingleMarket = () => {
   }
   return (
     <>
-      <Layout />
+      <div style={{ marginTop: `${!store.user.isLogin ? "152px" : ""}` }}>
+        <Layout />
+      </div>
       <div
         className={`global-margin-top${
           store.user.isLogin ? "-logged" : ""

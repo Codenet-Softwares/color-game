@@ -240,7 +240,7 @@ function AppDrawer({
         className="container-fluid custom-scrollbar"
         style={{
           height: "100vh",
-          overflowY: "auto",
+          overflowY: "none",
           overflowX: "hidden",
         }}
       >
@@ -264,14 +264,20 @@ function AppDrawer({
                 : "col-lg-10"
             } `}
             style={{
-              overflowY: "auto",
+              overflowY: "none",
               height:
                 location?.pathname === "/lottery-home"
                   ? "calc(100vh - 5px)"
                   : "calc(100vh - 40px)",
             }}
           >
-            <div className="col-12">{showCarousel && <InnerCarousel />}</div>
+            <div className="container-fluid mt-0 px-0">
+              <div className="row px-0 ">
+                <div className="px-0">
+                  {showCarousel && <InnerCarousel />}
+                </div>
+              </div>
+            </div>
             {children}
           </div>
 
@@ -282,7 +288,7 @@ function AppDrawer({
               style={{
                 position: "fixed",
                 right: "0",
-                top: isHomePage ? "125px" : "",
+                top: isHomePage ? "100px" : "",
                 height: "calc(100vh - 125px)",
                 overflowY: "auto",
               }}

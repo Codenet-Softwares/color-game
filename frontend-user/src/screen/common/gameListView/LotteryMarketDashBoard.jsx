@@ -159,7 +159,9 @@ const LotteryMarketDashBoard = () => {
   // Main return
   return (
     <>
-      <Layout />
+     <div style={{ marginTop: `${!store.user.isLogin ? "150px" : ""}` }}>
+        <Layout />
+      </div>
       <div
         className={`global-margin-top${
           store.user.isLogin ? "-logged" : ""

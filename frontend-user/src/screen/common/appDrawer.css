@@ -59,8 +59,7 @@
   color: hsl(216, 5%, 57%);
 }
 .sidebar ul li.subMenuItems a:hover {
-  /* background-color: #2CB3D1; */
-  /* color: #fff; */
+
    color: #444;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
 }
