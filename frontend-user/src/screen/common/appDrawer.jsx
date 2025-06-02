@@ -137,7 +137,7 @@ function AppDrawer({
                   onClick={() => handleToggle(gameObj.gameId)}
                 >
                   <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
-                    {gameObj?.gameName}
+               ⚽ {gameObj?.gameName}
                     <span
                       className={`dropdown-icon ${isToggled ? "active" : ""}`}
                       style={{ cursor: "pointer" }}

@@ -213,20 +213,25 @@ const GetwholeMarket = () => {
                       {/* Render only if markets are available */}
                       {gameWithMarketData &&
                         gameWithMarketData.markets.length > 0 && (
-                          <div className="row px-0 m-0">
-                            <span className="col-12 col-md-6 d-none d-md-block text-dark text-decoration-none text-nowrap fw-bold h6"></span>
-                            <div className="col-6 col-md-4"></div>
-                            <div
-                              className="col-3 col-md-1 rounded-start fw-bold p-1"
-                              style={{ background: "#80C2F1" }}
-                            >
-                              BACK
-                            </div>
-                            <div
-                              className="col-3 col-md-1 rounded-end fw-bold p-1"
-                              style={{ background: "#FAA9BA" }}
-                            >
-                              LAY
+                          <div className="col-12 col-md-3 p-0 m-0 py-1 ms-auto">
+                            <div className="row gx-1 justify-content-end">
+                              <div className="col-6 ">
+                                <div
+                                  className="rounded-start fw-bold py-1 px-2 text-center"
+                                  style={{ background: "#80C2F1" }}
+                                >
+                                  BACK
+                                </div>
+                              </div>
+
+                              <div className="col-6">
+                                <div
+                                  className="rounded-end fw-bold py-1 px-2 text-center"
+                                  style={{ background: "#FAA9BA" }}
+                                >
+                                  LAY
+                                </div>
+                              </div>
                             </div>
                           </div>
                         )}
@@ -236,15 +241,15 @@ const GetwholeMarket = () => {
                           .map((marketData) => {
                             return (
                               <div
-                                className=" p-0 m-0 "
+                                className="p-0 m-0 "
                                 style={{
                                   backgroundColor: "white",
                                   borderTop: "1px solid #ccc",
                                 }}
                               >
-                                <div className="row py-1 px-0 m-0 ">
+                                <div className="row px-0 m-0 align-items-center">
                                   {/* Runner Name and Balance */}
-                                  <span className="col-12 col-md-6 text-dark text-decoration-none text-nowrap h6 d-flex flex-wrap">
+                                  <div className="col-12 col-md-9 d-flex align-items-center flex-wrap p-0 px-2">
                                     <i className="far fa-calendar-alt text-dark me-2 d-block d-md-none mt-1"></i>
                                     <span
                                       className="pt-2"
@@ -255,7 +260,7 @@ const GetwholeMarket = () => {
                                     <span className="pt-2">| </span>
 
                                     <h6
-                                      className="text-primary px-1 pt-2 text-wrap"
+                                      className="text-primary pt-2 text-wrap m-0"
                                       style={{
                                         wordBreak: "break-word",
                                         whiteSpace: "normal",
@@ -263,23 +268,34 @@ const GetwholeMarket = () => {
                                     >
                                       {marketData?.marketName}
                                     </h6>
-                                  </span>
-                                  <span className="col-6 col-md-4"></span>
-                                  {/* Back and Lay Rates */}
-                                  <div
-                                    className="col-3 col-md-1 rounded-start pt-2"
-                                    style={{ backgroundColor: "#80C2F1" }}
-                                  >
-                                    {marketData?.runners[0]?.rate[0]?.back ??
-                                      "N/A"}
                                   </div>
-
-                                  <div
-                                    className="col-3 col-md-1 rounded-end pt-2"
-                                    style={{ backgroundColor: "#FAA9BA" }}
-                                  >
-                                    {marketData?.runners[0]?.rate[0]?.lay ??
-                                      "N/A"}
+                                  <div className="col-12 col-md-3 p-0 m-0 py-1 text-center">
+                                    <div className="row gx-1 justify-content-end">
+                                      <div className="col-6">
+                                        <div
+                                          className="rounded-start  py-1 px-2"
+                                          style={{
+                                            backgroundColor: "#80C2F1",
+                                            // minWidth: "60px",
+                                          }}
+                                        >
+                                          {marketData?.runners[0]?.rate[0]
+                                            ?.back ?? "N/A"}
+                                        </div>
+                                      </div>
+                                      <div className="col-6">
+                                        <div
+                                          className="rounded-end py-1 px-2"
+                                          style={{
+                                            backgroundColor: "#FAA9BA",
+                                            minWidth: "60px",
+                                          }}
+                                        >
+                                          {marketData?.runners[0]?.rate[0]
+                                            ?.lay ?? "N/A"}
+                                        </div>
+                                      </div>
+                                    </div>
                                   </div>
                                 </div>
                                 {/* );
