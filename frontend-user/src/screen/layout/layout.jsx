@@ -97,7 +97,7 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
         {user_allGames && getNavBarOption()}
      
       </div>
-      {store?.user?.isLogin && (
+      {store?.user?.isLogin && ["/home", "/"].includes(location?.pathname) && (
         <div className="fixed-bottom">
           <SubFooter />
         </div>

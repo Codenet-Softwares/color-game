@@ -82,7 +82,6 @@ const GetMarketDetailByMarketId = () => {
   };
 
   useEffect(() => {
-    console.log("Messages Data:");
     const unsubscribe = onSnapshot(
       collection(db, "color-game-db"),
       (snapshot) => {
@@ -91,14 +90,9 @@ const GetMarketDetailByMarketId = () => {
           ...doc.data(),
         }));
 
-        console.log("Messages Data:", messagesData);
         messagesData.map((message) => {
           if (store?.placeBidding?.marketId === message?.id) {
-            console.log(
-              "Filtered Message ID:",
-              message.id,
-              store?.placeBidding?.marketId
-            );
+         
             setIsActive(message.isActive);
             setIsUpdate(message.updatedAt);
             if (message.hideMarketWithUser === false) {

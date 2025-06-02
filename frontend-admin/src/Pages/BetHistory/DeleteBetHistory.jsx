@@ -33,7 +33,6 @@ const DeleteBetHistory = () => {
   });
   const [refresh, setRefresh] = useState({});
 
-  console.log("marketId", marketHistory);
 
   const fetchMarketHistory = useCallback(
     (term, page = 1, entries = 10) => {

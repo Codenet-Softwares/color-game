@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUserLotteryMarket_api } from "../../../utils/apiService";
 import AppDrawer from "../appDrawer";
 import Layout from "../../layout/layout";
@@ -12,6 +12,8 @@ const LotteryMarketDashBoard = () => {
   const [marketData, setMarketData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
+   const [hoveredCardIndex, setHoveredCardIndex] = useState(null);
+  const navigate = useNavigate();
 
   // Fetch market data
   const fetchMarketData = async () => {
@@ -33,16 +35,24 @@ const LotteryMarketDashBoard = () => {
 
   // Function to render the body
   const getBody = () => {
-    const handleMarketClick = (marketId) => {
+
+  const handleMarketClick = (marketId) => {
       if (store.user.isLogin) {
-        window.location.href = `/lottoPurchase/${marketId}`;
+        navigate(`/lottoPurchase/${marketId}`);
       } else {
         setShowLogin(true);
+        localStorage.setItem(
+          "lotteryPath",
+          JSON.stringify({
+            isLotterypath: true,
+            pathName: `/lottoPurchase/${marketId}`,
+          })
+        );
       }
     };
 
     return (
-      <div className=" p-3 mt-5 mt-sm-2 ">
+      <div className=" p-3 mt-5 mt-sm-2">
         {loading ? (
           <div className="text-center ">
             <div className="spinner-border text-primary" role="status">
@@ -55,44 +65,29 @@ const LotteryMarketDashBoard = () => {
             <div
               key={index}
               className="row mx-0 my-3 p-4"
+              onClick={() => handleMarketClick(marketDataItem.marketId)}
+              onMouseEnter={() => setHoveredCardIndex(index)}
+              onMouseLeave={() => setHoveredCardIndex(null)}
               style={{
                 backgroundColor: "#2CB3D1",
                 borderRadius: "16px",
-                boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
-                // transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 cursor: "pointer",
-                // overflow: "hidden",
+                overflow: "hidden",
               }}
             >
               {/* Market Header */}
-              <div
-                className="row mx-0 px-2 align-items-center"
-                onClick={() => handleMarketClick(marketDataItem.marketId)}
-                style={{
-                  cursor: "pointer",
-                }}
-              >
-                <span
-                  className="col-12 text-light font-weight-bold text-uppercase text-center"
-                  style={{
-                    fontSize: "22px",
-                    color: "#F1C40F",
-                    borderBottom: "2px solid #ddd",
-                    paddingBottom: "12px",
-                    transition: "color 0.3s ease",
-                  }}
-                  onMouseEnter={(e) =>
-                    (e.currentTarget.style.color = "#E67E22")
-                  }
-                  onMouseLeave={(e) =>
-                    (e.currentTarget.style.color = "#F1C40F")
-                  }
-                >
+              <div className="row mx-0 px-2 align-items-center">
+                <span className="col-12 text-light font-weight-bold text-uppercase text-center">
                   <h6
-                    className="fw-bold text-warning text-wrap"
+                    className="fw-bold text-wrap"
                     style={{
+                      fontSize: "22px",
                       wordBreak: "break-word",
                       whiteSpace: "normal",
+                      borderBottom: "2px solid #ddd",
+                      paddingBottom: "12px",
+                      transition: "color 0.3s ease",
+                      color: hoveredCardIndex === index ? "#E67E22" : "#F1C40F",
                     }}
                   >
                     Market: {marketDataItem?.marketName ?? "Unknown"}
@@ -133,13 +128,21 @@ const LotteryMarketDashBoard = () => {
                   <p className="m-0 text-dark">
                     <strong className="text-dark">Price:</strong>
                   </p>
-                  <p className="m-0 text-dark">
+                  <p
+                    className="m-0 fw-bold"
+                    style={{
+                      color: "#b846a7",
+                      fontWeight: "bold",
+                      animation: "blinker 1s linear infinite",
+                    }}
+                  >
                     {marketDataItem?.price
                       ? `₹ ${marketDataItem.price}`
                       : "N/A"}
                   </p>
                 </div>
               </div>
+
               {showLogin && (
                 <Login showLogin={showLogin} setShowLogin={setShowLogin} />
               )}

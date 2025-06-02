@@ -13,6 +13,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const { dispatch, store } = useAppContext();
+  const storedData = JSON.parse(localStorage?.getItem("lotteryPath"));
 
   useEffect(() => {
     if (!showLogin) {
@@ -65,6 +66,10 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
           payload: { isLogin: true, ...response.data },
         });
       }
+      if (storedData?.isLotterypath) {
+        navigate(storedData.pathName);
+      }
+      localStorage.removeItem("lotteryPath");
     }
     dispatch({
       type: strings.isLoading,
@@ -74,8 +79,9 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
 
   function header() {
     return (
-      <h4
-        className="d-flex justify-content-center text-uppercase fw-bold login_heading">Login </h4>
+      <h4 className="d-flex justify-content-center text-uppercase fw-bold login_heading">
+        Login{" "}
+      </h4>
     );
   }
 
@@ -91,15 +97,13 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
             value={values.userName}
             onChange={handleChange}
           />
-          <span
-            className="position-absolute small error_msg"
-          >
+          <span className="position-absolute small error_msg">
             {errors.userName && touched.userName ? (
               <p className="text-danger fw-bold">{errors.userName}</p>
             ) : null}
           </span>
         </div>
-        
+
         <br />
         <div className="d-flex justify-content-center position-relative ">
           <input
@@ -112,18 +116,16 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
           />
 
           <span
-            className="position-absolute  password_show"           
+            className="position-absolute  password_show"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <FaEye /> : <FaEyeSlash />}
-            </span>
-            <span className="position-absolute small error_msg"
-            >
+          </span>
+          <span className="position-absolute small error_msg">
             {errors.password && touched.password ? (
               <p className="text-danger fw-bold">{errors.password}</p>
             ) : null}
-            </span>
-          
+          </span>
         </div>
       </div>
     );
