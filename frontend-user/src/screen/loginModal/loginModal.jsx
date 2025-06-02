@@ -75,7 +75,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   function header() {
     return (
       <h4
-        className="d-flex justify-content-center text-uppercase fw-bold login_heading">Login 👇🏾</h4>
+        className="d-flex justify-content-center text-uppercase fw-bold login_heading">Login </h4>
     );
   }
 

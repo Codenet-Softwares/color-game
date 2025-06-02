@@ -35,9 +35,9 @@ function AppDrawer({
   const [showLogin, setShowLogin] = useState(false);
 
   const { dispatch, store } = useAppContext();
-  
+
   const location = useLocation();
-  console.log("location",location?.pathname)
+  console.log("location", location?.pathname);
   useEffect(() => {
     user_getAllGames();
   }, [isColorgameUpdate]);
@@ -240,18 +240,24 @@ function AppDrawer({
       <div
         className="container-fluid custom-scrollbar"
         style={{
-          height: location?.pathname==="/home"?"85vh":"100vh",
+          height: location?.pathname === "/home" ? "85vh" : "100vh",
           overflowY: "none",
           overflowX: "hidden",
         }}
       >
-        <div className="row" style={{ height: "100vh", display: "flex" }}>
+        <div className="row">
           {/* LEFT NAVBAR - md: 4, lg: 2 */}
           <div
-            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar p-0"
+            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar px-1   "
             style={{
               height: "100vh",
-              marginTop: isHomePage ? "0px" : "93px",
+              zIndex: 1020,
+              marginTop: isHomePage
+                ? store.user.isLogin
+                  ? "110px"
+                  : ""
+                : "93px",
+              backgroundColor: "#f8f9fa",
             }}
           >
             {getLeftNavBar()}
@@ -259,7 +265,7 @@ function AppDrawer({
 
           {/* MAIN CONTENT - md: 8 offset-4, lg: 7 offset-2 */}
           <div
-            className={`custom-scrollbar offset-md-4 col-md-8 offset-lg-2 ${
+            className={` offset-md-4 col-md-8 offset-lg-2 px-0  ${
               ["/home", "/"].includes(location?.pathname)
                 ? "col-lg-7"
                 : "col-lg-10"
@@ -272,14 +278,18 @@ function AppDrawer({
                   : "calc(100vh - 40px)",
             }}
           >
-            <div className="container-fluid mt-0 px-0">
-              <div className="row px-0 ">
-                <div className="px-0">
-                  {showCarousel && <InnerCarousel />}
-                </div>
+            <div className="container-fluid mt-0 px-0 ">
+              <div className="row ">
+                <div className="px-0">{showCarousel && <InnerCarousel />}</div>
               </div>
             </div>
-            {children}
+
+            <div
+              className="px-1"
+              style={{ overflowY: "none", height: "calc(100vh - 100px)" }}
+            >
+              {children}
+            </div>
           </div>
 
           {/* RIGHT SIDEBAR - only for desktop (lg: col-3) */}

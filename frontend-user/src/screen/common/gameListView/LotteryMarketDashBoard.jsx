@@ -42,7 +42,7 @@ const LotteryMarketDashBoard = () => {
     };
 
     return (
-      <div className=" p-3 mt-5 mt-sm-2">
+      <div className=" p-3 mt-5 mt-sm-2 ">
         {loading ? (
           <div className="text-center ">
             <div className="spinner-border text-primary" role="status">
@@ -61,7 +61,7 @@ const LotteryMarketDashBoard = () => {
                 boxShadow: "0 8px 16px rgba(0, 0, 0, 0.1)",
                 // transition: "transform 0.3s ease, box-shadow 0.3s ease",
                 cursor: "pointer",
-                overflow: "hidden",
+                // overflow: "hidden",
               }}
             >
               {/* Market Header */}
@@ -159,14 +159,10 @@ const LotteryMarketDashBoard = () => {
   // Main return
   return (
     <>
-     <div style={{ marginTop: `${!store.user.isLogin ? "150px" : ""}` }}>
+      <div style={{ marginTop: `${!store.user.isLogin ? "150px" : ""}` }}>
         <Layout />
       </div>
-      <div
-        className={`global-margin-top${
-          store.user.isLogin ? "-logged" : ""
-        } mb-0`}
-      >
+      <div>
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           {getBody()}
         </AppDrawer>

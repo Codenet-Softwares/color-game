@@ -13,8 +13,8 @@
 
 
 .global-margin-top-logged {
-  margin-top: 95px;
-  overflow-y: hidden;
+  margin-top: 100px;
+  overflow-y: auto;
 }
 
 * {
