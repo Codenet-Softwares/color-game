@@ -5,7 +5,7 @@ import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
-import { sequelize, sequelizeArchive } from './db.js';
+import { sequelize } from './db.js';
 
 // Route imports
 import { AdminRoute } from './routes/admin.route.js';
@@ -23,14 +23,10 @@ import { MarketDeleteApprovalRoute } from './routes/marketApproval.route.js';
 import Game from './models/game.model.js';
 import Market from './models/market.model.js';
 import Runner from './models/runner.model.js';
-import CurrentOrder from './models/currentOrder.model.js';
-import BetHistory from './models/betHistory.model.js';
 import MarketBalance from './models/marketBalance.js';
-import InactiveGame from './models/inactiveGame.models.js';
 
 // Helpers
 import { checkAndManageIndexes } from './helper/indexManager.js';
-import { updateColorGame } from './helper/cgCron.js';
 import { wlExternalRoute } from './routes/wl.external.route.js';
 
 // Env config
@@ -108,19 +104,6 @@ sequelize
     // Start server
     app.listen(process.env.PORT, () => {
       console.log(`Server running at http://localhost:${process.env.PORT}`);
-
-      // Cron-safe loop
-      const runLottery = async () => {
-        try {
-          await updateColorGame(); // Don't create connections inside here unnecessarily
-        } catch (err) {
-          console.error('Error in updateColorGame:', err.message);
-        } finally {
-          setTimeout(runLottery, 1000); // Loop again safely
-        }
-      };
-
-      runLottery(); // Start the loop
     });
   })
   .catch((err) => {
