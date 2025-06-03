@@ -30,6 +30,6 @@ export const authRoute = (app) => {
   //not needed for now
   // app.post('/api/supAdmin-reset-password',validateResetPassword, customErrorHandler, authorize([string.Admin]), adminResetPassword);
 
-  // app.post('/api/subAdmin-reset-password',validateResetPassword, customErrorHandler,authorize([string.Admin]), subAdminResetPassword);
+   app.post('/api/subAdmin-reset-password',validateResetPassword, customErrorHandler,authorize([string.Admin]), subAdminResetPassword);
 
 };
