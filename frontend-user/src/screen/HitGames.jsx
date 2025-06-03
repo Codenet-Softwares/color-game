@@ -32,13 +32,13 @@ const HitGames = () => {
   return (
     <>
       <br />
-      <div className="card-deck">
+      <div className="card-deck px-1" >
         {sliderData.map((item, index) => (
           <div
-            className="card border-0"
+            className="card border-0 px-0 "
             key={item.id || index}
             onClick={handleImageClick}
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", margin: 1  }}
           >
             <img
               src={item.image}

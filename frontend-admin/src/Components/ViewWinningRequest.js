@@ -16,7 +16,7 @@ const ViewWinningRequest = () => {
     getViewWinningRequest()
   );
   const auth = useAuth();
-  console.log("isopen", viewWinningRequest);
+
   const openModalWithData = (data, marketId) => {
     setViewWinningRequest((prev) => ({
       ...prev,
@@ -80,7 +80,7 @@ const ViewWinningRequest = () => {
       });
   };
 
-  console.log("first", viewWinningRequest);
+
   const handleClearSearch = () => {
     setSearchTerm("");
   };

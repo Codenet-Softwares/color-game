@@ -23,7 +23,6 @@ const UserBetHistory = () => {
     search: "",
     totalData: 0,
   });
-  console.log("=====>>>>", betAfterWin.winBetHistory.data);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedUserId, setSelectedUserId] = useState(""); // State to store selected user ID
@@ -57,7 +56,6 @@ const UserBetHistory = () => {
         betAfterWin.totalEntries,
         debouncedSearchTerm
       );
-      console.log("====>>> line 58", response.data.data.data);
 
       setBetAfterWin((prev) => ({
         ...prev,

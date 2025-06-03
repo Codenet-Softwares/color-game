@@ -6,6 +6,7 @@ import { sequelize } from "../db.js";
 import Runner from "../models/runner.model.js";
 import CurrentOrder from "../models/currentOrder.model.js";
 import rateSchema from "../models/rate.model.js";
+import { deleteLotteryFromFirebase } from "../helper/firebase.delete.js";
 
 export const getDeleteMarket = async (req, res) => {
     try {
@@ -121,6 +122,8 @@ export const deleteMarket = async (req, res) => {
             await transaction.rollback();
             return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, "Market deletion failed"));
         }
+
+        await deleteLotteryFromFirebase(marketId)
 
         await transaction.commit();
         return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Market deleted successfully"));

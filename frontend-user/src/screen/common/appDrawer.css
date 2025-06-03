@@ -1,7 +1,4 @@
-.sidebar ul {
-  list-style-type: none;
-  padding: 0;
-}
+
 .sidebar ul li {
   display: block;
   /* border-bottom: 2px solid rgb(226, 225, 225); */
@@ -62,8 +59,7 @@
   color: hsl(216, 5%, 57%);
 }
 .sidebar ul li.subMenuItems a:hover {
-  /* background-color: #2CB3D1; */
-  /* color: #fff; */
+
    color: #444;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2);
 }
@@ -103,9 +99,7 @@
   margin-right: 10px;
   animation: blink 1s infinite;
 }
-.sidebar ul:hover{
-  background-color: #F1F5F8;
-}
+
 .dropdown-icon {
   margin-left: 10px; /* Space between text and icon */
   transition: transform 0.3s; /* Smooth transition for rotation */
@@ -113,26 +107,8 @@
 .dropdown-icon.active {
   transform: rotate(180deg); /* Rotate icon when active */
 }
-.subMenuItems {
-  list-style-type: none; /* Remove default bullets */
-  margin: 8px;
-}
-.subMenuHead {
-  font-size: 15px;
-  /* color: #444; */
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #E6F7FF, #fff);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  border: 1px solid rgb(211, 208, 208);
-}
-.subMenuHead:hover {
-  color: #444;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow on hover */
-}
+
+
 /* Draw date icon styling */
 .draw-date-icon {
   font-size: 18px;

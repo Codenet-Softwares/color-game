@@ -10,7 +10,7 @@ import Pagination from "./Pagination";
 import ReusableTable from "./ReusableTable/ReusableTable";
 const BetWinTracker = () => {
   const { marketId } = useParams();
-  console.log("Market ID============", marketId);
+
 
   const auth = useAuth();
   const navigate = useNavigate();
@@ -86,7 +86,7 @@ const BetWinTracker = () => {
         marketId: marketId,
       });
 
-      console.log("Delete Response====================", response);
+
 
       if (response.status === 200) {
         toast.success("Market and bet deleted successfully!");
@@ -140,7 +140,7 @@ const BetWinTracker = () => {
   };
 
   const handleShowAllBets = (username, userId) => {
-    console.log("line 148", userId);
+
     // Set the selected user ID (to be implemented once the api is provided)
     setSelectedUserId(userId);
     setSelectedUsername(username); // Set the selected username

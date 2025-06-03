@@ -23,9 +23,10 @@ const SubAdminView = () => {
     remarks: "",
   });
   const toggleAccordion = (index, status, runnerName, remarks) => {
-    console.log("first====", runnerName, remarks);
     if (status === "Pending") {
-      toast.warning("Your submission is not yet approved.");
+      toast.warning(
+        `Your submission for Runner ${runnerName} has not been approved yet.`
+      );
       return;
     }
     setSubAdminHistory((prevState) => ({
@@ -280,7 +281,6 @@ const SubAdminView = () => {
                                     )
                                   }
                                 >
-                                  {console.log("first", subHistory.runnerName)}
                                   {subAdminHistory.openRowIndex === index
                                     ? "Hide Details"
                                     : "View Details"}

@@ -229,26 +229,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 />{" "}
                 Account Statement
               </li>
-              {/* <li
-                class="nav-item mb-3 align-items-start"
-                style={{
-                  color: "white",
-                  cursor: "pointer",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.color = "#2FA8BA"; 
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; 
-                }}
-              >
-                <FaMoneyCheck
-                  style={{
-                    color: "#fec015",
-                  }}
-                />{" "}
-                Rolling Commission
-              </li> */}
+          
               <li
                 onClick={handlePasswordChangeClick}
                 class="nav-item mb-3 align-items-start"

@@ -40,7 +40,6 @@ function AppDrawer({
   useEffect(() => {
     user_getAllGames();
   }, [isColorgameUpdate]);
-  console.log("isColorgameUpdate", isColorgameUpdate);
 
   const handleAllId = (gameId, marketId) => {
     dispatch({
@@ -74,7 +73,6 @@ function AppDrawer({
         ...doc.data(),
       }));
 
-      console.log("Messages Data:", messagesData);
       setIsColorgameUpdate(messagesData);
     });
 
@@ -90,7 +88,6 @@ function AppDrawer({
           ...doc.data(),
         }));
 
-        console.log("Messages Data:", messagesData);
         setIsColorgameUpdate(messagesData);
       }
     );
@@ -101,7 +98,7 @@ function AppDrawer({
   function getLeftNavBar() {
     return (
       <div
-        className={`sidebar border-top-0 border-end ${
+        className={`border-top-0 border-end ${
           store.user.isLogin ? "mt-4" : "mt-1"
         }`}
         style={{ overflowY: "auto" }}
@@ -124,10 +121,9 @@ function AppDrawer({
           />
         </span>
 
-        <ul className="overflow-auto">
+        <ul className="overflow-auto list-group list-group-flush">
           {user_allGames?.map((gameObj, index) => {
             const isToggled = toggleMap[gameObj.gameId];
-            console.log("gameObj", gameObj);
 
             return (
               <React.Fragment key={index}>
@@ -139,6 +135,7 @@ function AppDrawer({
                     {gameObj?.gameName}
                     <span
                       className={`dropdown-icon ${isToggled ? "active" : ""}`}
+                      style={{ cursor: "pointer" }}
                     >
                       ▼
                     </span>
@@ -149,7 +146,7 @@ function AppDrawer({
                   gameObj.markets?.map((marketObj, marketIndex) =>
                     gameObj.gameName.toLowerCase() === "colorgame" ? (
                       <li
-                        className="subMenuItems text-wrap"
+                        className="list-group-item text-wrap"
                         style={{
                           wordBreak: "break-word",
                           whiteSpace: "normal",
@@ -160,6 +157,7 @@ function AppDrawer({
                         }
                       >
                         <Link
+                          className="text-uppercase fw-semibold"
                           to={`/gameView/${gameObj?.gameName?.replace(
                             /\s/g,
                             ""
@@ -167,6 +165,11 @@ function AppDrawer({
                             /\s/g,
                             ""
                           )}/${marketObj?.marketId?.replace(/\s/g, "")}`}
+                          style={{
+                            color: "#333",
+                            textDecoration: "none",
+                            display: "block",
+                          }}
                         >
                           {marketObj.marketName}
                         </Link>
@@ -174,7 +177,7 @@ function AppDrawer({
                     ) : gameObj.gameName.toLowerCase() === "lottery" ? (
                       <li
                         key={marketObj.marketId}
-                        className="subMenuItems  text-wrap"
+                        className="list-group-item  text-wrap"
                         style={{
                           wordBreak: "break-word",
                           whiteSpace: "normal",
@@ -182,8 +185,14 @@ function AppDrawer({
                       >
                         {store.user.isLogin ? (
                           <Link
+                            className="text-uppercase fw-semibold "
                             to={`/lottoPurchase/${marketObj.marketId}`}
                             onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                            style={{
+                              color: "#333",
+                              textDecoration: "none",
+                              display: "block",
+                            }}
                           >
                             {marketObj.marketName}
                           </Link>
@@ -193,6 +202,11 @@ function AppDrawer({
                               e.stopPropagation();
                               setShowLogin(true);
                             }} // Prevents dropdown collapse
+                            style={{
+                              color: "#333",
+                              textDecoration: "none",
+                              display: "block",
+                            }}
                           >
                             {marketObj.marketName}
                           </Link>
@@ -218,14 +232,27 @@ function AppDrawer({
     return isMobile ? (
       getLeftNavBar()
     ) : (
-      <div className="container-fluid">
-        <div className="row" style={{ height: "100vh", display: "flex" }}>
+      <div
+        className="container-fluid custom-scrollbar"
+        style={{
+          height: ["/home", "/"].includes(location?.pathname)  ? "85vh" : "100vh",
+          overflowY: "none",
+          overflowX: "hidden",
+        }}
+      >
+        <div className="row">
           {/* LEFT NAVBAR - md: 4, lg: 2 */}
           <div
-            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar p-0"
+            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar px-1   "
             style={{
               height: "100vh",
-              marginTop: isHomePage ? "0px" : "93px",
+              zIndex: 1020,
+              marginTop: isHomePage
+                ? store.user.isLogin && location.pathname === "/lottery-home"
+                  ? "110px"
+                  : ""
+                : "93px",
+              backgroundColor: "#f8f9fa",
             }}
           >
             {getLeftNavBar()}
@@ -233,21 +260,31 @@ function AppDrawer({
 
           {/* MAIN CONTENT - md: 8 offset-4, lg: 7 offset-2 */}
           <div
-            className={`custom-scrollbar offset-md-4 col-md-8 offset-lg-2 ${
+            className={` offset-md-4 col-md-8 offset-lg-2 px-0  ${
               ["/home", "/"].includes(location?.pathname)
                 ? "col-lg-7"
                 : "col-lg-10"
             } `}
             style={{
-              overflowY: "auto",
+              overflowY: "none",
               height:
                 location?.pathname === "/lottery-home"
                   ? "calc(100vh - 5px)"
                   : "calc(100vh - 40px)",
             }}
           >
-            <div className="col-12">{showCarousel && <InnerCarousel />}</div>
-            {children}
+            <div className="container-fluid mt-0 px-0 ">
+              <div className="row ">
+                <div className="px-0">{showCarousel && <InnerCarousel />}</div>
+              </div>
+            </div>
+
+            <div
+              className="px-1"
+              style={{ overflowY: "none", height: "calc(100vh - 100px)" }}
+            >
+              {children}
+            </div>
           </div>
 
           {/* RIGHT SIDEBAR - only for desktop (lg: col-3) */}
@@ -257,7 +294,7 @@ function AppDrawer({
               style={{
                 position: "fixed",
                 right: "0",
-                top: isHomePage ? "125px" : "",
+                top: isHomePage ? "100px" : "",
                 height: "calc(100vh - 125px)",
                 overflowY: "auto",
               }}

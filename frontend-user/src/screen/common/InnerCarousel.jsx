@@ -28,7 +28,7 @@ const InnerCarousel = () => {
 
   return (
     <div>
-      <div className="row">
+      <div className="row px-0 ">
         <div className="col-md-12">
           <div
             id="carouselExampleCaptions"
@@ -68,27 +68,7 @@ const InnerCarousel = () => {
                       alt={`Slide ${index + 1}`}
                       style={{ height: "350px" }}
                     />
-                    {/* <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background:
-                    "linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))",
-                  color: "white",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  padding: "20px",
-                }}
-              >
-                <h5>{item.headingText}</h5>
-                <p>{item.text}</p>
-              </div> */}
+          
                   </div>
                 </div>
               ))}

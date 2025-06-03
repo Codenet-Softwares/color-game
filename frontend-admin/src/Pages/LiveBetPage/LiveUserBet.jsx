@@ -57,7 +57,6 @@ const LiveUserBet = () => {
         debouncedSearchTerm
       );
       const bets = response.data?.data || [];
-      console.log("line for bets", bets.marketName);
 
       setUserBets((prev) => ({
         ...prev,

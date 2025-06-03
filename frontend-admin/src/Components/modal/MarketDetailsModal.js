@@ -17,7 +17,7 @@ const MarketDetailsModal = ({
     // Use toISOString() and format the string to exclude the 'GMT' part
     return date.toISOString().replace('T', ' ').replace('Z', '');
   };
-  console.log("isActive",isActive)
+ 
   return (
     <Modal show={show} onHide={() => setShow(false)}>
       <Modal.Header closeButton>

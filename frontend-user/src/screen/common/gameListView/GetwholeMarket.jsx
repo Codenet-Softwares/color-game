@@ -66,7 +66,6 @@ const GetwholeMarket = () => {
         ...doc.data(),
       }));
 
-      console.log("Messages Data:", messagesData);
       setIsLotteryUpdate(messagesData);
     });
 
@@ -82,7 +81,6 @@ const GetwholeMarket = () => {
           ...doc.data(),
         }));
 
-        console.log("Messages Data:", messagesData);
         setIsColorgameUpdate(messagesData);
       }
     );
@@ -93,7 +91,15 @@ const GetwholeMarket = () => {
   return (
     <>
       {/* <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}> */}
-      <div className="row m-1">
+      <div
+        className="row m-1 p-0"
+        style={{
+          marginTop: 0,
+          paddingTop: 0,
+          position: "relative",
+          top: "-13px",
+        }}
+      >
         {user_allGamesWithMarketData &&
           user_allGamesWithMarketData
             .slice(0, store.user.isLogin ? 5 : 3)
@@ -103,7 +109,7 @@ const GetwholeMarket = () => {
                   {gameWithMarketData.gameName === "Lottery" ? (
                     <>
                       <div
-                        className="col-12 p-1 mt-3  text-white"
+                        className="col-12 p-1 fw-bold h6 text-white shadow-lg"
                         style={{
                           backgroundColor: "#18ADC5",
                           fontSize: "18px",
@@ -135,7 +141,7 @@ const GetwholeMarket = () => {
                                     whiteSpace: "normal",
                                   }}
                                 >
-                                  💹{marketData?.marketName ?? "Unknown"} |{" "}
+                                  {marketData?.marketName ?? "Unknown"} |{" "}
                                   <span
                                     className=""
                                     style={{ color: "#022C44" }}
@@ -178,13 +184,9 @@ const GetwholeMarket = () => {
 
                       {gameWithMarketData.markets.length > 0 ? (
                         <Link
-                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold`}
-                          // to={`/gameView/${gameWithMarketData?.gameName?.replace(
-                          //   /\s/g,
-                          //   ""
-                          // )}/${gameWithMarketData?.marketId}`}
+                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold p-0`}
                           to={`/lottery-home`}
-                          style={{ textAlign: "right", margin: "16px" }}
+                          style={{ textAlign: "right" }}
                         >
                           View more...
                         </Link>
@@ -211,14 +213,15 @@ const GetwholeMarket = () => {
                         gameWithMarketData.markets.length > 0 && (
                           <div className="row px-0 m-0">
                             <span className="col-12 col-md-6 d-none d-md-block text-dark text-decoration-none text-nowrap fw-bold h6"></span>
+                            <div className="col-6 col-md-4"></div>
                             <div
-                              className="col-6 col-md-3 rounded-top-2 fw-bold p-1"
+                              className="col-3 col-md-1 rounded-start fw-bold p-1"
                               style={{ background: "#80C2F1" }}
                             >
                               BACK
                             </div>
                             <div
-                              className="col-6 col-md-3 rounded-top-2 fw-bold p-1"
+                              className="col-3 col-md-1 rounded-end fw-bold p-1"
                               style={{ background: "#FAA9BA" }}
                             >
                               LAY
@@ -242,14 +245,15 @@ const GetwholeMarket = () => {
                                   <span className="col-12 col-md-6 text-dark text-decoration-none text-nowrap h6 d-flex flex-wrap">
                                     <i className="far fa-calendar-alt text-dark me-2 d-block d-md-none mt-1"></i>
                                     <span
-                                      className=""
+                                      className="pt-2"
                                       style={{ color: "#022C44" }}
                                     >
                                       {formatDate(marketData.startTime)}
                                     </span>
-                                    |{" "}
+                                    <span className="pt-2">| </span>
+
                                     <h6
-                                      className="text-primary px-1 text-wrap"
+                                      className="text-primary px-1 pt-2 text-wrap"
                                       style={{
                                         wordBreak: "break-word",
                                         whiteSpace: "normal",
@@ -258,9 +262,10 @@ const GetwholeMarket = () => {
                                       {marketData?.marketName}
                                     </h6>
                                   </span>
+                                  <span className="col-6 col-md-4"></span>
                                   {/* Back and Lay Rates */}
                                   <div
-                                    className="col-6 col-md-3 rounded p-1 h6"
+                                    className="col-3 col-md-1 rounded-start pt-2"
                                     style={{ backgroundColor: "#80C2F1" }}
                                   >
                                     {marketData?.runners[0]?.rate[0]?.back ??
@@ -268,7 +273,7 @@ const GetwholeMarket = () => {
                                   </div>
 
                                   <div
-                                    className="col-6 col-md-3 rounded p-1 h6"
+                                    className="col-3 col-md-1 rounded-end pt-2"
                                     style={{ backgroundColor: "#FAA9BA" }}
                                   >
                                     {marketData?.runners[0]?.rate[0]?.lay ??

@@ -2,7 +2,6 @@ import React from "react";
 import "./openBets.css"; // Import external CSS file
 
 const RenderBackTable = ({ betHistoryData }) => {
-  console.log("first", betHistoryData);
 
 
   // Ensure openBet is always an array

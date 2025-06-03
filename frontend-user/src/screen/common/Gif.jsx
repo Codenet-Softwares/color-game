@@ -24,16 +24,13 @@ const Gif = () => {
   }, []);
 
   return (
-    <div className="row m-0">
+    <div className="card-deck px-1 pt-2 ">
       {gifData.map((item, index) => (
-        <div
-          className={`col-sm-6 p-1 ${index !== 0 ? "ps-md-3" : ""}`}
-          key={index}
-        >
+        <div className="card border-0  mt-3 " key={index} style={{ margin: 1 }}>
           <div className="card rounded-0 border-0">
             <img
               src={item.image}
-              className="card-img-top  rounded-0"
+              className="card-img-top  rounded-0 "
               alt={`Gif ${index}`}
               style={{ maxHeight: "200px" }}
             />

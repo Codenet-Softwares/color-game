@@ -10,10 +10,15 @@ import {
 import { useAppContext } from "../../contextApi/context";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../Lottery/firebaseStore/lotteryFirebase";
+import strings from "../../utils/constant/stringConstant";
 
 const useLotteryData = (MarketId) => {
   const { updateWalletAndExposure } = useAppContext(); // Get update function from context for wallet and exposure
   const [lotteryData, setLotteryData] = useState(getInitialLotteryData());
+
+  const accessTokenFromStore = JSON.parse(
+    localStorage.getItem(strings.LOCAL_STORAGE_KEY)
+  )?.user?.accessToken;
 
   //all input boxes with dropdown defined here
   const DROPDOWN_FIELDS = [
@@ -72,12 +77,13 @@ const useLotteryData = (MarketId) => {
   }, [MarketId]);
 
   useEffect(() => {
-    setLotteryData(getInitialLotteryData());
-    fetchLotteryData();
-  }, [MarketId, lotteryData.isUpdate]);
+    if (accessTokenFromStore) {
+      setLotteryData(getInitialLotteryData());
+      fetchLotteryData();
+    }
+  }, [MarketId, lotteryData.isUpdate, accessTokenFromStore]);
 
-  console.log("isupdate.........", lotteryData.isUpdate)
-  // Firebase work happening here 
+  // Firebase work happening here
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "lottery-db"), (snapshot) => {
       const messagesData = snapshot.docs.map((doc) => ({
@@ -85,15 +91,13 @@ const useLotteryData = (MarketId) => {
         ...doc.data(),
       }));
 
-      console.log("Messages Data:", messagesData);
 
       messagesData.map((message) => {
         if (MarketId === message.id) {
-          console.log("Filtered Message ID:", message.id);
           setLotteryData((prevData) => ({
             ...prevData,
             isSuspend: !message.isActive,
-            isUpdate: message.updatedAt
+            isUpdate: message.updatedAt,
           }));
           if (!message.inactiveGame) {
             window.location.href = "/home";

@@ -23,7 +23,4 @@ background-color: #f8d7da;
 
   }
   
-  .open-custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.4);
-  }
   

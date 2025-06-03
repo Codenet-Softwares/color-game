@@ -11,13 +11,10 @@
   right: 24px;
 }
 
-.global-margin-top {
-  margin-top: 150px;
-  overflow: hidden;
-}
 
 .global-margin-top-logged {
-  margin-top: 95px;
+  margin-top: 100px;
+  overflow-y: hidden;
 }
 
 * {
@@ -27,30 +24,13 @@
 button[disabled] {
   background-color: #f0f0f0;
 }
- /* body{
-overflow-y: scroll;
- } */
-/* .timer-loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh; 
-} */
 
-/* .circle {
-  width: 60px; 
-  height: 60px; 
-  border-radius: 50%;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: conic-gradient(#2cb3d1 100%, #e6e6e6 0%);
+body {
+  background-color: #f0f0f0 !important;
+  overflow-y: hidden;
 }
 
-.time {
-  position: absolute;
-  font-size: 18px; 
-  color: #2cb3d1;
-  font-weight: bold;
-} */
+h1,
+h2 {
+  font-family: "Georgia", serif;
+}
