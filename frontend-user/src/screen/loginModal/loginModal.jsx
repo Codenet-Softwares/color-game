@@ -141,7 +141,16 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
         >
           Sign in
         </Button>
-        <span className= "mt-2"style={{ textDecoration: "none", color: "#1AA0D1" }}>
+        <span
+          className="mt-2"
+          style={{
+            textDecoration: "none",
+            color: "#1AA0D1",
+            cursor: "pointer",
+            animation: "blink 2s infinite", 
+            letterSpacing: "normal", 
+          }}
+        >
           Download App
         </span>
       </div>
