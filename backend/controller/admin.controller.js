@@ -162,7 +162,7 @@ export const deleteSubAdmin = async (req, res) => {
       .status(statusCode.success)
       .send(
         apiResponseSuccess(
-          subAdmin,
+          [],
           true,
           statusCode.success,
           "Sub-admin deleted successfully"
