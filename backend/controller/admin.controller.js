@@ -140,6 +140,49 @@ export const createSubAdmin = async (req, res) => {
   }
 };
 
+export const deleteSubAdmin = async (req, res) => {
+  const { adminId } = req.params;
+
+  try {
+    const subAdmin = await admins.findOne({
+      where: {
+        adminId,
+        roles: 'subAdmin', 
+      },
+    });
+
+    if (!subAdmin) {
+      return res.status(statusCode.badRequest).send(
+        apiResponseErr(null, false, statusCode.badRequest, "Sub-admin not found"))
+    }
+
+    await subAdmin.destroy();
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          subAdmin,
+          true,
+          statusCode.success,
+          "Sub-admin deleted successfully"
+        )
+      );
+
+  } catch (error) {
+      return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
 
 
 export const getSubAdmins = async (req, res) => {

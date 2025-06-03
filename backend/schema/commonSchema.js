@@ -175,6 +175,12 @@ export const validateSubAdmin = [
     .withMessage("Each permission must be a non-empty string"),
 ];
 
+export const validateDeleteSubAdmin = [
+  param('adminId')
+    .notEmpty().withMessage('adminId is required')
+    .isUUID().withMessage('adminId must be a valid UUID'),
+];
+
 
 export const suspendedMarketSchema = [
   param("marketId").notEmpty().withMessage("Market ID is required"),
@@ -661,10 +667,6 @@ export const validateResetPassword = [
     .trim()
     .notEmpty()
     .withMessage("Username Is Required"),
-  body("oldPassword")
-    .trim()
-    .notEmpty()
-    .withMessage("Old Password Is Required"),
   body("newPassword")
     .trim()
     .notEmpty()
