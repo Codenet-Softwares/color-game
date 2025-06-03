@@ -1,4 +1,3 @@
-
 import axios from "axios";
 const API_HOST = process.env.REACT_APP_API_URL;
 
@@ -15,6 +14,16 @@ class AccountService {
       method: "POST",
       url: API_HOST + "/api/subAdmin-reset-password",
       data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  DeleteSubAdmin(user, adminId) {
+    return axios({
+      method: "DELETE",
+      url: API_HOST + `/api/subAdmin-delete/${adminId}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -52,7 +61,6 @@ class AccountService {
     });
   }
 
-
   uploadSliderImg(data, user) {
     return axios({
       method: "POST",
@@ -63,7 +71,6 @@ class AccountService {
       },
     });
   }
-
 
   announceWin(data, user) {
     return axios({
@@ -86,7 +93,6 @@ class AccountService {
     });
   }
 
-
   DeleteRunner(user, runnerId) {
     return axios({
       method: "DELETE",
@@ -97,7 +103,6 @@ class AccountService {
     });
   }
 
-
   getInactiveGames(user, page, pageSize, search) {
     return axios({
       method: "GET",
@@ -107,7 +112,6 @@ class AccountService {
       },
     });
   }
-
 
   revokeAnnounceWin(data, user) {
     return axios({
@@ -130,10 +134,12 @@ class AccountService {
     });
   }
 
-  viewWinningRequest(user, page, pageSize,search) {
+  viewWinningRequest(user, page, pageSize, search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/get-result-requests?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url:
+        API_HOST +
+        `/api/get-result-requests?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -151,20 +157,24 @@ class AccountService {
     });
   }
 
-  viewWinninghistory(user, page, pageSize,search) {
+  viewWinninghistory(user, page, pageSize, search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/subAdmin/result-histories?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url:
+        API_HOST +
+        `/api/subAdmin/result-histories?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
     });
   }
 
-  viewSubAdmin(user, page, pageSize,search) {
+  viewSubAdmin(user, page, pageSize, search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/get-sub-admins?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url:
+        API_HOST +
+        `/api/get-sub-admins?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -179,15 +189,17 @@ class AccountService {
         Authorization: `Bearer ${user.token}`,
       },
       data: {
-        marketId: marketId, 
+        marketId: marketId,
       },
     });
   }
-  
-  subAdminResult(user, page, pageSize,search) {
+
+  subAdminResult(user, page, pageSize, search) {
     return axios({
       method: "GET",
-      url: API_HOST + `/api/subAdmin/get-result?page=${page}&pageSize=${pageSize}&search=${search}`,
+      url:
+        API_HOST +
+        `/api/subAdmin/get-result?page=${page}&pageSize=${pageSize}&search=${search}`,
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
@@ -204,7 +216,6 @@ class AccountService {
       // },
     });
   }
-
 }
 
 export default new AccountService();
