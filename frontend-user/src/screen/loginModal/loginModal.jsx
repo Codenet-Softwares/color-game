@@ -141,13 +141,9 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
         >
           Sign in
         </Button>
-        {/* <Button
-      variant="link"
-      onClick={() => navigate('/passwordReset')}
-      style={{ textDecoration: 'none', color: '#1AA0D1' }}
-    >
-      Reset Password
-    </Button> */}
+        <span className= "mt-2"style={{ textDecoration: "none", color: "#1AA0D1" }}>
+          Download App
+        </span>
       </div>
     );
   }
