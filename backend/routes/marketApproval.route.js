@@ -7,5 +7,5 @@ import { validateApprovalMarket } from "../schema/commonSchema.js";
 export const MarketDeleteApprovalRoute = (app) => {
     app.get("/api/market-delete-approval", authorize([string.Admin]), getDeleteMarket);
     app.post("/api/restore-deleted-market-approval/:marketId", validateApprovalMarket, customErrorHandler, authorize([string.Admin]), restoreDeleteMarket);
-    app.post("/api/deleted-market-approval/:approvalMarketId", validateApprovalMarket, customErrorHandler, authorize([string.Admin]), deleteMarket);
+    app.post("/api/deleted-market-approval/:marketId", validateApprovalMarket, customErrorHandler, authorize([string.Admin]), deleteMarket);
 }

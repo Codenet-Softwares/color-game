@@ -28,6 +28,7 @@ import { db } from "../firebase-db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
 import AllRunnerBalance from "../models/allRunnerBalances.model.js";
 import { sql } from "../db.js";
+import { deleteLotteryFromFirebase } from "../helper/firebase.delete.js";
 
 
 dotenv.config();
@@ -1691,6 +1692,7 @@ export const approveResult = async (req, res) => {
       return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result rejected due to mismatched declarations"));
     }
 
+    await deleteLotteryFromFirebase(marketId)
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result approved and declared successfully"));
   } catch (error) {
     console.error("Approval Error:", error);
@@ -2232,6 +2234,8 @@ export const afterWinVoidMarket = async (req, res) => {
         marketId
       },
     });
+
+    await deleteLotteryFromFirebase(marketId)
 
     return res
       .status(statusCode.success)
