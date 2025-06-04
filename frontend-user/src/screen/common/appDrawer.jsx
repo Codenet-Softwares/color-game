@@ -99,7 +99,7 @@ function AppDrawer({
     return (
       <div
         className={`border-top-0 border-end ${
-          store.user.isLogin ? "mt-4" : "mt-1"
+          store.user.isLogin ? "mt-5" : "mt-3"
         }`}
         style={{ overflowY: "auto" }}
       >
@@ -132,7 +132,7 @@ function AppDrawer({
                   onClick={() => handleToggle(gameObj.gameId)}
                 >
                   <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
-                    {gameObj?.gameName}
+               ⚽ {gameObj?.gameName}
                     <span
                       className={`dropdown-icon ${isToggled ? "active" : ""}`}
                       style={{ cursor: "pointer" }}
