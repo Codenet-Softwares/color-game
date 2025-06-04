@@ -92,7 +92,6 @@ const GetMarketDetailByMarketId = () => {
 
         messagesData.map((message) => {
           if (store?.placeBidding?.marketId === message?.id) {
-         
             setIsActive(message.isActive);
             setIsUpdate(message.updatedAt);
             if (message.hideMarketWithUser === false) {
@@ -688,7 +687,7 @@ const GetMarketDetailByMarketId = () => {
                       ) : (
                         <>
                           {/* Back */}
-                          <div className="row py-1 px-0 m-0 border-bottom">
+                          <div className="row py-1 px-0 m-0 border-bottom me-2">
                             <span
                               className={`col-4 text-dark text-decoration-none text-nowrap fw-bold`}
                             >
