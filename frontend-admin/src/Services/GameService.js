@@ -582,7 +582,6 @@ class GameService {
 
 
   AfterWinDeleteBet(user, data) {
-    console.log("data", data)
     return axios({
       method: "POST",
       url: `${API_HOST}/api/delete-bet-after-win`,

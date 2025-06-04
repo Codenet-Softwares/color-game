@@ -48,7 +48,6 @@ const FilterBlock = ({
 
   useEffect(() => {
     if (isLiveData && isAllFieldsSelected && !hasFetched) {
-      console.log("first", isLiveData, isAllFieldsSelected, !hasFetched);
       if (betHistoryData.selectGame === "lottery") {
         getHistoryForLotteryBetHistory();
       } else {

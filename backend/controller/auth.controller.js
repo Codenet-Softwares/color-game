@@ -507,22 +507,19 @@ export const adminResetPassword = async (req, res) => {
 
 export const subAdminResetPassword = async (req, res) => {
   try {
-    const { userName, oldPassword, newPassword } = req.body;
+    const { userName, newPassword } = req.body;
 
     const existingUser = await admins.findOne({ where: { userName } });
 
-    if(!existingUser){
+    if (!existingUser) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Admin not Found'));
     }
 
-    const isPasswordMatch = await bcrypt.compare(oldPassword, existingUser.password);
-    if (!isPasswordMatch) {
-      return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Invalid old password.'));
-    }
     const passwordIsDuplicate = await bcrypt.compare(newPassword, existingUser.password);
     if (passwordIsDuplicate) {
-        return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'New Password Cannot Be The Same As Existing Password'));
+      return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'New Password Cannot Be The Same As Existing Password'));
     }
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
@@ -533,4 +530,5 @@ export const subAdminResetPassword = async (req, res) => {
     res.status(statusCode.internalServerError).send(apiResponseErr(error.data ?? null, false, error.responseCode ?? statusCode.internalServerError, error.errMessage ?? error.message));
   }
 };
+
 

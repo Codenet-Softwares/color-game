@@ -66,7 +66,6 @@ const GetwholeMarket = () => {
         ...doc.data(),
       }));
 
-      console.log("Messages Data:", messagesData);
       setIsLotteryUpdate(messagesData);
     });
 
@@ -82,7 +81,6 @@ const GetwholeMarket = () => {
           ...doc.data(),
         }));
 
-        console.log("Messages Data:", messagesData);
         setIsColorgameUpdate(messagesData);
       }
     );

@@ -13,6 +13,7 @@ import { Op } from "sequelize";
 import BetHistory from "../models/betHistory.model.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
 import { sequelizeArchive } from "../db.js"
+import { deleteLotteryFromFirebase } from "../helper/firebase.delete.js";
 
 export const voidMarket = async (req, res) => {
   try {
@@ -97,6 +98,8 @@ export const voidMarket = async (req, res) => {
         },
       });
     };
+
+    await deleteLotteryFromFirebase(marketId)
 
     return res
       .status(statusCode.success)

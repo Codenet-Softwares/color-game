@@ -80,8 +80,6 @@ const ViewWinningHistory = () => {
     auth.showLoader();
     const isConfirmed = window.confirm("Are you sure you want to Revoke?");
     if (!isConfirmed) return;
-    console.log("runnerId=============", runnerId);
-    console.log("marketId=============", marketId);
 
     AccountServices.revokeAnnounceWin(
       {
@@ -121,7 +119,6 @@ const ViewWinningHistory = () => {
     }));
   };
 
-  console.log("first", viewWinningHistory);
 
   let startIndex = Math.min(
     (Number(viewWinningHistory?.currentPage) - 1) *
@@ -313,7 +310,6 @@ const ViewWinningHistory = () => {
                                         >
                                           Revoke
                                         </button>
-                                        {/* {console.log("object",game.data[0].runnerId)} */}
                                       </td>
                                     </tr>
                                   </tfoot>

@@ -8,7 +8,7 @@ const SubAdminResetPassword = ({ handleClose, userName }) => {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [oldPassword, setOldPassword] = useState("");
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -17,15 +17,10 @@ const SubAdminResetPassword = ({ handleClose, userName }) => {
   const validateForm = () => {
     let validationErrors = {};
 
-    if (!oldPassword) validationErrors.oldPassword = "Old Password Is Required";
-
     if (!newPassword) {
       validationErrors.newPassword = "New Password Is Required";
     } else if (newPassword.length < 6) {
       validationErrors.newPassword = "Password Must Be Atleast 6 Mharacters";
-    } else if (newPassword === oldPassword) {
-      validationErrors.newPassword =
-        "New Password Cannot Be The Same As Old Password";
     }
 
     if (!confirmPassword) {
@@ -38,14 +33,13 @@ const SubAdminResetPassword = ({ handleClose, userName }) => {
     return Object.keys(validationErrors).length === 0;
   };
   const handleReset = () => {
-    setOldPassword("");
     setNewPassword("");
   };
   const handleResetPassword = async () => {
     if (!validateForm()) return;
     const data = {
       userName: userName,
-      oldPassword: oldPassword,
+
       newPassword: newPassword,
     };
     try {
@@ -56,10 +50,6 @@ const SubAdminResetPassword = ({ handleClose, userName }) => {
     } catch (error) {
       toast.error("Failed to reset password. Please try again.");
     }
-  };
-  const handleOldPasswordChange = (e) => {
-    setOldPassword(e.target.value);
-    setErrors((prevErrors) => ({ ...prevErrors, oldPassword: "" }));
   };
 
   const handleNewPasswordChange = (e) => {
@@ -75,28 +65,7 @@ const SubAdminResetPassword = ({ handleClose, userName }) => {
     <>
       <div className="modal-body mt-3">
         <div className="form-group">
-          <input
-            type={showPassword ? "text" : "password"}
-            id="oldPassword"
-            placeholder="Enter Old Password"
-            className={`form-control ${
-              errors.oldPassword ? "border-danger" : ""
-            }`}
-            value={oldPassword}
-            onChange={handleOldPasswordChange}
-            required
-          />
-          <span
-            className="eye-icon"
-            onClick={() => setShowPassword(!showPassword)}
-            style={{
-              position: "absolute",
-              top: "20px",
-              right: "33px",
-            }}
-          >
-            {showPassword ? <FaEye /> : <FaEyeSlash />}
-          </span>
+       
           <p className="text-danger mb-0">{errors.oldPassword || "\u00A0"}</p>
         </div>
         <div className="form-group" style={{ position: "relative" }}>
@@ -155,13 +124,6 @@ const SubAdminResetPassword = ({ handleClose, userName }) => {
         </div>
       </div>
       <div className="modal-footer">
-        {/* <button
-          type="button"
-          className="btn btn-secondary me-3"
-             onClick={closeModal}
-        >
-          Close
-        </button> */}
         <button
           type="button"
           className="btn btn-primary"

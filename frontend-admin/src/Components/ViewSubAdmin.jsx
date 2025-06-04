@@ -5,7 +5,7 @@ import { useAuth } from "../Utils/Auth";
 import { toast } from "react-toastify";
 import { customErrorHandler } from "../Utils/helper";
 import SingleCard from "./common/singleCard";
-import { FaKey, FaSearch, FaTimes } from "react-icons/fa";
+import { FaKey, FaSearch, FaTimes, FaTrash } from "react-icons/fa";
 import Pagination from "./Pagination";
 import Modal from "../Components/ReusableModal/Modal";
 import SubAdminResetPassword from "./SubAdminResetPassword/SubAdminResetPassword";
@@ -20,6 +20,7 @@ const ViewSubAdmin = () => {
     setShowModal(true);
     setSelectedSubadmin(name);
   };
+  console.log('line 23',viewSubadmin)
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -35,7 +36,6 @@ const ViewSubAdmin = () => {
     setShowModal(false);
   };
   const auth = useAuth();
-  console.log("isopen", viewSubadmin);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= viewSubadmin?.totalPages) {
@@ -47,7 +47,6 @@ const ViewSubAdmin = () => {
   };
 
   useEffect(() => {
-    console.log("Fetching data for page:", viewSubadmin?.currentPage); // Debugging
     fetchViewWinningRequest();
   }, [
     viewSubadmin?.currentPage,
@@ -64,8 +63,6 @@ const ViewSubAdmin = () => {
       debouncedSearchTerm
     )
       .then((res) => {
-        console.log("API Response:", res.data); // Debugging
-
         setViewSubadmin((prev) => ({
           ...prev,
           data: res?.data?.data || [],
@@ -80,6 +77,23 @@ const ViewSubAdmin = () => {
         auth.hideLoader();
       });
   };
+const handleDeleteSubadmin = (adminId) => {
+  if (window.confirm(`Are you sure you want to delete this sub-admin?`)) {
+    auth.showLoader();
+    AccountServices.DeleteSubAdmin(auth.user, adminId)
+      .then(() => {
+        toast.success(`Sub-admin deleted successfully`);
+        fetchViewWinningRequest(); // Refresh data after deletion
+      })
+      .catch((err) => {
+        toast.error(customErrorHandler(err));
+      })
+      .finally(() => {
+        auth.hideLoader();
+      });
+  }
+};
+
 
   const handleClearSearch = () => {
     setSearchTerm(""); // Reset the search term
@@ -226,13 +240,25 @@ const ViewSubAdmin = () => {
 
                         <td>
                           <button
-                            className="btn btn-primary"
+                            className="btn btn-primary me-3"
                             data-bs-toggle="tooltip"
                             data-bs-placement="bottom"
                             title="Reset Password"
                             onClick={() => handleOpenModal(subadmin?.userName)}
                           >
                             <FaKey />
+                          </button>
+                     
+                          <button
+                            className="btn btn-danger"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="bottom"
+                            title="Delete Sub-Admin"
+                            onClick={() =>
+                              handleDeleteSubadmin(subadmin?.adminId)
+                            }
+                          >
+                              <FaTrash />
                           </button>
                         </td>
                         <Modal

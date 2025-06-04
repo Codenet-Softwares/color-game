@@ -11,7 +11,6 @@ const GetBetTrash = ({
 }) => {
   const auth = useAuth();
 
-  console.log("selectedMarketDetails", selectedMarketDetails);
 
   const handlePageChange = (pageNumber) => {
     setSelectedMarketDetails((prev) => ({ ...prev, currentPage: pageNumber }));

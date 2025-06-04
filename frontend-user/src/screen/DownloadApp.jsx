@@ -22,8 +22,10 @@ const DownloadApp = () => {
               </button>
             </div>
 
-            <div className="col-12 col-md-5 text-center mb-3">
-              <img src={LogoImg} alt="App Logo" className="img-fluid" />
+            <div className="col-12 col-md-5 text-center mb-3 mt-3">
+              <img src={LogoImg} alt="App Logo" className="img-fluid"
+               style={{ width: "300px", height: "300px" }}
+              />
             </div>
           </div>
         </div>

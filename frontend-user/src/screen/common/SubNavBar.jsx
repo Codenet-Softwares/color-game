@@ -121,7 +121,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               src={Logo}
               alt="Logo"
               style={{
-                width: "170px",
+                width: "90px",
                 maxWidth: "100%",
                 height: "auto",
               }}

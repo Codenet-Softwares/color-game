@@ -29,8 +29,9 @@ import {
   getBetsAfterWinHistory,
   getDetailsWinningBet,
   inActiveMarketStatus,
+  deleteSubAdmin,
 } from '../controller/admin.controller.js';
-import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket } from '../schema/commonSchema.js';
+import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket, validateDeleteSubAdmin } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
 
 dotenv.config();
@@ -41,6 +42,8 @@ export const AdminRoute = (app) => {
 
   // done
   app.post('/api/create-subAdmin',validateSubAdmin,customErrorHandler, authorize([string.Admin]), createSubAdmin);
+
+  app.delete('/api/subAdmin-delete/:adminId',validateDeleteSubAdmin,customErrorHandler,authorize([string.Admin]), deleteSubAdmin);
 
   // done
   app.get('/api/get-sub-admins', authorize([string.Admin]), getSubAdmins);

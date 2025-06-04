@@ -16,7 +16,6 @@ const ProfitAndLossLotteryEvent = ({
 }) => {
   const startIndex = Math.min((profitLossLotteryEventData.currentPage - 1) * profitLossLotteryEventData.itemPerPage + 1, profitLossLotteryEventData.totalData);
   const endIndex = Math.min(profitLossLotteryEventData.currentPage * profitLossLotteryEventData.itemPerPage, profitLossLotteryEventData.totalData);
-  console.log("startIndex", startIndex)
   const [renderApi, setRenderApi] = useState(null);
 
   const handelGotoLotteryBetHistory = (componentName, id) => {
