@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import LoginSchema from "../../schema/loginSchema";
 import "./loginModal.css";
 import { useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaDownload, FaEye, FaEyeSlash } from "react-icons/fa";
 function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   const [loginCred, setLoginCred] = useState(setInitialValues());
   const navigate = useNavigate();
@@ -141,18 +141,23 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
         >
           Sign in
         </Button>
-        <span
-          className="mt-2"
-          style={{
-            textDecoration: "none",
-            color: "#1AA0D1",
-            cursor: "pointer",
-            animation: "blink 2s infinite", 
-            letterSpacing: "normal", 
-          }}
-        >
-          Download App
-        </span>
+        <div className="app_btn mt-2">
+          <span> </span>
+          <span> </span>
+          <span> </span>
+          <span> </span>
+          <span
+            className="mt-2"
+            style={{
+              textDecoration: "none",
+              color: "#000",
+              cursor: "pointer",
+              // animation: "blink 2s infinite",
+            }}
+          >
+            <FaDownload /> Download App
+          </span>
+        </div>
       </div>
     );
   }
