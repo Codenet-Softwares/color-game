@@ -475,22 +475,40 @@ const GetMarketDetailByMarketId = () => {
                   </div>
                 </div>
               </div>
+              <div className="row py-1 px-0 m-0 border-bottom me-2 align-items-center">
+                {/* Runner Name */}
+                <span className="col-5 text-dark fw-bold text-nowrap"></span>
 
-              <div className="row py-1 px-0 m-0 border-bottom mt-2">
-                <div className="col-4"></div>
-                <div
-                  className="col-4 rounded-top-3 p-1 fw-bold"
-                  style={{ backgroundColor: "#80C2F1" }}
-                >
-                  BACK
-                </div>
-                <div
-                  className="col-4 rounded-top-3 p-1 fw-bold"
-                  style={{ backgroundColor: "#FAA9BA" }}
-                >
-                  LAY
+                {/* BACK & LAY Buttons with proper spacing */}
+                <div className="col-7 d-flex justify-content-end gap-1">
+                  <div
+                    className="col-3 p-1 fw-bold"
+                    style={{
+                      backgroundColor: "#80C2F1",
+                      borderRadius: "7px",
+                      cursor: "pointer",
+                      minWidth: "50px",
+                      textAlign: "center",
+                    }}
+                  >
+                    BACK
+                  </div>
+
+                  <div
+                    className="col-3 p-1 fw-bold"
+                    style={{
+                      backgroundColor: "#FAA9BA",
+                      borderRadius: "7px",
+                      cursor: "pointer",
+                      minWidth: "50px",
+                      textAlign: "center",
+                    }}
+                  >
+                    LAY
+                  </div>
                 </div>
               </div>
+
               {user_marketWithRunnerData &&
                 user_marketWithRunnerData.runners.map((runnerData, index) => {
                   // Determine if current row should display
@@ -514,11 +532,11 @@ const GetMarketDetailByMarketId = () => {
                       {toggle.mode === "lay" ? (
                         <>
                           {/* Lay */}
-                          <div className="row py-1 px-0 m-0 border fw-bold">
-                            <span
-                              className={`col-4 text-dark text-decoration-none text-nowrap`}
-                            >
-                              {runnerData.runnerName.name}{" "}
+                          <div className="row py-1 px-0 m-0 border-bottom me-2 align-items-center">
+                            {/* Runner Name */}
+                            <span className="col-5 text-dark fw-bold text-nowrap">
+                              {runnerData.runnerName.name}
+
                               <span className="">
                                 {/* Display bidding amount if conditions met */}
                                 {shouldDisplayTempLay && (
@@ -645,52 +663,58 @@ const GetMarketDetailByMarketId = () => {
                               )}
                             </span>
 
-                            <div
-                              className="col-4 rounded p-1"
-                              style={{
-                                backgroundColor: "#80C2F1",
-                                cursor: "pointer",
-                              }}
-                              onClick={() =>
-                                handleToggle(
-                                  runnerData.id,
-                                  runnerData.rate[0].back,
-                                  "back",
-                                  runnerData.runnerName.runnerId
-                                )
-                              }
-                              key={index}
-                            >
-                              {runnerData.rate[0].back}
-                            </div>
+                            {/* BACK & LAY Buttons with proper spacing */}
+                            <div className="col-7 d-flex justify-content-end gap-1">
+                              <div
+                                className="col-3 p-1 fw-bold"
+                                style={{
+                                  backgroundColor: "#80C2F1",
+                                  borderRadius: "7px",
+                                  cursor: "pointer",
+                                  minWidth: "50px",
+                                  textAlign: "center",
+                                }}
+                                onClick={() =>
+                                  handleToggle(
+                                    runnerData.id,
+                                    runnerData.rate[0].back,
+                                    "back",
+                                    runnerData.runnerName.runnerId
+                                  )
+                                }
+                              >
+                                {runnerData.rate[0].back}
+                              </div>
 
-                            <div
-                              className="col-4 rounded p-1"
-                              style={{
-                                backgroundColor: "#FAA9BA",
-                                cursor: "pointer",
-                              }}
-                              onClick={() =>
-                                handleToggle(
-                                  runnerData.id,
-                                  runnerData.rate[0].lay,
-                                  "lay",
-                                  runnerData.runnerName.runnerId
-                                )
-                              }
-                              key={index}
-                            >
-                              {runnerData.rate[0].lay}
+                              <div
+                                className="col-3 p-1 fw-bold"
+                                style={{
+                                  backgroundColor: "#FAA9BA",
+                                  borderRadius: "7px",
+                                  cursor: "pointer",
+                                  minWidth: "50px",
+                                  textAlign: "center",
+                                }}
+                                onClick={() =>
+                                  handleToggle(
+                                    runnerData.id,
+                                    runnerData.rate[0].lay,
+                                    "lay",
+                                    runnerData.runnerName.runnerId
+                                  )
+                                }
+                              >
+                                {runnerData.rate[0].lay}
+                              </div>
                             </div>
                           </div>
                         </>
                       ) : (
                         <>
                           {/* Back */}
-                          <div className="row py-1 px-0 m-0 border-bottom me-2">
-                            <span
-                              className={`col-4 text-dark text-decoration-none text-nowrap fw-bold`}
-                            >
+                          <div className="row py-1 px-0 m-0 border-bottom me-2 align-items-center">
+                            {/* Runner Name */}
+                            <span className="col-5 text-dark fw-bold text-nowrap">
                               {runnerData.runnerName.name}
                               <span>
                                 {/* Display bidding amount if conditions met */}
@@ -806,44 +830,49 @@ const GetMarketDetailByMarketId = () => {
                               )}
                             </span>
 
-                            <div
-                              className="col-4 p-1 fw-bold border-bottom"
-                              style={{
-                                backgroundColor: "#80C2F1",
-                                borderRadius: "7px",
-                                cursor: "pointer",
-                              }}
-                              onClick={() =>
-                                handleToggle(
-                                  runnerData.id,
-                                  runnerData.rate[0].back,
-                                  "back",
-                                  runnerData.runnerName.runnerId
-                                )
-                              }
-                              key={index}
-                            >
-                              {runnerData.rate[0].back}
-                            </div>
+                            {/* BACK & LAY Buttons with proper spacing */}
+                            <div className="col-7 d-flex justify-content-end gap-1">
+                              <div
+                                className="col-3 p-1 fw-bold"
+                                style={{
+                                  backgroundColor: "#80C2F1",
+                                  borderRadius: "7px",
+                                  cursor: "pointer",
+                                  minWidth: "50px",
+                                  textAlign: "center",
+                                }}
+                                onClick={() =>
+                                  handleToggle(
+                                    runnerData.id,
+                                    runnerData.rate[0].back,
+                                    "back",
+                                    runnerData.runnerName.runnerId
+                                  )
+                                }
+                              >
+                                {runnerData.rate[0].back}
+                              </div>
 
-                            <div
-                              className="col-4 p-1 fw-bold"
-                              style={{
-                                backgroundColor: "#FAA9BA",
-                                borderRadius: "7px",
-                                cursor: "pointer",
-                              }}
-                              onClick={() =>
-                                handleToggle(
-                                  runnerData.id,
-                                  runnerData.rate[0].lay,
-                                  "lay",
-                                  runnerData.runnerName.runnerId
-                                )
-                              }
-                              key={index}
-                            >
-                              {runnerData.rate[0].lay}
+                              <div
+                                className="col-3 p-1 fw-bold"
+                                style={{
+                                  backgroundColor: "#FAA9BA",
+                                  borderRadius: "7px",
+                                  cursor: "pointer",
+                                  minWidth: "50px",
+                                  textAlign: "center",
+                                }}
+                                onClick={() =>
+                                  handleToggle(
+                                    runnerData.id,
+                                    runnerData.rate[0].lay,
+                                    "lay",
+                                    runnerData.runnerName.runnerId
+                                  )
+                                }
+                              >
+                                {runnerData.rate[0].lay}
+                              </div>
                             </div>
                           </div>
                         </>
