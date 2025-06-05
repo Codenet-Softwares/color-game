@@ -29,6 +29,7 @@ import MarketListExposure from "../models/marketListExposure.model.js";
 import AllRunnerBalance from "../models/allRunnerBalances.model.js";
 import { sql } from "../db.js";
 import { deleteLotteryFromFirebase } from "../helper/firebase.delete.js";
+import NotificationService from "../utils/notification_service.js";
 
 
 dotenv.config();
@@ -1111,6 +1112,52 @@ export const inActiveMarketStatus = async (req, res) => {
       },
       { merge: true }
     );
+
+    // Notification 
+    const allUsers = await userSchema.findAll({
+      where: {
+        isActive: true,
+        fcm_token: {
+          [Op.ne]: null,
+        },
+      },
+      attributes: ['id', 'fcm_token', 'userName', 'userId'],
+    });
+
+    const notificationService = new NotificationService();
+
+    for (const user of allUsers) {
+      if (user.fcm_token) {
+        let title
+        let message
+
+        if(status === true){
+          title = `Market Live: ${market.marketName}`;
+          message = `The market "${market.marketName}" is now live. Start playing now!`;
+        } else {
+          title = `Market Closed: ${market.marketName}`;
+          message = `The market "${market.marketName}" has been closed. Stay tuned for updates.`;
+        }
+
+        await notificationService.sendNotification(
+          title,
+          message,
+          {
+            type: "colorgame",
+            marketId: marketId.toString(),
+            userId: user.userId.toString(),
+          },
+          user.fcm_token
+        );
+        
+        await Notification.create({
+          UserId: user.userId,  
+          MarketId: marketId,
+          message,
+          type: "colorgame",
+        });
+      }
+    }
 
     return res
       .status(statusCode.success) // Corrected the response status code

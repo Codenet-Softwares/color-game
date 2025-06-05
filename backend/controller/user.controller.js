@@ -2486,4 +2486,43 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
   }
 };
 
+export const updateFCMToken = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { fcm_token } = req.body;
+
+    if (!fcm_token) {
+      return res.status(400).json({
+        success: false,
+        message: 'fcm_token is required',
+      });
+    }
+
+    const user = await userSchema.findByPk(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    user.fcm_token = fcm_token;
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: 'FCM token updated successfully',
+      data: user,
+    });
+  } catch (error) {
+    console.error('Error updating FCM token:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: error.message,
+    });
+  }
+};
+
 

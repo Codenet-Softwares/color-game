@@ -38,6 +38,9 @@ userSchema.init(
     token: {
       type: DataTypes.STRING(512),
     },
+    fcm_token: {
+      type: DataTypes.STRING(512),
+    },
     isReset: {
       type: DataTypes.BOOLEAN,
       defaultValue: true,
