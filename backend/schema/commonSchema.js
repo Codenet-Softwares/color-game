@@ -715,11 +715,11 @@ export const validateTitleText = [
     .isString()
     .withMessage('Title must be a string'),
 
-  body('text')
+  body('message')
     .notEmpty()
-    .withMessage('Text is required')
+    .withMessage('Message is required')
     .isString()
-    .withMessage('Text must be a string'),
+    .withMessage('Message must be a string'),
 ];
 
 export const validateApproveResult = [

@@ -20,7 +20,7 @@ import BetHistory from "../models/betHistory.model.js";
 import { Op, Sequelize } from "sequelize";
 import Game from "../models/game.model.js";
 import { PreviousState } from "../models/previousState.model.js";
-import { sequelize }  from "../db.js";
+import { sequelize } from "../db.js";
 import WinningAmount from "../models/winningAmount.model.js";
 import ResultRequest from "../models/resultRequest.model.js";
 import ResultHistory from "../models/resultHistory.model.js";
@@ -92,7 +92,7 @@ export const createSubAdmin = async (req, res) => {
   try {
 
     const { userName, password, permissions } = req.body;
-    const existingAdmin = await admins.findOne({ where : { userName } });
+    const existingAdmin = await admins.findOne({ where: { userName } });
 
     if (existingAdmin) {
       return res
@@ -150,7 +150,7 @@ export const deleteSubAdmin = async (req, res) => {
     const subAdmin = await admins.findOne({
       where: {
         adminId,
-        roles: 'subAdmin', 
+        roles: 'subAdmin',
       },
     });
 
@@ -173,7 +173,7 @@ export const deleteSubAdmin = async (req, res) => {
       );
 
   } catch (error) {
-      return res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -202,7 +202,7 @@ export const getSubAdmins = async (req, res) => {
     const subAdmins = await admins.findAll({
       where: searchCondition,
       attributes: ["adminId", "userName", "roles", "permissions"],
-      order: [["id","DESC"]],
+      order: [["id", "DESC"]],
     });
 
     const totalItems = subAdmins.length;
@@ -977,19 +977,19 @@ export const revokeWinningAnnouncement = async (req, res) => {
         .send(apiResponseSuccess([], true, statusCode.success, "Market not found"));
     };
 
-      // Save data to Firestore
-    const formatDateTime = (date) =>date.toISOString().slice(0, 19).replace("T", " ");
+    // Save data to Firestore
+    const formatDateTime = (date) => date.toISOString().slice(0, 19).replace("T", " ");
 
     await db.collection('color-game-db').doc(existingMarket.marketId).set({
-      gameId : existingMarket.gameId,
-      marketName : existingMarket.marketName,
-      participants : existingMarket.participants,
-      startTime : formatDateTime(existingMarket.startTime),
-      endTime : formatDateTime(existingMarket.endTime),
-      announcementResult : existingMarket.announcementResult,
-      isActive : existingMarket.isActive,
-      isDisplay : existingMarket.isDisplay,
-      hideMarketWithUser : existingMarket.hideMarketWithUser,
+      gameId: existingMarket.gameId,
+      marketName: existingMarket.marketName,
+      participants: existingMarket.participants,
+      startTime: formatDateTime(existingMarket.startTime),
+      endTime: formatDateTime(existingMarket.endTime),
+      announcementResult: existingMarket.announcementResult,
+      isActive: existingMarket.isActive,
+      isDisplay: existingMarket.isDisplay,
+      hideMarketWithUser: existingMarket.hideMarketWithUser,
       isMarketClosed: false
     });
 
@@ -1086,7 +1086,7 @@ export const revokeWinningAnnouncement = async (req, res) => {
 
 export const inActiveMarketStatus = async (req, res) => {
   const { marketId } = req.params;
-  const {status} = req.body
+  const { status } = req.body
 
   try {
     const market = await Market.findOne({ where: { marketId } });
@@ -1097,18 +1097,18 @@ export const inActiveMarketStatus = async (req, res) => {
         .send(apiResponseErr(null, false, statusCode.badRequest, "Market not found"));
     }
 
-    if(status){
+    if (status) {
       await Market.update(
-        { hideMarketWithUser: true},
+        { hideMarketWithUser: true },
         { where: { marketId } }
       );
-      }
-      else{
-        await Market.update(
-          { hideMarketWithUser: false},
-          { where: { marketId } }
-        );
-      }
+    }
+    else {
+      await Market.update(
+        { hideMarketWithUser: false },
+        { where: { marketId } }
+      );
+    }
 
     await PreviousState.destroy({ where: { marketId } });
 
@@ -1121,7 +1121,7 @@ export const inActiveMarketStatus = async (req, res) => {
 
     await marketRef.set(
       {
-        isActive: market.isActive ,
+        isActive: market.isActive,
         hideMarketWithUser: status, // Changed to match SQL DB update
         isRevoke: market.isRevoke,
         updatedAt: new Date().toISOString()
@@ -1147,7 +1147,7 @@ export const inActiveMarketStatus = async (req, res) => {
         let title
         let message
 
-        if(status === true){
+        if (status === true) {
           title = `Market Live: ${market.marketName}`;
           message = `The market "${market.marketName}" is now live. Start playing now!`;
         } else {
@@ -1165,9 +1165,9 @@ export const inActiveMarketStatus = async (req, res) => {
           },
           user.fcm_token
         );
-        
+
         await Notification.create({
-          UserId: user.userId,  
+          UserId: user.userId,
           MarketId: marketId,
           message,
           type: "colorgame",
@@ -1180,7 +1180,7 @@ export const inActiveMarketStatus = async (req, res) => {
       .send(apiResponseSuccess([], true, statusCode.success, "Market updated successfully"));
   } catch (error) {
     console.error("Error updating market status:", error);
-   return res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1233,7 +1233,7 @@ export const liveUsersBet = async (req, res) => {
       });
       return userBetCount;
     }));
-    
+
     const formatData = {
       marketId: existingUser[0].marketId,
       marketName: existingUser[0].marketName,
@@ -1358,9 +1358,9 @@ export const getBetsAfterWin = async (req, res) => {
 
     const whereCondition = { marketId };
 
-        if (search) {
-          whereCondition.userName ={ [Op.like]: `%${search}%` };
-        }
+    if (search) {
+      whereCondition.userName = { [Op.like]: `%${search}%` };
+    }
 
     const { count, rows: existingUser } = await BetHistory.findAndCountAll({
       attributes: ["marketId", "marketName", "userId", "userName"],
@@ -1386,7 +1386,7 @@ export const getBetsAfterWin = async (req, res) => {
       });
       return userBetCount;
     }));
-    
+
     const formatData = {
       marketId: existingUser[0].marketId,
       marketName: existingUser[0].marketName,
@@ -1772,57 +1772,57 @@ export const approveResult = async (req, res) => {
 
         await CurrentOrder.destroy({ where: { marketId } });
       }
-       // Notification 
-    const allUsers = await userSchema.findAll({
-      where: {
-        isActive: true,
-        fcm_token: {
-          [Op.ne]: null,
-        },
-      },
-      attributes: ['id', 'fcm_token', 'userName', 'userId'],
-    });
-
-    const notificationService = new NotificationService();
-
-    for (const user of allUsers) {
-      if (user.fcm_token) {
-        let title;
-        let message;
-        title = `🏁 Results Declared: ${market.marketName}`;
-        message = `The final results for "${market.marketName}" have been declared. Check now to see if you've secured a win!`;
-
-        await notificationService.sendNotification(
-          title,
-          message,
-          {
-            type: "colorgame",
-            marketId: marketId.toString(),
-            userId: user.userId.toString(),
+      // Notification 
+      const allUsers = await userSchema.findAll({
+        where: {
+          isActive: true,
+          fcm_token: {
+            [Op.ne]: null,
           },
-          user.fcm_token
-        );
+        },
+        attributes: ['id', 'fcm_token', 'userName', 'userId'],
+      });
 
-        await Notification.create({
-          UserId: user.userId,
-          MarketId: marketId,
-          message,
-          type: "colorgame",
-        });
+      const notificationService = new NotificationService();
+
+      for (const user of allUsers) {
+        if (user.fcm_token) {
+          let title;
+          let message;
+          title = `🏁 Results Declared: ${market.marketName}`;
+          message = `The final results for "${market.marketName}" have been declared. Check now to see if you've secured a win!`;
+
+          await notificationService.sendNotification(
+            title,
+            message,
+            {
+              type: "colorgame",
+              marketId: marketId.toString(),
+              userId: user.userId.toString(),
+            },
+            user.fcm_token
+          );
+
+          await Notification.create({
+            UserId: user.userId,
+            MarketId: marketId,
+            message,
+            type: "colorgame",
+          });
+        }
       }
-    }
 
-    await deleteLotteryFromFirebase(marketId);
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          null,
-          true,
-          statusCode.success,
-          "Result approved and declared successfully"
-        )
-      );
+      await deleteLotteryFromFirebase(marketId);
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Result approved and declared successfully"
+          )
+        );
     } else {
       return res
         .status(statusCode.success)
@@ -1855,7 +1855,7 @@ export const getResultRequests = async (req, res) => {
     const { page = 1, limit = 10, search } = req.query;
     const offset = (page - 1) * limit;
 
-    const resultRequests  = await ResultRequest.findAll({
+    const resultRequests = await ResultRequest.findAll({
       where: {
         deletedAt: null,
       },
@@ -1897,11 +1897,11 @@ export const getResultRequests = async (req, res) => {
 
     const formattedResultRequests = Object.values(groupedData);
     let filteredResults = formattedResultRequests;
-    
+
     if (search) {
-        filteredResults = formattedResultRequests.filter(item => 
-            item.marketName.toLowerCase().includes(search.toLowerCase())
-        );
+      filteredResults = formattedResultRequests.filter(item =>
+        item.marketName.toLowerCase().includes(search.toLowerCase())
+      );
     }
 
     const totalItems = filteredResults.length;
@@ -1952,18 +1952,18 @@ export const getSubAdminResultHistory = async (req, res) => {
       order: [['createdAt', 'DESC']],
       where: {
         isApproved: true,
-        isRevokeAfterWin: false, 
+        isRevokeAfterWin: false,
       },
     };
 
     if (type) {
       queryOptions.where = {
-        ...queryOptions.where, 
+        ...queryOptions.where,
         type: type,
       };
     }
 
-    const resultHistories  = await ResultHistory.findAll(queryOptions);
+    const resultHistories = await ResultHistory.findAll(queryOptions);
 
     const marketIds = resultHistories.map(history => history.marketId);
     const markets = await Market.findAll({
@@ -2023,7 +2023,7 @@ export const getSubAdminResultHistory = async (req, res) => {
 
     const validPage = page > totalPages ? 1 : page;
     const validOffset = (validPage - 1) * limit;
-    
+
     const paginatedData = filteredResults.slice(validOffset, validOffset + limit);
 
     const pagination = {
@@ -2178,21 +2178,21 @@ export const getDetailsWinningData = async (req, res) => {
       where: { marketId },
     });
 
-const combinedData = winningAmounts.map((winner) => {
-  const relatedBets = betHistories.filter(
-    (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
-  );
+    const combinedData = winningAmounts.map((winner) => {
+      const relatedBets = betHistories.filter(
+        (bet) => bet.runnerId === winner.runnerId && bet.userId === winner.userId
+      );
 
-  const firstBet = relatedBets[0];
+      const firstBet = relatedBets[0];
 
-  return {
-    userId: winner.userId || null,
-    userName: winner.userName || null,
-    marketId: firstBet?.marketId || null,
-    marketName: firstBet?.marketName || null,
-    gameName: firstBet?.gameName || null,
-  };
-});
+      return {
+        userId: winner.userId || null,
+        userName: winner.userName || null,
+        marketId: firstBet?.marketId || null,
+        marketName: firstBet?.marketName || null,
+        gameName: firstBet?.gameName || null,
+      };
+    });
 
     const filteredData = combinedData.filter(
       (item) => item.gameName && item.gameName.toLowerCase() === "colorgame"
@@ -2200,8 +2200,8 @@ const combinedData = winningAmounts.map((winner) => {
 
     const searchedData = search
       ? filteredData.filter((item) =>
-          item.userName.toLowerCase().includes(search.toLowerCase())
-        )
+        item.userName.toLowerCase().includes(search.toLowerCase())
+      )
       : filteredData;
 
     const paginatedData = searchedData.slice(offset, offset + limit);
@@ -2280,19 +2280,18 @@ export const deleteBetAfterWin = async (req, res) => {
       { where: { userId, marketId }, transaction: t }
     );
 
-   const [ updateRows ] = await WinningAmount.update({ isPermanentDeleted : true}, {
+    const [updateRows] = await WinningAmount.update({ isPermanentDeleted: true }, {
       where: { userId, marketId, type: "win" },
       transaction: t,
     })
 
-    if(updateRows > 0)
-    {
-    await WinningAmount.destroy({
-      where: { userId, marketId, type: "win" },
-      transaction: t,
-    });
+    if (updateRows > 0) {
+      await WinningAmount.destroy({
+        where: { userId, marketId, type: "win" },
+        transaction: t,
+      });
 
-  }
+    }
 
     await t.commit();
     return res
@@ -2444,7 +2443,7 @@ export const getSubAdminHistory = async (req, res) => {
     baseQuery += ` ORDER BY createdAt DESC LIMIT :limit OFFSET :offset`;
 
     const resultRequests = await sequelize.query(baseQuery, {
-      replacements: { adminId, status, limit, offset, sevenDaysAgo, search: search ? `%${search}%` : null,  },
+      replacements: { adminId, status, limit, offset, sevenDaysAgo, search: search ? `%${search}%` : null, },
       type: sequelize.QueryTypes.SELECT,
     });
 
@@ -2496,7 +2495,7 @@ export const getSubAdminHistory = async (req, res) => {
 export const getSubadminResult = async (req, res) => {
   try {
     const adminId = req.user?.adminId;
-    const { page = 1 , pageSize = 10 , search = ""} = req.query;
+    const { page = 1, pageSize = 10, search = "" } = req.query;
     const offset = (page - 1) * pageSize;
 
     if (!adminId) {
@@ -2505,16 +2504,15 @@ export const getSubadminResult = async (req, res) => {
         .send(apiResponseErr(null, false, statusCode.badRequest, "Declared By ID is required"));
     }
 
-    const whereCondition = { status : "Approved", declaredById: Sequelize.literal(`JSON_CONTAINS(declaredById, '"${adminId}"')`)}
+    const whereCondition = { status: "Approved", declaredById: Sequelize.literal(`JSON_CONTAINS(declaredById, '"${adminId}"')`) }
 
-    if(search)
-    {
+    if (search) {
       whereCondition.marketName = { [Op.like]: `%${search}%` };
     }
 
     const results = await ResultHistory.findAll({
       where: whereCondition,
-      order : [["createdAt", "DESC"]]
+      order: [["createdAt", "DESC"]]
     });
 
     const structuredResults = results.map(result => {
@@ -2523,7 +2521,7 @@ export const getSubadminResult = async (req, res) => {
       if (Array.isArray(result.declaredById) && Array.isArray(result.declaredByNames)) {
         result.declaredById.forEach((declaredId, index) => {
           if (declaredId === adminId) {
-            
+
             const uniqueRunnerIds = [...new Set(result.runnerId)];
 
             uniqueRunnerIds.forEach((runnerId, idx) => {
@@ -2560,16 +2558,16 @@ export const getSubadminResult = async (req, res) => {
     };
 
     return res
-    .status(statusCode.success)
-    .send(
-      apiResponseSuccess(
-        paginatedData,
-        true,
-        statusCode.success,
-        "Subadmin result fetch successfully!",
-        pagination,
-      )
-    );
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          paginatedData,
+          true,
+          statusCode.success,
+          "Subadmin result fetch successfully!",
+          pagination,
+        )
+      );
 
   } catch (error) {
     return res.status(statusCode.internalServerError).send(
@@ -2670,7 +2668,7 @@ export const getBetsAfterWinHistory = async (req, res) => {
     const whereCondition = { marketId, userId };
 
     if (search) {
-      whereCondition.runnerName = { [Op.like]: `%${search}%` }; 
+      whereCondition.runnerName = { [Op.like]: `%${search}%` };
     }
 
     const existingBets = await BetHistory.findAll({
@@ -2737,10 +2735,10 @@ export const getBetsAfterWinHistory = async (req, res) => {
   }
 };
 
-export const getDetailsWinningBet = async(req,res) => {
+export const getDetailsWinningBet = async (req, res) => {
   try {
 
-    const { marketId, userId }= req.params;
+    const { marketId, userId } = req.params;
 
     const { page = 1, limit = 10, search } = req.query;
     const offset = (page - 1) * limit;
@@ -2784,18 +2782,18 @@ export const getDetailsWinningBet = async(req,res) => {
 
       const firstBet = relatedBets[0];
       return {
-        betId:  firstBet.betId || null,
+        betId: firstBet.betId || null,
         userId: winner.userId || null,
         userName: winner.userName || null,
         gameName: firstBet?.gameName || null,
         marketId: firstBet?.marketId || null,
         marketName: firstBet?.marketName || null,
-        runnerId : firstBet?.runnerId || null,
+        runnerId: firstBet?.runnerId || null,
         runnerName: firstBet?.runnerName || null,
         rate: firstBet.rate?.toString() || null,
         value: firstBet.value?.toString() || null,
         type: firstBet?.type || null,
-        bidAmount : firstBet?.bidAmount || null,
+        bidAmount: firstBet?.bidAmount || null,
         date: firstBet?.date || null,
       };
     });
@@ -2806,8 +2804,8 @@ export const getDetailsWinningBet = async(req,res) => {
 
     const searchedData = search
       ? filteredData.filter((item) =>
-          item.userName.toLowerCase().includes(search.toLowerCase())
-        )
+        item.userName.toLowerCase().includes(search.toLowerCase())
+      )
       : filteredData;
 
     const paginatedData = searchedData.slice(offset, offset + limit);
@@ -2846,70 +2844,51 @@ export const getDetailsWinningBet = async(req,res) => {
 export const createTitleTextNotification = async (req, res) => {
   try {
     const { message, title } = req.body;
-    
-    // Notification 
+
     const allUsers = await userSchema.findAll({
       where: {
         isActive: true,
-        fcm_token: {
-          [Op.ne]: null,
-        },
+        fcm_token: { [Op.ne]: null },
       },
       attributes: ['id', 'fcm_token', 'userName', 'userId'],
     });
 
     const notificationService = new NotificationService();
+    const createdNotifications = [];
 
     for (const user of allUsers) {
       if (user.fcm_token) {
-        
-
-       
-
         await notificationService.sendNotification(
           title,
           message,
-          {
-            type: "colorgame",
-            marketId: marketId.toString(),
-            userId: user.userId.toString(),
-          },
+          { userId: user.userId.toString() },
           user.fcm_token
         );
-        
-        await Notification.create({
-          UserId: user.userId,  
-          MarketId: marketId,
+
+        const newNotif = await Notification.create({
+          UserId: user.userId,
+          title,
           message,
-          type: "colorgame",
         });
+
+        createdNotifications.push(newNotif);
       }
     }
 
-    const newNotification = await Notification.create({ title, message });
-
-    return res
-      .status(statusCode.create)
-      .send(
-        apiResponseSuccess(
-          newNotification,
-          true,
-          statusCode.create,
-          "Notification created with title and text."
-        )
-      );
+    return res.status(statusCode.create).send(
+      apiResponseSuccess(
+        createdNotifications,
+        true,
+        statusCode.create,
+        "Notifications created with title and message."
+      )
+    );
 
   } catch (error) {
-    return res
-      .status(statusCode.internalServerError)
-      .send(
-        apiResponseErr(
-          null,
-          false,
-          statusCode.internalServerError,
-          error.message
-        )
-      );
+    console.error("Error in createTitleTextNotification:", error);
+    return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
   }
 };
 
