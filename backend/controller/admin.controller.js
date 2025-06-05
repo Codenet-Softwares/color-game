@@ -844,7 +844,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
       });
 
       if (user) {
-        // Fetch all runner balances from DB
         const allRunnerBalances = await AllRunnerBalance.findAll({
           where: {
             UserId: user.userId,
@@ -853,13 +852,11 @@ export const revokeWinningAnnouncement = async (req, res) => {
           transaction,
         });
 
-        // Calculate max negative runner balance
         const balances = allRunnerBalances.map(rb => rb.balance);
         const maxNegativeRunnerBalance = balances.reduce((max, current) => {
           return current < max ? current : max;
         }, 0);
 
-        // Upsert market exposure
         await MarketListExposure.upsert(
           {
             UserId: user.userId,
@@ -869,10 +866,8 @@ export const revokeWinningAnnouncement = async (req, res) => {
           { transaction }
         );
 
-        // Delete winning amount
         await WinningAmount.destroy({ where: { marketId }, transaction });
 
-        // Update MarketBalance for each runner
         for (const runnerBalance of allRunnerBalances) {
           const { RunnerId: runnerId, balance } = runnerBalance;
 
@@ -905,13 +900,11 @@ export const revokeWinningAnnouncement = async (req, res) => {
       }
     }
 
-    // Mark previous state as reverted
     await PreviousState.update(
       { isReverted: true },
       { where: { marketId, runnerId }, transaction }
     );
 
-    // Update market flags
     await Market.update(
       {
         isRevoke: true,
@@ -923,7 +916,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
       { where: { marketId }, transaction }
     );
 
-    // Mark result history as revoked
     await ResultHistory.update(
       {
         isRevokeAfterWin: true,
@@ -931,7 +923,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
       { where: { marketId }, transaction }
     );
 
-    // Update runner flags
     await Runner.update(
       {
         hideRunnerUser: false,
@@ -943,7 +934,6 @@ export const revokeWinningAnnouncement = async (req, res) => {
       { where: { runnerId }, transaction }
     );
 
-    // Recreate bets as current orders
     const bets = await BetHistory.findAll({
       where: { marketId },
       transaction,
@@ -973,11 +963,36 @@ export const revokeWinningAnnouncement = async (req, res) => {
       );
     }
 
-    // Cleanup
     await BetHistory.destroy({ where: { marketId }, transaction });
     await ProfitLoss.destroy({ where: { marketId }, transaction });
 
-    // Commit transaction
+    const existingMarket = await Market.findOne({
+      where: { marketId },
+      transaction,
+    });
+
+    if (!existingMarket) {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "Market not found"));
+    };
+
+      // Save data to Firestore
+    const formatDateTime = (date) =>date.toISOString().slice(0, 19).replace("T", " ");
+
+    await db.collection('color-game-db').doc(existingMarket.marketId).set({
+      gameId : existingMarket.gameId,
+      marketName : existingMarket.marketName,
+      participants : existingMarket.participants,
+      startTime : formatDateTime(existingMarket.startTime),
+      endTime : formatDateTime(existingMarket.endTime),
+      announcementResult : existingMarket.announcementResult,
+      isActive : existingMarket.isActive,
+      isDisplay : existingMarket.isDisplay,
+      hideMarketWithUser : existingMarket.hideMarketWithUser,
+      isMarketClosed: false
+    });
+
     await transaction.commit();
 
     return res
