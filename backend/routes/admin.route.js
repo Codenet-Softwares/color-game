@@ -101,6 +101,6 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-Details-winning-bet/:marketId/:userId', validateBetsAfterWin, customErrorHandler, authorize([string.Admin]), getDetailsWinningBet);
 
-  app.post('/api/create-title-text', validateTitleText, customErrorHandler, authorize([string.Admin]), createTitleTextNotification);
+  app.post('/api/create-notification-colorgame', validateTitleText, customErrorHandler, authorize([string.Admin]), createTitleTextNotification);
 };
 
