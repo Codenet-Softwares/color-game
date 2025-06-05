@@ -30,6 +30,7 @@ import AllRunnerBalance from "../models/allRunnerBalances.model.js";
 import { sql } from "../db.js";
 import { deleteLotteryFromFirebase } from "../helper/firebase.delete.js";
 import NotificationService from "../utils/notification_service.js";
+import Notification from "../models/notification.model.js";
 
 
 dotenv.config();
@@ -1526,7 +1527,14 @@ export const approveResult = async (req, res) => {
     if (resultRequests.length !== 2) {
       return res
         .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, "Exactly two declarations are required"));
+        .send(
+          apiResponseErr(
+            null,
+            false,
+            statusCode.badRequest,
+            "Exactly two declarations are required"
+          )
+        );
     }
 
     const runnerId1 = resultRequests[0].runnerId;
@@ -1538,15 +1546,17 @@ export const approveResult = async (req, res) => {
     const market = await Market.findOne({
       where: { marketId },
       include: [
-        { model: Game, attributes: ['gameName'] },
-        { model: Runner, attributes: ['runnerId', 'runnerName'] },
+        { model: Game, attributes: ["gameName"] },
+        { model: Runner, attributes: ["runnerId", "runnerName"] },
       ],
     });
 
     if (!market) {
       return res
         .status(statusCode.badRequest)
-        .send(apiResponseErr(null, false, statusCode.badRequest, "Market not found"));
+        .send(
+          apiResponseErr(null, false, statusCode.badRequest, "Market not found")
+        );
     }
 
     const gameName = market.Game.gameName;
@@ -1556,13 +1566,14 @@ export const approveResult = async (req, res) => {
     ).map((runner) => runner.runnerName);
 
     const isApproved = runnerId1 === runnerId2;
-    const type = isApproved ? 'Matched' : 'Unmatched';
+    const type = isApproved ? "Matched" : "Unmatched";
 
-    let remarks = '';
-    if (action === 'reject') {
-      remarks = type === 'Matched'
-        ? "Your result has been rejected. Kindly reach out to your upline for further guidance."
-        : "Oops! Your submission does not match our records. Please check the data and try again.";
+    let remarks = "";
+    if (action === "reject") {
+      remarks =
+        type === "Matched"
+          ? "Your result has been rejected. Kindly reach out to your upline for further guidance."
+          : "Oops! Your submission does not match our records. Please check the data and try again.";
 
       await ResultHistory.create({
         gameId,
@@ -1576,7 +1587,7 @@ export const approveResult = async (req, res) => {
         declaredByNames,
         declaredById: declaredByIds,
         remarks,
-        status: 'Rejected',
+        status: "Rejected",
         createdAt: new Date(),
       });
 
@@ -1587,7 +1598,16 @@ export const approveResult = async (req, res) => {
 
       await ResultRequest.destroy({ where: { marketId } });
 
-      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result rejected successfully"));
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Result rejected successfully"
+          )
+        );
     }
 
     remarks = "Congratulations! Your result has been approved.";
@@ -1604,7 +1624,7 @@ export const approveResult = async (req, res) => {
       declaredByNames,
       declaredById: declaredByIds,
       remarks,
-      status: 'Approved',
+      status: "Approved",
       createdAt: new Date(),
     });
 
@@ -1659,7 +1679,9 @@ export const approveResult = async (req, res) => {
                 where: { MarketId: marketId, UserId: user.userId },
               });
 
-              const marketExposureValue = exposureEntry ? Number(exposureEntry.exposure) : 0;
+              const marketExposureValue = exposureEntry
+                ? Number(exposureEntry.exposure)
+                : 0;
               const runnerBalanceValue = Number(runnerBalance.bal);
 
               if (resultRequests[0].isWin) {
@@ -1735,17 +1757,80 @@ export const approveResult = async (req, res) => {
 
         await CurrentOrder.destroy({ where: { marketId } });
       }
-    } else {
-      return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result rejected due to mismatched declarations"));
+       // Notification 
+    const allUsers = await userSchema.findAll({
+      where: {
+        isActive: true,
+        fcm_token: {
+          [Op.ne]: null,
+        },
+      },
+      attributes: ['id', 'fcm_token', 'userName', 'userId'],
+    });
+
+    const notificationService = new NotificationService();
+
+    for (const user of allUsers) {
+      if (user.fcm_token) {
+        let title;
+        let message;
+        title = `🏁 Results Declared: ${market.marketName}`;
+        message = `The final results for "${market.marketName}" have been declared. Check now to see if you've secured a win!`;
+
+        await notificationService.sendNotification(
+          title,
+          message,
+          {
+            type: "colorgame",
+            marketId: marketId.toString(),
+            userId: user.userId.toString(),
+          },
+          user.fcm_token
+        );
+
+        await Notification.create({
+          UserId: user.userId,
+          MarketId: marketId,
+          message,
+          type: "colorgame",
+        });
+      }
     }
 
-    await deleteLotteryFromFirebase(marketId)
-    return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, "Result approved and declared successfully"));
+    await deleteLotteryFromFirebase(marketId);
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Result approved and declared successfully"
+        )
+      );
+    } else {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            null,
+            true,
+            statusCode.success,
+            "Result rejected due to mismatched declarations"
+          )
+        );
+    }
   } catch (error) {
-    console.error("Approval Error:", error);
     return res
       .status(statusCode.internalServerError)
-      .send(apiResponseErr(null, false, statusCode.internalServerError, error.message));
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
   }
 };
 

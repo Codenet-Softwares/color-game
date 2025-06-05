@@ -48,15 +48,6 @@ export const AdminRoute = (app) => {
   // done
   app.get('/api/get-sub-admins', authorize([string.Admin]), getSubAdmins);
 
-  // done
-  // app.post(
-  //   '/api/update-market-status/:marketId',
-  //   suspendedMarketSchema,
-  //   customErrorHandler,
-  //   authorize([string.Admin]),
-  //   checkMarketStatus,
-  // );
-
   app.put(
     '/api/update-inActive-market-status/:marketId',
     suspendedMarketSchema,
@@ -76,8 +67,6 @@ export const AdminRoute = (app) => {
   app.post('/api/root-path/:action', buildRootPath);
 
   app.post('/api/revoke-winning-announcement', validateRevokeWinningAnnouncement, customErrorHandler, revokeWinningAnnouncement);
-
-  // app.get('/api/live-users-bet/:marketId', validateLiveUsersBet, customErrorHandler, authorize([string.Admin]), liveUsersBet);
 
   app.get('/api/live-users-bet/:marketId', validateLiveUsersBet, customErrorHandler, authorize([string.Admin]), liveUsersBet);
 
