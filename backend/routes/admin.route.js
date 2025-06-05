@@ -30,8 +30,9 @@ import {
   getDetailsWinningBet,
   inActiveMarketStatus,
   deleteSubAdmin,
+  createTitleTextNotification,
 } from '../controller/admin.controller.js';
-import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket, validateDeleteSubAdmin } from '../schema/commonSchema.js';
+import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket, validateDeleteSubAdmin, validateTitleText } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
 
 dotenv.config();
@@ -100,5 +101,6 @@ export const AdminRoute = (app) => {
 
   app.get('/api/get-Details-winning-bet/:marketId/:userId',validateBetsAfterWin,customErrorHandler,authorize([string.Admin]), getDetailsWinningBet);
 
+  app.post('/api/create-title-text',validateTitleText,customErrorHandler, createTitleTextNotification);
 };
 
