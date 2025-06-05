@@ -708,6 +708,20 @@ export const validateBetsAfterWin = [
     .withMessage("Market Id is not valid."),
 ];
 
+export const validateTitleText = [
+  body('title')
+    .notEmpty()
+    .withMessage('Title is required')
+    .isString()
+    .withMessage('Title must be a string'),
+
+  body('text')
+    .notEmpty()
+    .withMessage('Text is required')
+    .isString()
+    .withMessage('Text must be a string'),
+];
+
 export const validateApproveResult = [
   body('marketId')
     .notEmpty()

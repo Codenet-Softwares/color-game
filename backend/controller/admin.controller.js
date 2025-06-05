@@ -2842,3 +2842,74 @@ export const getDetailsWinningBet = async(req,res) => {
     );
   }
 };
+
+export const createTitleTextNotification = async (req, res) => {
+  try {
+    const { message, title } = req.body;
+    
+    // Notification 
+    const allUsers = await userSchema.findAll({
+      where: {
+        isActive: true,
+        fcm_token: {
+          [Op.ne]: null,
+        },
+      },
+      attributes: ['id', 'fcm_token', 'userName', 'userId'],
+    });
+
+    const notificationService = new NotificationService();
+
+    for (const user of allUsers) {
+      if (user.fcm_token) {
+        
+
+       
+
+        await notificationService.sendNotification(
+          title,
+          message,
+          {
+            type: "colorgame",
+            marketId: marketId.toString(),
+            userId: user.userId.toString(),
+          },
+          user.fcm_token
+        );
+        
+        await Notification.create({
+          UserId: user.userId,  
+          MarketId: marketId,
+          message,
+          type: "colorgame",
+        });
+      }
+    }
+
+    const newNotification = await Notification.create({ title, message });
+
+    return res
+      .status(statusCode.create)
+      .send(
+        apiResponseSuccess(
+          newNotification,
+          true,
+          statusCode.create,
+          "Notification created with title and text."
+        )
+      );
+
+  } catch (error) {
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.internalServerError,
+          error.message
+        )
+      );
+  }
+};
+
