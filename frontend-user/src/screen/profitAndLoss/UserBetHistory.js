@@ -30,7 +30,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
       {/* Header section with title and back button */}
       <div
         className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
-        style={{ backgroundColor: "#2CB3D1" }}
+        style={{ backgroundColor: "#253b4a" }}
       >
         <b>&nbsp;&nbsp;Bet History</b>
         <span

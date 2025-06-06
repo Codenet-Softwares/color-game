@@ -47,7 +47,7 @@ const ActivityLog = () => {
               <div className="card rounded">
                 <div
                   className="card-header text-white p-2 text-uppercase text-center"
-                  style={{ backgroundColor: "#18ADC5" }}
+                  style={{ backgroundColor: "##202020" }}
                 >
                   <b>&nbsp;&nbsp;Activity Log</b>
                 </div>

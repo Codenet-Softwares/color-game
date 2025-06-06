@@ -4,11 +4,14 @@ import RenderLayTable from "./components/RenderLayTable";
 
 const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
   return (
-    <div className="card border-bottom-0 rounded-0 px-0 mt-4" style={{ height: "", overflow: "hidden" }}>
+    <div
+      className="card border-bottom-0 rounded-0 px-0 "
+      style={{ height: "", overflow: "hidden", marginTop: "18px" }}
+    >
       <div
         className="card-header"
         style={{
-          backgroundColor: "#2CB3D1",
+          backgroundColor: "#202020",
           color: "white",
           textAlign: "center",
         }}
@@ -56,9 +59,7 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
               <div>
                 <RenderBackTable betHistoryData={betHistoryData} />
               </div>
-              <div
-                className="mt-2"
-              >
+              <div className="mt-2">
                 <RenderLayTable betHistoryData={betHistoryData} />
               </div>
             </div>
