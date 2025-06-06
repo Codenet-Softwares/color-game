@@ -67,7 +67,7 @@ const GetSingleMarket = () => {
           <div className="row p-0 m-0">
             <div
               className="col-12 p-2 mt-2 text-white fw-bold h6 "
-              style={{ backgroundColor: "#18ADC5", fontSize: "16px" }}
+              style={{ backgroundColor: "#202020", fontSize: "16px" }}
             >
               {user_gameWithMarketData[0]?.gameName}
             </div>
