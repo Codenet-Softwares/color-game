@@ -101,7 +101,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     fetchOuterAnnouncement();
   }, []);
 
-  return (
+  return store?.user?.isLogin ? (
     <>
       <nav className="user_navbar p-0">
         {store.user.isLogin ? (
@@ -123,69 +123,38 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             </span>
           </div>
         ) : (
-          <div
-            className="w-100 d-flex justify-content-between "
-            style={{ background: "#f1ac44" }}
-          >
-            <img src={ansmt} alt="Announcement" className="announcementImg" />
-            <marquee className="text-black" style={{ fontSize: "18px" }}>
-              {announcementOuterData
-                .map((item) => item.announcement)
-                .join(" | ")}
-            </marquee>
-            <span
-              className="text-nowrap text-black px-2"
-              style={{ fontSize: "14px" }}
-            >
-              {formattedDate}
-            </span>
-          </div>
+          // <div
+          //   className="w-100 d-flex justify-content-between "
+          //   style={{ background: "#f1ac44" }}
+          // >
+          //   <img src={ansmt} alt="Announcement" className="announcementImg" />
+          //   <marquee className="text-black" style={{ fontSize: "18px" }}>
+          //     {announcementOuterData
+          //       .map((item) => item.announcement)
+          //       .join(" | ")}
+          //   </marquee>
+          //   <span
+          //     className="text-nowrap text-black px-2"
+          //     style={{ fontSize: "14px" }}
+          //   >
+          //     {formattedDate}
+          //   </span>
+          // </div>
+          <></>
         )}
 
         <div
-          className="container-fluid d-flex align-items-center justify-content-between"
+          className="container-fluid d-flex align-items-center justify-content-between "
           style={{
             maxWidth: "100%",
             padding: store?.user?.islogin ? "4px 10px" : "",
           }}
         >
-          {/* {store.user.isLogin && (
-            <div className="d-flex flex-column">
-              <div className="mt-4"></div>
-              <button
-                className="btn border border-white mt-2 d-lg-none hambargerIcon "
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasTop"
-                aria-controls="offcanvasTop"
-                style={{
-                  width: "44px",
-                  height: "35px",
-                  fontSize: "18px",
-                  padding: "5px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  lineHeight: "1",
-                }}
-              >
-                <small
-                  className="fw-bold text-white"
-                  style={{ fontSize: "12px", marginBottom: "2px" }}
-                >
-                  Bets
-                </small>
-                <FaDollarSign size={15} color="white" />
-              </button>
-            </div>
-          )} */}
-
           <OpenBetsOffCanvas
             handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
             openBetData={openBetData}
           />
-          <a className="navbar-brand" href={`/home`}>
+          <a className="navbar-brand">
             <img
               src={Logo}
               alt="Logo"
@@ -222,11 +191,9 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                     >
                       Exp : (
                       <span className="text-danger">
-                        {
-                          exposureAndWallet.exposure ??
+                        {exposureAndWallet.exposure ??
                           store?.user?.wallet?.exposure ??
-                          0
-                       }
+                          0}
                       </span>
                       )
                     </span>
@@ -303,23 +270,101 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                   )}
                 </div>
               ) : (
-                <span
-                  className="btn text-white"
-                  style={{
-                    backgroundColor: "#f6a21e",
-                    fontSize: "13px",
-                    border: "2px solid white",
-                    borderRadius: "12px",
-                    padding: "6px 10px",
-                  }}
-                  onClick={() => setShowModalLogin(true)}
-                >
-                  <FaUser style={{ width: "12px" }} className="mb-1" />
-                  &nbsp;
-                  <b>LOG IN</b>
-                </span>
+                // <span
+                //   className="btn text-white"
+                //   style={{
+                //     backgroundColor: "#f6a21e",
+                //     fontSize: "13px",
+                //     border: "2px solid white",
+                //     borderRadius: "12px",
+                //     padding: "6px 10px",
+                //   }}
+                //   onClick={() => setShowModalLogin(true)}
+                // >
+                //   <FaUser style={{ width: "12px" }} className="mb-1" />
+                //   &nbsp;
+                //   <b>LOG IN</b>
+                // </span>
+                <></>
               )}
             </button>
+          </div>
+        </div>
+      </nav>
+    </>
+  ) : (
+    <>
+      <nav
+        className="navbar navbar-expand-lg fixed-top"
+        style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          left: 0,
+          zIndex: 1030,
+          backgroundColor: "rgba(0, 0, 0, 0.15)", // translucent black background
+        }}
+      >
+        <div className="container">
+          <a href="#" className="navbar-brand">
+            <img
+              src={Logo}
+              className="img-fluid"
+              alt="Logo"
+              style={{
+                width: "100px",
+                maxWidth: "100%",
+                height: "auto",
+              }}
+            />
+          </a>
+
+          {/* Login Button for Mobile (visible on small screens) */}
+          <button
+            type="button"
+            className="btn btn-login py-1 d-block d-sm-none"
+            onClick={() => setShowModalLogin(true)}
+            style={{
+              color: "#fff",
+              borderRadius: "10px",
+              padding: "20px 40px",
+              fontSize: "16px",
+              fontWeight: "500",
+              letterSpacing: "0",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              backgroundColor: "#f6a21e",
+              border: "2px solid white",
+            }}
+          >
+            Log In
+          </button>
+
+          <div
+            id="navbarSupportedContent"
+            className="collapse navbar-collapse d-none d-sm-flex justify-content-end"
+          >
+            <form className="form-inline my-2 my-lg-0">
+              <button
+                type="button"
+                className="btn btn-login py-2"
+                onClick={() => setShowModalLogin(true)}
+                style={{
+                  color: "#fff",
+                  borderRadius: "10px",
+                  padding: "20px 40px",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  letterSpacing: "0",
+                  textTransform: "uppercase",
+                  cursor: "pointer",
+                  backgroundColor: "#f6a21e",
+                  border: "2px solid white",
+                }}
+              >
+                &nbsp;<b>Log In</b>
+              </button>
+            </form>
           </div>
         </div>
       </nav>
