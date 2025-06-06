@@ -12,7 +12,7 @@ const LotteryPurchaseLayout = () => {
   function ticketHistory() {
     return (
       <div
-        className={`global-margin-top${store.user.isLogin ? "-logged" : ""} `}
+        style={{ marginTop: '95px' }}
       >
         <AppDrawer showCarousel={false} isMobile={false} isHomePage={true}>
           <LotteryPurchaseHistory MarketId={marketId} />

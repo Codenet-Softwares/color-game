@@ -8,7 +8,7 @@ const RulesPage = () => {
   function getRules() {
     return (
       <>
-        <div className="rulesPage pt-4" style={{marginTop:"150px" }}>
+        <div className="rulesPage pt-4" style={{marginTop:"120px" }}>
           <div className="Rules p-1 rounded " style={{backgroundColor:"#273f4f" }}>
             <h5>RULES</h5>
           </div>
