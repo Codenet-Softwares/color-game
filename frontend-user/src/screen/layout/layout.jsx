@@ -39,21 +39,21 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           listStyleType: "none",
           overflowX: "auto",
           padding: 0,
-          backgroundColor: "rgb(23 101 119)",
+          backgroundColor: "#f1ac44",
           fontSize: "18px",
         }}
       >
         <li
           key={0}
-          className="p-2 text-white"
+          className="p-2 text-black"
           style={{
             fontWeight: 600,
             backgroundColor:
-              location.pathname === "/home" ? "#5ECBDD" : "transparent",
+              location.pathname === "/home" ? "#e9f4a6" : "transparent",
             cursor: "pointer",
           }}
         >
-          <Link className=" text-decoration-none text-white" to={`/home`}>
+          <Link className=" text-decoration-none text-black" to={`/home`}>
             {"Home"}
           </Link>
         </li>
@@ -64,16 +64,16 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           return (
             <li
               key={gameObj.gameId}
-              className="p-2 text-white"
+              className="p-2 text-black"
               style={{
                 fontWeight: 600,
                 backgroundColor:
-                  location.pathname === gamePath ? "#5ECBDD" : "transparent",
+                  location.pathname === gamePath ? "#e9f4a6" : "transparent",
                 cursor: "pointer",
               }}
             >
               <Link
-                className={`text-white text-decoration-none text-nowrap ${
+                className={`text-black text-decoration-none text-nowrap ${
                   gameObj.isBlink ? "blink_me" : ""
                 }`}
                 to={gamePath}
@@ -95,7 +95,6 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           openBetData={openBetData}
         />
         {user_allGames && getNavBarOption()}
-     
       </div>
       {store?.user?.isLogin && ["/home", "/"].includes(location?.pathname) && (
         <div className="fixed-bottom">
