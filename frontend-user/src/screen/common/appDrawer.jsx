@@ -41,6 +41,63 @@ function AppDrawer({
     user_getAllGames();
   }, [isColorgameUpdate]);
 
+  function getNavBarOption() {
+    return (
+      <ul
+        className="mb-0 d-flex bg-hover"
+        style={{
+          listStyleType: "none",
+          overflowX: "auto",
+          padding: 0,
+          backgroundImage: "linear-gradient(-180deg, #F6A21E 0%, #F6A21E 100%)",
+          fontSize: "15px",
+        }}
+      >
+        {/* <li
+          key={0}
+          className="p-2 text-black"
+          style={{
+            fontWeight: 600,
+            backgroundColor:
+              location.pathname === "/home" ? "#e9f4a6" : "transparent",
+            cursor: "pointer",
+          }}
+        >
+          <Link className=" text-decoration-none text-black" to={`/home`}>
+            {"Home"}
+          </Link>
+        </li> */}
+        {user_allGames.map((gameObj) => {
+          const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
+            gameObj.gameId
+          }`;
+          return (
+            <li
+              key={gameObj.gameId}
+              className="p-2 text-black"
+              style={{
+                fontWeight: 600,
+                marginLeft: "12px",
+                backgroundColor:
+                  location.pathname === gamePath ? "#e9f4a6" : "transparent",
+                cursor: "pointer",
+              }}
+            >
+              <Link
+                className={`text-black text-decoration-none text-nowrap  ${
+                  gameObj.isBlink ? "blink_me" : ""
+                }`}
+                to={gamePath}
+              >
+                {gameObj.gameName}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+
   const handleAllId = (gameId, marketId) => {
     dispatch({
       type: strings.placeBidding,
@@ -99,7 +156,7 @@ function AppDrawer({
     return (
       <div
         className={`border-top-0 border-end ${
-          store.user.isLogin ? "mt-5" : "mt-3"
+          store.user.isLogin ? "mt-3" : "mt-3"
         }`}
         style={{ overflowY: "auto" }}
       >
@@ -235,7 +292,7 @@ function AppDrawer({
       <div
         className="container-fluid custom-scrollbar"
         style={{
-          height: ["/home", "/"].includes(location?.pathname)
+          height: ["/Home", "/"].includes(location?.pathname)
             ? "85vh"
             : "100vh",
           overflowY: "none",
@@ -263,7 +320,7 @@ function AppDrawer({
           {/* MAIN CONTENT - md: 8 offset-4, lg: 7 offset-2 */}
           <div
             className={` offset-md-4 col-md-8 offset-lg-2 px-0  ${
-              ["/home", "/"].includes(location?.pathname)
+              ["/Home", "/"].includes(location?.pathname)
                 ? "col-lg-7"
                 : "col-lg-10"
             } `}
@@ -278,13 +335,12 @@ function AppDrawer({
             <div
               className="container-fluid px-0"
               style={{
-                marginTop: ["/home", "/"].includes(location?.pathname)
-                  ? "-12px"
-                  : "-32px",
+                marginTop: "-6px",
               }}
             >
               <div className="row ">
                 <div className="px-0">{showCarousel && <InnerCarousel />}</div>
+                <div className="px-0 mb-1">{getNavBarOption()}</div>
               </div>
             </div>
 
@@ -301,7 +357,7 @@ function AppDrawer({
           </div>
 
           {/* RIGHT SIDEBAR - only for desktop (lg: col-3) */}
-          {["/home", "/"].includes(location?.pathname) && (
+          {["/Home", "/"].includes(location?.pathname) && (
             <div
               className="d-none d-lg-block col-lg-3 p-0"
               style={{

@@ -6,7 +6,7 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
   return (
     <div
       className="card border-bottom-0 rounded-0 px-0 "
-      style={{ height: "", overflow: "hidden", marginTop: "51PX" }}
+      style={{ height: "", overflow: "hidden", marginTop: "18px" }}
     >
       <div
         className="card-header"
