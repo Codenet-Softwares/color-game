@@ -961,7 +961,7 @@ function GameWithMarketList({ isSingleMarket }) {
               <>
                 <div
                   className="col-12 p-2 mt-2 fw-bold h6 text-white shadow-lg border"
-                  style={{ backgroundColor: "#18ADC5" }}
+                  style={{ backgroundColor: "##202020" }}
                 >
                   {gameWithMarketData.gameName}
                 </div>

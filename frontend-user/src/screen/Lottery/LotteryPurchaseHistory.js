@@ -224,7 +224,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
     <div
       className="container mt-5"
       style={{
-        background: "#2CB3D1",
+        background: "#2b4758",
         borderRadius: "10px",
         boxShadow: "0 0 15px rgba(0,0,0,0.1)",
       }}
@@ -255,8 +255,8 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       </div>
 
       {/* Market Navigation */}
-      <div className={`d-flex flex-column align-items-center mb-3 p-2 rounded shadow mt-5 ${visibleMarkets.length > 0 ? "" : "bg-white"}`}>
-        <h5 className="fw-bold " style={{ color: "#284B63" }}>
+      <div className={`d-flex flex-column align-items-center mb-3  p-2 rounded shadow mt-5 ${visibleMarkets.length > 0 ? "" : "bg-white"}`}>
+        <h5 className="fw-bold  text-white" >
           LOTTERY MARKETS
         </h5>
         {visibleMarkets.length > 0 ? (
@@ -366,7 +366,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         <>
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 text-center text-md-start">
             <div className="order-2 order-md-1 mt-2 mt-md-0">
-              <h5 className="fw-bold" style={{ color: "#284B63" }}>
+              <h5 className="fw-bold text-white" >
                 PURCHASED LOTTERY TICKETS
               </h5>
             </div>
@@ -493,10 +493,10 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         <div className="d-flex flex-column align-items-center mt-5">
           <div className="d-flex justify-content-center align-items-center mt-3 mb-4">
             <div>
-              <h5 className="text-secondary text-center">
+              <h5 className="text-secondary text-center text-white">
                 No Purchases To Display
               </h5>
-              <p className="mb-0 text-muted">
+              <p className="mb-0  text-white">
                 Your Purchase History Will Appear Here Once Available Markets
                 Are Added.
               </p>
