@@ -27,7 +27,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth);
   const [isRefresh, setIsRefresh] = useState(false);
 
-  console.log("window====>", isMobile);
 
   const accessTokenFromStore = JSON.parse(
     localStorage.getItem(strings.LOCAL_STORAGE_KEY)
@@ -81,36 +80,22 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     }
   };
 
-  const fetchInnerAnnouncement = async () => {
-    try {
-      const response = await getInnerAnnouncement();
-      if (response && response.data) {
-        setAnnouncemenInnertData(response.data);
-      } else {
-        console.error("Error fetching announcements", response);
-        setAnnouncemenInnertData([]);
-      }
-    } catch (error) {
-      console.error("Error fetching announcements", error);
-      setAnnouncemenInnertData([]);
-    }
-  };
+  
 
   useEffect(() => {
-    fetchInnerAnnouncement();
     fetchOuterAnnouncement();
   }, []);
 
   return store?.user?.isLogin ? (
     <>
       <nav className="user_navbar p-0">
-        {store.user.isLogin ? (
+        {/* {store.user.isLogin ? (
           <div
             className="w-100 d-flex justify-content-between "
-            style={{ background: "#f1ac44" }}
+            style={{ background: "#294253" }}
           >
             <img src={ansmt} alt="Announcement" className="announcementImg" />
-            <marquee className="text-black" style={{ fontSize: "18px" }}>
+            <marquee className="text-white" style={{ fontSize: "18px" }}>
               {announcementInnerData
                 .map((item) => item.announcement)
                 .join(" | ")}
@@ -123,6 +108,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             </span>
           </div>
         ) : (
+
           // <div
           //   className="w-100 d-flex justify-content-between "
           //   style={{ background: "#f1ac44" }}
@@ -142,6 +128,26 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
           // </div>
           <></>
         )}
+
+          <div
+            className="w-100 d-flex justify-content-between "
+            style={{ background: "#294253" }}
+          >
+            <img src={ansmt} alt="Announcement" className="announcementImg" />
+            <marquee className="text-white" style={{ fontSize: "18px" }}>
+              {announcementOuterData
+                .map((item) => item.announcement)
+                .join(" | ")}
+            </marquee>
+            <span
+              className="text-nowrap text-black px-2"
+              style={{ fontSize: "14px" }}
+            >
+              {formattedDate}
+            </span>
+          </div>
+        )} */}
+
 
         <div
           className="container-fluid d-flex align-items-center justify-content-between "

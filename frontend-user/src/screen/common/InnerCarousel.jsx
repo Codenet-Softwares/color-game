@@ -4,9 +4,10 @@ import { useAppContext } from "../../contextApi/context";
 import { aAdvertisement } from "../../utils/dummyData";
 
 const InnerCarousel = () => {
-  const {  store } = useAppContext();
+  const { store } = useAppContext();
   const [sliderData, setSliderData] = useState([]);
-  
+  const [isMobile, setIsMobile] = useState(window.innerWidth);
+
   const fetchSliderImgText = async () => {
     try {
       const response = await getInnerImg();
@@ -26,6 +27,12 @@ const InnerCarousel = () => {
     fetchSliderImgText();
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div>
       <div className="row px-0 ">
@@ -35,7 +42,7 @@ const InnerCarousel = () => {
             className={`carousel slide ${store.user.isLogin ? "mt-4" : "mt-1"}`}
             data-bs-ride="carousel"
             style={{
-              height: "350px",
+              height: isMobile <= 435 ? "220px" : "350px",
               overflow: "hidden",
               // backgroundSize: "contain",
               backgroundPosition: "center",
@@ -66,9 +73,8 @@ const InnerCarousel = () => {
                       src={item.image}
                       className="d-block w-100"
                       alt={`Slide ${index + 1}`}
-                      style={{ height: "350px" }}
+                      style={{ height: isMobile <= 435 ? "220px" : "350px" }}
                     />
-          
                   </div>
                 </div>
               ))}

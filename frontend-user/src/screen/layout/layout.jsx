@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../contextApi/context";
 import NavBar from "../common/navBar";
-import { user_getAllGames_api } from "../../utils/apiService";
+import {
+  getInnerAnnouncement,
+  user_getAllGames_api,
+} from "../../utils/apiService";
 import "./layout.css";
 import strings from "../../utils/constant/stringConstant";
 import SubFooter from "../common/SubFooter";
@@ -9,6 +12,7 @@ import { Link, useLocation } from "react-router-dom";
 
 function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
   const [user_allGames, setUser_allGames] = useState([]);
+  const [announcementInnerData, setAnnouncemenInnertData] = useState([]);
   const { dispatch, store } = useAppContext();
   const location = useLocation();
 
@@ -31,6 +35,25 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
     });
   }
 
+  const fetchInnerAnnouncement = async () => {
+    try {
+      const response = await getInnerAnnouncement();
+      if (response && response.data) {
+        setAnnouncemenInnertData(response.data);
+      } else {
+        console.error("Error fetching announcements", response);
+        setAnnouncemenInnertData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching announcements", error);
+      setAnnouncemenInnertData([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchInnerAnnouncement;
+  }, []);
+
   function getNavBarOption() {
     return (
       <ul
@@ -39,8 +62,8 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           listStyleType: "none",
           overflowX: "auto",
           padding: 0,
-          backgroundColor: "#f1ac44",
-          fontSize: "18px",
+          backgroundImage: "linear-gradient(-180deg, #F6A21E 0%, #F6A21E 100%)",
+          fontSize: "15px",
         }}
       >
         <li
@@ -94,7 +117,9 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
           openBetData={openBetData}
         />
+
         {store?.user?.isLogin &&user_allGames && getNavBarOption()}
+
       </div>
       {store?.user?.isLogin && ["/home", "/"].includes(location?.pathname) && (
         <div className="fixed-bottom">
