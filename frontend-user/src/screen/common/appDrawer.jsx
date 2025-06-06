@@ -292,7 +292,7 @@ function AppDrawer({
       <div
         className="container-fluid custom-scrollbar"
         style={{
-          height: ["/Home", "/"].includes(location?.pathname)
+          height: ["/home", "/"].includes(location?.pathname)
             ? "85vh"
             : "100vh",
           overflowY: "none",
@@ -320,7 +320,7 @@ function AppDrawer({
           {/* MAIN CONTENT - md: 8 offset-4, lg: 7 offset-2 */}
           <div
             className={` offset-md-4 col-md-8 offset-lg-2 px-0  ${
-              ["/Home", "/"].includes(location?.pathname)
+              ["/home", "/"].includes(location?.pathname)
                 ? "col-lg-7"
                 : "col-lg-10"
             } `}
@@ -359,7 +359,7 @@ function AppDrawer({
           </div>
 
           {/* RIGHT SIDEBAR - only for desktop (lg: col-3) */}
-          {["/Home", "/"].includes(location?.pathname) && (
+          {["/home", "/"].includes(location?.pathname) && (
             <div
               className="d-none d-lg-block col-lg-3 p-0"
               style={{

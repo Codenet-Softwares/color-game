@@ -66,7 +66,7 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
         />
 
         {/* {store?.user?.isLogin &&user_allGames && getNavBarOption()} */}
-        {store.user.isLogin && ["/Home", "/"].includes(location?.pathname) && (
+        {store.user.isLogin && ["/home", "/"].includes(location?.pathname) && (
           <div
             className="w-100 d-flex justify-content-between "
             style={{ background: "#294253" }}

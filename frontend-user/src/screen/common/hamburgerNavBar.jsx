@@ -36,7 +36,7 @@ const HamburgerNavBar = () => {
           borderTopRightRadius: "15px",
           background: "#f1ac44",
         }}
-        onClick={() => navigate("/Home")}
+        onClick={() => navigate("/home")}
       >
         <div className="col-3 col-md text-center text-white mx-4" title="Home">
           <div>
@@ -48,7 +48,7 @@ const HamburgerNavBar = () => {
         <div
           className={`col-3 col-md text-center text-white `}
           title="Video Play"
-          onClick={() => navigate("/Home")}
+          onClick={() => navigate("/home")}
         >
           <div>
             <FaPlay size={24} />
