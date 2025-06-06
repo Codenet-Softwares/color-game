@@ -52,8 +52,9 @@ const ForgotPassword = () => {
   function changePasswords() {
     return (
       <div className="global-margin-top-logged">
-        <form className="form-card shadow-lg " style={{ marginTop: "150px" }}>
-          <div className="text-center mb-3 text-dark mt-3" >
+        <form className="form-card shadow-lg " style={{ marginTop: "72px" }}>
+          <div className="text-center mb-3 text-primary mt-3" >
+
         <FaRegUserCircle  size={60}/>
           </div>
             

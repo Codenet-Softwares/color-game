@@ -77,7 +77,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
             openBetData={openBetData}
           />
-          <a className="navbar-brand">
+          <a href="/home" className="navbar-brand">
             <img
               src={Logo}
               alt="Logo"

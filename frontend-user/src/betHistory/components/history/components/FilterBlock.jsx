@@ -88,7 +88,7 @@ const FilterBlock = ({
   return (
     <div
       className="card shadow p-3 mb-5 rounded"
-      style={{ marginTop: "150px", background: "#253b4a" }}
+      style={{ marginTop: "85px", background: "#253b4a" }}
     >
       <div className="col-12">
         <div className="row">

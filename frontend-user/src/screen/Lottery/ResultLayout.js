@@ -12,7 +12,7 @@ const ResultLayout = () => {
   function WinningDeclare() {
     return (
       <div
-        className={`global-margin-top${store.user.isLogin ? "-logged" : ""} `}
+        style={{ marginTop: '75px' }}
       >
         <AppDrawer showCarousel={false} isMobile={false} isHomePage={true}>
           <NewResult />

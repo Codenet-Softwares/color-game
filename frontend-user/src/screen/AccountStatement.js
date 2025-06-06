@@ -104,7 +104,7 @@ const AccountStatement = () => {
     <>
       <AppDrawer showCarousel={false}>
         <Layout />
-        <div style={{ marginTop: "150px" }}>
+        <div style={{ marginTop: "72px" }}>
           <div className="d-flex justify-content-center px-2">
             <div className="card w-100 rounded">
               {/* Card Header */}

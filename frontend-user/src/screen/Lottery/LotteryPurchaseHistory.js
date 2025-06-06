@@ -222,11 +222,12 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
 
   return (
     <div
-      className="container mt-5"
+      className="container"
       style={{
         background: "#2b4758",
         borderRadius: "10px",
         boxShadow: "0 0 15px rgba(0,0,0,0.1)",
+        marginTop:""
       }}
     >
       {/* Date Filter UI */}
