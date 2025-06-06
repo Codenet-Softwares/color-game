@@ -340,7 +340,9 @@ function AppDrawer({
             >
               <div className="row ">
                 <div className="px-0">{showCarousel && <InnerCarousel />}</div>
-                <div className="px-0 mb-1">{getNavBarOption()}</div>
+                {["/home", "/"].includes(location?.pathname?.toLowerCase()) && (
+                  <div className="px-0 mb-1">{getNavBarOption()}</div>
+                )}
               </div>
             </div>
 
