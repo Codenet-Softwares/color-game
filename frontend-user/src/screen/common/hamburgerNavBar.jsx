@@ -25,6 +25,8 @@ const HamburgerNavBar = () => {
     }
   }
 
+  // ❗ Conditional rendering: Show navbar only when logged in
+  if (!store.user.isLogin) return null;
   return (
     <div className="container-fluid">
       <div

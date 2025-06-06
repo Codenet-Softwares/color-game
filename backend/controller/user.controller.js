@@ -22,13 +22,14 @@ import LotteryProfit_Loss from "../models/lotteryProfit_loss.model.js";
 import { v4 as uuidv4 } from "uuid";
 import { getISTTime } from "../helper/commonMethods.js";
 import { user_Balance } from "./admin.controller.js";
-import  { sequelize , sql } from "../db.js";
+import { sequelize, sql } from "../db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
+import Notification from "../models/notification.model.js";
 
 // done
 export const createUser = async (req, res) => {
   try {
-  const { userId, userName, password } = req.body;
+    const { userId, userName, password } = req.body;
     const existingUser = await userSchema.findOne({ where: { userName } });
     if (existingUser) {
       return res
@@ -64,7 +65,7 @@ export const createUser = async (req, res) => {
         )
       );
   } catch (error) {
-   return res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -219,8 +220,7 @@ export const resetPassword = async (req, res) => {
       userData.password
     );
 
-    if(newPasswordIsCorrect)
-    {
+    if (newPasswordIsCorrect) {
       return res
         .status(statusCode.badRequest)
         .send(
@@ -484,45 +484,45 @@ export const getAllGameData = async (req, res) => {
       ],
       order: [["createdAt", "DESC"]],
     });
-    
+
 
     const formattedGameData = gameData
-  .map((game) => ({
-    gameId: game.gameId,
-    gameName: game.gameName,
-    description: game.description,
-    isBlink: game.isBlink,
-    createdAt: game.createdAt, // Ensure createdAt is included
-    markets: game.Markets
-      .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
-      .map((market) => ({
-        marketId: market.marketId,
-        marketName: market.marketName,
-        participants: market.participants,
-        startTime: market.startTime,
-        endTime: market.endTime,
-        announcementResult: market.announcementResult,
-        isActive: market.isActive,
-        isVoid: market.isVoid,
-        runners: market.Runners
-          .filter((runner) => !runner.hideRunnerUser)
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Runners
-          .map((runner) => ({
-            runnerId: runner.runnerId,
-            runnerName: runner.runnerName,
-            isWin: runner.isWin,
-            bal: runner.bal,
-            rate: [
-              {
-                back: runner.back,
-                lay: runner.lay,
-              },
-            ],
+      .map((game) => ({
+        gameId: game.gameId,
+        gameName: game.gameName,
+        description: game.description,
+        isBlink: game.isBlink,
+        createdAt: game.createdAt, // Ensure createdAt is included
+        markets: game.Markets
+          .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
+          .map((market) => ({
+            marketId: market.marketId,
+            marketName: market.marketName,
+            participants: market.participants,
+            startTime: market.startTime,
+            endTime: market.endTime,
+            announcementResult: market.announcementResult,
+            isActive: market.isActive,
+            isVoid: market.isVoid,
+            runners: market.Runners
+              .filter((runner) => !runner.hideRunnerUser)
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Runners
+              .map((runner) => ({
+                runnerId: runner.runnerId,
+                runnerName: runner.runnerName,
+                isWin: runner.isWin,
+                bal: runner.bal,
+                rate: [
+                  {
+                    back: runner.back,
+                    lay: runner.lay,
+                  },
+                ],
+              })),
           })),
-      })),
-  }))
-  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // DESC order for Games
+      }))
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // DESC order for Games
 
 
     const baseURL = process.env.LOTTERY_URL;
@@ -532,27 +532,27 @@ export const getAllGameData = async (req, res) => {
     );
     const data = response.data.data
     const foramtedData = [{
-        gameName    : data[0]?.gameName === "Lottery" ?data[0]?.gameName : "Lottery",
-        markets     : data.map((game)=>({
-        marketId    : game.marketId,
-        marketName  : game.marketName,
-        group_start : game.group_start,
-        group_end   : game.group_end,
+      gameName: data[0]?.gameName === "Lottery" ? data[0]?.gameName : "Lottery",
+      markets: data.map((game) => ({
+        marketId: game.marketId,
+        marketName: game.marketName,
+        group_start: game.group_start,
+        group_end: game.group_end,
         series_start: game.series_start,
-        series_end  : game.series_end,
+        series_end: game.series_end,
         number_start: game.number_start,
-        number_end  : game.number_end,
-        start_time  : game.start_time,
-        end_time    : game.end_time,
-        date        : game.date,
-        price       : game.price,
-        isActive    : game.isActive,
-        isWin       : game.isWin,
-        isVoid      : game.isVoid,
-        createdAt   : game.createdAt,
-        updatedAt   : game.updatedAt
+        number_end: game.number_end,
+        start_time: game.start_time,
+        end_time: game.end_time,
+        date: game.date,
+        price: game.price,
+        isActive: game.isActive,
+        isWin: game.isWin,
+        isVoid: game.isVoid,
+        createdAt: game.createdAt,
+        updatedAt: game.updatedAt
 
-        }))
+      }))
     }]
 
     const combinedData = [...formattedGameData, ...foramtedData];
@@ -616,7 +616,7 @@ export const filteredGameData = async (req, res) => {
           ],
         },
       ],
-      
+
 
     });
 
@@ -641,31 +641,31 @@ export const filteredGameData = async (req, res) => {
       description: game.description,
       isBlink: game.isBlink,
       markets: game.Markets
-      .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
-      .map((market) => ({
-        marketId: market.marketId,
-        marketName: market.marketName,
-        participants: market.participants,
-        startTime: market.startTime,
-        endTime: market.endTime,
-        createdAt: market.createdAt,
-        announcementResult: market.announcementResult,
-        isActive: market.isActive,
-        runners: market.Runners.map((runner) => ({
-          runnerName: {
-            runnerId: runner.runnerId,
-            runnerName: runner.runnerName,
-            isWin: runner.isWin,
-            bal: runner.bal,
-          },
-          rate: [
-            {
-              back: runner.back,
-              lay: runner.lay,
+        .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
+        .map((market) => ({
+          marketId: market.marketId,
+          marketName: market.marketName,
+          participants: market.participants,
+          startTime: market.startTime,
+          endTime: market.endTime,
+          createdAt: market.createdAt,
+          announcementResult: market.announcementResult,
+          isActive: market.isActive,
+          runners: market.Runners.map((runner) => ({
+            runnerName: {
+              runnerId: runner.runnerId,
+              runnerName: runner.runnerName,
+              isWin: runner.isWin,
+              bal: runner.bal,
             },
-          ],
+            rate: [
+              {
+                back: runner.back,
+                lay: runner.lay,
+              },
+            ],
+          })),
         })),
-      })),
     }));
 
     // Send the formatted response
@@ -826,7 +826,7 @@ export const filterMarketData = async (req, res) => {
 
     // Fetch market data
     const marketDataRows = await Market.findAll({
-      where: { marketId, hideMarketWithUser: true, isVoid: false, announcementResult: false  },
+      where: { marketId, hideMarketWithUser: true, isVoid: false, announcementResult: false },
       include: [
         {
           model: Runner,
@@ -836,7 +836,7 @@ export const filterMarketData = async (req, res) => {
     });
 
     console.log("Market Data Rows:", marketDataRows);
-    
+
     // const currentTime = getISTTime();
 
     // await Market.update(
@@ -927,7 +927,7 @@ export const filterMarketData = async (req, res) => {
         where: {
           userId,
           marketId,
-          isLiveDeleted : false,
+          isLiveDeleted: false,
         },
       });
 
@@ -990,7 +990,7 @@ export const filterMarketData = async (req, res) => {
         apiResponseSuccess(marketDataObj, true, statusCode.success, "Success")
       );
   } catch (error) {
-   return res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -1279,15 +1279,13 @@ export const getUserBetHistory = async (req, res) => {
     if (type === "void") {
       whereCondition.isVoid = true;
       model = BetHistory;
-    }else if(type === "settle")
-    {
+    } else if (type === "settle") {
       whereCondition.isVoid = false;
       model = BetHistory;
-    }else if(type === "unsettle")
-    {
+    } else if (type === "unsettle") {
       whereCondition.isWin = false;
       model = CurrentOrder;
-    }else{
+    } else {
       whereCondition.isVoid = false;
       model = BetHistory;
     }
@@ -1315,13 +1313,13 @@ export const getUserBetHistory = async (req, res) => {
     res
       .status(statusCode.success)
       .send(
-      apiResponseSuccess(rows, true, statusCode.success, "Success", {
-        totalPages,
-        pageSize,
-        totalItems,
-        page,
-      })
-    );
+        apiResponseSuccess(rows, true, statusCode.success, "Success", {
+          totalPages,
+          pageSize,
+          totalItems,
+          page,
+        })
+      );
   } catch (error) {
     res
       .status(statusCode.internalServerError)
@@ -1468,7 +1466,7 @@ export const calculateProfitLoss = async (req, res) => {
       offset: (page - 1) * limit,
       limit: limit,
     });
-/***********************************Previous logic************************************************************* */
+    /***********************************Previous logic************************************************************* */
     // const lotteryProfitLossData = await LotteryProfit_Loss.findAll({
     //   attributes: [
     //     [Sequelize.fn("SUM", Sequelize.col("profitLoss")), "totalProfitLoss"],
@@ -1529,7 +1527,7 @@ export const calculateProfitLoss = async (req, res) => {
     //       )
     //     );
     // }
-  
+
     const combinedProfitLossData = [
       ...profitLossData.map((item) => ({
         gameId: item.gameId,
@@ -2048,7 +2046,7 @@ export const getUserBetList = async (req, res) => {
     const totalPages = Math.ceil(totalItems / pageSize);
 
     const paginationData = {
-      page : parseInt(page),
+      page: parseInt(page),
       pageSize: parseInt(pageSize),
       totalPages,
       totalItems,
@@ -2156,11 +2154,11 @@ export const userActiveInactive = async (req, res) => {
   try {
     const { userId } = req.params;
     const { isActive, locked } = req.body;
-    
+
     const existingUser = await userSchema.findOne({ where: { userId } });
 
     if (!existingUser || existingUser.length == 0) {
-     return res
+      return res
         .status(statusCode.success)
         .send(
           apiResponseSuccess([], true, statusCode.success, "No user found!.")
@@ -2186,12 +2184,12 @@ export const userActiveInactive = async (req, res) => {
     existingUser.save();
 
     return res
-    .status(statusCode.success)
-    .send(
-      apiResponseSuccess(existingUser, true, statusCode.success, "User update successfully.")
-    );
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(existingUser, true, statusCode.success, "User update successfully.")
+      );
   } catch (error) {
-   return res
+    return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
@@ -2208,7 +2206,7 @@ export const profitLoss = async (req, res) => {
   try {
 
 
-    const { dataType } = req.query;    
+    const { dataType } = req.query;
     let startDate, endDate;
     if (dataType === "live") {
       const today = new Date();
@@ -2276,21 +2274,21 @@ export const profitLoss = async (req, res) => {
       allUsers.map(async (user) => {
         const [sportsRecords, lotteryRecords] = await Promise.all([
           ProfitLoss.findAll({
-            where: { 
+            where: {
               userId: user.userId,
               date: {
                 [Op.between]: [startDate, endDate],
               },
-             },
+            },
             attributes: ['marketId', 'profitLoss'],
             raw: true
           }),
           LotteryProfit_Loss.findAll({
-            where: { 
+            where: {
               userId: user.userId,
               date: {
                 [Op.between]: [startDate, endDate],
-              }, 
+              },
             },
             attributes: ['marketId', 'profitLoss'],
             raw: true
@@ -2307,9 +2305,9 @@ export const profitLoss = async (req, res) => {
           return Array.from(marketMap.values()).reduce((sum, val) => sum + parseFloat(val), 0);
         };
 
-        const sportsTotal = sportsRecords.length > 0 ? 
+        const sportsTotal = sportsRecords.length > 0 ?
           getUniqueMarketProfitLoss(sportsRecords) : 0;
-        const lotteryTotal = lotteryRecords.length > 0 ? 
+        const lotteryTotal = lotteryRecords.length > 0 ?
           getUniqueMarketProfitLoss(lotteryRecords) : 0;
         const combinedTotal = sportsTotal + lotteryTotal;
 
@@ -2388,7 +2386,7 @@ export const calculateExternalProfitLoss = async (req, res) => {
 export const getExternalTotalProfitLoss = async (req, res) => {
   try {
     const { userId } = req.body;
-    const { type, dataType, startDate, endDate} = req.query;
+    const { type, dataType, startDate, endDate } = req.query;
     const existingUsers = await userSchema.findAll({ where: { userId } });
     if (!existingUsers || existingUsers.length == 0) {
       return res
@@ -2399,7 +2397,7 @@ export const getExternalTotalProfitLoss = async (req, res) => {
     const userIds = existingUsers.map((user) => user.userId);
     const user = userIds.join(",");
 
-     let datestart, dateend;
+    let datestart, dateend;
     if (startDate && endDate) {
       datestart = startDate;
       dateend = endDate;
@@ -2416,7 +2414,7 @@ export const getExternalTotalProfitLoss = async (req, res) => {
       dateend
     ]);
 
-     const data = response[0];
+    const data = response[0];
     return res.status(statusCode.success).send(data);
   } catch (error) {
     return res
@@ -2436,7 +2434,7 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
   try {
     const { userId } = req.body;
     const { marketId } = req.params;
-    const { dataType, startDate, endDate} = req.query;
+    const { dataType, startDate, endDate } = req.query;
 
 
     const existingUsers = await userSchema.findAll({ where: { userId } });
@@ -2449,7 +2447,7 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
     const userIds = existingUsers.map((user) => user.userId);
     const user = userIds.join(",");
 
-     let datestart, dateend;
+    let datestart, dateend;
     if (startDate && endDate) {
       datestart = startDate;
       dateend = endDate;
@@ -2458,7 +2456,7 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
       dateend = null;
     }
 
-    
+
     const [response] = await sql.query("CALL getAllUserTotalProfitLoss(?,?,?,?,?)", [
       user,
       dataType,
@@ -2467,7 +2465,7 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
       dateend
     ]);
 
-      const data = response[0];
+    const data = response[0];
 
     return res.status(statusCode.success).send(data);
 
@@ -2488,41 +2486,66 @@ export const getAllUserTotalProfitLoss = async (req, res) => {
 
 export const updateFCMToken = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const userId = req.user.userId;
     const { fcm_token } = req.body;
 
-    if (!fcm_token) {
-      return res.status(400).json({
-        success: false,
-        message: 'fcm_token is required',
-      });
-    }
-
-    const user = await userSchema.findByPk(userId);
+    const user = await userSchema.findAll({
+      where : { userId }
+    });
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      });
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
     }
 
     user.fcm_token = fcm_token;
     await user.save();
 
-    return res.status(200).json({
-      success: true,
-      message: 'FCM token updated successfully',
-      data: user,
-    });
+    return res.status(statusCode.success).send(apiResponseSuccess(user, true, statusCode.success, "FCM token updated successfully"));
   } catch (error) {
     console.error('Error updating FCM token:', error);
-    return res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-      error: error.message,
-    });
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          error.responseCode || statusCode.internalServerError,
+          error.errMessage || error.message
+        )
+      );
   }
 };
 
+export const getUserNotifications = async (req, res) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      return res
+        .status(statusCode.success)
+        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
+    }
+
+    const notifications = await Notification.findAll({
+      where: { UserId: user.userId },
+      order: [['createdAt', 'DESC']],
+    });
+
+    return res.status(statusCode.success).send(apiResponseSuccess(notifications, true, statusCode.success, "User notifications fetched successfully"));
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          error.responseCode || statusCode.internalServerError,
+          error.errMessage || error.message
+        )
+      );
+  }
+};
 
