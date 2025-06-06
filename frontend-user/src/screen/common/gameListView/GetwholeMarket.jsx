@@ -94,10 +94,10 @@ const GetwholeMarket = () => {
       <div
         className="row m-1 p-0"
         style={{
-          marginTop: 0,
+          marginTop: 1,
           paddingTop: 0,
           position: "relative",
-          top: "-13px",
+          top: "-9px",
         }}
       >
         {user_allGamesWithMarketData &&

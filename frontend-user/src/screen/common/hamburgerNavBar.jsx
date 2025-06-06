@@ -25,6 +25,8 @@ const HamburgerNavBar = () => {
     }
   }
 
+  // ❗ Conditional rendering: Show navbar only when logged in
+  if (!store.user.isLogin) return null;
   return (
     <div className="container-fluid">
       <div
@@ -47,30 +49,7 @@ const HamburgerNavBar = () => {
           </div>
           {activeIcon === "home" && <div className="hover-text ">Home</div>}
         </div>
-        {/* <div
-          className={`col-3 col-md text-center text-white ${
-            activeIcon === "play" ? "active-icon" : ""
-          }`}
-          title="Video Play"
-          onMouseEnter={() => handleIconHover("play")}
-        >
-          <div>
-            <FaPlay />
-          </div>
-          {activeIcon === "play" && <div className="hover-text">In-Play</div>}
-        </div> */}
-        {/* <div
-          className={`col-3 col-md text-center text-white d-flex align-items-center flex-column${
-            activeIcon === 'heart' ? 'active-icon' : ''
-          }`}
-          title="Animated Round Card (Mini Game)"
-          onMouseEnter={() => handleIconHover('heart')}
-        >
-          <div className="animated-coin">
-            <FaHeart />
-          </div>
-          {activeIcon === 'heart' && <div className="hover-text">Mini Game</div>}
-        </div> */}
+
         <div
           className={`col-3 col-md text-center text-white mx-4${
             activeIcon === "menu" ? "active-icon" : ""
