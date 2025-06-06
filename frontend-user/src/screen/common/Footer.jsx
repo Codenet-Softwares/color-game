@@ -31,7 +31,7 @@ const Footer = () => {
 
   return (
     <div className="footerBox py-1">
-      <div className="container">
+      {/* <div className="container">
         <footer className="">
         <div className="d-flex flex-wrap justify-content-center align-items-center">
         {footerImageData.map((item, index) => (
@@ -57,7 +57,8 @@ const Footer = () => {
           gaming activities are allowed under the law or jurisdiction that
           applies to you.
         </p>
-      </div>
+      </div> */}
+      <div className="footer-copyright text-center text-light py-3"> All rights reserved @ 2025 Indi Millions. </div>
 
       {showLogin && <Login showLogin={showLogin} setShowLogin={setShowLogin} />}
     </div>
