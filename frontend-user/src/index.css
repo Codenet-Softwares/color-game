@@ -28,6 +28,7 @@ button[disabled] {
 body {
   background-color: #f0f0f0 !important;
   overflow-y: hidden;
+  font-family: Tahoma, Helvetica, sans-serif !important;
 }
 
 h1,

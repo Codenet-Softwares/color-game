@@ -27,7 +27,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth);
   const [isRefresh, setIsRefresh] = useState(false);
 
-  console.log("window====>", isMobile);
 
   const accessTokenFromStore = JSON.parse(
     localStorage.getItem(strings.LOCAL_STORAGE_KEY)
@@ -81,36 +80,22 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     }
   };
 
-  const fetchInnerAnnouncement = async () => {
-    try {
-      const response = await getInnerAnnouncement();
-      if (response && response.data) {
-        setAnnouncemenInnertData(response.data);
-      } else {
-        console.error("Error fetching announcements", response);
-        setAnnouncemenInnertData([]);
-      }
-    } catch (error) {
-      console.error("Error fetching announcements", error);
-      setAnnouncemenInnertData([]);
-    }
-  };
+  
 
   useEffect(() => {
-    fetchInnerAnnouncement();
     fetchOuterAnnouncement();
   }, []);
 
   return (
     <>
       <nav className="user_navbar p-0">
-        {store.user.isLogin ? (
+        {/* {store.user.isLogin ? (
           <div
             className="w-100 d-flex justify-content-between "
-            style={{ background: "#f1ac44" }}
+            style={{ background: "#294253" }}
           >
             <img src={ansmt} alt="Announcement" className="announcementImg" />
-            <marquee className="text-black" style={{ fontSize: "18px" }}>
+            <marquee className="text-white" style={{ fontSize: "18px" }}>
               {announcementInnerData
                 .map((item) => item.announcement)
                 .join(" | ")}
@@ -125,10 +110,10 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
         ) : (
           <div
             className="w-100 d-flex justify-content-between "
-            style={{ background: "#f1ac44" }}
+            style={{ background: "#294253" }}
           >
             <img src={ansmt} alt="Announcement" className="announcementImg" />
-            <marquee className="text-black" style={{ fontSize: "18px" }}>
+            <marquee className="text-white" style={{ fontSize: "18px" }}>
               {announcementOuterData
                 .map((item) => item.announcement)
                 .join(" | ")}
@@ -140,7 +125,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               {formattedDate}
             </span>
           </div>
-        )}
+        )} */}
 
         <div
           className="container-fluid d-flex align-items-center justify-content-between"
@@ -149,38 +134,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             padding: store?.user?.islogin ? "4px 10px" : "",
           }}
         >
-          {/* {store.user.isLogin && (
-            <div className="d-flex flex-column">
-              <div className="mt-4"></div>
-              <button
-                className="btn border border-white mt-2 d-lg-none hambargerIcon "
-                type="button"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasTop"
-                aria-controls="offcanvasTop"
-                style={{
-                  width: "44px",
-                  height: "35px",
-                  fontSize: "18px",
-                  padding: "5px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  lineHeight: "1",
-                }}
-              >
-                <small
-                  className="fw-bold text-white"
-                  style={{ fontSize: "12px", marginBottom: "2px" }}
-                >
-                  Bets
-                </small>
-                <FaDollarSign size={15} color="white" />
-              </button>
-            </div>
-          )} */}
-
           <OpenBetsOffCanvas
             handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
             openBetData={openBetData}
@@ -222,11 +175,9 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                     >
                       Exp : (
                       <span className="text-danger">
-                        {
-                          exposureAndWallet.exposure ??
+                        {exposureAndWallet.exposure ??
                           store?.user?.wallet?.exposure ??
-                          0
-                       }
+                          0}
                       </span>
                       )
                     </span>
