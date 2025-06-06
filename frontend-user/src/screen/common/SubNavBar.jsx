@@ -14,8 +14,6 @@ import strings from "../../utils/constant/stringConstant";
 
 const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const { store, dispatch } = useAppContext();
-  const [announcementInnerData, setAnnouncemenInnertData] = useState([]);
-  const [announcementOuterData, setAnnouncementOuterData] = useState([]);
   const [showModalLogin, setShowModalLogin] = useState(false);
   const currentDate = new Date();
   const options = { year: "numeric", month: "short", day: "numeric" };
@@ -65,90 +63,9 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     });
   }, [store.user.wallet?.marketListExposure]);
 
-  const fetchOuterAnnouncement = async () => {
-    try {
-      const response = await getAnnouncement();
-      if (response && response.data) {
-        setAnnouncementOuterData(response.data);
-      } else {
-        console.error("error", response);
-        setAnnouncementOuterData([]);
-      }
-    } catch (error) {
-      console.error("error", error);
-      setAnnouncementOuterData([]);
-    }
-  };
-
-  
-
-  useEffect(() => {
-    fetchOuterAnnouncement();
-  }, []);
-
   return store?.user?.isLogin ? (
     <>
       <nav className="user_navbar p-0">
-        {/* {store.user.isLogin ? (
-          <div
-            className="w-100 d-flex justify-content-between "
-            style={{ background: "#294253" }}
-          >
-            <img src={ansmt} alt="Announcement" className="announcementImg" />
-            <marquee className="text-white" style={{ fontSize: "18px" }}>
-              {announcementInnerData
-                .map((item) => item.announcement)
-                .join(" | ")}
-            </marquee>
-            <span
-              className="text-nowrap text-black px-2"
-              style={{ fontSize: "14px" }}
-            >
-              {formattedDate}
-            </span>
-          </div>
-        ) : (
-
-          // <div
-          //   className="w-100 d-flex justify-content-between "
-          //   style={{ background: "#f1ac44" }}
-          // >
-          //   <img src={ansmt} alt="Announcement" className="announcementImg" />
-          //   <marquee className="text-black" style={{ fontSize: "18px" }}>
-          //     {announcementOuterData
-          //       .map((item) => item.announcement)
-          //       .join(" | ")}
-          //   </marquee>
-          //   <span
-          //     className="text-nowrap text-black px-2"
-          //     style={{ fontSize: "14px" }}
-          //   >
-          //     {formattedDate}
-          //   </span>
-          // </div>
-          <></>
-        )}
-
-          <div
-            className="w-100 d-flex justify-content-between "
-            style={{ background: "#294253" }}
-          >
-            <img src={ansmt} alt="Announcement" className="announcementImg" />
-            <marquee className="text-white" style={{ fontSize: "18px" }}>
-              {announcementOuterData
-                .map((item) => item.announcement)
-                .join(" | ")}
-            </marquee>
-            <span
-              className="text-nowrap text-black px-2"
-              style={{ fontSize: "14px" }}
-            >
-              {formattedDate}
-            </span>
-          </div>
-        )} */}
-
-
         <div
           className="container-fluid d-flex align-items-center justify-content-between "
           style={{
