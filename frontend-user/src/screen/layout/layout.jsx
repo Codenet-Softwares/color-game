@@ -117,22 +117,9 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
           openBetData={openBetData}
         />
-        {/* {user_allGames && getNavBarOption()} */}
-        <div
-          className="w-100 d-flex justify-content-between mt-5"
-          style={{ background: "#294253" }}
-        >
-          {/* <img src={ansmt} alt="Announcement" className="announcementImg" /> */}
-          <marquee className="text-white" style={{ fontSize: "18px" }}>
-            {announcementInnerData.map((item) => item.announcement).join(" | ")}
-          </marquee>
-          <span
-            className="text-nowrap text-black px-2"
-            style={{ fontSize: "14px" }}
-          >
-            {/* {formattedDate} */}
-          </span>
-        </div>
+
+        {store?.user?.isLogin &&user_allGames && getNavBarOption()}
+
       </div>
       {store?.user?.isLogin && ["/home", "/"].includes(location?.pathname) && (
         <div className="fixed-bottom">
