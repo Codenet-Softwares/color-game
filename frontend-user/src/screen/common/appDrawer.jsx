@@ -44,7 +44,7 @@ function AppDrawer({
   function getNavBarOption() {
     return (
       <ul
-        className="mb-0 d-flex bg-hover"
+        className="mb-0 d-flex py-1 bg-hover"
         style={{
           listStyleType: "none",
           overflowX: "auto",
@@ -53,20 +53,7 @@ function AppDrawer({
           fontSize: "15px",
         }}
       >
-        {/* <li
-          key={0}
-          className="p-2 text-black"
-          style={{
-            fontWeight: 600,
-            backgroundColor:
-              location.pathname === "/home" ? "#e9f4a6" : "transparent",
-            cursor: "pointer",
-          }}
-        >
-          <Link className=" text-decoration-none text-black" to={`/home`}>
-            {"Home"}
-          </Link>
-        </li> */}
+    
         {user_allGames.map((gameObj) => {
           const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
             gameObj.gameId
@@ -74,17 +61,20 @@ function AppDrawer({
           return (
             <li
               key={gameObj.gameId}
-              className="p-2 text-black"
+              // className="p-0 text-black "
               style={{
-                fontWeight: 600,
-                marginLeft: "12px",
+                 whiteSpace: "nowrap",
+                  padding: "2px 10px",
+                fontWeight: 0,
+                marginLeft: "20px",
+                borderRadius: "50px",
                 backgroundColor:
-                  location.pathname === gamePath ? "#e9f4a6" : "transparent",
+                  location.pathname === gamePath ? "#e9f4a6" : "#284050",
                 cursor: "pointer",
               }}
             >
               <Link
-                className={`text-black text-decoration-none text-nowrap  ${
+                className={`text-white text-decoration-none text-nowrap  ${
                   gameObj.isBlink ? "blink_me" : ""
                 }`}
                 to={gamePath}
@@ -333,13 +323,17 @@ function AppDrawer({
             }}
           >
             <div
-              className="container-fluid px-0"
+              className="container-fluid px-0 "
               style={{
                 marginTop: "-6px",
               }}
             >
               <div className="row ">
-                <div className="px-0">{showCarousel && <InnerCarousel />}</div>
+                <div className="px-0 "
+                style={{
+                marginBottom: "-10px",
+              }}
+                >{showCarousel && <InnerCarousel />}</div>
                 {["/home", "/"].includes(location?.pathname?.toLowerCase()) && (
                   <div className="px-0 mb-1">{getNavBarOption()}</div>
                 )}

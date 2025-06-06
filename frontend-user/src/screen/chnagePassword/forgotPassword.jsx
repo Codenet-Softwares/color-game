@@ -54,10 +54,11 @@ const ForgotPassword = () => {
       <div className="global-margin-top-logged">
         <form className="form-card shadow-lg " style={{ marginTop: "72px" }}>
           <div className="text-center mb-3 text-primary mt-3" >
+
         <FaRegUserCircle  size={60}/>
           </div>
             
-          <h4 className="text-uppercase text-center text-primary">
+          <h4 className="text-uppercase text-center text-dark">
             Reset Password
           </h4>
           <div className="form-group1 mt-4 position-relative">
