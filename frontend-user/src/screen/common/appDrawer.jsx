@@ -275,7 +275,14 @@ function AppDrawer({
                   : "calc(100vh - 40px)",
             }}
           >
-            <div className="container-fluid mt-0 px-0 ">
+            <div
+              className="container-fluid px-0"
+              style={{
+                marginTop: ["/home", "/"].includes(location?.pathname)
+                  ? "-12px"
+                  : "-32px",
+              }}
+            >
               <div className="row ">
                 <div className="px-0">{showCarousel && <InnerCarousel />}</div>
               </div>

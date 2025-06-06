@@ -27,7 +27,7 @@ const SubFooter = () => {
     <nav
       className="navbar p-0 d-none d-md-block d-sm-none"
       style={{
-        background: "#f1ac44",
+        background: "#294253",
         color: "white",
         alignItems: "center",
         // height:"15px"
