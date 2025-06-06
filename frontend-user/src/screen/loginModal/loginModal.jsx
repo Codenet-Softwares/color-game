@@ -135,8 +135,7 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
     return (
       <div className="d-flex flex-column w-100 ">
         <Button
-          className="text-uppercase fw-bold sign_button"
-          variant="secondary"
+          className="text-uppercase border border-black fw-bold sign_button"
           onClick={handleSubmit}
         >
           Sign in
@@ -163,7 +162,13 @@ function Login({ showLogin, setShowLogin, setShowResetModal, showResetModal }) {
   }
 
   return (
-    <Modal show={showLogin} onHide={setShowLogin} centered backdrop={false}>
+    <Modal
+      show={showLogin}
+      onHide={setShowLogin}
+      centered
+      backdrop={false}
+      dialogClassName="custom-modal-border"
+    >
       {header && (
         <Modal.Header className="custom-header" closeButton>
           <Modal.Title className="m-auto">{header()}</Modal.Title>

@@ -32,7 +32,7 @@ const HamburgerNavBar = () => {
         style={{
           borderTopLeftRadius: "15px",
           borderTopRightRadius: "15px",
-          background: "#25616a",
+          background: "#f1ac44",
         }}
       >
         <div
@@ -47,7 +47,7 @@ const HamburgerNavBar = () => {
           </div>
           {activeIcon === "home" && <div className="hover-text ">Home</div>}
         </div>
-        {/* <div
+        <div
           className={`col-3 col-md text-center text-white ${
             activeIcon === "play" ? "active-icon" : ""
           }`}
@@ -58,7 +58,7 @@ const HamburgerNavBar = () => {
             <FaPlay />
           </div>
           {activeIcon === "play" && <div className="hover-text">In-Play</div>}
-        </div> */}
+        </div>
         {/* <div
           className={`col-3 col-md text-center text-white d-flex align-items-center flex-column${
             activeIcon === 'heart' ? 'active-icon' : ''

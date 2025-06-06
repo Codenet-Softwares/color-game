@@ -132,7 +132,7 @@ function AppDrawer({
                   onClick={() => handleToggle(gameObj.gameId)}
                 >
                   <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
-               ⚽ {gameObj?.gameName}
+                    ⚽ {gameObj?.gameName}
                     <span
                       className={`dropdown-icon ${isToggled ? "active" : ""}`}
                       style={{ cursor: "pointer" }}
@@ -235,7 +235,9 @@ function AppDrawer({
       <div
         className="container-fluid custom-scrollbar"
         style={{
-          height: ["/home", "/"].includes(location?.pathname)  ? "85vh" : "100vh",
+          height: ["/home", "/"].includes(location?.pathname)
+            ? "85vh"
+            : "100vh",
           overflowY: "none",
           overflowX: "hidden",
         }}
@@ -281,7 +283,11 @@ function AppDrawer({
 
             <div
               className="px-1"
-              style={{ overflowY: "none", height: "calc(100vh - 100px)" }}
+              style={{
+                overflowY: "none",
+                height: "calc(100vh - 100px)",
+                backgroundColor: "white",
+              }}
             >
               {children}
             </div>
