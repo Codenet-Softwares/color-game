@@ -70,7 +70,7 @@ const ProfitAndLossEvent = ({
       <div className="card w-100 rounded " style={{ marginTop: "150px" }}>
         <div
           className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
-          style={{ backgroundColor: "#2CB3D1" }}
+          style={{ backgroundColor: "#253b4a" }}
         >
           <b>&nbsp;&nbsp;Profit & Loss Events</b>
           <span

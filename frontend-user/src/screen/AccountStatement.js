@@ -109,8 +109,8 @@ const AccountStatement = () => {
             <div className="card w-100 rounded">
               {/* Card Header */}
               <div
-                className="card-header text-white p-2 text-uppercase text-center"
-                style={{ backgroundColor: "#2CB3D1" }}
+                className="card-header text-white p-2 text-uppercase text-center  mt-4"
+                style={{ backgroundColor: "#2a4455" }}
               >
                 <b className="h5 fw-bold">&nbsp;&nbsp;Account Statement</b>
               </div>
@@ -188,13 +188,14 @@ const AccountStatement = () => {
                       />
                     </div>
                     {/* Get Statement Button */}
-                    <div className="col-12 col-sm-2 col-md-6 col-lg-2 d-flex align-items-end mb-3 mb-sm-0 mt-2">
+                    <div className="col-12 col-sm-2 col-md-6 col-lg-2 d-flex align-items-end mb-3 mb-sm-0 mt-2 ">
                       <button
-                        className="btn btn-primary w-100 btn-sm"
+                        className="btn  w-100 btn-sm text-white fw-bold"
                         disabled={
                           !backupDate.startDate || !backupDate.endDate // Disable button if no dates selected
                         }
                         onClick={handleGetDate}
+                        style={{backgroundColor:"#687a85"}}
                       >
                         Get Statement
                       </button>

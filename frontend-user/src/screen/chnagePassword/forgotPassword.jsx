@@ -144,6 +144,9 @@ const ForgotPassword = () => {
             type="button"
             className="btn btn-primary mt-2"
             onClick={handleSubmit}
+              style={{
+              backgroundColor:"#8c9aa2"
+              }}
           >
             Change Password
           </button>
