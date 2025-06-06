@@ -93,6 +93,57 @@ const Home = () => {
   );
 
   const homePage = () => (
+    <div className="mb-0">
+      {/* Carousel-like Image */}
+      <div className="home-scroll-wrapper bg-white">
+        <div className="carousel-img-container ">
+          <img
+            src="https://bet11.bet/assets/img/whitelable-banner.jpg"
+            alt="Cricket Banner"
+            className=" d-block w-100 carousel-img "
+          />
+        </div>
+
+        {/* Motivational Text */}
+        <div className="motivational-text text-uppercase fw-bold text-dark">
+          <h2>invest in billions... earn in millions</h2>
+        </div>
+
+        {/* Section Title */}
+        <div className="start-play-section text-danger text-uppercase">
+          <h3>Let’s Start Playing</h3>
+        </div>
+
+        <div>
+          <HitGames />
+        </div>
+
+        {/* View More Button */}
+        <div className="d-flex justify-content-center mt-5 mb-2 ">
+          <button
+            type="button"
+            mat-button=""
+            className="btn btn-view py-2 text-danger fw-bold fs-4 text-uppercase "
+            style={{
+              boxShadow: "inset 0 0 3px 2px #000",
+              border: "2px solid #000",
+              borderRadius: "50px",
+              fontWeight: 900,
+              padding: "30px 40px 43px",
+              opacity: 1,
+              fontSize: "19px",
+              backgroundColor: "transparent",
+            }}
+          >
+            View More
+          </button>
+        </div>
+
+        <DownloadApp />
+        <Footer />
+      </div>
+
+      {/* const homePage = () => (
     <div className="home-scroll-wrapper">
       <div className="home-scroll-content">
         <div className="carousel-wrapper">
@@ -105,6 +156,8 @@ const Home = () => {
         <Footer />
         <Login showLogin={showLogin} setShowLogin={setShowLogin} />
       </div>
+    </div>
+  ); */}
     </div>
   );
 
