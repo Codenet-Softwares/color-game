@@ -42,7 +42,8 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     }
   };
   useEffect(() => {
-    if (accessTokenFromStore) handleUserWallet();
+
+    if (store?.user?.isLogin && accessTokenFromStore) handleUserWallet();
   }, [isRefresh, accessTokenFromStore]);
 
   useEffect(() => {
