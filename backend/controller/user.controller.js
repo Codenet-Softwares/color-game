@@ -494,9 +494,19 @@ export const getAllGameData = async (req, res) => {
         description: game.description,
         isBlink: game.isBlink,
         createdAt: game.createdAt, // Ensure createdAt is included
-        markets: game.Markets
-          .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
+        markets: game.Markets.filter(
+          (market) =>
+            market.hideMarketWithUser &&
+            !market.isVoid &&
+            market.announcementResult === false &&
+            market.isDeleted === false
+        )
+          .sort((a, b) => {
+            // First prioritize hotGame === true, then sort by createdAt DESC
+            if (b.hotGame === true && a.hotGame !== true) return 1;
+            if (a.hotGame === true && b.hotGame !== true) return -1;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          })
           .map((market) => ({
             marketId: market.marketId,
             marketName: market.marketName,
@@ -507,8 +517,7 @@ export const getAllGameData = async (req, res) => {
             isActive: market.isActive,
             isVoid: market.isVoid,
             hotGame: market.hotGame,
-            runners: market.Runners
-              .filter((runner) => !runner.hideRunnerUser)
+            runners: market.Runners.filter((runner) => !runner.hideRunnerUser)
               .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Runners
               .map((runner) => ({
                 runnerId: runner.runnerId,

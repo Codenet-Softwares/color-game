@@ -267,7 +267,8 @@ export const createMarket = async (req, res) => {
       isActive : newMarket.isActive,
       isDisplay : newMarket.isDisplay,
       hideMarketWithUser : newMarket.hideMarketWithUser,
-      isMarketClosed: false
+      isMarketClosed: false,
+      hotGame : false,
     });
 
     return res
@@ -561,7 +562,7 @@ export const createRunner = async (req, res) => {
       );
   } catch (error) {
     console.error("Error creating runner:", error);
-    res
+   return res
       .status(statusCode.internalServerError)
       .send(
         apiResponseErr(
