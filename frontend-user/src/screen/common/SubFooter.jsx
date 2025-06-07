@@ -37,7 +37,7 @@ const SubFooter = () => {
         {announcementData.length > 0 ? (
           <marquee
             style={{
-              color: "black",
+              color: "white",
               fontSize: "14px",
               whiteSpace: "nowrap",
               margin: "0",
