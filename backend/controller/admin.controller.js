@@ -2928,7 +2928,17 @@ export const updateHotGameStatus = async(req, res) => {
             "Failed to update hot game status. Market not found or no changes made.",
           )
         );
-    }
+    };
+
+    const marketRef = db.collection("color-game-db").doc(marketId);
+
+    await marketRef.set(
+      {
+        hotGame: status,
+        updatedAt: new Date().toISOString()
+      },
+      { merge: true }
+    );
 
     return res
       .status(statusCode.success)
