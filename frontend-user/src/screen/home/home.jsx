@@ -26,6 +26,7 @@ const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [openBetData, setOpenBetData] = useState(getOpenBet());
+  const [currentGameTab, setCurrentGameTab] = useState("Lottery");
 
   const { store } = useAppContext();
 
@@ -87,8 +88,9 @@ const Home = () => {
         setShowResetModal={setShowResetModal}
         openBetData={openBetData}
         handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
+        setCurrentGameTab={setCurrentGameTab}
       >
-        <GetwholeMarket />
+        <GetwholeMarket currentGameTab={currentGameTab} />
       </AppDrawer>
     </div>
   );
@@ -159,7 +161,7 @@ const Home = () => {
             display: "flex",
             alignItems: "center",
             gap: "6px",
-            cursor:"pointer"
+            cursor: "pointer",
           }}
         >
           <MdAndroid size={18} /> download app

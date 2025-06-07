@@ -17,8 +17,6 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
   const { dispatch, store } = useAppContext();
   const location = useLocation();
 
-  console.log("location", location);
-
   useEffect(() => {
     user_getAllGames();
   }, []);

@@ -26,6 +26,7 @@ function AppDrawer({
   onMarketSelect, // New prop for market selection callback
   openBetData,
   handleOpenBetsSelectionMenu,
+  setCurrentGameTab,
 }) {
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
@@ -79,29 +80,14 @@ function AppDrawer({
                 cursor: "pointer",
               }}
             >
-              {gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ===
-                "colorgame" && (
-                <Link
-                  className={`text-white text-decoration-none text-nowrap  ${
-                    gameObj.isBlink ? "blink_me" : ""
-                  }`}
-                  to={gamePath}
-                >
-                  {gameObj.gameName}
-                </Link>
-              )}
-
-              {gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ===
-                "lottery" && (
-                <Link
-                  className={`text-white text-decoration-none text-nowrap  ${
-                    gameObj.isBlink ? "blink_me" : ""
-                  }`}
-                  to={`/lottery-home`}
-                >
-                  {gameObj.gameName}
-                </Link>
-              )}
+              <span
+                className={`text-white text-decoration-none text-nowrap btn-sm  ${
+                  gameObj.isBlink ? "blink_me" : ""
+                }`}
+                onClick={() => setCurrentGameTab(gameObj.gameName)}
+              >
+                {gameObj.gameName}
+              </span>
             </li>
           );
         })}
@@ -211,7 +197,8 @@ function AppDrawer({
 
                 {isToggled &&
                   gameObj.markets?.map((marketObj, marketIndex) =>
-                    gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") === "colorgame" ? (
+                    gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ===
+                    "colorgame" ? (
                       <li
                         className="list-group-item text-wrap"
                         style={{
@@ -241,7 +228,9 @@ function AppDrawer({
                           {marketObj.marketName}
                         </Link>
                       </li>
-                    ) : gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") === "lottery" ? (
+                    ) : gameObj.gameName
+                        .toLowerCase()
+                        .replace(/[\s\-_]/g, "") === "lottery" ? (
                       <li
                         key={marketObj.marketId}
                         className="list-group-item  text-wrap"
@@ -346,7 +335,7 @@ function AppDrawer({
             <div
               className="container-fluid px-0 "
               style={{
-              marginTop:
+                marginTop:
                   location?.pathname === "/lottery-home" ? "85px" : "-6px",
               }}
             >
