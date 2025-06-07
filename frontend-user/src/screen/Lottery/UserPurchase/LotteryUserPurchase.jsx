@@ -56,17 +56,17 @@ const LotteryUserPurchase = ({ MarketId }) => {
               >
                 {lotteryData.marketName}
               </span>
-              <div className="time-display-container">
+              <div className="time-display-container ">
                 <div className="time-box">
-                  <div className="time-title">Start Time:</div>
-                  <div className="time-value text-primary">
+                  <div className="time-title text-white ">Start Time:</div>
+                  <div className="time-value text-white me-5">
                     {moment
                       .utc(lotteryData.startTimeForShowCountdown)
                       .format("DD MMM YYYY, hh:mm A")}
                   </div>
 
-                  <div className="time-title">End Time:</div>
-                  <div className="time-value text-danger">
+                  <div className="time-title text-white">End Time:</div>
+                  <div className="time-value text-white">
                     {moment
                       .utc(lotteryData.endTimeForShowCountdown)
                       .format("DD MMM YYYY, hh:mm A")}

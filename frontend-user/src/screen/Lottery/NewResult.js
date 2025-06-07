@@ -116,7 +116,7 @@ const NewResult = () => {
     setSelectedDate(formattedDate);
   };
   return (
-    <div className="whole_container">
+    <div className="whole_container ">
       <div className="container_result p-3">
         <div className="market-container shadow-lg">
           {/* Datepicker (Auto Moves Below on Small Screens) */}
@@ -190,7 +190,7 @@ const NewResult = () => {
         <div className="mt-4">
           {markets.length > 0 ? (
             <>
-              <h2 className="text-center fw-bold">
+              <h2 className="text-center fw-bold text-white">
                 Results For{" "}
                 <span className="text-decoration-underline">
                   {selectedMarket?.marketName || "Selected Market"}

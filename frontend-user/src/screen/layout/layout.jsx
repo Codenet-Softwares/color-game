@@ -1,14 +1,19 @@
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../contextApi/context";
 import NavBar from "../common/navBar";
-import { user_getAllGames_api } from "../../utils/apiService";
+import {
+  getInnerAnnouncement,
+  user_getAllGames_api,
+} from "../../utils/apiService";
 import "./layout.css";
 import strings from "../../utils/constant/stringConstant";
 import SubFooter from "../common/SubFooter";
 import { Link, useLocation } from "react-router-dom";
+import ansmt from "../../asset/ancmntv.png";
 
 function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
   const [user_allGames, setUser_allGames] = useState([]);
+  const [announcementInnerData, setAnnouncemenInnertData] = useState([]);
   const { dispatch, store } = useAppContext();
   const location = useLocation();
 
@@ -31,61 +36,24 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
     });
   }
 
-  function getNavBarOption() {
-    return (
-      <ul
-        className="mb-0 d-flex bg-hover"
-        style={{
-          listStyleType: "none",
-          overflowX: "auto",
-          padding: 0,
-          backgroundColor: "rgb(23 101 119)",
-          fontSize: "18px",
-        }}
-      >
-        <li
-          key={0}
-          className="p-2 text-white"
-          style={{
-            fontWeight: 600,
-            backgroundColor:
-              location.pathname === "/home" ? "#5ECBDD" : "transparent",
-            cursor: "pointer",
-          }}
-        >
-          <Link className=" text-decoration-none text-white" to={`/home`}>
-            {"Home"}
-          </Link>
-        </li>
-        {user_allGames.map((gameObj) => {
-          const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
-            gameObj.gameId
-          }`;
-          return (
-            <li
-              key={gameObj.gameId}
-              className="p-2 text-white"
-              style={{
-                fontWeight: 600,
-                backgroundColor:
-                  location.pathname === gamePath ? "#5ECBDD" : "transparent",
-                cursor: "pointer",
-              }}
-            >
-              <Link
-                className={`text-white text-decoration-none text-nowrap ${
-                  gameObj.isBlink ? "blink_me" : ""
-                }`}
-                to={gamePath}
-              >
-                {gameObj.gameName}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    );
-  }
+  const fetchInnerAnnouncement = async () => {
+    try {
+      const response = await getInnerAnnouncement();
+      if (response && response.data) {
+        setAnnouncemenInnertData(response.data);
+      } else {
+        console.error("Error fetching announcements", response);
+        setAnnouncemenInnertData([]);
+      }
+    } catch (error) {
+      console.error("Error fetching announcements", error);
+      setAnnouncemenInnertData([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchInnerAnnouncement();
+  }, []);
 
   return (
     <div>
@@ -94,8 +62,27 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
           handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
           openBetData={openBetData}
         />
-        {user_allGames && getNavBarOption()}
-     
+
+        {/* {store?.user?.isLogin &&user_allGames && getNavBarOption()} */}
+        {store.user.isLogin && ["/home", "/"].includes(location?.pathname) && (
+          <div
+            className="w-100 d-flex justify-content-between "
+            style={{ background: "#294253" }}
+          >
+            <img src={ansmt} alt="Announcement" className="announcementImg" />
+            <marquee className="text-white" style={{ fontSize: "18px" }}>
+              {announcementInnerData
+                .map((item) => item.announcement)
+                .join(" | ")}
+            </marquee>
+            <span
+              className="text-nowrap text-black px-2"
+              style={{ fontSize: "14px" }}
+            >
+              {/* {formattedDate} */}
+            </span>
+          </div>
+        )}
       </div>
       {store?.user?.isLogin && ["/home", "/"].includes(location?.pathname) && (
         <div className="fixed-bottom">

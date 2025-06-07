@@ -11,7 +11,17 @@
 .page_404 img {
   width: 100%;
 }
-
+.blink_me{
+      animation: blinker 1s linear infinite;
+}
+.hot_game{
+  width: 20px;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 .four_zero_four_bg {
   background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
   height: 400px;
@@ -111,7 +121,7 @@
 
 .Rules {
   text-align: center;
-  background-color: #27A6C3;
+  background-color: #27a6c3;
   color: white;
   /* position: fixed;
   width: 100%; */
@@ -167,7 +177,6 @@
   border: 1px solid #ccc;
   border-radius: 15px;
   background-color: #f9f9f9;
-  
 }
 
 .form-group {
@@ -213,39 +222,54 @@ label {
 /* *======================> */
 /* hambargerIcon*/
 /* *======================> */
-.user_navbar{
-  background-image: linear-gradient(to bottom, #0a262c, #03354C, #17687a, #1b8da6, #20b3d4);
+.user_navbar {
+  background-image: linear-gradient(
+    to bottom,
+    #202020,
+    #202020,
+    #202020,
+    #202020,
+    #202020
+  );
 }
 .hambargerIcon {
-  background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
+  background-color: "#202020";
   width: 44px;
   height: 40px;
   font-size: 18px;
   padding: 5px;
+  border: 1px solid white;
 }
-.open_OffCanvas{
+.open_OffCanvas {
   background-image: linear-gradient(to top, #044469 4%, #1aa0d1 92%);
   width: 44px;
   height: 40px;
   font-size: 18px;
   /* padding: 5px; */
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   /* line-height: 1; */
 }
-.open_topHeading{
+.open_topHeading {
   font-size: 12px;
   margin-bottom: 2px;
 }
-.image_logo{
+.image_logo {
   width: 170px;
   max-width: 100%;
   height: auto;
 }
-.sideCanvas_coin{
-  background-image: linear-gradient(to top, #114551, #226575, #34879b, #47abc2, #5ad0eb);
+.sideCanvas_coin {
+  background-image: linear-gradient(
+    to top,
+    #114551,
+    #226575,
+    #34879b,
+    #47abc2,
+    #5ad0eb
+  );
   font-size: 13px;
   padding: 5px 8px;
 }
@@ -259,7 +283,7 @@ label {
 .leftslidebar {
   color: #fff;
 }
-.announcementImg{
+.announcementImg {
   width: 30px;
   height: 30px;
   margin-left: 10px;

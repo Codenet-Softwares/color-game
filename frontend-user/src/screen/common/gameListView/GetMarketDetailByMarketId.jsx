@@ -408,8 +408,7 @@ const GetMarketDetailByMarketId = () => {
     <>
       <Layout />
       <div
-        className={`global-margin-top${store.user.isLogin ? "-logged" : ""}`}
-        style={{ height: "106vh" }}
+        style={{ height: "106vh", marginTop: "85px" }}
       >
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           {/* Background: Market Data and UI */}
@@ -427,8 +426,8 @@ const GetMarketDetailByMarketId = () => {
                 </div>
               )}
               <div
-                className="col-12 p-2 mt-2 fw-bold d-flex flex-wrap justify-content-between align-items-center rounded px-3"
-                style={{ backgroundColor: "#2CB3D1" }}
+                className="col-12 p-2 mt-2 fw-bold d-flex flex-wrap justify-content-between align-items-center rounded px-3 text-white"
+                style={{ backgroundColor: "#202020" }}
               >
                 {/* Left side: Market Name and Countdown Timer */}
                 <div className="d-flex flex-wrap align-items-center ">
