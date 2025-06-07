@@ -601,6 +601,26 @@ class GameService {
       },
     });
   }
+
+
+// Add this to your GameService.js
+updateHotGameStatus(user, marketId, status) {
+  return axios({
+    method: "PUT",
+    url: `${API_HOST}/api/update-hotGame-status`,
+    headers: {
+      Authorization: `Bearer ${user.token}`,
+    },
+    data: {
+      marketId: marketId,
+      status: status
+    }
+  });
 }
+
+
+}
+
+
 
 export default new GameService();
