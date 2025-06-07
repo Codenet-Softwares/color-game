@@ -84,6 +84,10 @@ Market.init(
       allowNull: false,
       defaultValue: false,
     },
+    hotGame: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
   },
   {
     sequelize,
