@@ -408,8 +408,7 @@ const GetMarketDetailByMarketId = () => {
     <>
       <Layout />
       <div
-        className={`global-margin-top${store.user.isLogin ? "-logged" : ""}`}
-        style={{ height: "106vh" }}
+        style={{ height: "106vh", marginTop: "85px" }}
       >
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           {/* Background: Market Data and UI */}

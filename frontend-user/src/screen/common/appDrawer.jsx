@@ -26,6 +26,7 @@ function AppDrawer({
   onMarketSelect, // New prop for market selection callback
   openBetData,
   handleOpenBetsSelectionMenu,
+  setCurrentGameTab,
 }) {
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
@@ -33,13 +34,20 @@ function AppDrawer({
   const [isColorgameUpdate, setIsColorgameUpdate] = useState(null);
   const [toggleMap, setToggleMap] = useState({});
   const [showLogin, setShowLogin] = useState(false);
-
+  const [isMobileSize, setIsMobileSize] = useState(window.innerWidth);
+  0;
   const { dispatch, store } = useAppContext();
 
   const location = useLocation();
   useEffect(() => {
     user_getAllGames();
   }, [isColorgameUpdate]);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobileSize(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   function getNavBarOption() {
     return (
@@ -53,7 +61,6 @@ function AppDrawer({
           fontSize: "15px",
         }}
       >
-    
         {user_allGames.map((gameObj) => {
           const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
             gameObj.gameId
@@ -63,8 +70,8 @@ function AppDrawer({
               key={gameObj.gameId}
               // className="p-0 text-black "
               style={{
-                 whiteSpace: "nowrap",
-                  padding: "2px 10px",
+                whiteSpace: "nowrap",
+                padding: "2px 10px",
                 fontWeight: 0,
                 marginLeft: "20px",
                 borderRadius: "50px",
@@ -73,14 +80,14 @@ function AppDrawer({
                 cursor: "pointer",
               }}
             >
-              <Link
-                className={`text-white text-decoration-none text-nowrap  ${
+              <span
+                className={`text-white text-decoration-none text-nowrap btn-sm  ${
                   gameObj.isBlink ? "blink_me" : ""
                 }`}
-                to={gamePath}
+                onClick={() => setCurrentGameTab(gameObj.gameName)}
               >
                 {gameObj.gameName}
-              </Link>
+              </span>
             </li>
           );
         })}
@@ -148,7 +155,6 @@ function AppDrawer({
         className={`border-top-0 border-end ${
           store.user.isLogin ? "mt-3" : "mt-3"
         }`}
-        style={{ overflowY: "auto" }}
       >
         <span
           style={{
@@ -191,7 +197,8 @@ function AppDrawer({
 
                 {isToggled &&
                   gameObj.markets?.map((marketObj, marketIndex) =>
-                    gameObj.gameName.toLowerCase() === "colorgame" ? (
+                    gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ===
+                    "colorgame" ? (
                       <li
                         className="list-group-item text-wrap"
                         style={{
@@ -221,7 +228,9 @@ function AppDrawer({
                           {marketObj.marketName}
                         </Link>
                       </li>
-                    ) : gameObj.gameName.toLowerCase() === "lottery" ? (
+                    ) : gameObj.gameName
+                        .toLowerCase()
+                        .replace(/[\s\-_]/g, "") === "lottery" ? (
                       <li
                         key={marketObj.marketId}
                         className="list-group-item  text-wrap"
@@ -292,13 +301,14 @@ function AppDrawer({
         <div className="row">
           {/* LEFT NAVBAR - md: 4, lg: 2 */}
           <div
-            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar px-1   "
+            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar px-1 scrollbar-aurora-blade   "
             style={{
-              height: "100vh",
+              height: "90vh",
+              overflowY: "auto",
               zIndex: 1020,
               marginTop: isHomePage
                 ? store.user.isLogin && location.pathname === "/lottery-home"
-                  ? "110px"
+                  ? "72px"
                   : ""
                 : "93px",
               backgroundColor: "#f8f9fa",
@@ -325,15 +335,19 @@ function AppDrawer({
             <div
               className="container-fluid px-0 "
               style={{
-                marginTop: "-6px",
+                marginTop:
+                  location?.pathname === "/lottery-home" ? "85px" : "-6px",
               }}
             >
               <div className="row ">
-                <div className="px-0 "
-                style={{
-                marginBottom: "-10px",
-              }}
-                >{showCarousel && <InnerCarousel />}</div>
+                <div
+                  className="px-0 "
+                  style={{
+                    marginBottom: "-10px",
+                  }}
+                >
+                  {showCarousel && <InnerCarousel />}
+                </div>
                 {["/home", "/"].includes(location?.pathname?.toLowerCase()) && (
                   <div className="px-0 mb-1">{getNavBarOption()}</div>
                 )}
@@ -346,6 +360,13 @@ function AppDrawer({
                 overflowY: "none",
                 height: "calc(100vh - 100px)",
                 backgroundColor: "white",
+                width: ["/home", "/"].includes(
+                  location?.pathname?.toLowerCase()
+                )
+                  ? isMobileSize <= 435
+                    ? "100vw"
+                    : "59vw"
+                  : "",
               }}
             >
               {children}

@@ -11,7 +11,17 @@
 .page_404 img {
   width: 100%;
 }
-
+.blink_me{
+      animation: blinker 1s linear infinite;
+}
+.hot_game{
+  width: 20px;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
+}
 .four_zero_four_bg {
   background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
   height: 400px;
