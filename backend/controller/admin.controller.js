@@ -2891,3 +2891,65 @@ export const createTitleTextNotification = async (req, res) => {
   }
 };
 
+export const updateHotGameStatus = async(req, res) => {
+  try {
+    const { marketId, status } = req.body;
+
+    const existingMarket = await Market.findOne({
+      where: { marketId }
+    });
+
+    if (!existingMarket) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "Market not found.",
+          )
+        );
+    }
+
+    const updatedMarket = await Market.update(
+      { hotGame: status },
+      { where: { marketId } }
+    ); 
+
+    if (updatedMarket[0] === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "Failed to update hot game status. Market not found or no changes made.",
+          )
+        );
+    }
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          `Hot game status updated to ${status ? 'active' : 'inactive'} successfully.`
+        )
+      );
+
+  } catch (error) {
+    return apiResponseErr(
+      null,
+      false,
+      statusCode.internalServerError,
+      error.message,
+      res
+    );
+  }
+
+}
+
