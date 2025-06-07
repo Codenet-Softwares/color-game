@@ -860,3 +860,17 @@ export const activeInactive = [
     .isBoolean()
     .withMessage('locked must be a boolean'),
 ];
+
+export const validateHotGame = [
+  body('marketId')
+    .notEmpty()
+    .withMessage('Market ID is required')
+    .isUUID()
+    .withMessage('Market ID must be a valid UUID'),
+
+  body('status')
+    .notEmpty()
+    .withMessage('Status is required')
+    .isBoolean()
+    .withMessage('Status must be a boolean'),
+];
