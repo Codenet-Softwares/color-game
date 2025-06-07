@@ -117,9 +117,10 @@ const GetwholeMarket = () => {
                           fontWeight: "bold",
                         }}
                       >
-                       <div className="mx-2">{gameWithMarketData.gameName}</div> 
+                        <div className="mx-2">
+                          {gameWithMarketData.gameName}
+                        </div>
                       </div>
-
                       {gameWithMarketData &&
                         gameWithMarketData.markets
                           // .slice(0, store.user.isLogin ? 5 : 3)
@@ -133,6 +134,24 @@ const GetwholeMarket = () => {
                               }}
                             >
                               {/* Market Header */}
+                              {marketData.hotGame === true && (
+                                <div
+                                  className="blink_me bg-danger rounded-pill text-center text-white d-flex align-items-center justify-content-center "
+                                  style={{
+                                    width: "74px",
+                                    height: "20px",
+                                    marginLeft: "250px",
+                                  }}
+                                >
+                                  <small
+                                    className="fw-bold"
+                                    style={{ fontSize: "10px" }}
+                                  >
+                                    Hot Game
+                                  </small>
+                                </div>
+                              )}
+
                               <div className="row align-items-center">
                                 <span
                                   className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
@@ -196,6 +215,7 @@ const GetwholeMarket = () => {
 
                       {gameWithMarketData.markets.length > 0 ? (
                         <></>
+                      ) : (
                         // <Link
                         //   className={`col-12 text-dark text-decoration-none text-nowrap fw-bold px-0 mx-0`}
                         //   to={`/lottery-home`}
@@ -203,7 +223,6 @@ const GetwholeMarket = () => {
                         // >
                         //   View more...
                         // </Link>
-                      ) : (
                         <p
                           className="text-center fw-bold"
                           style={{ backgroundColor: "orange" }}
