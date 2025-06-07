@@ -12,12 +12,12 @@ const OpenBetsOffCanvas = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     >
       <div
         className="offcanvas-header text-light text-uppercase"
-        style={{ background: "#176577" }}
+        style={{ background: "#2A4455" }}
       >
         <h5 id="offcanvasTopLabel">Open Bets</h5>
         <button
           type="button"
-          className="btn-close text-reset"
+          className="btn-close text-reset "
           data-bs-dismiss="offcanvas"
           aria-label="Close"
         ></button>

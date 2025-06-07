@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getGameImg } from "../utils/apiService";
 import Login from "./loginModal/loginModal";
-import { dHitGames } from "../utils/dummyData";
+// import {dHitGames} from "../utils/dummyData"
+import { dHitGames } from '../utils/dummyData';
 
 const HitGames = () => {
   const [sliderData, setSliderData] = useState([]);

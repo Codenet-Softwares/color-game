@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getSliderImgText } from "../../utils/apiService";
-import { dSlider } from "../../utils/dummyData";
+// import { dSlider } from "../../utils/dummyData";
+
 import './Carrousel.css'
 
 const Carousel = () => {

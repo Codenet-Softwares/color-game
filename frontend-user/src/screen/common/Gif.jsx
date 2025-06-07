@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getGifImg } from "../../utils/apiService";
-import { sGif } from "../../utils/dummyData";
+// import { sGif } from "../../utils/dummyData";
 
 const Gif = () => {
   const [gifData, setGifData] = useState([]);
