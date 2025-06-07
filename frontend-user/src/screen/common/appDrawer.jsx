@@ -41,6 +41,53 @@ function AppDrawer({
     user_getAllGames();
   }, [isColorgameUpdate]);
 
+  function getNavBarOption() {
+    return (
+      <ul
+        className="mb-0 d-flex py-1 bg-hover"
+        style={{
+          listStyleType: "none",
+          overflowX: "auto",
+          padding: 0,
+          backgroundImage: "linear-gradient(-180deg, #F6A21E 0%, #F6A21E 100%)",
+          fontSize: "15px",
+        }}
+      >
+    
+        {user_allGames.map((gameObj) => {
+          const gamePath = `/gameView/${gameObj.gameName.replace(/\s/g, "")}/${
+            gameObj.gameId
+          }`;
+          return (
+            <li
+              key={gameObj.gameId}
+              // className="p-0 text-black "
+              style={{
+                 whiteSpace: "nowrap",
+                  padding: "2px 10px",
+                fontWeight: 0,
+                marginLeft: "20px",
+                borderRadius: "50px",
+                backgroundColor:
+                  location.pathname === gamePath ? "#e9f4a6" : "#284050",
+                cursor: "pointer",
+              }}
+            >
+              <Link
+                className={`text-white text-decoration-none text-nowrap  ${
+                  gameObj.isBlink ? "blink_me" : ""
+                }`}
+                to={gamePath}
+              >
+                {gameObj.gameName}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    );
+  }
+
   const handleAllId = (gameId, marketId) => {
     dispatch({
       type: strings.placeBidding,
@@ -99,7 +146,7 @@ function AppDrawer({
     return (
       <div
         className={`border-top-0 border-end ${
-          store.user.isLogin ? "mt-5" : "mt-3"
+          store.user.isLogin ? "mt-3" : "mt-3"
         }`}
         style={{ overflowY: "auto" }}
       >
@@ -132,7 +179,7 @@ function AppDrawer({
                   onClick={() => handleToggle(gameObj.gameId)}
                 >
                   <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
-               ⚽ {gameObj?.gameName}
+                    ⚽ {gameObj?.gameName}
                     <span
                       className={`dropdown-icon ${isToggled ? "active" : ""}`}
                       style={{ cursor: "pointer" }}
@@ -235,7 +282,9 @@ function AppDrawer({
       <div
         className="container-fluid custom-scrollbar"
         style={{
-          height: ["/home", "/"].includes(location?.pathname)  ? "85vh" : "100vh",
+          height: ["/home", "/"].includes(location?.pathname)
+            ? "85vh"
+            : "100vh",
           overflowY: "none",
           overflowX: "hidden",
         }}
@@ -273,15 +322,31 @@ function AppDrawer({
                   : "calc(100vh - 40px)",
             }}
           >
-            <div className="container-fluid mt-0 px-0 ">
+            <div
+              className="container-fluid px-0 "
+              style={{
+                marginTop: "-6px",
+              }}
+            >
               <div className="row ">
-                <div className="px-0">{showCarousel && <InnerCarousel />}</div>
+                <div className="px-0 "
+                style={{
+                marginBottom: "-10px",
+              }}
+                >{showCarousel && <InnerCarousel />}</div>
+                {["/home", "/"].includes(location?.pathname?.toLowerCase()) && (
+                  <div className="px-0 mb-1">{getNavBarOption()}</div>
+                )}
               </div>
             </div>
 
             <div
               className="px-1"
-              style={{ overflowY: "none", height: "calc(100vh - 100px)" }}
+              style={{
+                overflowY: "none",
+                height: "calc(100vh - 100px)",
+                backgroundColor: "white",
+              }}
             >
               {children}
             </div>

@@ -27,7 +27,7 @@ const SubFooter = () => {
     <nav
       className="navbar p-0 d-none d-md-block d-sm-none"
       style={{
-        background: "linear-gradient(to bottom, #18ADC5,rgb(63, 125, 139))",
+        background: "#294253",
         color: "white",
         alignItems: "center",
         // height:"15px"
@@ -37,10 +37,10 @@ const SubFooter = () => {
         {announcementData.length > 0 ? (
           <marquee
             style={{
-              color: "white",
+              color: "black",
               fontSize: "14px",
               whiteSpace: "nowrap",
-              margin:"0"
+              margin: "0",
             }}
           >
             {announcementData.map((item) => (
@@ -56,7 +56,7 @@ const SubFooter = () => {
               textAlign: "center",
               margin: 0,
               fontSize: "14px",
-              fontWeight:"bold"
+              fontWeight: "bold",
             }}
           >
             No Announcements Available.

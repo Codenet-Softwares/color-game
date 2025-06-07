@@ -20,6 +20,7 @@ import {
 } from "../../utils/apiService";
 import strings from "../../utils/constant/stringConstant";
 import Footer from "../common/Footer";
+import { MdAndroid } from "react-icons/md"; // Material Design Icon replacement
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -93,6 +94,82 @@ const Home = () => {
   );
 
   const homePage = () => (
+    <div className="mb-0">
+      {/* Carousel-like Image */}
+      <div className="home-scroll-wrapper bg-white">
+        <div className="carousel-img-container ">
+          <img
+            src="https://bet11.bet/assets/img/whitelable-banner.jpg"
+            alt="Cricket Banner"
+            className=" d-block w-100 carousel-img "
+          />
+        </div>
+
+        {/* Motivational Text */}
+        <div className="motivational-text text-uppercase fw-bold text-dark mt-5">
+          <h2>invest in billions... earn in millions</h2>
+        </div>
+
+        {/* Section Title */}
+        <div className="start-play-section text-danger text-uppercase mt-5">
+          <h3>Let’s Start Playing</h3>
+        </div>
+
+        <div>
+          <HitGames />
+        </div>
+
+        {/* View More Button */}
+        <div className="d-flex justify-content-center mt-5 mb-2">
+          <button
+            type="button"
+            mat-button=""
+            onClick={() => setShowLogin(true)}
+            className="btn btn-view py-1 text-danger fw-bold fs-4 text-uppercase "
+            style={{
+              boxShadow: "inset 0 0 3px 2px #000",
+              border: "2px solid #000",
+              borderRadius: "50px",
+              fontWeight: 900,
+              padding: "30px 40px 43px",
+              opacity: 1,
+              fontSize: "19px",
+              backgroundColor: "transparent",
+            }}
+          >
+            View More
+          </button>
+        </div>
+        {/* Download App Floating Icon */}
+        <h2
+          className="download-icon-btnw"
+          style={{
+            position: "fixed",
+            bottom: "60px",
+            right: "5px",
+            margin: "0",
+            fontWeight: "bolder",
+            zIndex: 3,
+            textTransform: "uppercase",
+            fontSize: "14px",
+            padding: "10px 15px",
+            borderRadius: "50px",
+            background: "#222",
+            color: "#fff",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            cursor:"pointer"
+          }}
+        >
+          <MdAndroid size={18} /> download app
+        </h2>
+        <DownloadApp />
+        <Footer />
+        <Login showLogin={showLogin} setShowLogin={setShowLogin} />
+      </div>
+
+      {/* const homePage = () => (
     <div className="home-scroll-wrapper">
       <div className="home-scroll-content">
         <div className="carousel-wrapper">
@@ -105,6 +182,8 @@ const Home = () => {
         <Footer />
         <Login showLogin={showLogin} setShowLogin={setShowLogin} />
       </div>
+    </div>
+  ); */}
     </div>
   );
 

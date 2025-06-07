@@ -31,7 +31,7 @@ const Table = ({
       <div
         className="card-header"
         style={{
-          backgroundColor: "#2CB3D1",
+          backgroundColor: "#273f4f",
           color: "white",
           textAlign: "center",
         }}

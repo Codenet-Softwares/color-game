@@ -457,6 +457,7 @@ export const getAllGameData = async (req, res) => {
             "startTime",
             "endTime",
             "announcementResult",
+            "hotGame",
             "isActive",
             "hideMarketWithUser",
             "isVoid",
@@ -493,9 +494,19 @@ export const getAllGameData = async (req, res) => {
         description: game.description,
         isBlink: game.isBlink,
         createdAt: game.createdAt, // Ensure createdAt is included
-        markets: game.Markets
-          .filter((market) => market.hideMarketWithUser && !market.isVoid && market.announcementResult === false && market.isDeleted === false)
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Markets
+        markets: game.Markets.filter(
+          (market) =>
+            market.hideMarketWithUser &&
+            !market.isVoid &&
+            market.announcementResult === false &&
+            market.isDeleted === false
+        )
+          .sort((a, b) => {
+            // First prioritize hotGame === true, then sort by createdAt DESC
+            if (b.hotGame === true && a.hotGame !== true) return 1;
+            if (a.hotGame === true && b.hotGame !== true) return -1;
+            return new Date(b.createdAt) - new Date(a.createdAt);
+          })
           .map((market) => ({
             marketId: market.marketId,
             marketName: market.marketName,
@@ -505,8 +516,8 @@ export const getAllGameData = async (req, res) => {
             announcementResult: market.announcementResult,
             isActive: market.isActive,
             isVoid: market.isVoid,
-            runners: market.Runners
-              .filter((runner) => !runner.hideRunnerUser)
+            hotGame: market.hotGame,
+            runners: market.Runners.filter((runner) => !runner.hideRunnerUser)
               .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Runners
               .map((runner) => ({
                 runnerId: runner.runnerId,
@@ -546,6 +557,7 @@ export const getAllGameData = async (req, res) => {
         end_time: game.end_time,
         date: game.date,
         price: game.price,
+        hotGame : game.hotGame,
         isActive: game.isActive,
         isWin: game.isWin,
         isVoid: game.isVoid,
@@ -555,9 +567,9 @@ export const getAllGameData = async (req, res) => {
       }))
     }]
 
-    const combinedData = [...formattedGameData, ...foramtedData];
+    const combinedData = [ ...foramtedData ,...formattedGameData];
 
-    res
+   return res
       .status(statusCode.success)
       .json(
         apiResponseSuccess(
@@ -572,7 +584,7 @@ export const getAllGameData = async (req, res) => {
       return res.status(error.response.status).json(apiResponseErr(null, false, error.response.status, error.response.data.message || error.response.data.errMessage));
     } else {
       return res.status(statusCode.internalServerError).json(apiResponseErr(null, false, statusCode.internalServerError, error.message));
-    };
+    }
   }
 };
 // done

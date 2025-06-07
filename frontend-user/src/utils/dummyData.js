@@ -8,20 +8,32 @@ const dSlider = [
   },
   {
     image: 'https://wallpapercave.com/wp/wp8054743.jpg',
-  },
+  }
 ];
 
 const dHitGames = [
   {
     image:
-      'https://play-lh.googleusercontent.com/GPj8Sq5fUohNuMBA-BnqRBIUSW9NPDYR88erK-yoPD0YyvQ07D_1kx8nJVK_0I_jTg=w526-h296-rw',
+      'https://bet11.bet/assets/img/w_cricket.jpg',
   },
   {
     image:
-      'https://ewscripps.brightspotcdn.com/dims4/default/c130770/2147483647/strip/true/crop/3000x1688+0+156/resize/1280x720!/quality/90/?url=http%3A%2F%2Fewscripps-brightspot.s3.amazonaws.com%2F30%2Fc4%2F99666cc84a00bba64b033b85046f%2Fgettyimages-56870579.jpg',
+      'https://bet11.bet/assets/img/w_football.jpg',
   },
   {
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRw81LVZ3wl8h23bq17u3buCrghlW9nVh-TQ&usqp=CAU',
+    image: 'https://bet11.bet/assets/img/w_tennis.jpg',
+  },
+
+   {
+    image: 'https://bet11.bet/assets/img/w_cricket_casino.jpg',
+  },
+
+   {
+    image: 'https://bet11.bet/assets/img/w_teenpatti.jpg',
+  },
+
+     {
+    image: 'https://bet11.bet/assets/img/w_election.jpg',
   },
 ];
 
