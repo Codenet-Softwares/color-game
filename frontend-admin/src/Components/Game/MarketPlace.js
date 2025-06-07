@@ -55,8 +55,8 @@ const MarketPlace = () => {
     if (!isoString) return "N/A";
 
     const date = new Date(isoString);
-    let hours = date.getUTCHours();  // Use getUTCHours instead of getHours
-    const minutes = date.getUTCMinutes();  // Use getUTCMinutes instead of getMinutes
+    let hours = date.getUTCHours(); // Use getUTCHours instead of getHours
+    const minutes = date.getUTCMinutes(); // Use getUTCMinutes instead of getMinutes
     const ampm = hours >= 12 ? "P.M" : "A.M";
 
     hours = hours % 12;
@@ -264,8 +264,10 @@ const MarketPlace = () => {
                 <select
                   className="form-select form-select-sm"
                   aria-label=".form-select-sm example"
-                  onChange={(e) => { setTotalEntries(e.target.value); setCurrentPage(1); }}
-
+                  onChange={(e) => {
+                    setTotalEntries(e.target.value);
+                    setCurrentPage(1);
+                  }}
                 >
                   <option selected value="10">
                     Showing 10 Entries
@@ -286,7 +288,7 @@ const MarketPlace = () => {
                       value={search}
                       onChange={(e) => {
                         setSearch(e.target.value);
-                        setCurrentPage(1)
+                        setCurrentPage(1);
                       }}
                       type="text"
                       placeholder="Search Content Here..."
@@ -325,24 +327,24 @@ const MarketPlace = () => {
 
                                     <div className=" col-md-2 ">
                                       <div className="d-flex justify-content-between align-items-center w-100">
-                                        
                                         <span
-                                          className={`badge rounded-pill fw-bold text-uppercase ${market.hideMarketWithUser
-                                            ? "bg-success"
-                                            : "bg-danger"
-                                            }`}
+                                          className={`badge rounded-pill fw-bold text-uppercase ${
+                                            market.hideMarketWithUser
+                                              ? "bg-success"
+                                              : "bg-danger"
+                                          }`}
                                         >
                                           {market.hideMarketWithUser
                                             ? "Active"
                                             : "Inactive"}
                                         </span>
-                                       
                                       </div>
                                     </div>
                                     <div className="col-md-4">
                                       <div className="header_more_tool d-flex justify-content-end">
                                         <div className="dropdown">
-                                          <button className="btn btn-info text-uppercase fw-bold me-3"
+                                          <button
+                                            className="btn btn-info text-uppercase fw-bold me-3"
                                             onClick={() =>
                                               handleMarketDetailsModalOpen(
                                                 market.marketId,
@@ -378,78 +380,159 @@ const MarketPlace = () => {
                                               left: "0px",
                                             }}
                                           >
-                                            {auth?.user?.roles === "admin" && <> {market.isDisplay && (
-                                              <a
-                                                className="dropdown-item"
-                                                href="#"
-                                                onClick={() =>
-                                                  handleRunnerModalOpen(
-                                                    market.marketId,
-                                                    market.participants
-                                                  )
-                                                }
-                                              >
-                                                <i className="fas fa-edit"></i>{" "}
-                                                Create Runner
-                                              </a>
-                                            )}</>}
-                                            {auth?.user?.roles === "admin" && <a
-                                              className="dropdown-item"
-                                              href="#"
-                                              onClick={(e) =>
-                                                handleDelete(e, market.marketId)
-                                              }
-                                            >
-                                              <i className="ti-trash"></i>{" "}
-                                              Delete
-                                            </a>}
-
-
-                                            {!market.isDisplay && (
+                                            {auth?.user?.roles === "admin" && (
                                               <>
-                                                {auth?.user?.roles === "admin" && <>{market.hideMarketWithUser ? (
+                                                {" "}
+                                                {market.isDisplay && (
                                                   <a
                                                     className="dropdown-item"
-                                                    onClick={(e) =>
-                                                      handleSuspensedMarket(
-                                                        e,
-                                                        false,
-                                                        market.marketId
+                                                    href="#"
+                                                    onClick={() =>
+                                                      handleRunnerModalOpen(
+                                                        market.marketId,
+                                                        market.participants
                                                       )
                                                     }
                                                   >
-                                                    <i className="fa-solid fa-lock"></i>{" "}
-                                                    Suspened
+                                                    <i className="fas fa-edit"></i>{" "}
+                                                    Create Runner
                                                   </a>
-                                                ) : (
+                                                )}
+                                              </>
+                                            )}
+
+                                            {auth?.user?.roles === "admin" && (
+                                              <a
+                                                className="dropdown-item"
+                                                href="#"
+                                                onClick={(e) =>
+                                                  handleDelete(
+                                                    e,
+                                                    market.marketId
+                                                  )
+                                                }
+                                              >
+                                                <i className="ti-trash"></i>{" "}
+                                                Delete
+                                              </a>
+                                            )}
+
+                                            {!market.isDisplay && (
+                                              <>
+                                                {auth?.user?.roles ===
+                                                  "admin" && (
                                                   <>
-                                                    <a
-                                                      className="dropdown-item"
-                                                      href="#"
-                                                      onClick={() =>
-                                                        handleShowUpdateModal(
-                                                          gameMarketData[index]
-                                                        )
-                                                      }
-                                                    >
-                                                      <i className="fas fa-edit"></i>{" "}
-                                                      Edit
-                                                    </a>
-                                                    <a
-                                                      className="dropdown-item"
-                                                      onClick={(e) =>
-                                                        handleSuspensedMarket(
-                                                          e,
-                                                          true,
-                                                          market.marketId
-                                                        )
-                                                      }
-                                                    >
-                                                      <i className="fa-solid fa-lock"></i>{" "}
-                                                      Active
-                                                    </a>
+                                                    {market.hideMarketWithUser ? (
+                                                      <a
+                                                        className="dropdown-item"
+                                                        onClick={(e) =>
+                                                          handleSuspensedMarket(
+                                                            e,
+                                                            false,
+                                                            market.marketId
+                                                          )
+                                                        }
+                                                      >
+                                                        <i className="fa-solid fa-lock"></i>{" "}
+                                                        Suspened
+                                                      </a>
+                                                    ) : (
+                                                      <>
+                                                        <a
+                                                          className="dropdown-item"
+                                                          href="#"
+                                                          onClick={() =>
+                                                            handleShowUpdateModal(
+                                                              gameMarketData[
+                                                                index
+                                                              ]
+                                                            )
+                                                          }
+                                                        >
+                                                          <i className="fas fa-edit"></i>{" "}
+                                                          Edit
+                                                        </a>
+                                                        <a
+                                                          className="dropdown-item"
+                                                          onClick={(e) =>
+                                                            handleSuspensedMarket(
+                                                              e,
+                                                              true,
+                                                              market.marketId
+                                                            )
+                                                          }
+                                                        >
+                                                          <i className="fa-solid fa-lock"></i>{" "}
+                                                          Active
+                                                        </a>
+                                                        <a
+                                                          className="dropdown-item"
+                                                          href="#"
+                                                          onClick={(e) => {
+                                                            e.preventDefault();
+                                                            GameService.updateHotGameStatus(
+                                                              auth.user,
+                                                              market.marketId,
+                                                              true
+                                                            )
+                                                              .then((res) => {
+                                                                toast.success(
+                                                                  res.data
+                                                                    .message
+                                                                );
+                                                                setRefresh(
+                                                                  (prev) =>
+                                                                    !prev
+                                                                );
+                                                              })
+                                                              .catch((err) => {
+                                                                toast.error(
+                                                                  customErrorHandler(
+                                                                    err
+                                                                  )
+                                                                );
+                                                              });
+                                                          }}
+                                                        >
+                                                          <i className="fas fa-check-circle text-success"></i>{" "}
+                                                          Hot Active
+                                                        </a>
+                                                        <a
+                                                          className="dropdown-item"
+                                                          href="#"
+                                                          onClick={(e) => {
+                                                            e.preventDefault();
+                                                            GameService.updateHotGameStatus(
+                                                              auth.user,
+                                                              market.marketId,
+                                                              false
+                                                            )
+                                                              .then((res) => {
+                                                                toast.success(
+                                                                  res.data
+                                                                    .message
+                                                                );
+                                                                setRefresh(
+                                                                  (prev) =>
+                                                                    !prev
+                                                                );
+                                                              })
+                                                              .catch((err) => {
+                                                                toast.error(
+                                                                  customErrorHandler(
+                                                                    err
+                                                                  )
+                                                                );
+                                                              });
+                                                          }}
+                                                        >
+                                                          <i className="fas fa-times-circle text-danger"></i>{" "}
+                                                          Hot Inactive
+                                                        </a>
+                                                      </>
+                                                    )}
                                                   </>
-                                                )}</>}
+                                                )}
 
                                                 <Link
                                                   to={`${market.marketId}`}
@@ -462,38 +545,22 @@ const MarketPlace = () => {
                                                   <i className="ti-eye"></i>{" "}
                                                   View runner
                                                 </Link>
-                                                {auth?.user?.roles === "admin" && <a
-                                                  className="dropdown-item"
-                                                  href="#"
-                                                  onClick={(e) =>
-                                                    handleVoidMarket(
-                                                      e,
-                                                      market.marketId
-                                                    )
-                                                  }
-                                                >
-                                                  <i className="fas fa-edit"></i>{" "}
-                                                  Void
-                                                </a>}
-
-
-                                                {/* <a
-                                                  className="dropdown-item"
-                                                  href="#"
-                                                  onClick={() =>
-                                                    handleMarketDetailsModalOpen(
-                                                      market.marketId,
-                                                      market.participants,
-                                                      market.isActive,
-                                                      market.startTime,
-                                                      market.endTime,
-                                                      market.marketName
-                                                    )
-                                                  }
-                                                >
-                                                  <i className="ti-eye"></i>{" "}
-                                                  View Market Details
-                                                </a> */}
+                                                {auth?.user?.roles ===
+                                                  "admin" && (
+                                                  <a
+                                                    className="dropdown-item"
+                                                    href="#"
+                                                    onClick={(e) =>
+                                                      handleVoidMarket(
+                                                        e,
+                                                        market.marketId
+                                                      )
+                                                    }
+                                                  >
+                                                    <i className="fas fa-edit"></i>{" "}
+                                                    Void
+                                                  </a>
+                                                )}
                                               </>
                                             )}
                                           </div>
