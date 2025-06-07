@@ -184,8 +184,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                     style={{
                       width: "500px",
                       height: "60px",
-                      backgroundImage:
-                        "linear-gradient(-180deg, #F6A21E 0%, #F6A21E 100%)",
+                      backgroundColor: "rgb(104, 122, 133)",
                     }}
                   >
                     Balance ({store?.user?.wallet?.balance})
@@ -196,8 +195,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                     style={{
                       width: "500px",
                       height: "60px",
-                      backgroundImage:
-                        "linear-gradient(-180deg, #F6A21E 0%, #F6A21E 100%)",
+                      backgroundColor: "rgb(104, 122, 133)",
                     }}
                   >
                     Exposure (
