@@ -5,8 +5,8 @@ import RenderLayTable from "./components/RenderLayTable";
 const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
   return (
     <div
-      className="card border-bottom-0 rounded-0 px-0 "
-      style={{ height: "", overflow: "hidden", marginTop: "18px" }}
+      className="card border-bottom-0 rounded-0 px-0 py-3 "
+      style={{ overflow: "hidden" }}
     >
       <div
         className="card-header"

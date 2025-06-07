@@ -143,3 +143,29 @@
     height: 84vh;
   }
 }
+
+.scrollbar-aurora-blade {
+  scrollbar-width: thin;
+  scrollbar-color: #9bbcd1 #f8f9fa;
+}
+
+/* Chrome, Edge, Safari */
+.scrollbar-aurora-blade::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-aurora-blade::-webkit-scrollbar-track {
+  background: #f8f9fa;
+  border-radius: 10px;
+}
+
+.scrollbar-aurora-blade::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #9bbcd1, #678da4);
+  border-radius: 10px;
+  transition: background 0.3s;
+}
+
+.scrollbar-aurora-blade::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #5f88a0, #456b86);
+}
+

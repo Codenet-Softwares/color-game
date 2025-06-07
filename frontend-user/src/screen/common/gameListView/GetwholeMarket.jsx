@@ -92,7 +92,7 @@ const GetwholeMarket = () => {
     <>
       {/* <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}> */}
       <div
-        className="row m-1 p-0"
+        className="row mt-1 "
         style={{
           marginTop: 1,
           paddingTop: 0,
@@ -110,14 +110,14 @@ const GetwholeMarket = () => {
                   {gameWithMarketData.gameName === "Lottery" ? (
                     <>
                       <div
-                        className="col-12 p-1 fw-bold h6 text-black shadow-lg text-white"
+                        className="col-12 p-1 fw-bold h6 text-black shadow-lg text-white mx-1"
                         style={{
                           backgroundColor: "#202020",
                           fontSize: "18px",
                           fontWeight: "bold",
                         }}
                       >
-                        {gameWithMarketData.gameName}
+                       <div className="mx-2">{gameWithMarketData.gameName}</div> 
                       </div>
 
                       {gameWithMarketData &&
@@ -126,7 +126,7 @@ const GetwholeMarket = () => {
                           .map((marketData, index) => (
                             <div
                               key={index}
-                              className="row my-2 m-0"
+                              className="row my-2 m-2"
                               style={{
                                 borderRadius: "5px",
                                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
@@ -195,13 +195,14 @@ const GetwholeMarket = () => {
                           ))}
 
                       {gameWithMarketData.markets.length > 0 ? (
-                        <Link
-                          className={`col-12 text-dark text-decoration-none text-nowrap fw-bold p-0`}
-                          to={`/lottery-home`}
-                          style={{ textAlign: "right" }}
-                        >
-                          View more...
-                        </Link>
+                        <></>
+                        // <Link
+                        //   className={`col-12 text-dark text-decoration-none text-nowrap fw-bold px-0 mx-0`}
+                        //   to={`/lottery-home`}
+                        //   style={{ textAlign: "right" }}
+                        // >
+                        //   View more...
+                        // </Link>
                       ) : (
                         <p
                           className="text-center fw-bold"
