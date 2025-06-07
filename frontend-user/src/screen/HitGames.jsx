@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getGameImg } from "../utils/apiService";
 import Login from "./loginModal/loginModal";
-import { dHitGames } from "../utils/dummyData";
+// import {dHitGames} from "../utils/dummyData"
+import { dHitGames } from '../utils/dummyData';
 
 const HitGames = () => {
   const [sliderData, setSliderData] = useState([]);
@@ -31,23 +32,26 @@ const HitGames = () => {
 
   return (
     <>
-      <br />
-      <div className="card-deck px-1" >
-        {sliderData.map((item, index) => (
-          <div
-            className="card border-0 px-0 "
-            key={item.id || index}
-            onClick={handleImageClick}
-            style={{ cursor: "pointer", margin: 1  }}
-          >
-            <img
-              src={item.image}
-              className="card-img-top"
-              style={{borderRadius:"15px", objectFit: "cover"}}
-              alt={`Card ${index}`}
-            />
-          </div>
-        ))}
+      <div className="container mt-3 bg-white">
+        <div className="row g-3">
+          {dHitGames.map((item, index) => (
+            <div
+              className="col-12 col-sm-6 col-md-4"
+              key={item.id || index}
+              onClick={handleImageClick}
+              style={{ cursor: "pointer" }}
+            >
+              <div className="card border-0">
+                <img
+                  src={item.image}
+                  className="card-img-top rounded"
+                  alt={`Card ${index}`}
+                  style={{ height: "100%", objectFit: "cover", borderRadius: "18px",  aspectRatio: "4 / 3",  }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {showLogin && <Login showLogin={showLogin} setShowLogin={setShowLogin} />}

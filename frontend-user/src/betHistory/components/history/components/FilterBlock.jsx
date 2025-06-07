@@ -88,7 +88,7 @@ const FilterBlock = ({
   return (
     <div
       className="card shadow p-3 mb-5 rounded"
-      style={{ marginTop: "150px", background: "#2CB3D1" }}
+      style={{ marginTop: "85px", background: "#253b4a" }}
     >
       <div className="col-12">
         <div className="row">
@@ -164,7 +164,7 @@ const FilterBlock = ({
             {/* Second Row: From Date & To Date */}
             <div className="d-flex flex-column flex-md-row gap-1 align-items-md-end mt-3 text-center">
               <div className="col-md-6">
-                <label className="form-label">From:</label>
+                <label className="form-label text-white">From:</label>
                 <Datetime
                   value={betHistoryData.startDate}
                   name="startDate"
@@ -188,7 +188,7 @@ const FilterBlock = ({
               </div>
 
               <div className="col-md-6">
-                <label className="form-label">To:</label>
+                <label className="form-label text-white">To:</label>
                 <Datetime
                   value={betHistoryData.endDate}
                   name="endDate"
@@ -220,13 +220,14 @@ const FilterBlock = ({
             {/* Button Row */}
             <div className="col-md-6 d-flex align-items-center justify-content-center mx-auto mt-3">
               <button
-                className="btn btn-primary w-100"
+                className="btn  w-100 text-white"
                 onClick={() =>
                   betHistoryData.selectGame === "lottery"
                     ? getHistoryForLotteryBetHistory()
                     : handleGetHistory()
                 }
                 disabled={isButtonDisabled()}
+                style={{backgroundColor:"#6a7e89"}}
               >
                 Get History
               </button>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getGifImg } from "../../utils/apiService";
-import { sGif } from "../../utils/dummyData";
+// import { sGif } from "../../utils/dummyData";
 
 const Gif = () => {
   const [gifData, setGifData] = useState([]);
@@ -24,10 +24,10 @@ const Gif = () => {
   }, []);
 
   return (
-    <div className="card-deck px-1 pt-2 ">
+    <div className="card-deck px-1 ">
       {gifData.map((item, index) => (
-        <div className="card border-0  mt-3 " key={index} style={{ margin: 1 }}>
-          <div className="card rounded-0 border-0">
+        <div className="card border-0  mt-3 " key={index} style={{ margin: 4 }}>
+          <div className="card rounded-0 border-0 mt-0">
             <img
               src={item.image}
               className="card-img-top  rounded-0 "

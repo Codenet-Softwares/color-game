@@ -351,17 +351,17 @@ const ProfitLoss = ({
   };
 
   return (
-    <div className="col-sm-12 mt-3 px-3">
+    <div className="col-sm-12 mt-3 px-3 ">
       {toggle && (
-        <div className="card mb-3 w-100 rounded" style={{ marginTop: "150px" }}>
+        <div className="card mb-3 w-100 rounded" style={{ marginTop: "80px" }}>
           <div
             className="card-body"
-            style={{ backgroundColor: "#2CB3D1", borderRadius: "8px" }}
+            style={{ backgroundColor: "#2b4758", borderRadius: "8px" }}
           >
-            <div class="container">
+            <div class="container ">
               <div class="row justify-content-center">
                 <div class="col-9 col-md-9 text-center ">
-                  <label className="fw-bold mb-1">Data Source</label>{" "}
+                  <label className="fw-bold mb-1 text-white">Data Source</label>{" "}
                   <select
                     class="form-select fw-bold"
                     aria-label="Default select example"
@@ -385,7 +385,7 @@ const ProfitLoss = ({
                 </div>
                 <div class="col-9 col-md-6 d-flex flex-column text-center">
                   {" "}
-                  <label className="fw-bold mb-1">From:</label>
+                  <label className="fw-bold mb-1 text-white">From:</label>
                   <DatePicker
                     selected={startDate}
                     onChange={(date) => setStartDate(date)}
@@ -397,7 +397,7 @@ const ProfitLoss = ({
                 </div>
                 <div class="col-9 col-md-6 d-flex flex-column text-center">
                   {" "}
-                  <label className="fw-bold mb-1">To:</label>
+                  <label className="fw-bold mb-1 text-white">To:</label>
                   <DatePicker
                     selected={endDate}
                     onChange={(date) => setEndDate(date)}
@@ -409,9 +409,10 @@ const ProfitLoss = ({
                 </div>
                 <div class="col-12 col-md-9 d-flex align-items-end mt-3">
                   <button
-                    className="btn btn-danger w-100 fw-bold"
+                    className="btn  w-100 fw-bold text-white"
                     disabled={startDate === null || endDate === null}
                     onClick={handleDateForProfitLoss}
+                    style={{backgroundColor:"#6a7e89"}}
                   >
                     Get Statement
                   </button>
@@ -427,7 +428,7 @@ const ProfitLoss = ({
         <div class="card w-100 rounded">
           <div
             class="card-header text-white p-2 text-center text-uppercase h5"
-            style={{ backgroundColor: "#2CB3D1" }}
+            style={{ backgroundColor: "#253b4a" }}
           >
             <b>&nbsp;&nbsp;Profit & Loss</b>
           </div>

@@ -52,12 +52,13 @@ const ForgotPassword = () => {
   function changePasswords() {
     return (
       <div className="global-margin-top-logged">
-        <form className="form-card shadow-lg " style={{ marginTop: "150px" }}>
-          <div className="text-center mb-3 text-primary mt-3" >
+        <form className="form-card shadow-lg " style={{ marginTop: "72px" }}>
+          <div className="text-center mb-3 text-dark mt-3" >
+
         <FaRegUserCircle  size={60}/>
           </div>
             
-          <h4 className="text-uppercase text-center text-primary">
+          <h4 className="text-uppercase text-center text-dark">
             Reset Password
           </h4>
           <div className="form-group1 mt-4 position-relative">
@@ -144,6 +145,9 @@ const ForgotPassword = () => {
             type="button"
             className="btn btn-primary mt-2"
             onClick={handleSubmit}
+              style={{
+              backgroundColor:"#8c9aa2"
+              }}
           >
             Change Password
           </button>
