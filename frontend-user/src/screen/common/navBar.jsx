@@ -123,7 +123,6 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
         setTimeout(() => {
           window.location.reload();
         }, 500);
-
       } else {
         toast.error(response.message || "Logout failed");
       }
@@ -151,11 +150,11 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     return (
       <div>
         <div
-          class="offcanvas offcanvas-end p-0 text-white"
+          class="offcanvas offcanvas-end p-0 text-black"
           tabindex="-1"
           id="offcanvasDarkNavbar"
           aria-labelledby="offcanvasDarkNavbarLabel"
-          style={{ width: "300px", background: "#0D505A" }}
+          style={{ width: "300px" }}
         >
           <div class="offcanvas-header">
             <h6 class="offcanvas-title" id="offcanvasDarkNavbarLabel">
@@ -185,7 +184,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                     style={{
                       width: "500px",
                       height: "60px",
-                      background: "#2FA8BA",
+                      backgroundColor: "rgb(104, 122, 133)",
                     }}
                   >
                     Balance ({store?.user?.wallet?.balance})
@@ -196,7 +195,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                     style={{
                       width: "500px",
                       height: "60px",
-                      background: "#2FA8BA",
+                      backgroundColor: "rgb(104, 122, 133)",
                     }}
                   >
                     Exposure (
@@ -211,14 +210,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               <li
                 class="nav-item mb-3 align-items-start text-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
                 onClick={handleAccountStatementClick}
               >
@@ -229,19 +228,19 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 />{" "}
                 Account Statement
               </li>
-          
+
               <li
                 onClick={handlePasswordChangeClick}
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
               >
                 <FaKey
@@ -255,14 +254,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               <li
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
                 onClick={handleLotteryPurchasesClick}
               >
@@ -277,14 +276,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               <li
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
                 onClick={handleResultsClick}
               >
@@ -299,14 +298,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               <li
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
                 onClick={takeMetoProfitAndLoss}
               >
@@ -321,14 +320,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 class="nav-item mb-3 align-items-start"
                 onClick={handleBetHistoryClick}
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
               >
                 <FaHistory
@@ -343,14 +342,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 class="nav-item mb-3 align-items-start"
                 onClick={handleActivityLog}
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
               >
                 <FaRunning
@@ -365,14 +364,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 onClick={handleRulesPageClick}
                 class="nav-item mb-3 align-items-start text-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
               >
                 <FaBook
@@ -386,14 +385,14 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               <li
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "white", // Initial color
+                  color: "black", // Initial color
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "white"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
                 }}
                 onClick={handleLogout}
               >

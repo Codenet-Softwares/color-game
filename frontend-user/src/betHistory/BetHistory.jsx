@@ -168,7 +168,7 @@ const BetHistory = () => {
     <AppDrawer showCarousel={false}>
       <Layout />
       <div className="row">
-        <div className="col-lg-12">
+        <div className="col-lg-12 pt-4">
           <History
             betHistoryData={betHistoryData}
             getHistoryForLotteryBetHistory={getHistoryForLotteryBetHistory}

@@ -55,7 +55,7 @@ const GetSingleMarket = () => {
   }
   return (
     <>
-      <div style={{ marginTop: `${!store.user.isLogin ? "152px" : ""}` }}>
+      <div style={{ marginTop: "-10px" }}>
         <Layout />
       </div>
       <div
@@ -67,13 +67,13 @@ const GetSingleMarket = () => {
           <div className="row p-0 m-0">
             <div
               className="col-12 p-2 mt-2 text-white fw-bold h6 "
-              style={{ backgroundColor: "#18ADC5", fontSize: "16px" }}
+              style={{ backgroundColor: "#202020", fontSize: "16px" }}
             >
               {user_gameWithMarketData[0]?.gameName}
             </div>
             {user_gameWithMarketData[0]?.markets.length > 0 ? (
               <>
-                <div className="col-12 p-0 m-0">
+                {/* <div className="col-12 p-0 m-0">
                   <div className="row px-0 m-0 align-items-center">
                     <div className="col-12 col-md-9 p-0"></div>
                     <div className="col-12 col-md-3 p-0 m-0 py-1">
@@ -97,7 +97,7 @@ const GetSingleMarket = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 {user_gameWithMarketData &&
                   user_gameWithMarketData[0]?.markets.map((marketData) => {
                     return (
@@ -105,7 +105,7 @@ const GetSingleMarket = () => {
                         className="p-0 m-0"
                         style={{
                           backgroundColor: "white",
-                          borderTop: "1px solid #ccc",
+                          borderBottom: "1px solid #ccc",
                         }}
                         key={marketData.marketId}
                       >
@@ -114,8 +114,12 @@ const GetSingleMarket = () => {
                             <i className="far fa-calendar-alt text-dark me-2 d-block d-md-none mt-1"></i>
 
                             <Link
-                              className={`text-dark text-decoration-none text-nowrap d-flex flex-column flex-md-row `}
-                              style={{ fontSize: "14px" }}
+                              style={{
+                                textDecoration: "none",
+
+                                color: "#27a7e4",
+                                fontWeight: "bold",
+                              }}
                               to={`/gameView/${user_gameWithMarketData[0]?.gameName?.replace(
                                 /\s/g,
                                 ""
@@ -127,23 +131,23 @@ const GetSingleMarket = () => {
                                 handleMarketId(marketData?.marketId)
                               }
                             >
-                              <span className="pt-2 fw-bold me-2">
-                                {formatDate(marketData.startTime)}
-                              </span>
-                              <span className="pt-2">|</span>
-
                               <span
-                                className="text-primary pt-2 text-wrap m-0 ps-1 fw-bold"
+                                className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
                                 style={{
+                                  fontSize: "16px",
                                   wordBreak: "break-word",
                                   whiteSpace: "normal",
                                 }}
                               >
                                 {marketData.marketName}
                               </span>
+                              <span className="pt-2">|</span>
+                              <span className="" style={{ color: "#b2b2b2" }}>
+                                {formatDate(marketData.startTime)}
+                              </span>
                             </Link>
                           </div>
-                          <div className="col-12 col-md-3 p-0 m-0 py-1">
+                          {/* <div className="col-12 col-md-3 p-0 m-0 py-1">
                             <div className="row gx-2 justify-content-end">
                               <div className="col-6">
                                 <div
@@ -168,7 +172,7 @@ const GetSingleMarket = () => {
                                 {marketData?.runners[0]?.rate[0]?.lay ?? "N/A"}
                               </div>
                             </div>
-                          </div>
+                          </div> */}
                         </div>
                       </div>
                     );

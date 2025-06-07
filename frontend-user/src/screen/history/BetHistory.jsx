@@ -370,7 +370,7 @@ const BetHistory = () => {
               textAlign: "center",
             }}
           >
-            <h5 className="card-title text-uppercase fw-bold">Bet History</h5>
+            <h5 className="card-title text-uppercase fw-bold">Bet History </h5>
           </div>
           {selectedGameId === null ? (
             <div

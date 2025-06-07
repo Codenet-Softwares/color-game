@@ -5,7 +5,7 @@
   min-height: 75vh;
 }
 .container_result {
-  background: #2cb3d1;
+  background: #2b4758;
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -85,7 +85,7 @@
 }
 
 .market-container {
-  background-color: #2cb3d1;
+  background-color: #2b4758;
   padding: 10px;
   border-radius: 8px;
   /* box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); */
