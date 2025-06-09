@@ -1,0 +1,277 @@
+import { useEffect, useState } from "react";
+// import "./common/common.css";
+import "./Inplay.css";
+import { Link, useLocation } from "react-router-dom";
+import {
+  inPlayMarket_api,
+  user_getGameWithMarketData_api,
+} from "../utils/apiService";
+import Layout from "./layout/layout";
+import strings from "../utils/constant/stringConstant";
+import { useAppContext } from "../contextApi/context";
+import AppDrawer from "./common/appDrawer";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "./Lottery/firebaseStore/lotteryFirebase";
+
+const Inplay = () => {
+  const [inPlayMarket, setIsplayMarket] = useState([]);
+  const [isPlayUpdate, setIsPlayUpdate] = useState(null);
+  const { store, dispatch } = useAppContext();
+
+  useEffect(() => {
+    user_getInPlayMarketData();
+  }, [isPlayUpdate]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "lottery-db"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setIsPlayUpdate(messagesData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleMarketId = (id) => {
+    dispatch({
+      type: strings.placeBidding,
+      payload: { marketId: id },
+    });
+  };
+  const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+
+    // Extract UTC values directly
+    const day = date.getUTCDate();
+    const month = date.toLocaleString("en-US", {
+      month: "short",
+      timeZone: "UTC",
+    });
+    const hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th"; // 1st, 2nd, etc.
+
+    return `${day}${ordinalSuffix} ${month} ${hours}:${
+      minutes < 10 ? "0" + minutes : minutes
+    } `;
+  };
+
+  async function user_getInPlayMarketData() {
+    const response = await inPlayMarket_api();
+    if (response) {
+      setIsplayMarket(response.data);
+    }
+  }
+  return (
+    <>
+      {/* <div style={{ marginTop: "75px" }}> */}
+      <Layout />
+      {/* </div> */}
+      <div className="global-margin-top-logged-inplay">
+        <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
+          <div
+            className="row mt-1 cg_inplay "
+            style={{
+              marginTop: 1,
+              paddingTop: 0,
+              position: "relative",
+              top: "-9px",
+            }}
+          >
+            {inPlayMarket &&
+              inPlayMarket.map((gameWithMarketData) => {
+                return (
+                  <>
+                    {console.log("location", location)}
+                    {gameWithMarketData.gameName
+                      .toLowerCase()
+                      .replace(/[\s\-_]/g, "") ===
+                    "Lottery".toLowerCase().replace(/[\s\-_]/g, "") ? (
+                      <>
+                        <div
+                          className="col-12 p-1 fw-bold h6 text-black shadow-lg text-white m-1"
+                          style={{
+                            backgroundColor: "#202020",
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          <div className="mx-2">
+                            {gameWithMarketData.gameName}
+                          </div>
+                        </div>
+                        {gameWithMarketData &&
+                          gameWithMarketData.markets.map(
+                            (marketData, index) => (
+                              <div
+                                key={index}
+                                className="row my-2 m-2"
+                                style={{
+                                  borderRadius: "5px",
+                                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                }}
+                              >
+                                {marketData.hotGame === true && (
+                                  <div
+                                    className="blink_me bg-danger rounded-pill text-center text-white d-flex align-items-center justify-content-center "
+                                    style={{
+                                      width: "74px",
+                                      height: "20px",
+                                      marginLeft: "250px",
+                                    }}
+                                  >
+                                    <small
+                                      className="fw-bold"
+                                      style={{ fontSize: "10px" }}
+                                    >
+                                      Hot Game
+                                    </small>
+                                  </div>
+                                )}
+
+                                <div className="row align-items-center">
+                                  <span
+                                    className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
+                                    style={{
+                                      fontSize: "16px",
+                                      wordBreak: "break-word",
+                                      whiteSpace: "normal",
+                                    }}
+                                  >
+                                    <Link
+                                      to={`/lottoPurchase/${marketData.marketId}`}
+                                      onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                                      style={{
+                                        textDecoration: "none",
+                                        color: "#27a7e4",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {marketData?.marketName ?? "Unknown"} |{" "}
+                                    </Link>
+                                    <span
+                                      className=""
+                                      style={{ color: "#b2b2b2" }}
+                                    >
+                                      {formatDate(marketData.start_Time)}
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            )
+                          )}
+
+                        {gameWithMarketData.markets.length === 0 && (
+                          <p
+                            className="text-center fw-bold"
+                            style={{ backgroundColor: "orange" }}
+                          >
+                            No market Available
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <div
+                          className="col-12 p-1 fw-bold h6 text-black shadow-lg text-white mx-2"
+                          style={{
+                            backgroundColor: "#202020",
+                            fontSize: "18px",
+                            fontWeight: "bold",
+                          }}
+                        >
+                          {console.log("gamewith", gameWithMarketData)}
+                          {gameWithMarketData.gameName}
+                        </div>
+                        {gameWithMarketData &&
+                          gameWithMarketData.markets.map(
+                            (marketData, index) => (
+                              <div
+                                key={index}
+                                className="row my-2 m-2"
+                                style={{
+                                  borderRadius: "5px",
+                                  boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                                }}
+                              >
+                                {marketData.hotGame === true && (
+                                  <div
+                                    className="blink_me bg-danger rounded-pill text-center text-white d-flex align-items-center justify-content-center "
+                                    style={{
+                                      width: "74px",
+                                      height: "20px",
+                                      marginLeft: "250px",
+                                    }}
+                                  >
+                                    <small
+                                      className="fw-bold"
+                                      style={{ fontSize: "10px" }}
+                                    >
+                                      Hot Game
+                                    </small>
+                                  </div>
+                                )}
+
+                                <div className="row align-items-center">
+                                  <span
+                                    className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
+                                    style={{
+                                      fontSize: "16px",
+                                      wordBreak: "break-word",
+                                      whiteSpace: "normal",
+                                    }}
+                                  >
+                                    <Link
+                                      to={`/gameView/Colorgame/${marketData?.marketName}/${marketData?.marketId}`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleAllId(
+                                          gameWithMarketData?.gameId,
+                                          marketData?.marketId
+                                        );
+                                      }} // Prevents dropdown collapse
+                                      style={{
+                                        textDecoration: "none",
+                                        color: "#27a7e4",
+                                        fontWeight: "bold",
+                                      }}
+                                    >
+                                      {marketData?.marketName ?? "Unknown"} |{" "}
+                                    </Link>
+                                    <span
+                                      className=""
+                                      style={{ color: "#b2b2b2" }}
+                                    >
+                                      {formatDate(marketData.startTime)}
+                                    </span>
+                                  </span>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        {gameWithMarketData.markets.length === 0 && (
+                          <p
+                            className="text-center pt-1 fw-bold"
+                            style={{
+                              margin: 0,
+                            }}
+                          >
+                            No market Available
+                          </p>
+                        )}
+                      </>
+                    )}
+                  </>
+                );
+              })}
+          </div>
+        </AppDrawer>
+      </div>
+    </>
+  );
+};
+
+export default Inplay;

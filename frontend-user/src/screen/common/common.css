@@ -478,3 +478,23 @@ profit and loss
   margin: 5px;
   text-align: center;
 }
+@media (max-width: 767.98px) {
+  .cg_games {
+    padding-bottom: 90px;
+    background-color: white;
+  }
+  }
+@media (max-width: 767.98px) {
+  .cg_inplay {
+    padding-bottom: 160px;
+    background-color: white;
+  }
+  }
+@media (min-width: 767.98px) {
+  .cg_inplay {
+    padding-bottom: 80px;
+    background-color: white;
+  }
+  }
+
+  

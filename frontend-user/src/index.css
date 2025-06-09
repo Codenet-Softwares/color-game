@@ -35,3 +35,8 @@ h1,
 h2 {
   font-family: "Georgia", serif;
 }
+
+.global-margin-top-logged-inplay {
+  margin-top: 75px;
+  overflow-y: hidden;
+}

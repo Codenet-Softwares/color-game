@@ -4,7 +4,7 @@ import {
   getLotteryMarketsApi,
   user_getAllGamesWithMarketData_api,
 } from "../../utils/apiService";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getAllGameDataInitialState } from "../../utils/getInitiateState";
 import HamburgerNavBar from "./hamburgerNavBar";
 import { useAppContext } from "../../contextApi/context";
@@ -27,6 +27,7 @@ function AppDrawer({
   openBetData,
   handleOpenBetsSelectionMenu,
   setCurrentGameTab,
+  currentGameTab,
 }) {
   const [user_allGames, setUser_allGames] = useState(
     getAllGameDataInitialState()
@@ -37,6 +38,7 @@ function AppDrawer({
   const [isMobileSize, setIsMobileSize] = useState(window.innerWidth);
   0;
   const { dispatch, store } = useAppContext();
+  const navigate = useNavigate();
 
   const location = useLocation();
   useEffect(() => {
@@ -68,7 +70,12 @@ function AppDrawer({
           return (
             <li
               key={gameObj.gameId}
-              // className="p-0 text-black "
+              className={`${
+                gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ==
+                currentGameTab.toLowerCase().replace(/[\s\-_]/g, "")
+                  ? "text-black bg-white"
+                  : "text-white bg-black"
+              } `}
               style={{
                 whiteSpace: "nowrap",
                 padding: "2px 10px",
@@ -81,7 +88,12 @@ function AppDrawer({
               }}
             >
               <span
-                className={`text-white text-decoration-none text-nowrap btn-sm  ${
+                className={`${
+                  gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ==
+                  currentGameTab.toLowerCase().replace(/[\s\-_]/g, "")
+                    ? "text-black bg-white"
+                    : "text-white bg-black"
+                } text-decoration-none text-nowrap btn-sm  ${
                   gameObj.isBlink ? "blink_me" : ""
                 }`}
                 onClick={() => setCurrentGameTab(gameObj.gameName)}
@@ -100,6 +112,10 @@ function AppDrawer({
       type: strings.placeBidding,
       payload: { gameId: gameId, marketId: marketId },
     });
+  };
+
+  const handleNavigateToInPlay = () => {
+    navigate("/inplay");
   };
 
   async function user_getAllGames() {
@@ -175,6 +191,11 @@ function AppDrawer({
         </span>
 
         <ul className="overflow-auto list-group list-group-flush">
+          <li onClick={() => handleNavigateToInPlay()}>
+            <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
+              ⚽ Inplay
+            </div>
+          </li>
           {user_allGames?.map((gameObj, index) => {
             const isToggled = toggleMap[gameObj.gameId];
 
@@ -360,13 +381,13 @@ function AppDrawer({
                 overflowY: "none",
                 height: "calc(100vh - 100px)",
                 backgroundColor: "white",
-                width: ["/home", "/"].includes(
-                  location?.pathname?.toLowerCase()
-                )
-                  ? isMobileSize <= 435
-                    ? "100vw"
-                    : "59vw"
-                  : "",
+                // width: ["/home", "/"].includes(
+                //   location?.pathname?.toLowerCase()
+                // )
+                //   ? isMobileSize <= 435
+                //     ? "100vw"
+                //     : "59vw"
+                //   : "",
               }}
             >
               {children}

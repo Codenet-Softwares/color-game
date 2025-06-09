@@ -66,16 +66,16 @@ const FilterBlock = ({
     }
   }, [
     betHistoryData.dataSource,
-    betHistoryData.selectGame, 
-    betHistoryData.selectMenu, 
+    betHistoryData.selectGame,
+    betHistoryData.selectMenu,
     isAllFieldsSelected,
-    betHistoryData.startDate,
-    betHistoryData.endDate,
+    // betHistoryData.startDate,
+    // betHistoryData.endDate,
   ]);
 
   const isButtonDisabled = () => {
     if (!isAllFieldsSelected || dateError) return true;
-    if (isLiveData) return true; 
+    if (isLiveData) return true;
     if (
       isBackupOrOld &&
       (!betHistoryData.startDate || !betHistoryData.endDate || !isDateValid())
@@ -227,7 +227,7 @@ const FilterBlock = ({
                     : handleGetHistory()
                 }
                 disabled={isButtonDisabled()}
-                style={{backgroundColor:"#6a7e89"}}
+                style={{ backgroundColor: "#6a7e89" }}
               >
                 Get History
               </button>
