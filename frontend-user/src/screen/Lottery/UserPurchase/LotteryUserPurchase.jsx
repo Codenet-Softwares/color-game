@@ -17,7 +17,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
     <div className="outer-container">
       {lotteryData?.searchResult &&
       lotteryData?.searchResult?.tickets?.length > 0 ? (
-        <div className="inner-container mb-5 ">
+        <div className="inner-container border rounded shadow mx-auto  p-3 d-flex flex-column justify-content-center align-items-center ">
           <SearchResultsNew
             lotteryData={lotteryData}
             handleBack={handleBack}
@@ -117,6 +117,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   <button
                     type="submit"
                     className="text-uppercase text-white submit-btn"
+                    // disabled={isSubmitting || lotteryData?.isSuspend}
                   >
                     {isSubmitting ? "Processing..." : "Search"}
                   </button>

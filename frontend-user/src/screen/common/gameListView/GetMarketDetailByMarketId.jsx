@@ -466,8 +466,7 @@ const GetMarketDetailByMarketId = () => {
                       .utc(user_marketWithRunnerData.startTime)
                       .format("DD MMM YYYY, HH:mm")}
                   </div>
-                  <div>
-                    <strong>End Time:</strong>{" "}
+<div  style={{marginRight:"8px"}}>                    <strong>End Time:</strong>{" "}
                     {moment
                       .utc(user_marketWithRunnerData.endTime)
                       .format("DD MMM YYYY, HH:mm")}

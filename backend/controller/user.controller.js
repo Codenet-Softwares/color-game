@@ -476,13 +476,10 @@ export const getAllGameData = async (req, res) => {
                 "hideRunnerUser",
                 "createdAt",
               ],
-              order: [["createdAt", "DESC"]],
             },
           ],
-          order: [["createdAt", "DESC"]],
         },
       ],
-      order: [["createdAt", "DESC"]],
     });
 
     const formattedGameData = gameData
@@ -503,7 +500,7 @@ export const getAllGameData = async (req, res) => {
             // First prioritize hotGame === true, then sort by createdAt DESC
             if (b.hotGame === true && a.hotGame !== true) return 1;
             if (a.hotGame === true && b.hotGame !== true) return -1;
-            return new Date(b.createdAt) - new Date(a.createdAt);
+            // return new Date(b.createdAt) - new Date(a.createdAt);
           })
           .map((market) => ({
             marketId: market.marketId,
@@ -516,7 +513,6 @@ export const getAllGameData = async (req, res) => {
             isVoid: market.isVoid,
             hotGame: market.hotGame,
             runners: market.Runners.filter((runner) => !runner.hideRunnerUser)
-              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // DESC order for Runners
               .map((runner) => ({
                 runnerId: runner.runnerId,
                 runnerName: runner.runnerName,
@@ -531,7 +527,7 @@ export const getAllGameData = async (req, res) => {
               })),
           })),
       }))
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // DESC order for Games
+
 
     const baseURL = process.env.LOTTERY_URL;
 
@@ -2567,6 +2563,13 @@ export const updateFCMToken = async (req, res) => {
     const userId = req.user.userId;
     const { fcm_token } = req.body;
 
+    if(!fcm_token)
+    {
+        return res
+        .status(statusCode.badRequest)
+        .send(apiResponseErr(null, false, statusCode.badRequest, "Fcm token not found!"));
+    }
+
     const user = await userSchema.findAll({
       where: { userId }
     });
@@ -2584,7 +2587,7 @@ export const updateFCMToken = async (req, res) => {
     )
 
     if (updatedRows === 0) {
-      throw new Error("FCM Token Not Updated");
+          return res.status(statusCode.success).send(apiResponseSuccess([], true, statusCode.success, "FCM token Not update!"));
     }
 
     return res.status(statusCode.success).send(apiResponseSuccess(updatedRows, true, statusCode.success, "FCM token updated successfully"));

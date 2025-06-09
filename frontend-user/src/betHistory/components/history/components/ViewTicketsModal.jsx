@@ -38,17 +38,19 @@ const ViewTicketsModal = ({ isOpen, onClose, ticketNumbers }) => {
                     scrollbarColor: "#343a40 #e9ecef",
                   }}
                 >
-                  <div className="row row-cols-3 g-3">
-                    {ticketNumbers.map((ticket, index) => (
-                      <div key={index} className="col">
-                        <div className="card border-1 shadow-sm text-center p-1">
-                          <div className="card-body py-1 fw-bold text-info">
-                            {ticket}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+      <div className="row row-cols-1 row-cols-md-3 g-3">
+  {ticketNumbers.map((ticket, index) => (
+    <div key={index} className="col">
+      <div className="card border-1 shadow-sm text-center p-1">
+        <div className="card-body py-1 fw-bold text-info">
+          {ticket}
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+
                 </div>
               </div>
             ) : (
