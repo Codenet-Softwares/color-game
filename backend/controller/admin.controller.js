@@ -2863,6 +2863,7 @@ export const createTitleTextNotification = async (req, res) => {
         const newNotif = await Notification.create({
           UserId: user.userId,
           message,
+          type: "colorgame",
         });
 
         createdNotifications.push(newNotif);
