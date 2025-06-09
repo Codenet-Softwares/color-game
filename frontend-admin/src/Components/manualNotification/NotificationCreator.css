@@ -1,0 +1,88 @@
+/* NotificationCreator.css */
+.notification-creator-container {
+    max-width: 480px;
+    margin: 2rem auto;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(70, 130, 180, 0.15);
+    background-color: #e6f7ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.notification-creator-heading {
+    color: #1c3d5a;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.notification-creator-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.notification-creator-label {
+    font-weight: 600;
+    color: #234e70;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+}
+
+.notification-creator-input {
+    margin-top: 6px;
+    padding: 10px 12px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1.5px solid #91c7ff;
+    outline: none;
+    resize: none;
+    transition: border-color 0.3s ease;
+}
+
+.notification-creator-input:focus {
+    border-color: #4682B4;
+    box-shadow: 0 0 0 2px rgba(70, 130, 180, 0.2);
+}
+
+.notification-creator-button {
+    padding: 12px;
+    background-color: #4682B4;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.notification-creator-button:hover {
+    background-color: #3a6d99;
+}
+
+.notification-creator-button:disabled {
+    background-color: #a0c4e4;
+    cursor: not-allowed;
+}
+
+.notification-creator-success {
+    margin-top: 16px;
+    color: #2d7a2d;
+    font-weight: 600;
+    text-align: center;
+}
+
+.notification-creator-error {
+    margin-top: 16px;
+    color: #b00020;
+    font-weight: 600;
+    text-align: center;
+}
+
+.notification-creator-character-count {
+    text-align: right;
+    color: #666;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}

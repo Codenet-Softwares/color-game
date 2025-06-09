@@ -23,6 +23,13 @@ const Navside = () => {
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
   const [inactive, setInactive] = useState(true);
   const [isBetTracker, setIsBetTracker] = useState(false);
+  // Add this state near your other state declarations
+ const [isNotification, setIsNotification] = useState(true);
+
+// Add this handler near your other handlers
+const handleNotificationToggle = () => {
+  setIsNotification(!isNotification);
+};
 
   const navigate = useNavigate();
   const toggleMenu = (menuSetter) => {
@@ -474,9 +481,67 @@ const Navside = () => {
               </li>
             )}
         {/* Announced Market end */}
+
+        {isNotification ? (
+  <li className="m-2" onClick={handleNotificationToggle}>
+    <a className="has-arrow" href="#" aria-expanded="false">
+      <div className="nav_icon_small">
+        <i
+          className="fa-solid fa-bell"
+          style={{
+            color: "#3E5879",
+            marginRight: "10px",
+            fontSize: "20px",
+          }}
+        ></i>
+      </div>
+      <div className="nav_title">
+        <span>Notifications</span>
+      </div>
+    </a>
+  </li>
+) : (
+  <li className="" onClick={handleNotificationToggle}>
+    <a className="has-arrow" href="#" aria-expanded="false">
+      <div className="nav_icon_small">
+        <i
+          className="fa-solid fa-bell"
+          style={{
+            color: "#3E5879",
+            marginRight: "10px",
+            fontSize: "20px",
+          }}
+        ></i>
+      </div>
+      <div className="nav_title">
+        <span>Notifications</span>
+      </div>
+    </a>
+    <ul>
+      <li>
+        <Link to="/notification-create">
+          <span>
+            <i
+              className="fa-solid fa-paper-plane"
+              style={{
+                color: "#3E5879",
+                marginRight: "10px",
+                fontSize: "15px",
+              }}
+            ></i>
+            Create Notification
+          </span>
+        </Link>
+      </li>
+      {/* You can add more notification-related links here if needed */}
+    </ul>
+  </li>
+)}
       </ul>
 
       {/* List Of the Sidebar Ends */}
+   
+
     </nav>
   );
 };
