@@ -51,15 +51,7 @@ const HamburgerNavBar = () => {
           <FaPlay className="nav-icon" />
           <span className="nav-label">In-Play</span>
         </button>
-        {/* notification */}
-        <button
-          className="nav-item"
-          title="Notifications"
-          aria-label="Notifications"
-        >
-          <NotificationIcon    isMobile={true} position="bottom" />
-          <span className="nav-label">Notifications</span>
-        </button>
+  
 
         {/* Menu */}
         <button

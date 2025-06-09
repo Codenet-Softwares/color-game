@@ -90,11 +90,9 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             />
           </a>
           <div className="d-flex align-items-center ms-auto">
-            {isMobile >= 435 && (
-              <div className="me-5">
-                <NotificationIcon isMobile={isMobile} />
-              </div>
-            )}
+            <div className="me-3 d-flex align-items-center">
+              <NotificationIcon isMobile={isMobile} />
+            </div>
             <button className="navbar-toggler border-0" type="button">
               {store.user.isLogin ? (
                 <div className="d-flex align-items-center">

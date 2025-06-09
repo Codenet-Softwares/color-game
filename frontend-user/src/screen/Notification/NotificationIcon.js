@@ -6,22 +6,37 @@ import { messaging } from "../Lottery/firebaseStore/lotteryFirebase";
 import { getUserNotifications, updateFCMToken } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
 
-const NotificationIcon = ({ isMobile , position = "top" }) => {
+const NotificationIcon = ({ isMobile }) => {
   const { store } = useAppContext();
   const [notificationCount, setNotificationCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState([]);
- // Adjust dropdown style based on position
-  const dropdownStyle =
-    position === "bottom"
-      ? {
-          bottom: "45px", // raise it above the footer icon
-          right: 0,
-        }
-      : {
-          top: "45px", // below the icon in header
-          right: 0,
-        };
+  const [notifications, setNotifications] = useState({});
+
+  // Group and sort notifications
+  const groupAndSortNotifications = (data) => {
+    const grouped = {};
+
+    data.forEach((notif) => {
+      const marketKey = notif.MarketId || "general";
+      if (!grouped[marketKey]) grouped[marketKey] = [];
+
+      grouped[marketKey].push({
+        ...notif,
+        createdAt: notif.createdAt ? new Date(notif.createdAt) : null,
+      });
+    });
+
+    Object.keys(grouped).forEach((key) => {
+      grouped[key].sort((a, b) => {
+        if (!a.createdAt) return 1;
+        if (!b.createdAt) return -1;
+        return b.createdAt - a.createdAt;
+      });
+    });
+
+    return grouped;
+  };
+
   // Request permission and get FCM token
   useEffect(() => {
     if (!store.user?.isLogin) return;
@@ -40,19 +55,23 @@ const NotificationIcon = ({ isMobile , position = "top" }) => {
 
     requestPermission();
 
-    // Handle foreground messages
     const unsubscribe = onMessage(messaging, (payload) => {
-      console.log("Message received. ", payload);
-      // Update notification count and list
+      console.log("Message received: ", payload);
+      const newMessage = {
+        MarketId: "",
+        message: payload.notification?.body || "You have a new notification",
+        createdAt: new Date(),
+        id: Date.now(),
+      };
+
+      setNotifications((prev) => {
+        const grouped = { ...prev };
+        const key = newMessage.MarketId || "general";
+        grouped[key] = [newMessage, ...(grouped[key] || [])];
+        return grouped;
+      });
+
       setNotificationCount((prev) => prev + 1);
-      setNotifications((prev) => [
-        {
-          title: payload.notification?.title || "New Notification",
-          body: payload.notification?.body || "You have a new notification",
-          time: new Date().toLocaleTimeString(),
-        },
-        ...prev,
-      ]);
     });
 
     return () => unsubscribe();
@@ -66,8 +85,14 @@ const NotificationIcon = ({ isMobile , position = "top" }) => {
       try {
         const response = await getUserNotifications();
         if (response.data) {
-          setNotifications(response.data);
-          setNotificationCount(response.data.length);
+          const grouped = groupAndSortNotifications(response.data);
+          setNotifications(grouped);
+
+          const total = Object.values(grouped).reduce(
+            (acc, arr) => acc + arr.length,
+            0
+          );
+          setNotificationCount(total);
         }
       } catch (error) {
         console.error("Error loading notifications:", error);
@@ -80,7 +105,7 @@ const NotificationIcon = ({ isMobile , position = "top" }) => {
   if (!store.user?.isLogin) return null;
 
   return (
-   <div className="position-relative">
+    <div className="position-relative">
       <button
         className="btn btn-sm border border-white me-2 d-flex align-items-center justify-content-center text-white mx-1"
         style={{
@@ -91,6 +116,7 @@ const NotificationIcon = ({ isMobile , position = "top" }) => {
           padding: "5px 8px",
         }}
         onClick={() => setShowNotifications(!showNotifications)}
+        title="notifications"
       >
         <FaBell />
         {notificationCount > 0 && (
@@ -104,8 +130,11 @@ const NotificationIcon = ({ isMobile , position = "top" }) => {
         <div
           className="position-absolute bg-dark text-white p-2 rounded shadow"
           style={{
-            ...dropdownStyle,
-            width: "300px",
+            left: isMobile < 435 ? "90%" : "auto",
+            transform: isMobile < 435 ? "translateX(-50%)" : "none",
+            right: isMobile < 435 ? "auto" : 0,
+            top: "40px",
+            width: isMobile < 435 ? "90vw" : "400px",
             maxHeight: "400px",
             overflowY: "auto",
             zIndex: 1000,
@@ -120,12 +149,47 @@ const NotificationIcon = ({ isMobile , position = "top" }) => {
               ×
             </button>
           </div>
-          {notifications.length === 0 ? (
+
+          {Object.keys(notifications).length === 0 ? (
             <div className="text-center py-3">No notifications</div>
           ) : (
-            notifications.map((notification, index) => (
-              <div key={index} className="border-bottom pb-2 mb-2">
-                <div className="fw-bold">{notification.message}</div>
+            Object.entries(notifications).map(([marketId, notifs], idx) => (
+              <div key={marketId + idx} className="mb-3">
+                <div
+                  className="fw-bold text-info border-bottom pb-1 mb-2"
+                  style={{ fontSize: "13px" }}
+                >
+                  {marketId === "general"
+                    ? "General Updates"
+                    : `Market: ${
+                        notifs[0].message?.match(/"(.+?)"/)?.[1] || "Unknown"
+                      }`}
+                </div>
+
+                {notifs.map((notification, index) => (
+                  <div
+                    key={notification.id || index}
+                    className="border-bottom pb-2 mb-2"
+                    style={{
+                      wordWrap: "break-word",
+                      whiteSpace: "normal",
+                      fontSize: isMobile < 435 ? "13px" : "14px",
+                    }}
+                  >
+                    <div>{notification.message}</div>
+                    <div className="text-primary small">
+                      {notification.createdAt
+                        ? new Date(notification.createdAt).toLocaleString(
+                            "en-IN",
+                            {
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                            }
+                          )
+                        : "Time not available"}
+                    </div>
+                  </div>
+                ))}
               </div>
             ))
           )}
