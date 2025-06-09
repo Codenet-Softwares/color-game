@@ -104,18 +104,18 @@ const AccountStatement = () => {
     <>
       <AppDrawer showCarousel={false}>
         <Layout />
-        <div style={{ marginTop: "90px" }}>
+        <div style={{ marginTop: "120px" }}>
           <div className="d-flex justify-content-center px-2">
-            <div className="card w-100 rounded">
+            <div className="card w-100 rounded border">
               {/* Card Header */}
               <div
-                className="card-header text-white p-2 text-uppercase text-center  mt-4"
+                className="card-header text-white p-2 text-uppercase text-center"
                 style={{ backgroundColor: "#2a4455" }}
               >
                 <b className="h5 fw-bold">&nbsp;&nbsp;Account Statement</b>
               </div>
 
-              <div className="form-group mb-3 px-2 mt-2 fw-bold">
+              <div className="form-group mb-3 px-2 mt-2 fw-bold border-0">
                 <div className="container-fluid">
                   <div className="row g-sm-1 align-items-end justify-content-center text-center">
                     {/* Total Entries */}

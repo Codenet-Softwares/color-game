@@ -2,6 +2,8 @@ import React from "react";
 import Pagination from "../common/Pagination";
 
 const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
+
+
   const formatDate = (isoString) => {
     const date = new Date(isoString);
 
@@ -43,28 +45,25 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
       </div>
 
       <div className="m-1 row g-2 d-flex justify-content-end d-md-flex justify-content-md-end d-sm-flex justify-content-sm-center">
-        <div className="col-auto">
-          <button
-            className="btn text-white fw-bold"
-            style={{ backgroundColor: "#80C2F1" }}
-          >
-            Back
-          </button>
-        </div>
-        <div className="col-auto">
-          <button
-            className="btn text-white fw-bold"
-            style={{ backgroundColor: "#FAA9BA" }}
-          >
-            Lay
-          </button>
-        </div>
-        <div className="col-auto">
-          <button className="btn btn-light fw-bold text-white bg-danger">
-            Void
-          </button>
-        </div>
-      </div>
+  <div className="col-auto">
+    <button className="btn text-white fw-bold" style={{ backgroundColor: "#80C2F1" }}>
+      Back
+    </button>
+  </div>
+  <div className="col-auto">
+    <button className="btn text-white fw-bold" style={{ backgroundColor: "#FAA9BA" }}>
+      Lay
+    </button>
+  </div>
+  <div className="col-auto">
+    <button className="btn btn-light fw-bold text-white bg-danger">
+      Void
+    </button>
+  </div>
+</div>
+
+
+
 
       {/* Main table section that displays bet history */}
       <div className="table-responsive">
@@ -77,16 +76,36 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
                 color: "#5562a3",
               }}
             >
-              <th>Sport Name</th>
-              <th>Event Name</th>
-              <th>Market Name</th>
-              <th>Selection Name</th>
-              <th>Bet Type</th>
-              <th>User Price</th>
-              <th>Amount</th>
-              <th>Profit/Loss</th>
-              <th>Place Date</th>
-              <th>Match Date</th>
+              <th>
+                Sport Name
+              </th>
+              <th>
+                Event Name
+              </th>
+              <th>
+                Market Name
+              </th>
+              <th>
+                Selection Name
+              </th>
+              <th>
+                Bet Type
+              </th>
+              <th>
+                User Price
+              </th>
+              <th>
+                Amount
+              </th>
+              <th>
+                Profit/Loss
+              </th>
+              <th>
+                Place Date
+              </th>
+              <th>
+                Match Date
+              </th>
             </tr>
           </thead>
           {/* Render bet history data if available */}
@@ -120,7 +139,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
                 <td colSpan="10">
                   {" "}
                   {/* Fixed typo from colspan="10" to colSpan="10" */}
-                  <div className="alert alert-danger fw-bold" role="alert">
+                    <div className="alert alert-danger fw-bold" role="alert">
                     No Data Found !!
                   </div>
                 </td>
