@@ -31,6 +31,7 @@ import {
   profitLoss,
   updateFCMToken,
   getUserNotifications,
+  getInPlayMarket,
 
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
@@ -152,4 +153,6 @@ export const UserRoute = (app) => {
   app.post('/api/user/update-fcm-token', authorize([string.User]), updateFCMToken)
 
   app.get('/api/user/get-notification', authorize([string.User]), getUserNotifications)
+
+  app.get('/api/user/get-inplay-market', getInPlayMarket);
 };
