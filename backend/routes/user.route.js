@@ -154,5 +154,5 @@ export const UserRoute = (app) => {
 
   app.get('/api/user/get-notification', authorize([string.User]), getUserNotifications)
 
-  app.get('/api/user/get-inplay-market', getInPlayMarket);
+  app.get('/api/user/get-inplay-market', customErrorHandler, authorize([string.User]),  getInPlayMarket);
 };
