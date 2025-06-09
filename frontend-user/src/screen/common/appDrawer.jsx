@@ -247,8 +247,8 @@ function AppDrawer({
                             display: "block",
                           }}
                         >
-                          {capitalizeEachWord(marketObj.marketName)}
-                        <div className="px-4 game_text">➔ {marketObj.marketName}</div> 
+                          
+                        <div className="px-4 game_text">➔ {capitalizeEachWord(marketObj.marketName)}</div> 
                         </Link>
                       </li>
                     ) : gameObj.gameName
