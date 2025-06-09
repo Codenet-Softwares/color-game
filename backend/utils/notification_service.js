@@ -55,7 +55,7 @@ export default class NotificationService {
     }
   }
 
-  async deleteFcmToken(fcm_token) {
+  static async deleteFcmToken(fcm_token) {
     try {
       const user = await userSchema.findOne({
         where: {
