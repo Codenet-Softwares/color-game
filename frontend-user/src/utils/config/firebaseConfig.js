@@ -1,5 +1,7 @@
 import { initializeApp, getApps } from "firebase/app";
+
 import { getFirestore } from "firebase/firestore";
+import { getMessaging } from "firebase/messaging";
 
 const firebase_Config = {
   apiKey: "AIzaSyBZQJrXdThPqxxdZonU7nq3obWA6OXM9Ig",
@@ -10,8 +12,10 @@ const firebase_Config = {
   appId: "1:942283542981:web:cf0ef9b7b05f9f621ffbac"
 };
 
+
+
 const app = getApps().length === 0 ? initializeApp(firebase_Config) : getApps()[0];
-
 const db = getFirestore(app);
+const messaging = getMessaging(app);
 
-export { db };
+export { db , messaging };

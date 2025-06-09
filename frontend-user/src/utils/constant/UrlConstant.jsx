@@ -58,6 +58,8 @@ class UrlConstant {
   getAannouncement = `${this.url_dev}/get-announcements`;
   getInnerAannouncement = `${this.url_dev}/get-inner-announcements`;
   anonymousMarkets = `${this.url_dev}/external/get-allLottery-game`;
+  updateFcm = `${this.url_dev}/${this.user}/update-fcm-token`;
+  getFcm = `${this.url_dev}/${this.user}/get-notification`;
 }
 
 const urls = new UrlConstant();

@@ -6,9 +6,9 @@ const SearchResultsNew = ({ lotteryData, handleBack, handleBuy }) => {
   return (
     <div className="text-center ">
       {/* Back Button */}
-      <div className="text-start ">
+      <div className="text-start mt-3">
         <button
-          className="btn btn-secondary back-button text-uppercase"
+          className="btn btn-secondary back-button text-uppercase "
           onClick={handleBack}
         >
           Back
@@ -33,16 +33,25 @@ const SearchResultsNew = ({ lotteryData, handleBack, handleBuy }) => {
                 ))}
               </div>
             </div>
-            <h5 className="text-uppercase">
-              Price:{" "}
-              <span className="result-price">
-                ₹{lotteryData.searchResult.price}
-              </span>
-            </h5>
-            <h5 className="text-uppercase">
-              SEM:{" "}
-              <span className="result-sem">{lotteryData.searchResult.sem}</span>
-            </h5>
+            <div className="row justify-content-center my-3">
+              <div className="col-6 col-sm-5 text-end">
+                <h5 className="text-uppercase mb-0">
+                  Price:{" "}
+                  <span className="result-price">
+                    ₹{lotteryData.searchResult.price}
+                  </span>
+                </h5>
+              </div>
+              <div className="col-6 col-sm-5 text-start">
+                <h5 className="text-uppercase mb-0">
+                  SEM:{" "}
+                  <span className="result-sem">
+                    {lotteryData.searchResult.sem}
+                  </span>
+                </h5>
+              </div>
+            </div>
+
             {/* Buy Button */}
             <button
               className="btn btn-dark buy-button text-uppercase fw-bold "

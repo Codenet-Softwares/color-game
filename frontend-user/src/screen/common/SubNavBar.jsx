@@ -11,6 +11,7 @@ import {
 import Login from "../loginModal/loginModal";
 import OpenBetsOffCanvas from "../../components/OpenBetsOffCanvas";
 import strings from "../../utils/constant/stringConstant";
+import NotificationIcon from "../Notification/NotificationIcon";
 
 const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const { store, dispatch } = useAppContext();
@@ -91,6 +92,7 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             />
           </a>
           <div className="d-flex align-items-center ms-auto">
+            {isMobile >= 435 && <NotificationIcon isMobile={isMobile} />}
             <button className="navbar-toggler border-0" type="button">
               {store.user.isLogin ? (
                 <div className="d-flex align-items-center">

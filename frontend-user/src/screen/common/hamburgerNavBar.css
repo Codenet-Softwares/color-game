@@ -1,0 +1,164 @@
+/* Base styles for all devices */
+.hamburger-navbar-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1;
+  margin: 6;
+  width: 100%;
+}
+
+.hamburger-navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #f1ac44;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  padding: 8px 0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  height: auto;
+  width: 100%;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 6px 12px;
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.nav-item:active {
+  transform: scale(0.95);
+}
+
+.nav-icon {
+  font-size: clamp(18px, 5vw, 24px);
+  margin-bottom: 2px;
+  transition: transform 0.2s ease;
+}
+
+.nav-label {
+  font-size: clamp(10px, 3vw, 14px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+/* Foldable devices support */
+@media (min-width: 600px) and (max-height: 720px) {
+  .hamburger-navbar {
+    padding: 6px 0;
+  }
+  .nav-icon {
+    font-size: 20px;
+  }
+  .nav-label {
+    font-size: 11px;
+  }
+}
+
+/* Very small devices (phones, 320px and below) */
+@media (max-width: 320px) {
+  .hamburger-navbar {
+    padding: 4px 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .nav-item {
+    padding: 4px 6px;
+  }
+  .nav-icon {
+    font-size: 16px;
+  }
+  .nav-label {
+    font-size: 9px;
+  }
+}
+@media (max-width: 375px) {
+  .hamburger-navbar {
+    padding: 1px 0;
+    border-radius: 12px 12px 0 0;
+  }
+  .nav-item {
+    padding: 4px 6px;
+  }
+  .nav-icon {
+    font-size: 16px;
+  }
+  .nav-label {
+    font-size: 9px;
+  }
+}
+
+
+/* Landscape mode for small devices */
+@media (max-height: 420px) and (orientation: landscape) {
+  .hamburger-navbar {
+    padding: 4px 0;
+    flex-direction: row;
+    height: auto;
+  }
+  .nav-item {
+    flex-direction: row;
+    gap: 6px;
+    padding: 4px 8px;
+  }
+  .nav-icon {
+    margin-bottom: 0;
+    font-size: 16px;
+  }
+  .nav-label {
+    font-size: 12px;
+  }
+}
+
+/* Foldable devices in folded state */
+@media (max-width: 280px) {
+  .hamburger-navbar {
+    border-radius: 10px 10px 0 0;
+  }
+  .nav-item {
+    padding: 3px 4px;
+  }
+  .nav-icon {
+    font-size: 14px;
+  }
+  .nav-label {
+    font-size: 8px;
+  }
+}
+
+/* Large screens (should be hidden as per your original code) */
+@media (min-width: 992px) {
+  .hamburger-navbar-container {
+    display: none;
+  }
+}
+
+/* Accessibility improvements */
+.nav-item:focus-visible {
+  outline: 2px solid white;
+  outline-offset: 2px;
+}
+
+/* Active state */
+.nav-item.active {
+  transform: translateY(-4px);
+}
+
+.nav-item.active .nav-icon {
+  transform: scale(1.1);
+}
