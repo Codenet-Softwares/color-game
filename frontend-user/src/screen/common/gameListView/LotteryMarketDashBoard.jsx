@@ -77,7 +77,7 @@ const LotteryMarketDashBoard = () => {
             >
               {/* Market Header */}
               <div className="row mx-0 px-2 align-items-center">
-                <span className="col-12 text-light font-weight-bold text-uppercase text-center">
+                <span className="col-12 text-light font-weight-bold text-center">
                   <h6
                     className="fw-bold text-wrap"
                     style={{

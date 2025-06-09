@@ -1,32 +1,12 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../common.css";
 import { user_getAllGamesWithMarketData_api } from "../../../utils/apiService";
 import { useAppContext } from "../../../contextApi/context";
 import strings from "../../../utils/constant/stringConstant";
-import { toast } from "react-toastify";
-import AppDrawer from "../appDrawer";
 import { Link } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../.././Lottery/firebaseStore/lotteryFirebase";
-
-const formatDate = (dateStr) => {
-  const date = new Date(dateStr);
-
-  // Check if the date is valid
-  if (isNaN(date)) {
-    return "Invalid Date"; // Return a fallback message if the date is invalid
-  }
-
-  const day = date.getDate();
-  const month = date.toLocaleString("default", { month: "short" });
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th"; // To get 1st, 2nd, etc.
-  const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${
-    minutes < 10 ? "0" + minutes : minutes
-  }`;
-  return formattedTime;
-};
+import { capitalizeEachWord, convertFormatDate } from "../../../utils/helper";
 
 const GetwholeMarket = ({ currentGameTab }) => {
   const [user_allGamesWithMarketData, setUser_allGamesWithMarketData] =
@@ -123,7 +103,9 @@ const GetwholeMarket = ({ currentGameTab }) => {
                         fontWeight: "bold",
                       }}
                     >
-                      <div className="mx-2">{gameWithMarketData.gameName}</div>
+                      <div className="mx-2">
+                        {capitalizeEachWord(gameWithMarketData.gameName)}
+                      </div>
                     </div>
                     {gameWithMarketData &&
                       gameWithMarketData.markets.map((marketData, index) => (
@@ -155,7 +137,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
 
                           <div className="row align-items-center">
                             <span
-                              className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
+                              className="col-12 font-weight-bold text-primary text-wrap"
                               style={{
                                 fontSize: "16px",
                                 wordBreak: "break-word",
@@ -171,10 +153,14 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {marketData?.marketName ?? "Unknown"} |{" "}
+                                {console.log(
+                                  "capitalizeEachWord",
+                                  capitalizeEachWord(marketData?.marketName)
+                                )}
+                                {capitalizeEachWord(marketData?.marketName)} |{" "}
                               </Link>
                               <span className="" style={{ color: "#b2b2b2" }}>
-                                {formatDate(marketData.start_time)}
+                                {convertFormatDate(marketData.start_time)}
                               </span>
                             </span>
                           </div>
@@ -233,7 +219,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
 
                           <div className="row align-items-center">
                             <span
-                              className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
+                              className="col-12 font-weight-bold  text-primary text-wrap"
                               style={{
                                 fontSize: "16px",
                                 wordBreak: "break-word",
@@ -255,10 +241,12 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {marketData?.marketName ?? "Unknown"} |{" "}
+                                {capitalizeEachWord(marketData?.marketName) ??
+                                  "Unknown"}{" "}
+                                |{" "}
                               </Link>
                               <span className="" style={{ color: "#b2b2b2" }}>
-                                {formatDate(marketData.startTime)}
+                                {convertFormatDate(marketData.startTime)}
                               </span>
                             </span>
                           </div>

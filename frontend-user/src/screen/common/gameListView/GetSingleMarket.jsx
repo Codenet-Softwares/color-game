@@ -8,6 +8,7 @@ import strings from "../../../utils/constant/stringConstant";
 import { toast } from "react-toastify";
 import AppDrawer from "../appDrawer";
 import Layout from "../../layout/layout";
+import { capitalizeEachWord } from "../../../utils/helper";
 const GetSingleMarket = () => {
   const [user_gameWithMarketData, setUser_gameWithMarketData] = useState(
     getGameWithMarketDataInitialState()
@@ -139,7 +140,7 @@ const GetSingleMarket = () => {
                                   whiteSpace: "normal",
                                 }}
                               >
-                                {marketData.marketName}
+                                {capitalizeEachWord(marketData.marketName)}
                               </span>
                               <span className="pt-2">|</span>
                               <span className="" style={{ color: "#b2b2b2" }}>

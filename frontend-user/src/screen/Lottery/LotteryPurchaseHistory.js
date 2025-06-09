@@ -8,7 +8,8 @@ import {
 import { format } from "date-fns";
 import debounce from "lodash.debounce";
 import ViewTicketsModal from "../../betHistory/components/history/components/ViewTicketsModal";
-import "./LotteryPurchaseHistory.css";
+import "./LotteryPurchaseHistory.css"
+import { capitalizeEachWord } from "../../utils/helper";
 // Initial state function
 export function initialLotteryPurchaseState() {
   return {
@@ -310,7 +311,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                     }}
                     onClick={() => handleMarketClick(market.marketId)}
                   >
-                    {market.marketName}
+                    {capitalizeEachWord(market.marketName)}
                   </span>
                 ))}
               </div>
@@ -394,7 +395,6 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
   }}
   className="custom-scrollbar"
 >
-
             <Table striped hover responsive bordered>
               <thead
                 style={{
@@ -430,7 +430,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   state.purchasedTickets.map((ticket, index) => (
                     <tr key={index}>
                       <td>{startIndex + index}</td>
-                      <td>{ticket.marketName || "N/A"}</td>
+                      <td>{capitalizeEachWord(ticket.marketName) || "N/A"}</td>
                       <td>
                         {ticket.price !== undefined ? ticket.price : "N/A"}
                       </td>

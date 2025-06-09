@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaCoins, FaUser, FaDollarSign } from "react-icons/fa";
-import ansmt from "../../asset/ancmntv.png";
 import { useAppContext } from "../../contextApi/context";
 import Logo from "../../asset/Logo.png";
 import {
-  getAnnouncement,
-  getInnerAnnouncement,
   userWallet,
 } from "../../utils/apiService";
 import Login from "../loginModal/loginModal";

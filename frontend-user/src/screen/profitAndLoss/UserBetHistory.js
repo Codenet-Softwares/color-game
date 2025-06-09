@@ -45,22 +45,22 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
       </div>
 
       <div className="m-1 row g-2 d-flex justify-content-end d-md-flex justify-content-md-end d-sm-flex justify-content-sm-center">
-  <div className="col-auto">
-    <button className="btn text-white fw-bold" style={{ backgroundColor: "#80C2F1" }}>
-      Back
-    </button>
-  </div>
-  <div className="col-auto">
-    <button className="btn text-white fw-bold" style={{ backgroundColor: "#FAA9BA" }}>
-      Lay
-    </button>
-  </div>
-  <div className="col-auto">
-    <button className="btn btn-light fw-bold text-white bg-danger">
-      Void
-    </button>
-  </div>
-</div>
+        <div className="col-auto">
+          <button className="btn text-white fw-bold" style={{ backgroundColor: "#80C2F1" }}>
+            Back
+          </button>
+        </div>
+        <div className="col-auto">
+          <button className="btn text-white fw-bold" style={{ backgroundColor: "#FAA9BA" }}>
+            Lay
+          </button>
+        </div>
+        <div className="col-auto">
+          <button className="btn btn-light fw-bold text-white bg-danger">
+            Void
+          </button>
+        </div>
+      </div>
 
 
 
@@ -113,12 +113,12 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
             {data?.data?.length > 0 ? (
               data?.data?.map((data, index) => (
                 <tr key={index} align="center">
-                  <td>{data?.gameName}</td>
+                  <td>{capitalizeEachWord(data?.gameName)}</td>
                   <td
                     className="text-primary fw-bold"
                     style={{ cursor: "pointer" }}
                   >
-                    {data?.marketName}
+                    {capitalizeEachWord(data?.marketName)}
                   </td>
                   <td>{"Winner"}</td>
                   <td>{data?.runnerName}</td>
@@ -139,7 +139,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
                 <td colSpan="10">
                   {" "}
                   {/* Fixed typo from colspan="10" to colSpan="10" */}
-                    <div className="alert alert-danger fw-bold" role="alert">
+                  <div className="alert alert-danger fw-bold" role="alert">
                     No Data Found !!
                   </div>
                 </td>

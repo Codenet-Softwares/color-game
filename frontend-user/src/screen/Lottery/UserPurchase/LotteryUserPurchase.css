@@ -300,7 +300,7 @@
   font-weight: 700;
   font-size: 20px;
   letter-spacing: 1.2px;
-  text-transform: uppercase;
+  
   background: linear-gradient(90deg, #3b6e91, #4682b4);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

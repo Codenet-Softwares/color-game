@@ -1,6 +1,6 @@
 import React from "react";
 import Pagination from "../../../../screen/common/Pagination";
-import { formatDateForUi } from "../../../../utils/helper";
+import { capitalizeEachWord, formatDateForUi } from "../../../../utils/helper";
 import ViewTicketsModal from "./ViewTicketsModal";
 
 const Table = ({
@@ -86,8 +86,8 @@ const Table = ({
                   <tbody>
                     {betHistoryData.history?.map((item, index) => (
                       <tr key={index} align="center">
-                        <td>{item.gameName}</td>
-                        <td>{item.marketName}</td>
+                        <td>{capitalizeEachWord(item.gameName)}</td>
+                        <td>{capitalizeEachWord(item.marketName)}</td>
                         <td>
                           {" "}
                           <div
@@ -139,8 +139,8 @@ const Table = ({
                   <tbody>
                     {betHistoryData.history?.map((item, index) => (
                       <tr key={index} align="center">
-                        <td>{item?.gameName}</td>
-                        <td>{item?.marketName}</td>
+                        <td>{capitalizeEachWord(item?.gameName)}</td>
+                        <td>{capitalizeEachWord(item?.marketName)}</td>
                         <td>{"WINNER"}</td>
                         <td>{item?.runnerName}</td>
                         <td
@@ -161,22 +161,20 @@ const Table = ({
               )}
             </table>
           </div>
-  {/* <div className="d-flex justify-content-center"> */}
-  <div className="overflow-auto">
-    <div className="d-inline-block">
-      <Pagination
-        currentPage={betHistoryData.currentPage}
-        totalPages={betHistoryData.totalPages}
-        handlePageChange={handlePageChange}
-        startIndex={startIndex}
-        endIndex={endIndex}
-        totalData={betHistoryData.totalData}
-      />
-    </div>
-  {/* </div> */}
-</div>
-
-
+          {/* <div className="d-flex justify-content-center"> */}
+          <div className="overflow-auto">
+            <div className="d-inline-block">
+              <Pagination
+                currentPage={betHistoryData.currentPage}
+                totalPages={betHistoryData.totalPages}
+                handlePageChange={handlePageChange}
+                startIndex={startIndex}
+                endIndex={endIndex}
+                totalData={betHistoryData.totalData}
+              />
+            </div>
+            {/* </div> */}
+          </div>
         </div>
       ) : (
         renderNoDataFound()

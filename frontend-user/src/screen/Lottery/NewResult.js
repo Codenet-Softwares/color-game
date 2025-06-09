@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { GetResultMarket, GetWiningResult } from "../../utils/apiService";
 import { format } from "date-fns";
 import "./NewResult.css";
+import { capitalizeEachWord } from "../../utils/helper";
 
 const NewResult = () => {
   const [markets, setMarkets] = useState([]);
@@ -37,17 +38,6 @@ const NewResult = () => {
     setOpenIndex(openIndex === index ? null : index); // Toggle open/close
   };
 
-  // let this be commented do not delete for future reference
-  // const fetchMarkets = () => {
-  //   GetResultMarket({ date: selectedDate }).then((response) => {
-  //     if (response && response.success && response.data) {
-  //       setMarkets(response.data);
-  //       setSelectedMarket(response.data[0]); // Default to the first market
-  //     } else {
-  //       setError("Failed to fetch markets or no data available.");
-  //     }
-  //   });
-  // };
   const fetchMarkets = () => {
     GetResultMarket({ date: selectedDate }).then((response) => {
       if (
@@ -75,13 +65,13 @@ const NewResult = () => {
     if (!selectedMarket) return; // Ensure a market is selected
 
     setError(null); // Clear previous errors
-  
+
 
     GetWiningResult({
       marketId: selectedMarket.marketId,
       date: selectedDate,
     }).then((response) => {
-    
+
 
       if (response && response.success) {
         if (response.data && response.data.length > 0) {
@@ -159,14 +149,13 @@ const NewResult = () => {
                 visibleMarkets.slice(0, maxVisibleMarkets).map((market) => (
                   <button
                     key={market.marketId}
-                    className={`btn market-btn ${
-                      market.marketId === selectedMarket?.marketId
+                    className={`btn market-btn ${market.marketId === selectedMarket?.marketId
                         ? "btn-primary"
                         : "btn-outline-light"
-                    }`}
+                      }`}
                     onClick={() => setSelectedMarket(market)}
                   >
-                    {market.marketName}
+                    {capitalizeEachWord(market.marketName)}
                   </button>
                 ))
               ) : (
@@ -193,7 +182,7 @@ const NewResult = () => {
               <h2 className="text-center fw-bold text-white">
                 Results For{" "}
                 <span className="text-decoration-underline">
-                  {selectedMarket?.marketName || "Selected Market"}
+                  {capitalizeEachWord(selectedMarket?.marketName) || "Selected Market"}
                 </span>
               </h2>
 
@@ -206,27 +195,26 @@ const NewResult = () => {
               ) : (
                 <div className="accordion mt-4">
                   {results?.sort((a, b) => {
-                      // Define the order of prizes
-                      const order = {
-                        "First Prize": 1,
-                        "Second Prize": 2,
-                        "Third Prize": 3,
-                        "Fourth Prize": 4,
-                        "Fifth Prize": 5,
-                      };
-                    
-                      return (
-                        (order[a.prizeCategory]) -
-                        (order[b.prizeCategory])
-                      );
-                    })
+                    // Define the order of prizes
+                    const order = {
+                      "First Prize": 1,
+                      "Second Prize": 2,
+                      "Third Prize": 3,
+                      "Fourth Prize": 4,
+                      "Fifth Prize": 5,
+                    };
+
+                    return (
+                      (order[a.prizeCategory]) -
+                      (order[b.prizeCategory])
+                    );
+                  })
                     .map((result, index) => (
                       <div className="accordion-item" key={result.resultId}>
                         <h2 className="accordion-header">
                           <button
-                            className={`accordion-button d-flex flex-column flex-md-row justify-content-between align-items-start ${
-                              openIndex === index ? "" : "collapsed"
-                            }`}
+                            className={`accordion-button d-flex flex-column flex-md-row justify-content-between align-items-start ${openIndex === index ? "" : "collapsed"
+                              }`}
                             onClick={() => toggleAccordion(index)}
                           >
                             <span>

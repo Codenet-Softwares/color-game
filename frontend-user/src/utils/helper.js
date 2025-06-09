@@ -49,7 +49,7 @@ class TicketService {
     return tickets;
   }
 
-  listHelper() {}
+  listHelper() { }
 
   calculatePrice() {
     const price = 6 * this.sem;
@@ -108,11 +108,35 @@ export function formatDate(dateString) {
   // Concatenate the parts with '-' separator
   return `${year}-${month}-${day}`;
 }
-  
-//   const groupInput = 38;      
-//   const seriesInput = 'L';   
-//   const numberInput = '77777';     
-//   const semInput = 5
-  
-//  export const ticketService = new TicketService(groupInput, seriesInput, numberInput, semInput);
+
+export function capitalizeEachWord(str) {
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
+
+export const convertFormatDate = (dateStr) => {
+  const originalDate = new Date(dateStr);
+
+  if (isNaN(originalDate)) {
+    return "Invalid Date";
+  }
+
+  // Subtract 5 hours 30 minutes in milliseconds
+  const adjustedDate = new Date(originalDate.getTime() - (5 * 60 + 30) * 60 * 1000);
+
+  const day = adjustedDate.getDate();
+  const month = adjustedDate.toLocaleString("default", { month: "short" });
+  const hours = adjustedDate.getHours();
+  const minutes = adjustedDate.getMinutes();
+
+  const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th";
+  const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${minutes < 10 ? "0" + minutes : minutes
+    }`;
+
+  return formattedTime;
+};
+
 

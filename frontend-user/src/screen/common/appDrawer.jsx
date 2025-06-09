@@ -15,6 +15,7 @@ import OpenBets from "../../betHistory/components/openBets/OpenBets";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../Lottery/firebaseStore/lotteryFirebase";
 import Login from "../loginModal/loginModal";
+import { capitalizeEachWord } from "../../utils/helper";
 
 function AppDrawer({
   children,
@@ -232,7 +233,7 @@ function AppDrawer({
                         }
                       >
                         <Link
-                          className=""
+                          className="fw-semibold"
                           to={`/gameView/${gameObj?.gameName?.replace(
                             /\s/g,
                             ""
@@ -246,6 +247,7 @@ function AppDrawer({
                             display: "block",
                           }}
                         >
+                          {capitalizeEachWord(marketObj.marketName)}
                         <div className="px-4 game_text">➔ {marketObj.marketName}</div> 
                         </Link>
                       </li>
@@ -263,7 +265,7 @@ function AppDrawer({
                       >
                         {store.user.isLogin ? (
                           <Link
-                            className=" "
+                            className="fw-semibold "
                             to={`/lottoPurchase/${marketObj.marketId}`}
                             onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
                             style={{
@@ -286,7 +288,7 @@ function AppDrawer({
                               display: "block",
                             }}
                           >
-                            {marketObj.marketName}
+                            {capitalizeEachWord(marketObj.marketName)}
                           </Link>
                         )}
                         {showLogin && (
