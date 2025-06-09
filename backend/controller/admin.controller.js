@@ -1170,6 +1170,18 @@ export const inActiveMarketStatus = async (req, res) => {
           message,
           type: "colorgame",
         });
+        const marketRef = db.collection("color-game-notification").doc(user.userId)
+
+    await marketRef.set(
+      {
+        UserId: user.userId,
+        marketId: marketId,
+        message: message,
+        type: "colorgame",
+        updatedAt: new Date().toISOString()
+      },
+      { merge: true }
+    );
       }
     }
 
@@ -1805,6 +1817,18 @@ export const approveResult = async (req, res) => {
             message,
             type: "colorgame",
           });
+          const marketRef = db.collection("color-game-notification").doc(user.userId)
+
+    await marketRef.set(
+      {
+        UserId: user.userId,
+        marketId: marketId,
+        message: message,
+        type: "colorgame",
+        updatedAt: new Date().toISOString()
+      },
+      { merge: true }
+    );
         }
       }
 
