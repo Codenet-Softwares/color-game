@@ -1,4 +1,4 @@
- import React from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { RequireAuth } from "../Utils/RequireAuth";
 import Login from "../Pages/Accounts/Login/Login";
@@ -25,18 +25,14 @@ import BetWinTracker from "../Components/BetWinTracker";
 import SubAdminView from "../Components/SubAdmin/SubAdminView";
 import SubAdminWinResult from "../Components/SubAdmin/SubAdminWinResult";
 import ResetPassword from "../Pages/Accounts/ResetPassword/ResetPassword";
+import NotificationCreator from "../Components/manualNotification/NotificationCreator";
 
 const AppRoutes = () => {
   const userrole = sessionStorage.getItem("role") || "";
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="reset-password"
-          element={
-              <ResetPassword/>
-          }
-        />
+        <Route path="reset-password" element={<ResetPassword />} />
         <Route index element={<Login />} />
         <Route path="*" element={<ErrorPage />} />
         <Route
@@ -61,6 +57,15 @@ const AppRoutes = () => {
             element={
               <RequireAuth>
                 <MarketPlace />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/notification-create"
+            element={
+              <RequireAuth>
+                <NotificationCreator />
               </RequireAuth>
             }
           />
@@ -194,6 +199,7 @@ const AppRoutes = () => {
               </RequireAuth>
             }
           />
+
           <Route
             path="/all-subAdmin-data"
             element={

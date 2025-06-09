@@ -23,11 +23,21 @@ class UserService {
     });
   }
 
-
- userUpdate(data, user,userId) {
+  userUpdate(data, user, userId) {
     return axios({
       method: "PUT",
       url: API_HOST + `/api/users-update/${userId}`,
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
+
+  sendColorGameNotification(user, data) {
+    return axios({
+      method: "post",
+      url: API_HOST + "/api/create-notification-colorgame",
       data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,
