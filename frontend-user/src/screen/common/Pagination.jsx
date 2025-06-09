@@ -8,7 +8,6 @@ const Pagination = ({
   endIndex,
   totalData,
 }) => {
-
   const renderPageNumbers = () => {
     const pageNumbers = [];
 
@@ -70,7 +69,7 @@ const Pagination = ({
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
                   >
-                    Previous
+                    Prev
                   </button>
                 </li>
                 {renderPageNumbers()}

@@ -89,6 +89,7 @@ const Home = () => {
         openBetData={openBetData}
         handleOpenBetsSelectionMenu={handleOpenBetsSelectionMenu}
         setCurrentGameTab={setCurrentGameTab}
+        currentGameTab={currentGameTab}
       >
         <GetwholeMarket currentGameTab={currentGameTab} />
       </AppDrawer>

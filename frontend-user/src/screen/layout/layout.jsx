@@ -10,10 +10,13 @@ import strings from "../../utils/constant/stringConstant";
 import SubFooter from "../common/SubFooter";
 import { Link, useLocation } from "react-router-dom";
 import ansmt from "../../asset/ancmntv.png";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../Lottery/firebaseStore/lotteryFirebase";
 
 function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
   const [user_allGames, setUser_allGames] = useState([]);
   const [announcementInnerData, setAnnouncemenInnertData] = useState([]);
+  const [isAnnnoucementUpadte, setIsAnnnoucementUpadte] = useState(null);
   const { dispatch, store } = useAppContext();
   const location = useLocation();
 
@@ -36,6 +39,21 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
     });
   }
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "whitelabel"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      messagesData.map((message) => {
+        setIsAnnnoucementUpadte(message.updatedAt);
+      });
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const fetchInnerAnnouncement = async () => {
     try {
       const response = await getInnerAnnouncement();
@@ -53,7 +71,7 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
 
   useEffect(() => {
     fetchInnerAnnouncement();
-  }, []);
+  }, [isAnnnoucementUpadte]);
 
   return (
     <div>
@@ -86,7 +104,7 @@ function Layout({ openBetData, handleOpenBetsSelectionMenu }) {
       </div>
       {store?.user?.isLogin && ["/home", "/"].includes(location?.pathname) && (
         <div className="fixed-bottom">
-          <SubFooter />
+          <SubFooter isAnnnoucementUpadte ={isAnnnoucementUpadte}/>
         </div>
       )}
     </div>

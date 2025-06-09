@@ -117,7 +117,7 @@ export const adminLogin = async (req, res) => {
         .send(apiResponseErr(null, false, statusCode.badRequest, 'Password reset required'));
     }
 
-    
+
 
     const accessTokenResponse = {
       id: existingUser.id,
@@ -128,7 +128,7 @@ export const adminLogin = async (req, res) => {
     };
 
     const accessToken = jwt.sign(accessTokenResponse, process.env.JWT_SECRET_KEY, {
-      expiresIn: '1d', 
+      expiresIn: '1d',
     });
 
     existingUser.token = accessToken;
@@ -169,21 +169,21 @@ export const loginUser = async (req, res) => {
   try {
     const baseURL = process.env.WHITE_LABEL_URL;
 
-const response = await axios.get(`${baseURL}/api/admin-user/Active-Locked`);
-const activeLockedUsers = response.data?.data || [];
+    const response = await axios.get(`${baseURL}/api/admin-user/Active-Locked`);
+    const activeLockedUsers = response.data?.data || [];
 
-const user = activeLockedUsers.find((user) => user.userName === userName);
+    const user = activeLockedUsers.find((user) => user.userName === userName);
 
-if (user && (!user.isActive || user.locked)) {
-  return res.status(statusCode.badRequest).send(
-    apiResponseErr(
-      null,
-      false,
-      statusCode.badRequest,
-      'Your account is Deactivated. Please contact your applying support.'
-    )
-  );
-}
+    if (user && (!user.isActive || user.locked)) {
+      return res.status(statusCode.badRequest).send(
+        apiResponseErr(
+          null,
+          false,
+          statusCode.badRequest,
+          'Your account is Deactivated. Please contact your applying support.'
+        )
+      );
+    }
 
 
     const existingUser = await userSchema.findOne({ where: { userName } });
@@ -233,7 +233,7 @@ if (user && (!user.isActive || user.locked)) {
             'Password reset required.',
           ),
         );
-    } 
+    }
     else {
       const accessTokenResponse = {
         id: existingUser.id,
@@ -482,7 +482,7 @@ export const adminResetPassword = async (req, res) => {
     const { userName, oldPassword, newPassword } = req.body;
 
     const existingUser = await admins.findOne({ where: { userName } });
-    if(!existingUser){
+    if (!existingUser) {
       return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'Admin not Found'));
     }
     const isPasswordMatch = await bcrypt.compare(oldPassword, existingUser.password);
@@ -491,13 +491,13 @@ export const adminResetPassword = async (req, res) => {
     }
 
     const passwordIsDuplicate = await bcrypt.compare(newPassword, existingUser.password);
-        if (passwordIsDuplicate) {
-            return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'New Password Cannot Be The Same As Existing Password'));
-        }
+    if (passwordIsDuplicate) {
+      return res.status(statusCode.badRequest).send(apiResponseErr(null, false, statusCode.badRequest, 'New Password Cannot Be The Same As Existing Password'));
+    }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    await existingUser.update({ password: hashedPassword});
+    await existingUser.update({ password: hashedPassword });
 
     return res.status(statusCode.success).send(apiResponseSuccess(null, true, statusCode.success, 'Password reset successfully.'));
   } catch (error) {

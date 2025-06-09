@@ -24,7 +24,9 @@ import LotteryMarketDashBoard from "./screen/common/gameListView/LotteryMarketDa
 import LotteryBuyLayout from "./screen/Lottery/UserPurchase/LotteryBuyLayout";
 import BetHistory from "./betHistory/BetHistory";
 import LivegameList from "./screen/common/gameListView/LivegameList";
+import Inplay from "./screen/Inplay";
 import ErrorBoundary from "./utils/ErrorBoundary";
+
 
 function App() {
   return (
@@ -53,7 +55,7 @@ function App() {
             path="/gameView/:gameName/:market/:id"
             element={<GetMarketDetailByMarketId />}
           />
-         
+
           <Route path="/lottoPurchase/:marketId" element={<LotteryBuyLayout />} />
           <Route
             path="/LotteryPurchaseHistory"
@@ -134,6 +136,12 @@ function App() {
           <Route path="/livegames" element={
             <PrivateRoute>
               <LivegameList />
+            </PrivateRoute>
+          } />
+
+          <Route path="/inplay" element={
+            <PrivateRoute>
+              <Inplay />
             </PrivateRoute>
           } />
 

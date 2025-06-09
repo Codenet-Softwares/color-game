@@ -40,16 +40,10 @@ const GetwholeMarket = ({ currentGameTab }) => {
     user_getAllGamesWithMarketData();
   }, [isLotteryUpdate, isColorgameUpdate, currentGameTab]);
 
-  const handleGameId = (id) => {
+  const handleAllId = (gameId, marketId) => {
     dispatch({
       type: strings.placeBidding,
-      payload: { gameId: id },
-    });
-  };
-  const handleMarketId = (id) => {
-    dispatch({
-      type: strings.placeBidding,
-      payload: { marketId: id },
+      payload: { gameId: gameId, marketId: marketId },
     });
   };
 
@@ -102,7 +96,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
     <>
       {/* <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}> */}
       <div
-        className="row mt-1 "
+        className="row mt-1 cg_games "
         style={{
           marginTop: 1,
           paddingTop: 0,
@@ -206,7 +200,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                         fontWeight: "bold",
                       }}
                     >
-                      {console.log("gamewith", gameWithMarketData.gameName)}
+                      {console.log("gamewith", gameWithMarketData)}
                       {gameWithMarketData.gameName}
                     </div>
                     {gameWithMarketData &&
@@ -248,7 +242,13 @@ const GetwholeMarket = ({ currentGameTab }) => {
                             >
                               <Link
                                 to={`/gameView/Colorgame/${marketData?.marketName}/${marketData?.marketId}`}
-                                onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleAllId(
+                                    gameWithMarketData?.gameId,
+                                    marketData?.marketId
+                                  );
+                                }} // Prevents dropdown collapse
                                 style={{
                                   textDecoration: "none",
                                   color: "#27a7e4",

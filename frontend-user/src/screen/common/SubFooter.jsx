@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getInnerAnnouncement } from "../../utils/apiService";
 
-const SubFooter = () => {
+const SubFooter = ({ isAnnnoucementUpadte }) => {
   const [announcementData, setAnnouncementData] = useState([]);
 
   const fetchAnnouncement = async () => {
@@ -21,7 +21,7 @@ const SubFooter = () => {
 
   useEffect(() => {
     fetchAnnouncement();
-  }, []);
+  }, [isAnnnoucementUpadte]);
 
   return (
     <nav
