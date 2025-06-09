@@ -104,7 +104,7 @@ const AccountStatement = () => {
     <>
       <AppDrawer showCarousel={false}>
         <Layout />
-        <div style={{ marginTop: "72px" }}>
+        <div style={{ marginTop: "90px" }}>
           <div className="d-flex justify-content-center px-2">
             <div className="card w-100 rounded">
               {/* Card Header */}
@@ -306,7 +306,7 @@ const AccountStatement = () => {
 
                 {/* Pagination */}
                 {getAccountstatement?.statement?.length > 0 && (
-                  <li className="list-group-item overflow-auto">
+                  <li className="list-group-item overflow-auto" style={{marginBottom:"80px"}}>
                     <Pagination
                       currentPage={getAccountstatement.currentPage}
                       totalPages={getAccountstatement.totalPages}

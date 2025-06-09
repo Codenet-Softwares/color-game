@@ -1,15 +1,17 @@
 .whole_container {
   font-family: Arial, sans-serif;
   margin: 20px;
-  background: #f0f0f0;
+  /* background: #F8F9FA; */
   min-height: 75vh;
+  padding-bottom: 150px;
+    overflow-y: auto;
 }
 .container_result {
   background: #2b4758;
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  margin-top: 58px;
+  /* margin-top: 58px; */
 }
 /* DateFilter.css */
 .date-filter-container {
@@ -27,6 +29,9 @@
   max-width: 500px;
   position: relative;
   top: 15px;
+}
+.accordion-item {
+  scroll-margin-bottom: 100px; /* Ensures item is visible when focused */
 }
 
 .date-filter-label {
@@ -97,7 +102,7 @@
 .market-buttons-container {
   display: flex;
   flex-wrap: nowrap;
-  overflow: hidden;
+  overflow: auto;
   gap: 10px;
 }
 
@@ -171,6 +176,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   padding: 10px;
 }
+
 @media (max-width: 768px) {
   .accordion-body strong {
     font-size: 1rem !important;
@@ -180,3 +186,18 @@
     padding: 10px !important;
   }
 }
+@media (max-width: 768px) {
+  .accordion {
+    /* margin-bottom: 150px; */
+  }
+
+  .accordion-body strong {
+    font-size: 1rem !important;
+  }
+
+  .ticket-number {
+    font-size: 0.9rem !important;
+    padding: 10px !important;
+  }
+}
+

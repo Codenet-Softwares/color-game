@@ -116,7 +116,7 @@ const NewResult = () => {
     setSelectedDate(formattedDate);
   };
   return (
-    <div className="whole_container ">
+    <div className="whole_container mt-5 px-5">
       <div className="container_result p-3">
         <div className="market-container shadow-lg">
           {/* Datepicker (Auto Moves Below on Small Screens) */}

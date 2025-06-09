@@ -71,10 +71,10 @@ const ProfitAndLossLotteryEvent = ({
   return (
     <>
       {/* card */}
-      <div className="card w-100 rounded">
+      <div className="card w-100 rounded" style={{marginTop:"90px",paddingBottom:"80px"}}>
         <div
-          className="card-heade text-white p-1 d-flex justify-content-between"
-          style={{ backgroundColor: "#2CB3D1" }}
+          className="card-heade text-white p-1 d-flex justify-content-between rounded-top"
+          style={{ backgroundColor: "#2B4758" }}
         >
           <b>&nbsp;&nbsp;Profit & Loss Events</b>
           <span
@@ -99,12 +99,12 @@ const ProfitAndLossLotteryEvent = ({
             <option value="50">50 Entries</option>
             <option value="100">100 Entries</option>
           </select>
-          <input
+          {/* <input
             type="search"
             className="form-control w-auto"
             placeholder="Search..."
             onChange={handleSearch}
-          />
+          /> */}
         </div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
@@ -204,7 +204,7 @@ const ProfitAndLossLotteryEvent = ({
               )}
             </div>
           </li>
-          <li className="list-group-item">
+          <li className="list-group-item overflow-auto">
             {/* Pagination */}
             {data?.data?.length > 0 && (
               <Pagination

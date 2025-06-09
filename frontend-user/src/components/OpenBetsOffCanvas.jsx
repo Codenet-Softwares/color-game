@@ -17,7 +17,7 @@ const OpenBetsOffCanvas = ({ openBetData, handleOpenBetsSelectionMenu }) => {
         <h5 id="offcanvasTopLabel">Open Bets</h5>
         <button
           type="button"
-          className="btn-close text-reset "
+          className="btn-close btn-close-white"
           data-bs-dismiss="offcanvas"
           aria-label="Close"
         ></button>
