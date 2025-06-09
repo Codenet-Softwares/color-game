@@ -2568,32 +2568,28 @@ export const updateFCMToken = async (req, res) => {
     const { fcm_token } = req.body;
 
     const user = await userSchema.findAll({
-      where: { userId },
+      where: { userId }
     });
 
     if (!user) {
       return res
         .status(statusCode.success)
-        .send(
-          apiResponseSuccess([], true, statusCode.success, "User not found")
-        );
+        .send(apiResponseSuccess([], true, statusCode.success, "User not found"));
     }
 
-    user.fcm_token = fcm_token;
-    await user.save();
+    const [updatedRows] = await userSchema.update({
+      fcm_token: fcm_token
+    },
+      { where: { userId } }
+    )
 
-    return res
-      .status(statusCode.success)
-      .send(
-        apiResponseSuccess(
-          user,
-          true,
-          statusCode.success,
-          "FCM token updated successfully"
-        )
-      );
+    if (updatedRows === 0) {
+      throw new Error("FCM Token Not Updated");
+    }
+
+    return res.status(statusCode.success).send(apiResponseSuccess(updatedRows, true, statusCode.success, "FCM token updated successfully"));
   } catch (error) {
-    console.error("Error updating FCM token:", error);
+    console.error('Error updating FCM token:', error);
     return res
       .status(statusCode.internalServerError)
       .send(

@@ -25,10 +25,13 @@ import LotteryBuyLayout from "./screen/Lottery/UserPurchase/LotteryBuyLayout";
 import BetHistory from "./betHistory/BetHistory";
 import LivegameList from "./screen/common/gameListView/LivegameList";
 import Inplay from "./screen/Inplay";
+import ErrorBoundary from "./utils/ErrorBoundary";
+
 
 function App() {
   return (
     <AppProvider>
+        <ErrorBoundary>
       <ToastContainer
         position="top-center"
         autoClose={500}
@@ -146,6 +149,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      </ErrorBoundary>
     </AppProvider>
   );
 }

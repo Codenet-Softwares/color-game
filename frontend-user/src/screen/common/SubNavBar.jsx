@@ -11,6 +11,8 @@ import {
 import Login from "../loginModal/loginModal";
 import OpenBetsOffCanvas from "../../components/OpenBetsOffCanvas";
 import strings from "../../utils/constant/stringConstant";
+import NotificationIcon from "../Notification/NotificationIcon";
+import "./SubNavBar.css";
 
 const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const { store, dispatch } = useAppContext();
@@ -24,7 +26,14 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   });
   const [isMobile, setIsMobile] = useState(window.innerWidth);
   const [isRefresh, setIsRefresh] = useState(false);
-
+  const [rotate, setRotate] = useState(false);
+  const handleClick = () => {
+    setIsRefresh((prev) => !prev);
+    setRotate(true);
+    setTimeout(() => {
+      setRotate(false);
+    }, 500);
+  };
 
   const accessTokenFromStore = JSON.parse(
     localStorage.getItem(strings.LOCAL_STORAGE_KEY)
@@ -42,7 +51,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     }
   };
   useEffect(() => {
-
     if (store?.user?.isLogin && accessTokenFromStore) handleUserWallet();
   }, [isRefresh, accessTokenFromStore]);
 
@@ -91,6 +99,9 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             />
           </a>
           <div className="d-flex align-items-center ms-auto">
+            <div className="me-3 d-flex align-items-center">
+              <NotificationIcon isMobile={isMobile} />
+            </div>
             <button className="navbar-toggler border-0" type="button">
               {store.user.isLogin ? (
                 <div className="d-flex align-items-center">
@@ -161,9 +172,13 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                         fontSize: "14px",
                         padding: "5px 8px",
                       }}
-                      onClick={() => setIsRefresh((prev) => !prev)}
+                      onClick={handleClick}
                     >
-                      <i class="fa fa-rotate-left text-white"></i>
+                      <i
+                        className={`fa fa-rotate-left text-warning ${
+                          rotate ? "rotate" : ""
+                        }`}
+                      ></i>
                     </button>
                   </span>
 
@@ -194,21 +209,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                   )}
                 </div>
               ) : (
-                // <span
-                //   className="btn text-white"
-                //   style={{
-                //     backgroundColor: "#f6a21e",
-                //     fontSize: "13px",
-                //     border: "2px solid white",
-                //     borderRadius: "12px",
-                //     padding: "6px 10px",
-                //   }}
-                //   onClick={() => setShowModalLogin(true)}
-                // >
-                //   <FaUser style={{ width: "12px" }} className="mb-1" />
-                //   &nbsp;
-                //   <b>LOG IN</b>
-                // </span>
                 <></>
               )}
             </button>

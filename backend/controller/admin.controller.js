@@ -1140,12 +1140,10 @@ export const inActiveMarketStatus = async (req, res) => {
       attributes: ['id', 'fcm_token', 'userName', 'userId'],
     });
 
-    const notificationService = new NotificationService();
-
     for (const user of allUsers) {
       if (user.fcm_token) {
-        let title
-        let message
+        let title;
+        let message;
 
         if (status === true) {
           title = `Market Live: ${market.marketName}`;
@@ -1155,7 +1153,7 @@ export const inActiveMarketStatus = async (req, res) => {
           message = `The market "${market.marketName}" has been closed. Stay tuned for updates.`;
         }
 
-        await notificationService.sendNotification(
+        await NotificationService.sendNotification(
           title,
           message,
           {
@@ -1783,8 +1781,6 @@ export const approveResult = async (req, res) => {
         attributes: ['id', 'fcm_token', 'userName', 'userId'],
       });
 
-      const notificationService = new NotificationService();
-
       for (const user of allUsers) {
         if (user.fcm_token) {
           let title;
@@ -1792,7 +1788,7 @@ export const approveResult = async (req, res) => {
           title = `🏁 Results Declared: ${market.marketName}`;
           message = `The final results for "${market.marketName}" have been declared. Check now to see if you've secured a win!`;
 
-          await notificationService.sendNotification(
+          await NotificationService.sendNotification(
             title,
             message,
             {
@@ -2853,12 +2849,11 @@ export const createTitleTextNotification = async (req, res) => {
       attributes: ['id', 'fcm_token', 'userName', 'userId'],
     });
 
-    const notificationService = new NotificationService();
     const createdNotifications = [];
 
     for (const user of allUsers) {
       if (user.fcm_token) {
-        await notificationService.sendNotification(
+        await NotificationService.sendNotification(
           title,
           message,
           { userId: user.userId.toString() },
@@ -2868,6 +2863,7 @@ export const createTitleTextNotification = async (req, res) => {
         const newNotif = await Notification.create({
           UserId: user.userId,
           message,
+          type: "colorgame",
         });
 
         createdNotifications.push(newNotif);

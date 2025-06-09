@@ -27,7 +27,7 @@
 /* Ticket Grid */
 .ticket-grid {
   display: grid;
-  grid-template-columns: repeat(2, 4fr);
+  grid-template-columns: repeat(2, 2fr);
   gap: 20px;
 }
 
@@ -41,4 +41,89 @@
 .result-price, .result-sem {
   color: #18ADC5;
   font-size: clamp(0.9rem, 2vw, 1.2rem);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .ticket-grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 30px;
+  }
+    .search-results-heading {
+    font-size: 1.1rem;
+  }
+  
+  .results-subheading,
+  .results-price,
+  .results-sem {
+    font-size: 0.95rem;
+  }
+
+
+}
+
+  @media (max-width: 480px) {
+  .ticket-grid {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 8px;
+  }
+
+    .back-button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .search-results-heading {
+    font-size: 1rem;
+  }
+  
+  .ticket-list-container {
+    padding: 6px;
+  }
+  
+  .buy-button {
+    padding: 8px 20px;
+    font-size: 0.9rem;
+  }
+
+
+}
+
+  @media (max-width: 350px) {
+  .ticket-grid {
+    grid-template-columns: 1fr;
+      .search-result-container {
+    padding: 0;
+  }
+  
+  .results-subheading,
+  .results-price,
+  .results-sem {
+    font-size: 0.9rem;
+  }
+  }
+}
+
+
+@media (max-width: 375px) {
+  .ticket-list-container {
+    padding: 8px;
+  }
+  
+  .ticket-grid {
+    gap: 8px;
+  }
+  
+  .scrollable-container {
+    max-height: 50vh;
+  }
+  
+  .back-button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .buy-button {
+    max-width: 180px;
+  }
 }
