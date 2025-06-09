@@ -763,7 +763,8 @@ export const getUserLotteryMarket_api = async (body = {}, isToast = false) => {
 
 export async function updateFCMToken(fcm_token, isToast = false) {
   try {
-    const callParams = await getCallParams(strings.POST, callParams, isToast);
+    const payload = { fcm_token: fcm_token }; 
+    const callParams = await getCallParams(strings.POST, payload, isToast);
     const response = await makeCall(urls.updateFcm, callParams, isToast);
     return response;
   } catch (error) {

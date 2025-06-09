@@ -1,35 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { FaBell } from "react-icons/fa";
-
 import { getToken, onMessage } from "firebase/messaging";
 
-
+import { messaging } from "../Lottery/firebaseStore/lotteryFirebase";
 import { getUserNotifications, updateFCMToken } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
-import { messaging } from "../Lottery/firebaseStore/lotteryFirebase";
 
-const NotificationIcon = ({ isMobile }) => {
+const NotificationIcon = ({ isMobile , position = "top" }) => {
   const { store } = useAppContext();
   const [notificationCount, setNotificationCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
-
+ // Adjust dropdown style based on position
+  const dropdownStyle =
+    position === "bottom"
+      ? {
+          bottom: "45px", // raise it above the footer icon
+          right: 0,
+        }
+      : {
+          top: "45px", // below the icon in header
+          right: 0,
+        };
   // Request permission and get FCM token
   useEffect(() => {
     if (!store.user?.isLogin) return;
 
     const requestPermission = async () => {
-      try {
-        const permission = await Notification.requestPermission();
-        if (permission === "granted") {
-          const vapidKey = "BLtqMxtLTGnsp5H2jmFzHVBOKlkyclQU2JIvMgv7v4XNPQr3o7PCW8lfm8mOC33uLwjkRP9M5LnkfyVK5Ib2Iic";
-          const token = await getToken(messaging, { vapidKey });
-          if (token) {
-            await updateFCMToken(token);
-          }
+      const permission = await Notification.requestPermission();
+      if (permission === "granted") {
+        const vapidKey =
+          "BBrdxBcf-xma-KJVlwDAikMq_0p8O_rGH75t3c0giKx6AsUzUbKl9nmsuHGo1O0GwRWGH0F_1ldfBa0DpYmVacU";
+        const token = await getToken(messaging, { vapidKey });
+        if (token) {
+          await updateFCMToken(token);
         }
-      } catch (error) {
-        console.error("Error getting notification permission:", error);
       }
     };
 
@@ -39,12 +44,15 @@ const NotificationIcon = ({ isMobile }) => {
     const unsubscribe = onMessage(messaging, (payload) => {
       console.log("Message received. ", payload);
       // Update notification count and list
-      setNotificationCount(prev => prev + 1);
-      setNotifications(prev => [{
-        title: payload.notification?.title || "New Notification",
-        body: payload.notification?.body || "You have a new notification",
-        time: new Date().toLocaleTimeString()
-      }, ...prev]);
+      setNotificationCount((prev) => prev + 1);
+      setNotifications((prev) => [
+        {
+          title: payload.notification?.title || "New Notification",
+          body: payload.notification?.body || "You have a new notification",
+          time: new Date().toLocaleTimeString(),
+        },
+        ...prev,
+      ]);
     });
 
     return () => unsubscribe();
@@ -72,7 +80,7 @@ const NotificationIcon = ({ isMobile }) => {
   if (!store.user?.isLogin) return null;
 
   return (
-    <div className="position-relative">
+   <div className="position-relative">
       <button
         className="btn btn-sm border border-white me-2 d-flex align-items-center justify-content-center text-white mx-1"
         style={{
@@ -94,8 +102,9 @@ const NotificationIcon = ({ isMobile }) => {
 
       {showNotifications && (
         <div
-          className="position-absolute end-0 mt-2 bg-dark text-white p-2 rounded shadow"
+          className="position-absolute bg-dark text-white p-2 rounded shadow"
           style={{
+            ...dropdownStyle,
             width: "300px",
             maxHeight: "400px",
             overflowY: "auto",
@@ -116,9 +125,7 @@ const NotificationIcon = ({ isMobile }) => {
           ) : (
             notifications.map((notification, index) => (
               <div key={index} className="border-bottom pb-2 mb-2">
-                <div className="fw-bold">{notification.title}</div>
-                <div>{notification.body}</div>
-                <div className="text-muted small">{notification.time}</div>
+                <div className="fw-bold">{notification.message}</div>
               </div>
             ))
           )}

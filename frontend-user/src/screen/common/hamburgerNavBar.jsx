@@ -57,7 +57,7 @@ const HamburgerNavBar = () => {
           title="Notifications"
           aria-label="Notifications"
         >
-          <NotificationIcon    isMobile={true} />
+          <NotificationIcon    isMobile={true} position="bottom" />
           <span className="nav-label">Notifications</span>
         </button>
 

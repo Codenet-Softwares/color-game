@@ -26,7 +26,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth);
   const [isRefresh, setIsRefresh] = useState(false);
 
-
   const accessTokenFromStore = JSON.parse(
     localStorage.getItem(strings.LOCAL_STORAGE_KEY)
   )?.user?.accessToken;
@@ -43,7 +42,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
     }
   };
   useEffect(() => {
-
     if (store?.user?.isLogin && accessTokenFromStore) handleUserWallet();
   }, [isRefresh, accessTokenFromStore]);
 
@@ -92,7 +90,11 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
             />
           </a>
           <div className="d-flex align-items-center ms-auto">
-            {isMobile >= 435 && <NotificationIcon isMobile={isMobile} />}
+            {isMobile >= 435 && (
+              <div className="me-5">
+                <NotificationIcon isMobile={isMobile} />
+              </div>
+            )}
             <button className="navbar-toggler border-0" type="button">
               {store.user.isLogin ? (
                 <div className="d-flex align-items-center">
@@ -196,21 +198,6 @@ const SubNavbar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                   )}
                 </div>
               ) : (
-                // <span
-                //   className="btn text-white"
-                //   style={{
-                //     backgroundColor: "#f6a21e",
-                //     fontSize: "13px",
-                //     border: "2px solid white",
-                //     borderRadius: "12px",
-                //     padding: "6px 10px",
-                //   }}
-                //   onClick={() => setShowModalLogin(true)}
-                // >
-                //   <FaUser style={{ width: "12px" }} className="mb-1" />
-                //   &nbsp;
-                //   <b>LOG IN</b>
-                // </span>
                 <></>
               )}
             </button>
