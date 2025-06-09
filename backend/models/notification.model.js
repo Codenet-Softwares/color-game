@@ -13,7 +13,7 @@ const Notification = sequelize.define('Notification', {
     },
     MarketId: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     message: {
         type: DataTypes.TEXT,
