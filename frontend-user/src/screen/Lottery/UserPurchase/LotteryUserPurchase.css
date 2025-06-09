@@ -8,11 +8,15 @@
 }
 
 .form-wrapper {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 200%;
-  height: 200%;
+  min-height: 100vh;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9fa, #e6f7ff);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .form-container {
@@ -64,9 +68,6 @@
     opacity: 1;
     transform: scale(1);
   }
-}
-.form-wrapper {
-  position: relative;
 }
 
 .suspended-overlay {
@@ -141,17 +142,6 @@
     transform: translateY(0);
     opacity: 1;
   }
-}
-.form-wrapper {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 20px;
-  background: linear-gradient(135deg, #f8f9fa, #e6f7ff);
-  border-radius: 12px;
-  overflow: hidden;
 }
 
 /*Suspended Overlay - Frosted Glass Effect */
@@ -375,5 +365,89 @@
     font-size: 8px;
     padding: 2px 0px;
     width: 25%;
+  }
+}
+
+/* Inner Container Base Styles */
+.inner-container {
+  width: 100%;
+  max-width: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  background: white;
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Mobile-First Responsive Adjustments */
+@media (max-width: 767px) {
+  .inner-container {
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Small Mobile Screens (320px-374px) */
+@media (max-width: 374px) {
+  .inner-container {
+    padding: 10px;
+    border-radius: 8px;
+    border-width: 0.5px;
+  }
+}
+
+/* Medium Mobile Screens (375px-413px) */
+@media (min-width: 375px) and (max-width: 413px) {
+  .inner-container {
+    padding: 12px 10px;
+  }
+  .form-wrapper {
+    padding: 12px 10px;
+    min-height: auto;
+  }
+
+  .form-container {
+    padding: 1px;
+    min-height: auto;
+    padding-bottom: 75px;
+    padding-top: 35px;
+  }
+}
+
+/* Large Mobile Screens (414px-767px) */
+@media (min-width: 414px) and (max-width: 767px) {
+  .inner-container {
+    padding: 14px 12px;
+  }
+}
+
+/* Tablet Portrait (768px-1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .inner-container {
+    max-width: 90%;
+    padding: 18px;
+  }
+}
+
+/* Landscape Mode Adjustments */
+@media (max-width: 767px) and (orientation: landscape) {
+  .inner-container {
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 10px;
+  }
+}
+
+/* Very Small Height Screens */
+@media (max-height: 600px) {
+  .inner-container {
+    padding: 8px;
+    max-height: 90vh;
   }
 }

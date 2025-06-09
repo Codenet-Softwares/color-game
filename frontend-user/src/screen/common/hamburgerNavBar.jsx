@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { FaHome, FaPlay, FaBars, FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../contextApi/context";
+import "./hamburgerNavBar.css";
 import Login from "../loginModal/loginModal";
+import NotificationIcon from "../Notification/NotificationIcon";
 
 const HamburgerNavBar = () => {
   const [activeIcon, setActiveIcon] = useState(null);
   const [isLoginModal, setIsLoginModal] = useState(false);
-
   const { store } = useAppContext();
-
   const navigate = useNavigate();
 
   const handleIconHover = (icon) => {
@@ -25,58 +25,49 @@ const HamburgerNavBar = () => {
     }
   }
 
-  // ❗ Conditional rendering: Show navbar only when logged in
   if (!store.user.isLogin) return null;
+
   return (
-<div className="container-fluid">
-  <div
-    className="navbar fixed-bottom navbar-light d-lg-none d-md-none"
-    style={{
-      borderTopLeftRadius: "15px",
-      borderTopRightRadius: "15px",
-      background: "#f1ac44",
-    }}
-  >
-    <div className="d-flex justify-content-around w-100 text-white">
-      {/* Home */}
-      <div
-        className="text-center flex-fill"
-        title="Home"
-        onClick={() => navigate("/home")}
-        style={{ cursor: "pointer" }}
-      >
-        <div><FaHome size={24} /></div>
-        <div className="mt-1">Home</div>
-      </div>
+    <div className="hamburger-navbar-container">
+      <nav className="hamburger-navbar">
+        {/* Home */}
+        <button
+          className="nav-item"
+          title="Home"
+          onClick={() => navigate("/home")}
+          aria-label="Home"
+        >
+          <FaHome className="nav-icon" />
+          <span className="nav-label">Home</span>
+        </button>
 
-      {/* In-Play */}
-      <div
-        className="text-center flex-fill"
-        title="Video Play"
-        onClick={() => navigate("/home")}
-        style={{ cursor: "pointer" }}
-      >
-        <div><FaPlay size={24} /></div>
-        <div className="mt-1">In-Play</div>
-      </div>
+        {/* In-Play */}
+        <button
+          className="nav-item"
+          title="In-Play"
+          onClick={() => navigate("/home")}
+          aria-label="In-Play"
+        >
+          <FaPlay className="nav-icon" />
+          <span className="nav-label">In-Play</span>
+        </button>
+  
 
-      {/* Menu */}
-      <div
-        className="text-center flex-fill"
-        title="Menu"
-        onClick={handleLogin}
-        data-bs-toggle={store.user.isLogin ? "offcanvas" : ""}
-        data-bs-target="#offcanvasDarkNavbar"
-        style={{ cursor: "pointer" }}
-      >
-        <div><FaBars size={24} /></div>
-        <div className="mt-1">Menu</div>
-        <Login showLogin={isLoginModal} setShowLogin={setIsLoginModal} />
-      </div>
+        {/* Menu */}
+        <button
+          className="nav-item"
+          title="Menu"
+          onClick={handleLogin}
+          data-bs-toggle={store.user.isLogin ? "offcanvas" : ""}
+          data-bs-target="#offcanvasDarkNavbar"
+          aria-label="Menu"
+        >
+          <FaBars className="nav-icon" />
+          <span className="nav-label">Menu</span>
+          <Login showLogin={isLoginModal} setShowLogin={setIsLoginModal} />
+        </button>
+      </nav>
     </div>
-  </div>
-</div>
-
   );
 };
 
