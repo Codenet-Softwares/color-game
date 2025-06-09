@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Pagination from "../common/Pagination";
+import { capitalizeEachWord } from "../../utils/helper";
 
 const ProfitAndLossLotteryEvent = ({
   data,
