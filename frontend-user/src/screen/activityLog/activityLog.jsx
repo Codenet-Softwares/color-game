@@ -47,9 +47,9 @@ const ActivityLog = () => {
               <div className="card rounded">
                 <div
                   className="card-header text-white p-2 text-uppercase text-center"
-                  style={{ backgroundColor: "##202020" }}
+                  style={{ backgroundColor: "#2A4455" }}
                 >
-                  <b>&nbsp;&nbsp;Activity Log</b>
+                  <b className="text-white">&nbsp;&nbsp;Activity Log</b>
                 </div>
                 <ul className="list-group list-group-flush text-center">
                   <li className="list-group-item p-3  ">

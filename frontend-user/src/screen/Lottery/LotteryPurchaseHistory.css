@@ -1,9 +1,14 @@
 .table-sm td, .table-sm th {
     padding: 0.75rem;
   }
-  
-  .container {
-    max-width: 1200px;
-    margin: auto;
+@media (max-width: 768px) {
+  .purchase_pagination {
+    padding-bottom: 120px;
   }
+}
+@media (max-width:824px) {
+  .purchase_pagination {
+    padding-bottom:155px;
+  }
+}
   
