@@ -23,11 +23,11 @@ const UserLotteryBetHistory = ({ data, SetComponent }) => {
     };
 
     return (
-        <div className="card w-100 rounded">
+        <div className="card w-100 rounded" style={{marginTop:"90px" }}>
             {/* Header section with title and back button */}
             <div
                 className="card-header text-white p-1 d-flex justify-content-between"
-                style={{ backgroundColor: "#2CB3D1" }}
+                style={{ backgroundColor: "#2B4758" }}
             >
                 <b>&nbsp;&nbsp;Bet History</b>
                 <span
@@ -49,7 +49,7 @@ const UserLotteryBetHistory = ({ data, SetComponent }) => {
             </div> */}
 
             {/* Main table section that displays bet history */}
-            <ul className="list-group list-group-flush" style={{ overflowX: "auto" }}>
+            <ul className="list-group list-group-flush" style={{ overflowX: "auto"}}>
                 <li className="list-group-item">
                     <div className="QA_section">
                         <div className="QA_table mb_30" style={{ overflowX: "auto" }}>

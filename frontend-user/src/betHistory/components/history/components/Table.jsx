@@ -161,14 +161,22 @@ const Table = ({
               )}
             </table>
           </div>
-          <Pagination
-            currentPage={betHistoryData.currentPage}
-            totalPages={betHistoryData.totalPages}
-            handlePageChange={handlePageChange}
-            startIndex={startIndex}
-            endIndex={endIndex}
-            totalData={betHistoryData.totalData}
-          />
+  {/* <div className="d-flex justify-content-center"> */}
+  <div className="overflow-auto">
+    <div className="d-inline-block">
+      <Pagination
+        currentPage={betHistoryData.currentPage}
+        totalPages={betHistoryData.totalPages}
+        handlePageChange={handlePageChange}
+        startIndex={startIndex}
+        endIndex={endIndex}
+        totalData={betHistoryData.totalData}
+      />
+    </div>
+  {/* </div> */}
+</div>
+
+
         </div>
       ) : (
         renderNoDataFound()

@@ -8,7 +8,7 @@ import {
 import { format } from "date-fns";
 import debounce from "lodash.debounce";
 import ViewTicketsModal from "../../betHistory/components/history/components/ViewTicketsModal";
-
+import "./LotteryPurchaseHistory.css"
 // Initial state function
 export function initialLotteryPurchaseState() {
   return {
@@ -222,13 +222,13 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
 
   return (
     <div
-      className="container"
+      className="container purchase_lotto mt-4 container" 
       style={{
         background: "#2b4758",
         borderRadius: "10px",
         boxShadow: "0 0 15px rgba(0,0,0,0.1)",
-        marginTop:""
-      }}
+        // marginTop:"60px",
+          }}
     >
       {/* Date Filter UI */}
       <div className="date-filter-container">
@@ -385,7 +385,8 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
           </div>
 
           <div
-            style={{ maxHeight: "320px", overflowY: "auto" }}
+            style={{ maxHeight: "320px", overflowY: "auto",
+ }}
             className="custom-scrollbar"
           >
             <Table striped hover responsive bordered>
@@ -507,7 +508,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       )}
 
       {state.purchasedTickets?.length > 0 && visibleMarkets?.length > 0 && (
-        <div className="mt-2">
+        <div className="purchase_pagination mt-2">
           <Pagination
             currentPage={state.pagination.page}
             totalPages={state.pagination.totalPages}

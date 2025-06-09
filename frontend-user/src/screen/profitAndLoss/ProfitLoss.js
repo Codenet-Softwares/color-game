@@ -353,7 +353,7 @@ const ProfitLoss = ({
   return (
     <div className="col-sm-12 mt-3 px-3 ">
       {toggle && (
-        <div className="card mb-3 w-100 rounded" style={{ marginTop: "80px" }}>
+        <div className="card mb-3 w-100 rounded" style={{ marginTop: "90px" }}>
           <div
             className="card-body"
             style={{ backgroundColor: "#2b4758", borderRadius: "8px" }}
@@ -425,7 +425,7 @@ const ProfitLoss = ({
 
       {/* card */}
       {toggle ? (
-        <div class="card w-100 rounded">
+        <div class="card w-100 rounded" style={{paddingBottom:"80px"}}>
           <div
             class="card-header text-white p-2 text-center text-uppercase h5"
             style={{ backgroundColor: "#253b4a" }}
