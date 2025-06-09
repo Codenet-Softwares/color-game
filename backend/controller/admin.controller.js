@@ -1140,12 +1140,10 @@ export const inActiveMarketStatus = async (req, res) => {
       attributes: ['id', 'fcm_token', 'userName', 'userId'],
     });
 
-    const notificationService = new NotificationService();
-
     for (const user of allUsers) {
       if (user.fcm_token) {
-        let title
-        let message
+        let title;
+        let message;
 
         if (status === true) {
           title = `Market Live: ${market.marketName}`;
