@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Pagination from "../common/Pagination";
+import { capitalizeEachWord } from "../../utils/helper";
 
 const ProfitAndLossEvent = ({
   data,
@@ -24,7 +25,7 @@ const ProfitAndLossEvent = ({
     SetMarketId(marketId);
   };
   const handleItemPerPage = (event) => {
-  
+
     SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
@@ -42,7 +43,7 @@ const ProfitAndLossEvent = ({
   useEffect(() => {
     let timer = setTimeout(() => {
       getProfitLossEventWise(gameId, "ProfitAndLossEvent", profitLossEventData.searchItem);
-      
+
     }, 300);
     return () => clearTimeout(timer);
   }, [profitLossEventData.searchItem]);
@@ -58,11 +59,11 @@ const ProfitAndLossEvent = ({
     if (renderApi !== null) {
       getProfitLossEventWise(gameId, "ProfitAndLossEvent");
     }
-  }, [renderApi,profitLossEventData.itemPerPage]);
+  }, [renderApi, profitLossEventData.itemPerPage]);
 
   useEffect(() => {
-      getProfitLossEventWise(gameId, "ProfitAndLossEvent");
-  }, [ profitLossEventData.itemPerPage]);
+    getProfitLossEventWise(gameId, "ProfitAndLossEvent");
+  }, [profitLossEventData.itemPerPage]);
 
   return (
     <>
@@ -86,27 +87,27 @@ const ProfitAndLossEvent = ({
         </div>
         <div className="m-1 row g-2 align-items-center">
           <div className="col-12 col-md-auto mb-1">
-          <select
+            <select
 
-            className="form-select fw-bold"
-            onChange={handleItemPerPage}
+              className="form-select fw-bold"
+              onChange={handleItemPerPage}
 
-          >
-            <option value="10">10 Entries</option>
-            <option value="25">25 Entries</option>
-            <option value="50">50 Entries</option>
-            <option value="100">100 Entries</option>
-          </select>
+            >
+              <option value="10">10 Entries</option>
+              <option value="25">25 Entries</option>
+              <option value="50">50 Entries</option>
+              <option value="100">100 Entries</option>
+            </select>
           </div>
           <div className="col-12 col-md-auto ms-auto">
-          <input
-            type="search"
-            className="form-control"
-            placeholder="Search..."
-            onChange={handleSearch}
-          />
+            <input
+              type="search"
+              className="form-control"
+              placeholder="Search..."
+              onChange={handleSearch}
+            />
           </div>
-          </div>
+        </div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
             <div className="white_card_body">
@@ -149,13 +150,13 @@ const ProfitAndLossEvent = ({
                             Total P&L
                           </th>
                         </tr>
-                        </thead>
-                        <tbody>
+                      </thead>
+                      <tbody>
 
                         {data?.data?.length > 0 ? (
                           data?.data?.map((data, index) => (
                             <tr key={index} align="center">
-                              <td>{data?.gameName}</td>
+                              <td>{capitalizeEachWord(data?.gameName)}</td>
                               <td
                                 className="text-primary fw-bold"
                                 style={{ cursor: "pointer" }}
@@ -166,7 +167,7 @@ const ProfitAndLossEvent = ({
                                   );
                                 }}
                               >
-                                {data?.marketName}
+                                {capitalizeEachWord(data?.marketName)}
                               </td>
                               <td
                                 className={`fw-bold ${data?.totalProfitLoss > 0
@@ -191,7 +192,7 @@ const ProfitAndLossEvent = ({
                           <tr align="center">
                             <td colspan="8">
                               <div
-                                    class="alert alert-danger fw-bold"
+                                class="alert alert-danger fw-bold"
                                 role="alert"
                               >
                                 No Data Found !!
@@ -199,8 +200,8 @@ const ProfitAndLossEvent = ({
                             </td>
                           </tr>
                         )}
-                    
-                        </tbody>
+
+                      </tbody>
                     </table>
                   </div>
                 </div>

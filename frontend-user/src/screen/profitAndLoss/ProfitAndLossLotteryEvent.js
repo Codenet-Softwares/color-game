@@ -23,7 +23,7 @@ const ProfitAndLossLotteryEvent = ({
     SetMarketId(id);
   };
   const handleItemPerPage = (event) => {
- 
+
     SetProfitLossEventData((prevState) => ({
       ...prevState,
       itemPerPage: Number(event.target.value),
@@ -71,7 +71,7 @@ const ProfitAndLossLotteryEvent = ({
   return (
     <>
       {/* card */}
-      <div className="card w-100 rounded" style={{marginTop:"90px",paddingBottom:"80px"}}>
+      <div className="card w-100 rounded" style={{ marginTop: "90px", paddingBottom: "80px" }}>
         <div
           className="card-heade text-white p-1 d-flex justify-content-between rounded-top"
           style={{ backgroundColor: "#2B4758" }}
@@ -151,7 +151,7 @@ const ProfitAndLossLotteryEvent = ({
                         {data?.data?.length > 0 ? (
                           data?.data?.map((data, index) => (
                             <tr key={index} align="center">
-                              <td>{data?.gameName}</td>
+                              <td>{capitalizeEachWord(data?.gameName)}</td>
                               <td
                                 className="text-primary fw-bold"
                                 style={{ cursor: "pointer" }}
@@ -162,24 +162,22 @@ const ProfitAndLossLotteryEvent = ({
                                   );
                                 }}
                               >
-                                {data?.marketName}
+                                {capitalizeEachWord(data?.marketName)}
                               </td>
                               <td
-                                className={`fw-bold ${
-                                  data?.profitLoss > 0
+                                className={`fw-bold ${data?.profitLoss > 0
                                     ? "text-success"
                                     : "text-danger"
-                                }`}
+                                  }`}
                               >
                                 {data?.profitLoss}
                               </td>
                               <td>{data?.commission || 0}</td>
                               <td
-                                className={`fw-bold ${
-                                  data?.profitLoss > 0
+                                className={`fw-bold ${data?.profitLoss > 0
                                     ? "text-success"
                                     : "text-danger"
-                                }`}
+                                  }`}
                               >
                                 {data?.profitLoss}
                               </td>
@@ -189,7 +187,7 @@ const ProfitAndLossLotteryEvent = ({
                           <tr align="center">
                             <td colspan="5">
                               <div
-                                    class="alert alert-danger fw-bold"
+                                class="alert alert-danger fw-bold"
                                 role="alert"
                               >
                                 No Data Found !!

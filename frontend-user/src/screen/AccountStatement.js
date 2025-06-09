@@ -5,7 +5,7 @@ import Pagination from "./common/Pagination";
 import DatePicker from "react-datepicker";
 import { customErrorHandler } from "../utils/helper";
 import AppDrawer from "./common/appDrawer";
-import Layout from "./layout/layout";  
+import Layout from "./layout/layout";
 
 const AccountStatement = () => {
   // Initialize state using getAccountStatement function
@@ -109,7 +109,7 @@ const AccountStatement = () => {
             <div className="card w-100 rounded border">
               {/* Card Header */}
               <div
-                className="card-header text-white p-2 text-uppercase text-center"
+                className="card-header text-white p-2  text-center"
                 style={{ backgroundColor: "#2a4455" }}
               >
                 <b className="h5 fw-bold">&nbsp;&nbsp;Account Statement</b>
@@ -195,7 +195,7 @@ const AccountStatement = () => {
                           !backupDate.startDate || !backupDate.endDate // Disable button if no dates selected
                         }
                         onClick={handleGetDate}
-                        style={{backgroundColor:"#687a85"}}
+                        style={{ backgroundColor: "#687a85" }}
                       >
                         Get Statement
                       </button>
@@ -306,7 +306,7 @@ const AccountStatement = () => {
 
                 {/* Pagination */}
                 {getAccountstatement?.statement?.length > 0 && (
-                  <li className="list-group-item overflow-auto" style={{marginBottom:"80px"}}>
+                  <li className="list-group-item overflow-auto" style={{ marginBottom: "80px" }}>
                     <Pagination
                       currentPage={getAccountstatement.currentPage}
                       totalPages={getAccountstatement.totalPages}

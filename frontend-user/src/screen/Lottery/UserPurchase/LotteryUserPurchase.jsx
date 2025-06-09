@@ -8,6 +8,7 @@ import "./LotteryUserPurchase.css";
 import useLotteryData from "../../customHook/useLotteryData";
 import CountdownTimerLotto from "../../../globlaCommon/CountdownTimerLotto";
 import SearchResultsNew from "./SearchResultsNew";
+import { capitalizeEachWord } from "../../../utils/helper";
 
 const LotteryUserPurchase = ({ MarketId }) => {
   const { lotteryData, handleSubmit, handleBuy, handleBack, DROPDOWN_FIELDS } =
@@ -37,7 +38,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
           {/*The ending of overlay suspended message coming over the form after market gets suspended*/}
 
           <div
-            className={`form-container text-uppercase ${
+            className={`form-container ${
               lotteryData.isSuspend ? "blurred" : ""
             }`}
           >
@@ -54,7 +55,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   whiteSpace: "normal",
                 }}
               >
-                {lotteryData.marketName}
+                {capitalizeEachWord(lotteryData.marketName)}
               </span>
               <div className="time-display-container ">
                 <div className="time-box">

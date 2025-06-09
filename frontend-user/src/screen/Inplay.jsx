@@ -12,6 +12,7 @@ import { useAppContext } from "../contextApi/context";
 import AppDrawer from "./common/appDrawer";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./Lottery/firebaseStore/lotteryFirebase";
+import { capitalizeEachWord, convertFormatDate } from "../utils/helper";
 
 const Inplay = () => {
   const [inPlayMarket, setIsplayMarket] = useState([]);
@@ -41,23 +42,7 @@ const Inplay = () => {
       payload: { marketId: id },
     });
   };
-  const formatDate = (dateStr) => {
-    const date = new Date(dateStr);
 
-    // Extract UTC values directly
-    const day = date.getUTCDate();
-    const month = date.toLocaleString("en-US", {
-      month: "short",
-      timeZone: "UTC",
-    });
-    const hours = date.getUTCHours();
-    const minutes = date.getUTCMinutes();
-    const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th"; // 1st, 2nd, etc.
-
-    return `${day}${ordinalSuffix} ${month} ${hours}:${
-      minutes < 10 ? "0" + minutes : minutes
-    } `;
-  };
 
   async function user_getInPlayMarketData() {
     const response = await inPlayMarket_api();
@@ -134,7 +119,7 @@ const Inplay = () => {
 
                                 <div className="row align-items-center">
                                   <span
-                                    className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
+                                    className="col-12 font-weight-bold text-primary text-wrap"
                                     style={{
                                       fontSize: "16px",
                                       wordBreak: "break-word",
@@ -150,13 +135,16 @@ const Inplay = () => {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      {marketData?.marketName ?? "Unknown"} |{" "}
+                                      {capitalizeEachWord(
+                                        marketData?.marketName
+                                      ) ?? "Unknown"}{" "}
+                                      |{" "}
                                     </Link>
                                     <span
                                       className=""
                                       style={{ color: "#b2b2b2" }}
                                     >
-                                      {formatDate(marketData.start_Time)}
+                                      {convertFormatDate(marketData.start_Time)}
                                     </span>
                                   </span>
                                 </div>
@@ -217,7 +205,7 @@ const Inplay = () => {
 
                                 <div className="row align-items-center">
                                   <span
-                                    className="col-12 font-weight-bold text-uppercase text-primary text-wrap"
+                                    className="col-12 font-weight-bold text-primary text-wrap"
                                     style={{
                                       fontSize: "16px",
                                       wordBreak: "break-word",
@@ -239,13 +227,16 @@ const Inplay = () => {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      {marketData?.marketName ?? "Unknown"} |{" "}
+                                      {capitalizeEachWord(
+                                        marketData?.marketName
+                                      ) ?? "Unknown"}{" "}
+                                      |{" "}
                                     </Link>
                                     <span
                                       className=""
                                       style={{ color: "#b2b2b2" }}
                                     >
-                                      {formatDate(marketData.startTime)}
+                                      {convertFormatDate(marketData.startTime)}
                                     </span>
                                   </span>
                                 </div>

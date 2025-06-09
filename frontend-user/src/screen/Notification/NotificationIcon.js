@@ -2,15 +2,22 @@ import React, { useEffect, useState } from "react";
 import { FaBell } from "react-icons/fa";
 import { getToken, onMessage } from "firebase/messaging";
 
-import { messaging } from "../Lottery/firebaseStore/lotteryFirebase";
+import { db, messaging } from "../Lottery/firebaseStore/lotteryFirebase";
 import { getUserNotifications, updateFCMToken } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
+import strings from "../../utils/constant/stringConstant";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const NotificationIcon = ({ isMobile }) => {
   const { store } = useAppContext();
   const [notificationCount, setNotificationCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState({});
+  const [isNotification, setIsNotification] = useState(null)
+
+  const accessTokenFromStore = JSON.parse(
+    localStorage.getItem(strings.LOCAL_STORAGE_KEY)
+  )?.user?.accessToken;
 
   // Group and sort notifications
   const groupAndSortNotifications = (data) => {
@@ -40,42 +47,43 @@ const NotificationIcon = ({ isMobile }) => {
   // Request permission and get FCM token
   useEffect(() => {
     if (!store.user?.isLogin) return;
-
-    const requestPermission = async () => {
-      const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        const vapidKey =
-          "BBrdxBcf-xma-KJVlwDAikMq_0p8O_rGH75t3c0giKx6AsUzUbKl9nmsuHGo1O0GwRWGH0F_1ldfBa0DpYmVacU";
-        const token = await getToken(messaging, { vapidKey });
-        if (token) {
-          await updateFCMToken(token);
+    if (accessTokenFromStore) {
+      const requestPermission = async () => {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          const vapidKey =
+            "BBrdxBcf-xma-KJVlwDAikMq_0p8O_rGH75t3c0giKx6AsUzUbKl9nmsuHGo1O0GwRWGH0F_1ldfBa0DpYmVacU";
+          const token = await getToken(messaging, { vapidKey });
+          if (token) {
+            // await updateFCMToken(token);
+          }
         }
-      }
-    };
-
-    requestPermission();
-
-    const unsubscribe = onMessage(messaging, (payload) => {
-      console.log("Message received: ", payload);
-      const newMessage = {
-        MarketId: "",
-        message: payload.notification?.body || "You have a new notification",
-        createdAt: new Date(),
-        id: Date.now(),
       };
 
-      setNotifications((prev) => {
-        const grouped = { ...prev };
-        const key = newMessage.MarketId || "general";
-        grouped[key] = [newMessage, ...(grouped[key] || [])];
-        return grouped;
+      requestPermission();
+
+      const unsubscribe = onMessage(messaging, (payload) => {
+        console.log("Message received: ", payload);
+        const newMessage = {
+          MarketId: "",
+          message: payload.notification?.body || "You have a new notification",
+          createdAt: new Date(),
+          id: Date.now(),
+        };
+
+        setNotifications((prev) => {
+          const grouped = { ...prev };
+          const key = newMessage.MarketId || "general";
+          grouped[key] = [newMessage, ...(grouped[key] || [])];
+          return grouped;
+        });
+
+        setNotificationCount((prev) => prev + 1);
       });
 
-      setNotificationCount((prev) => prev + 1);
-    });
-
-    return () => unsubscribe();
-  }, [store.user?.isLogin]);
+      return () => unsubscribe();
+    }
+  }, [store.user?.isLogin, accessTokenFromStore]);
 
   // Load existing notifications
   useEffect(() => {
@@ -99,8 +107,39 @@ const NotificationIcon = ({ isMobile }) => {
       }
     };
 
-    loadNotifications();
-  }, [store.user?.isLogin]);
+    if (accessTokenFromStore) {
+      loadNotifications();
+    }
+  }, [store.user?.isLogin, accessTokenFromStore, isNotification]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "lottery-notification"), (snapshot) => {
+      const messagesData = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setIsNotification(messagesData);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "color-game-notification"),
+      (snapshot) => {
+        const messagesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setIsNotification(messagesData);
+      }
+    );
+
+    return () => unsubscribe();
+  }, []);
 
   if (!store.user?.isLogin) return null;
 
@@ -161,9 +200,8 @@ const NotificationIcon = ({ isMobile }) => {
                 >
                   {marketId === "general"
                     ? "General Updates"
-                    : `Market: ${
-                        notifs[0].message?.match(/"(.+?)"/)?.[1] || "Unknown"
-                      }`}
+                    : `Market: ${notifs[0].message?.match(/"(.+?)"/)?.[1] || "Unknown"
+                    }`}
                 </div>
 
                 {notifs.map((notification, index) => (
@@ -180,12 +218,12 @@ const NotificationIcon = ({ isMobile }) => {
                     <div className="text-primary small">
                       {notification.createdAt
                         ? new Date(notification.createdAt).toLocaleString(
-                            "en-IN",
-                            {
-                              dateStyle: "medium",
-                              timeStyle: "short",
-                            }
-                          )
+                          "en-IN",
+                          {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }
+                        )
                         : "Time not available"}
                     </div>
                   </div>

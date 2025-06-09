@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import debounce from "lodash.debounce";
 import ViewTicketsModal from "../../betHistory/components/history/components/ViewTicketsModal";
 import "./LotteryPurchaseHistory.css"
+import { capitalizeEachWord } from "../../utils/helper";
 // Initial state function
 export function initialLotteryPurchaseState() {
   return {
@@ -222,13 +223,13 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
 
   return (
     <div
-      className="container purchase_lotto mt-4 container" 
+      className="container purchase_lotto mt-4 container"
       style={{
         background: "#2b4758",
         borderRadius: "10px",
         boxShadow: "0 0 15px rgba(0,0,0,0.1)",
         // marginTop:"60px",
-          }}
+      }}
     >
       {/* Date Filter UI */}
       <div className="date-filter-container">
@@ -307,7 +308,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                     }}
                     onClick={() => handleMarketClick(market.marketId)}
                   >
-                    {market.marketName}
+                    {capitalizeEachWord(market.marketName)}
                   </span>
                 ))}
               </div>
@@ -385,8 +386,9 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
           </div>
 
           <div
-            style={{ maxHeight: "320px", overflowY: "auto",
- }}
+            style={{
+              maxHeight: "320px", overflowY: "auto",
+            }}
             className="custom-scrollbar"
           >
             <Table striped hover responsive bordered>
@@ -424,7 +426,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   state.purchasedTickets.map((ticket, index) => (
                     <tr key={index}>
                       <td>{startIndex + index}</td>
-                      <td>{ticket.marketName || "N/A"}</td>
+                      <td>{capitalizeEachWord(ticket.marketName) || "N/A"}</td>
                       <td>
                         {ticket.price !== undefined ? ticket.price : "N/A"}
                       </td>
