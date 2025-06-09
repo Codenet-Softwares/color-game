@@ -2892,6 +2892,17 @@ export const createTitleTextNotification = async (req, res) => {
 
         createdNotifications.push(newNotif);
       }
+      const marketRef = db.collection("color-game-notification").doc(user.userId)
+
+      await marketRef.set(
+        {
+          UserId: user.userId,
+          message: message,
+          type: "colorgame",
+          updatedAt: new Date().toISOString()
+        },
+        { merge: true }
+      );
     }
 
     return res.status(statusCode.create).send(
