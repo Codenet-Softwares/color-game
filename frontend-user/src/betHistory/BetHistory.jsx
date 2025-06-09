@@ -41,7 +41,7 @@ const BetHistory = () => {
 
   const renderNoDataFound = () => {
     return (
-      <div class="alert alert-danger text-center mt-2" role="alert">
+      <div class="alert alert-danger text-center mt-2 mb-5" role="alert">
         No data found
       </div>
     );

@@ -6,16 +6,20 @@ const SearchResultsNew = ({ lotteryData, handleBack, handleBuy }) => {
   return (
     <div className="text-center ">
       {/* Back Button */}
-      <div className="text-start mt-3">
-        <button
-          className="btn btn-secondary back-button text-uppercase "
-          onClick={handleBack}
-        >
-          Back
-        </button>
-      </div>
+     <div className="position-relative mt-3">
+  {/* Back Button aligned to the left */}
+  <button
+    className="btn btn-secondary back-button text-uppercase position-absolute start-0"
+    onClick={handleBack}
+  >
+    Back
+  </button>
 
-      <h4 className="search-results-heading text-uppercase">Search Results:</h4>
+  {/* Centered Heading */}
+  <h4 className="text-uppercase text-center m-0 fw-bold search-results-heading">Search Results:</h4>
+</div>
+
+
       <div className="search-result-container">
         {lotteryData?.searchResult?.tickets?.length > 0 ? (
           <>

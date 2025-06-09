@@ -2,13 +2,14 @@
     padding: 0.75rem;
   }
 @media (max-width: 768px) {
-  .purchase_pagination {
-    padding-bottom: 120px;
+  .custom-scrollbar {
+    padding-bottom: 150px; /* enough room for buttons/messages */
   }
 }
+
 @media (max-width:824px) {
   .purchase_pagination {
-    padding-bottom:155px;
+    padding-bottom:200px;
   }
 }
   
