@@ -42,14 +42,14 @@ const ResetPassword = () => {
   return (
     <div className="container">
       <div className="logo-container">
-        <img
+        <img 
           src={Logo}
           alt="Logo"
-          className="logo"
-          style={{ height: "150px" }}
+          className="logo border"
+          style={{ height: "150px",background:"orange" }}
         />
       </div>
-      <div className="row justify-content-center align-items-center h-100">
+      <div className="row justify-content-center align-items-center h-100 mt-5">
         <div className="col-md-6">
           <div className="card shadow p-3 mb-5 bg-white rounded">
             <div className="card-body">

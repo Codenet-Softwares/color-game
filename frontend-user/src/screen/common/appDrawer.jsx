@@ -192,7 +192,7 @@ function AppDrawer({
 
         <ul className="overflow-auto list-group list-group-flush">
           <li onClick={() => handleNavigateToInPlay()}>
-            <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
+            <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2">
               ⚽ Inplay
             </div>
           </li>
@@ -205,11 +205,11 @@ function AppDrawer({
                   className={isToggled ? "" : "MenuHead"}
                   onClick={() => handleToggle(gameObj.gameId)}
                 >
-                  <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2">
+                  <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2 ">
                     ⚽ {gameObj?.gameName}
                     <span
-                      className={`dropdown-icon ${isToggled ? "active" : ""}`}
-                      style={{ cursor: "pointer" }}
+                      className={`dropdown-icon rounded px-1${isToggled ? "active" : ""}`}
+                      style={{ cursor: "pointer",color:"#89b621",border:"1px solid #89b621"}}
                     >
                       ▼
                     </span>
@@ -221,7 +221,7 @@ function AppDrawer({
                     gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ===
                     "colorgame" ? (
                       <li
-                        className="list-group-item text-wrap"
+                        className="list-group-item text-wrap games_box px-0 py-1"
                         style={{
                           wordBreak: "break-word",
                           whiteSpace: "normal",
@@ -232,7 +232,7 @@ function AppDrawer({
                         }
                       >
                         <Link
-                          className="text-uppercase fw-semibold"
+                          className=""
                           to={`/gameView/${gameObj?.gameName?.replace(
                             /\s/g,
                             ""
@@ -246,7 +246,7 @@ function AppDrawer({
                             display: "block",
                           }}
                         >
-                          {marketObj.marketName}
+                        <div className="px-4 game_text">➔ {marketObj.marketName}</div> 
                         </Link>
                       </li>
                     ) : gameObj.gameName
@@ -254,15 +254,16 @@ function AppDrawer({
                         .replace(/[\s\-_]/g, "") === "lottery" ? (
                       <li
                         key={marketObj.marketId}
-                        className="list-group-item  text-wrap"
+                        className="list-group-item  text-wrap games_box  px-0 py-1"
                         style={{
                           wordBreak: "break-word",
                           whiteSpace: "normal",
+                        
                         }}
                       >
                         {store.user.isLogin ? (
                           <Link
-                            className="text-uppercase fw-semibold "
+                            className=" "
                             to={`/lottoPurchase/${marketObj.marketId}`}
                             onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
                             style={{
@@ -271,7 +272,7 @@ function AppDrawer({
                               display: "block",
                             }}
                           >
-                            {marketObj.marketName}
+                          <div className="px-4 game_text"> ➔ {marketObj.marketName}</div> 
                           </Link>
                         ) : (
                           <Link

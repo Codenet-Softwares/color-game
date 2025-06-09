@@ -169,3 +169,10 @@
   background: linear-gradient(180deg, #5f88a0, #456b86);
 }
 
+.games_box:hover{
+background-color: #E6EFD1;
+color: #89b621;
+}
+.game_text:hover{
+color: #89b621;
+}

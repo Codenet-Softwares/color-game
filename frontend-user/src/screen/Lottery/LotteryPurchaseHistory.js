@@ -8,7 +8,7 @@ import {
 import { format } from "date-fns";
 import debounce from "lodash.debounce";
 import ViewTicketsModal from "../../betHistory/components/history/components/ViewTicketsModal";
-import "./LotteryPurchaseHistory.css"
+import "./LotteryPurchaseHistory.css";
 // Initial state function
 export function initialLotteryPurchaseState() {
   return {
@@ -222,13 +222,13 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
 
   return (
     <div
-      className="container purchase_lotto mt-4 container" 
+      className="container purchase_lotto mt-4 container"
       style={{
         background: "#2b4758",
         borderRadius: "10px",
         boxShadow: "0 0 15px rgba(0,0,0,0.1)",
         // marginTop:"60px",
-          }}
+      }}
     >
       {/* Date Filter UI */}
       <div className="date-filter-container">
@@ -256,10 +256,12 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       </div>
 
       {/* Market Navigation */}
-      <div className={`d-flex flex-column align-items-center mb-3  p-2 rounded shadow mt-5 ${visibleMarkets.length > 0 ? "" : "bg-white"}`}>
-        <h5 className="fw-bold  text-white" >
-          LOTTERY MARKETS
-        </h5>
+      <div
+        className={`d-flex flex-column align-items-center mb-3  p-2 rounded shadow mt-5 ${
+          visibleMarkets.length > 0 ? "" : "bg-white"
+        }`}
+      >
+        <h5 className="fw-bold  text-white">LOTTERY MARKETS</h5>
         {visibleMarkets.length > 0 ? (
           <>
             <div className="d-flex align-items-center justify-content-center flex-wrap mb-2 shadow-lg px-2 rounded">
@@ -293,17 +295,18 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                 {visibleMarkets.map((market) => (
                   <span
                     key={market.marketId}
-                    className={`badge text-white me-2 mb-2 ${state.selectedMarketId === market.marketId
-                      ? "bg-success"
-                      : "bg-primary"
-                      }`}
+                    className={`badge text-white me-2 mb-2 ${
+                      state.selectedMarketId === market.marketId
+                        ? "bg-success"
+                        : "bg-primary"
+                    }`}
                     style={{
                       cursor: "pointer",
                       padding: "10px 15px",
                       fontSize: "14px",
                       borderRadius: "20px",
                       transition: "all 0.3s ease-in-out",
-                      borderRadius: "5px"
+                      borderRadius: "5px",
                     }}
                     onClick={() => handleMarketClick(market.marketId)}
                   >
@@ -328,19 +331,19 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   padding: 0,
                   backgroundColor:
                     state.visibleStartIndex + visibleCount >=
-                      state.markets.length
+                    state.markets.length
                       ? "#ccc"
                       : "#0d6efd",
                   color: "#fff",
                   border: "none",
                   cursor:
                     state.visibleStartIndex + visibleCount >=
-                      state.markets.length
+                    state.markets.length
                       ? "not-allowed"
                       : "pointer",
                   opacity:
                     state.visibleStartIndex + visibleCount >=
-                      state.markets.length
+                    state.markets.length
                       ? 0.6
                       : 1,
                 }}
@@ -367,9 +370,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
         <>
           <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3 text-center text-md-start">
             <div className="order-2 order-md-1 mt-2 mt-md-0">
-              <h5 className="fw-bold text-white" >
-                PURCHASED LOTTERY TICKETS
-              </h5>
+              <h5 className="fw-bold text-white">PURCHASED LOTTERY TICKETS</h5>
             </div>
 
             <div className="w-100 w-md-50 order-1 order-md-2">
@@ -385,10 +386,15 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
           </div>
 
           <div
-            style={{ maxHeight: "320px", overflowY: "auto",
- }}
-            className="custom-scrollbar"
-          >
+  style={{
+    maxHeight: "320px",
+    overflowY: "auto",
+    minHeight: "120px", // ensures empty message has some space
+    paddingBottom: "60px", // gives space for bottom content
+  }}
+  className="custom-scrollbar"
+>
+
             <Table striped hover responsive bordered>
               <thead
                 style={{
@@ -482,10 +488,16 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="text-center">
-                      No Tickets Found.
-                    </td>
-                  </tr>
+  <td colSpan="6">
+    <div
+      className="d-flex justify-content-center align-items-center text-danger"
+      // style={{ minHeight: "100px" }}
+    >
+      No Tickets Found.
+    </div>
+  </td>
+</tr>
+
                 )}
               </tbody>
             </Table>

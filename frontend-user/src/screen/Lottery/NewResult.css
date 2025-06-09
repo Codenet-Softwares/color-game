@@ -3,7 +3,7 @@
   margin: 20px;
   /* background: #F8F9FA; */
   min-height: 75vh;
-  padding-bottom: 150px;
+  padding-bottom: 200px;
     overflow-y: auto;
 }
 .container_result {
@@ -187,9 +187,6 @@
   }
 }
 @media (max-width: 768px) {
-  .accordion {
-    /* margin-bottom: 150px; */
-  }
 
   .accordion-body strong {
     font-size: 1rem !important;
