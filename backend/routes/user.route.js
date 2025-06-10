@@ -32,6 +32,7 @@ import {
   updateFCMToken,
   getUserNotifications,
   getInPlayMarket,
+  updateNotificationRead,
 
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
@@ -42,6 +43,7 @@ import {
   createUserValidate,
   marketProfitLossValidate,
   runnerProfitLossValidate,
+  updateNotification,
   validateProfitLossInput,
   validateUserResetPassword,
 } from '../schema/commonSchema.js';
@@ -155,4 +157,7 @@ export const UserRoute = (app) => {
   app.get('/api/user/get-notification', authorize([string.User]), getUserNotifications)
 
   app.get('/api/user/get-inplay-market', customErrorHandler, authorize([string.User]),  getInPlayMarket);
+
+  app.put('/api/user/notification-read', updateNotification , customErrorHandler, authorize([string.User]), updateNotificationRead);
+
 };

@@ -62,6 +62,7 @@ class UrlConstant {
   InplayMarket = `${this.url_dev}/${this.user}/get-inplay-market`;
   updateFcm = `${this.url_dev}/${this.user}/update-fcm-token`;
   getFcm = `${this.url_dev}/${this.user}/get-notification`;
+  getToRead = `${this.url_dev}/${this.user}/notification-read`
 }
 
 const urls = new UrlConstant();

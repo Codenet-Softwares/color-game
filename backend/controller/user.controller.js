@@ -25,6 +25,7 @@ import { user_Balance } from "./admin.controller.js";
 import { sequelize, sql } from "../db.js";
 import MarketListExposure from "../models/marketListExposure.model.js";
 import Notification from "../models/notification.model.js";
+import { db } from "../firebase-db.js";
 
 // done
 export const createUser = async (req, res) => {
@@ -1137,6 +1138,9 @@ export const createBid = async (req, res) => {
         "Market has not opened yet."
       );
     }
+
+    console.log("Current Time:", currentTime);
+    console.log("Market End Time:", market.endTime);
 
     if (currentTime > market.endTime) {
       throw apiResponseErr(
@@ -2733,7 +2737,8 @@ export const getInPlayMarket = async (req, res) => {
 
       if (!gameMap.has(gameId)) {
         gameMap.set(gameId, {
-          gameName: market.Game?.gameName || "Unknown",
+          gameId: market.Game?.gameId || [],
+          gameName: market.Game?.gameName || [],
           markets: [],
         });
       }
@@ -2786,3 +2791,78 @@ export const getInPlayMarket = async (req, res) => {
       );
   }
 };
+
+
+export const updateNotificationRead = async (req,res) => {
+  try {
+
+    const { userId } = req.user;
+    const { isRead } = req.body;
+
+    const existingData = await Notification.findAll({
+      where: { UserId: userId, isRead: false },
+    });
+
+    if (!existingData || existingData.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "No unread notifications found"
+          )
+        );
+    }
+
+    await Notification.update(
+      { isRead: isRead },
+      { where: { UserId: userId, isRead: false } }
+    );
+
+     const marketLottery = db.collection("color-game-notification").doc(userId);
+
+        await marketLottery.set(
+          {
+            //isRead: isRead,
+            updatedAt: new Date().toISOString()
+          },
+          { merge: true }
+        );
+
+
+      const marketColorGame = db.collection("lottery-notification").doc(userId);
+
+        await marketColorGame.set(
+          {
+            //isRead: isRead,
+            updatedAt: new Date().toISOString()
+          },
+          { merge: true }
+        );
+
+    return res
+      .status(statusCode.success)
+      .send(
+        apiResponseSuccess(
+          null,
+          true,
+          statusCode.success,
+          "Notifications marked as read"
+        )
+      );
+  } catch (error) {
+    console.error("Error fetching in-play market:", error);
+    return res
+      .status(statusCode.internalServerError)
+      .send(
+        apiResponseErr(
+          null,
+          false,
+          error.responseCode || statusCode.internalServerError,
+          error.errMessage || error.message
+        )
+      );
+  }
+}

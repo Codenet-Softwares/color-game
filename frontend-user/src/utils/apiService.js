@@ -778,7 +778,6 @@ export const getUserLotteryMarket_api = async (body = {}, isToast = false) => {
   }
 };
 
-
 export async function inPlayMarket_api(body = {}, isToast = false) {
   try {
     const callParams = await getCallParams(strings.GET, body, isToast);
@@ -792,7 +791,7 @@ export async function inPlayMarket_api(body = {}, isToast = false) {
 
 export async function updateFCMToken(fcm_token, isToast = false) {
   try {
-    const payload = { fcm_token: fcm_token }; 
+    const payload = { fcm_token: fcm_token };
     const callParams = await getCallParams(strings.POST, payload, isToast);
     const response = await makeCall(urls.updateFcm, callParams, isToast);
     return response;
@@ -810,5 +809,15 @@ export async function getUserNotifications(isToast = false) {
   } catch (error) {
     console.error("Error fetching notifications", error);
     throw error;
+  }
+}
+
+export async function markNotificationAsRead(body = {},isToast = false) {
+  try {
+    const callParams = await getCallParams(strings.PUT, body , isToast);
+    const response = await makeCall(urls.getToRead, callParams, isToast);
+    return response;
+  } catch (err) {
+    throw err;
   }
 }
