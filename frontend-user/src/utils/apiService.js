@@ -709,6 +709,23 @@ export const getInnerImg = async () => {
     throw err;
   }
 };
+export const singleOuterImg = async () => {
+  try {
+    const callParams = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await fetch(urls.getSingleOuterImg, callParams);
+
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    console.error("Error in getSliderImgText:", err);
+    throw err;
+  }
+};
 
 export const getAnnouncement = async () => {
   try {

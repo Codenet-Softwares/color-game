@@ -21,12 +21,15 @@ import {
 import strings from "../../utils/constant/stringConstant";
 import Footer from "../common/Footer";
 import { MdAndroid } from "react-icons/md"; // Material Design Icon replacement
+import { singleOuterImg } from "../../utils/apiService";
+import homepageBackground from "../../asset/homepageBackground.png";
 
 const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [openBetData, setOpenBetData] = useState(getOpenBet());
   const [currentGameTab, setCurrentGameTab] = useState("Lottery");
+  const [SingleOutImage, setSingleOutImage] = useState([]);
 
   const { store } = useAppContext();
 
@@ -37,7 +40,24 @@ const Home = () => {
   useEffect(() => {
     AOS.init();
   }, []);
+  const fetchOuterSingleImage = async () => {
+    try {
+      const response = await singleOuterImg();
+      if (response.data.length > 0) {
+        setSingleOutImage(response.data);
+      } else {
+        console.error("error", response);
+        setSingleOutImage(aAdvertisement);
+      }
+    } catch (error) {
+      console.error("error", error);
+      setSingleOutImage([]);
+    }
+  };
 
+  useEffect(() => {
+    fetchOuterSingleImage();
+  }, []);
   const handleOpenBetsSelectionMenu = (e) => {
     const { name, value } = e.target;
 
@@ -99,18 +119,28 @@ const Home = () => {
   const homePage = () => (
     <div className="mb-0">
       {/* Carousel-like Image */}
-      <div className="home-scroll-wrapper bg-white">
+      
+      <div className="home-scroll-wrapper bg-white"
+      // style={{
+      //   backgroundImage: `url(${homepageBackground})`,
+      //   backgroundSize: "cover",
+      //   backgroundPosition: "center",
+      //   height: "100vh",
+      // }}
+      >
+        {SingleOutImage.map((item, index) => (
         <div className="carousel-img-container ">
           <img
-            src="https://bet11.bet/assets/img/whitelable-banner.jpg"
+            src={item.image}
             alt="Cricket Banner"
             className=" d-block w-100 carousel-img "
           />
         </div>
+         ))}
 
         {/* Motivational Text */}
         <div className="motivational-text text-uppercase fw-bold text-dark mt-5">
-          <h2>invest in billions... earn in millions</h2>
+          <h2>The more you play, the more you win</h2>
         </div>
 
         {/* Section Title */}

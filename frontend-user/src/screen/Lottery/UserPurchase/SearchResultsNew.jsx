@@ -58,7 +58,7 @@ const SearchResultsNew = ({ lotteryData, handleBack, handleBuy }) => {
 
             {/* Buy Button */}
             <button
-              className="btn btn-dark buy-button text-uppercase fw-bold "
+              className=" buy-button text-uppercase fw-bold border-0 px-3 py-2 text-white rounded"
               onClick={handleBuy}
             >
               purchase

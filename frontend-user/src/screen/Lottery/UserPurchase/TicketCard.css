@@ -5,8 +5,8 @@
   border-radius: 12px;
   position: relative;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  color: #18adc5;
-  border: 3px solid #18adc5;
+  color: #4682B4;
+  border: 3px solid #4682B4;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -33,8 +33,8 @@
   border-radius: 8px;
   position: relative;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  color: #18adc5;
-  border: 2px solid #18adc5;
+  color: #4682B4;
+  border: 2px solid #4682B4;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
@@ -58,7 +58,7 @@
   writing-mode: vertical-rl;
   font-weight: bold;
   font-size: 1.2rem;
-  color: #18ADC5;
+  color: #4682B4;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,8 +74,8 @@
 .ticket-card-center {
   flex-grow: 1;
   text-align: center;
-  border-left: 2px dashed #18adc5;
-  border-right: 2px dashed #18adc5;
+  border-left: 2px dashed #4682B4;
+  border-right: 2px dashed #4682B4;
   padding: 8px 12px;
   display: flex;
   flex-direction: column;
@@ -98,7 +98,7 @@
 .ticket-card-number {
   font-size: 1rem;
   font-weight: bold;
-  color: #18ADC5;
+  color: #4682B4;
   word-break: break-all;
   overflow-wrap: anywhere;
 }

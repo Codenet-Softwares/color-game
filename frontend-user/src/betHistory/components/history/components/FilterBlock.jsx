@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import moment from "moment";
-
+import { capitalizeEachWord } from "../../../../utils/helper";
 const FilterBlock = ({
   handleGetHistory,
   getHistoryForLotteryBetHistory,
@@ -109,7 +109,7 @@ const FilterBlock = ({
                     Live Data
                   </option>
                   <option value="backup" className="fw-bold">
-                    Back Data
+                    Backup Data
                   </option>
                   <option value="olddata" className="fw-bold">
                     Old Data
@@ -130,7 +130,8 @@ const FilterBlock = ({
                   <option value="">Select Game</option>
                   {betHistoryData.gameSelectionData.map((game, index) => (
                     <option key={index} value={game.gameId}>
-                      {game.gameName}
+                      {/* {game.gameName} */}
+                      {capitalizeEachWord(game.gameName)}
                     </option>
                   ))}
                   <option value="lottery">Lottery</option>
