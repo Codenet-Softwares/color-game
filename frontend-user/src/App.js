@@ -6,7 +6,7 @@ import GameView from "./screen/gameView/gameView";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
-import RulesPage from "./screen/common/rulesPage";
+// import RulesPage from "./screen/common/rulesPage";
 import ForgotPassword from "./screen/chnagePassword/forgotPassword";
 import PrivateRoute from "./globlaCommon/privateRoute";
 import Loading from "./globlaCommon/loading";
@@ -73,14 +73,14 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
+          {/* <Route
             path="/rulesPage"
             element={
               <PrivateRoute>
                 <RulesPage />
               </PrivateRoute>
             }
-          />
+          /> */}
 
           <Route
             path="/betHistory"

@@ -254,11 +254,11 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
               <li
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "black", // Initial color
+                  color: "black", 
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
+                  e.currentTarget.style.color = "#2FA8BA";
                 }}
                 onMouseOut={(e) => {
                   e.currentTarget.style.color = "black"; // Color back to original on mouse out
@@ -273,17 +273,17 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 My Lottery Purchases
               </li>
 
-              <li
+              {/* <li
                 class="nav-item mb-3 align-items-start"
                 style={{
-                  color: "black", // Initial color
+                  color: "black", 
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
+                  e.currentTarget.style.color = "#2FA8BA";
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; 
                 }}
                 onClick={handleResultsClick}
               >
@@ -293,7 +293,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                   }}
                 />{" "}
                 Winning Results
-              </li>
+              </li> */}
 
               <li
                 class="nav-item mb-3 align-items-start"
@@ -360,18 +360,18 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                 Activity Log
               </li>
 
-              <li
+              {/* <li
                 onClick={handleRulesPageClick}
                 class="nav-item mb-3 align-items-start text-start"
                 style={{
-                  color: "black", // Initial color
+                  color: "black", 
                   cursor: "pointer",
                 }}
                 onMouseOver={(e) => {
-                  e.currentTarget.style.color = "#2FA8BA"; // Color change on hover
+                  e.currentTarget.style.color = "#2FA8BA"; 
                 }}
                 onMouseOut={(e) => {
-                  e.currentTarget.style.color = "black"; // Color back to original on mouse out
+                  e.currentTarget.style.color = "black"; 
                 }}
               >
                 <FaBook
@@ -380,7 +380,7 @@ const NavBar = ({ openBetData, handleOpenBetsSelectionMenu }) => {
                   }}
                 />{" "}
                 Rules
-              </li>
+              </li> */}
 
               <li
                 class="nav-item mb-3 align-items-start"

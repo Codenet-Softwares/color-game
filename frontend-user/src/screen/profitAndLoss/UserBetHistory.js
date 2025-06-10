@@ -1,5 +1,6 @@
 import React from "react";
 import Pagination from "../common/Pagination";
+import { capitalizeEachWord } from "../../utils/helper";
 
 const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
 
@@ -26,7 +27,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
   );
 
   return (
-    <div className="card w-100 rounded" style={{ marginTop: "150px" }}>
+    <div className="card w-100 rounded" style={{ marginTop: "100px" }}>
       {/* Header section with title and back button */}
       <div
         className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
@@ -115,7 +116,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
                 <tr key={index} align="center">
                   <td>{capitalizeEachWord(data?.gameName)}</td>
                   <td
-                    className="text-primary fw-bold"
+                    className="fw-bold"
                     style={{ cursor: "pointer" }}
                   >
                     {capitalizeEachWord(data?.marketName)}

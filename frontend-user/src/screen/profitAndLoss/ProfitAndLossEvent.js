@@ -68,7 +68,7 @@ const ProfitAndLossEvent = ({
   return (
     <>
       {/* card */}
-      <div className="card w-100 rounded ">
+      <div className="card w-100 rounded" style={{ marginTop: "100px", paddingBottom:"120px"}}>
         <div
           className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
           style={{ backgroundColor: "#253b4a" }}

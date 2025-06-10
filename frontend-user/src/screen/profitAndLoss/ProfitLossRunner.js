@@ -1,7 +1,7 @@
 import React from "react";
 import { toast } from "react-toastify";
 import Pagination from "../common/Pagination";
-import { formatDateForUi } from "../../utils/helper";
+import { capitalizeEachWord, formatDateForUi } from "../../utils/helper";
 
 const ProfitAndLossRunner = ({
   data,
@@ -42,7 +42,7 @@ const ProfitAndLossRunner = ({
   return (
     <>
       {/* card */}
-      <div className="card w-100 rounded" style={{ marginTop: "150px" }}>
+      <div className="card w-100 rounded" style={{ marginTop: "100px" }}>
         <div
           className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
           style={{ backgroundColor: "#253b4a" }}
