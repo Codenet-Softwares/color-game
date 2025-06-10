@@ -1170,19 +1170,20 @@ export const inActiveMarketStatus = async (req, res) => {
           message,
           type: "colorgame",
         });
-        const marketRef = db.collection("color-game-notification").doc(user.userId)
 
-    await marketRef.set(
-      {
+      const notificationsRef = db
+        .collection("color-game-notification")
+        .doc(user.userId)
+        .collection("notifications");
+
+      await notificationsRef.add({
         UserId: user.userId,
         marketId: marketId,
         message: message,
         type: "colorgame",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-      },
-      { merge: true }
-    );
+      });
       }
     }
 
@@ -1818,19 +1819,20 @@ export const approveResult = async (req, res) => {
             message,
             type: "colorgame",
           });
-          const marketRef = db.collection("color-game-notification").doc(user.userId)
 
-    await marketRef.set(
-      {
-        UserId: user.userId,
-        marketId: marketId,
-        message: message,
-        type: "colorgame",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      { merge: true }
-    );
+          const notificationsRef = db
+            .collection("color-game-notification")
+            .doc(user.userId)
+            .collection("notifications");
+
+          await notificationsRef.add({
+            UserId: user.userId,
+            marketId: marketId,
+            message: message,
+            type: "colorgame",
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          });
         }
       }
 
@@ -2894,28 +2896,30 @@ export const createTitleTextNotification = async (req, res) => {
 
         createdNotifications.push(newNotif);
       }
-      const marketRef = db.collection("color-game-notification").doc(user.userId)
+      const notificationsRef = db
+        .collection("color-game-notification")
+        .doc(user.userId)
+        .collection("notifications");
 
-      await marketRef.set(
-        {
-          UserId: user.userId,
-          message: message,
-          type: "colorgame",
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        },
-        { merge: true }
-      );
+      await notificationsRef.add({
+        UserId: user.userId,
+        message: message,
+        type: "colorgame",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
     }
 
-    return res.status(statusCode.create).send(
-      apiResponseSuccess(
-        createdNotifications,
-        true,
-        statusCode.create,
-        "Notifications created with title and message."
-      )
-    );
+    return res
+      .status(statusCode.create)
+      .send(
+        apiResponseSuccess(
+          createdNotifications,
+          true,
+          statusCode.create,
+          "Notifications created with title and message."
+        )
+      );
 
   } catch (error) {
     console.error("Error in createTitleTextNotification:", error);
