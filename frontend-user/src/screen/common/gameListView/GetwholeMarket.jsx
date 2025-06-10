@@ -149,7 +149,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                 onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
                                 style={{
                                   textDecoration: "none",
-                                  color: "#27a7e4",
+                                  color: "#4682B4",
                                   fontWeight: "bold",
                                 }}
                               >
@@ -237,7 +237,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                 }} // Prevents dropdown collapse
                                 style={{
                                   textDecoration: "none",
-                                  color: "#27a7e4",
+                                  color: "#4682B4",
                                   fontWeight: "bold",
                                 }}
                               >

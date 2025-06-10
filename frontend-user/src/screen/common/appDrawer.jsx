@@ -265,7 +265,7 @@ function AppDrawer({
                       >
                         {store.user.isLogin ? (
                           <Link
-                            className="fw-semibold "
+                            className="fw-semibold"
                             to={`/lottoPurchase/${marketObj.marketId}`}
                             onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
                             style={{
@@ -274,7 +274,7 @@ function AppDrawer({
                               display: "block",
                             }}
                           >
-                          <div className="px-4 game_text"> ➔ {marketObj.marketName}</div> 
+                          <div className="px-4 game_text"> ➔ {capitalizeEachWord(marketObj.marketName)}</div> 
                           </Link>
                         ) : (
                           <Link

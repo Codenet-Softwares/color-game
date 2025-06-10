@@ -94,14 +94,17 @@ const Table = ({
                             className="dropdown"
                             style={{ position: "relative" }}
                           >
-                            <button
-                              className="btn btn-outline-dark fw-semibold px-4 py-2 rounded-5 shadow-sm border-1"
-                              type="button"
-                              onClick={() => openModalWithTickets(item.tickets)}
-                            >
-                              <i className="bi bi-ticket-perforated me-2"></i>{" "}
-                              View Tickets
-                            </button>
+           <button
+  className="btn btn-outline-dark fw-semibold px-3 py-2 rounded-5 shadow-sm border-1 d-inline-flex align-items-center gap-2"
+  type="button"
+  onClick={() => openModalWithTickets(item.tickets)}
+  style={{ fontSize: "14px", whiteSpace: "nowrap" }}
+>
+  <i className="bi bi-ticket-perforated"></i>
+  <span>View Tickets</span>
+</button>
+
+
                             <ViewTicketsModal
                               isOpen={betHistoryData.modalOpen}
                               onClose={() =>

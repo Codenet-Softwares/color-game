@@ -520,7 +520,7 @@ const LotteryPurchaseHistory = ({ MarketId }) => {
       )}
 
       {state.purchasedTickets?.length > 0 && visibleMarkets?.length > 0 && (
-        <div className="purchase_pagination mt-2">
+        <div className="purchase_pagination mt-2 text-white">
           <Pagination
             currentPage={state.pagination.page}
             totalPages={state.pagination.totalPages}

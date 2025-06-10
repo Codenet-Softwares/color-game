@@ -7,7 +7,7 @@
 
 /* Heading */
 .search-results-heading {
-  color: #18ADC5;
+  color: #4682B4;
   font-weight: bold;
 }
 
@@ -38,8 +38,16 @@
 }
 /* Price & SEM Text */
 .result-price, .result-sem {
-  color: #18ADC5;
+  color: #4682B4;
   font-size: clamp(0.9rem, 2vw, 1.2rem);
+}
+.buy-button{
+  background-color: #4682B4;
+}
+.buy-button:hover{
+  background-color: #355A7E;
+    transform: scale(1.05);
+    width: 150px;
 }
 
 /* Responsive Adjustments */

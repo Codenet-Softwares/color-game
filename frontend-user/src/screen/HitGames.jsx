@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { getGameImg } from "../utils/apiService";
 import Login from "./loginModal/loginModal";
-// import {dHitGames} from "../utils/dummyData"
 import { dHitGames } from '../utils/dummyData';
 
 const HitGames = () => {
-  const [sliderData, setSliderData] = useState([]);
+  const [HitGames, setHitGames] = useState(dHitGames);
   const [showLogin, setShowLogin] = useState(false);
 
   const fetchSliderImgText = async () => {
     try {
       const response = await getGameImg();
+      console.log("response=======",response.data.length >0)
       if (response.data.length > 0) {
-        setSliderData(response.data);
+        setHitGames(response.data);
       } else {
-        setSliderData(dHitGames);
+        setHitGames(dHitGames);
       }
     } catch (error) {
       console.error("Error fetching slider data", error);
-      setSliderData([]);
+      setHitGames([]);
     }
   };
 
@@ -32,9 +32,9 @@ const HitGames = () => {
 
   return (
     <>
-      <div className="container mt-3 bg-white">
+      <div className="container mt-3">
         <div className="row g-3">
-          {dHitGames.map((item, index) => (
+          {HitGames.map((item, index) => (
             <div
               className="col-12 col-sm-6 col-md-4"
               key={item.id || index}
