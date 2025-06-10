@@ -43,7 +43,6 @@ const Inplay = () => {
     });
   };
 
-
   async function user_getInPlayMarketData() {
     const response = await inPlayMarket_api();
     if (response) {
@@ -93,42 +92,25 @@ const Inplay = () => {
                             (marketData, index) => (
                               <div
                                 key={index}
-                                className="row my-2 m-2"
+                                className="row px-3 py-1"
                                 style={{
                                   borderRadius: "5px",
                                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                                 }}
                               >
-                                {marketData.hotGame === true && (
-                                  <div
-                                    className="blink_me bg-danger rounded-pill text-center text-white d-flex align-items-center justify-content-center "
-                                    style={{
-                                      width: "74px",
-                                      height: "20px",
-                                      marginLeft: "250px",
-                                    }}
-                                  >
-                                    <small
-                                      className="fw-bold"
-                                      style={{ fontSize: "10px" }}
-                                    >
-                                      Hot Game
-                                    </small>
-                                  </div>
-                                )}
-
                                 <div className="row align-items-center">
                                   <span
-                                    className="col-12 font-weight-bold text-primary text-wrap"
+                                    className="col-12 font-weight-bold text-primary text-wrap d-flex align-items-center flex-wrap"
                                     style={{
                                       fontSize: "16px",
                                       wordBreak: "break-word",
                                       whiteSpace: "normal",
+                                      gap: "6px",
                                     }}
                                   >
                                     <Link
                                       to={`/lottoPurchase/${marketData.marketId}`}
-                                      onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                                      onClick={(e) => e.stopPropagation()}
                                       style={{
                                         textDecoration: "none",
                                         color: "#27a7e4",
@@ -138,14 +120,26 @@ const Inplay = () => {
                                       {capitalizeEachWord(
                                         marketData?.marketName
                                       ) ?? "Unknown"}{" "}
-                                      |{" "}
+                                      |
                                     </Link>
-                                    <span
-                                      className=""
-                                      style={{ color: "#b2b2b2" }}
-                                    >
+
+                                    <span style={{ color: "#b2b2b2" }}>
                                       {convertFormatDate(marketData.start_Time)}
                                     </span>
+
+                                    {/* Hot Game badge appears right after date */}
+                                    {marketData.hotGame === true && (
+                                      <span
+                                        className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
+                                        style={{
+                                          height: "20px",
+                                          fontSize: "10px",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Hot Game
+                                      </span>
+                                    )}
                                   </span>
                                 </div>
                               </div>
@@ -164,7 +158,7 @@ const Inplay = () => {
                     ) : (
                       <>
                         <div
-                          className="col-12 p-1 fw-bold h6 text-black shadow-lg text-white mx-2"
+                          className="col-12 p-1 fw-bold h6 text-black shadow-lg text-white mx-2 px-2"
                           style={{
                             backgroundColor: "#202020",
                             fontSize: "18px",
@@ -179,37 +173,20 @@ const Inplay = () => {
                             (marketData, index) => (
                               <div
                                 key={index}
-                                className="row my-2 m-2"
+                                className="row px-3 py-1"
                                 style={{
                                   borderRadius: "5px",
                                   boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                                 }}
                               >
-                                {marketData.hotGame === true && (
-                                  <div
-                                    className="blink_me bg-danger rounded-pill text-center text-white d-flex align-items-center justify-content-center "
-                                    style={{
-                                      width: "74px",
-                                      height: "20px",
-                                      marginLeft: "250px",
-                                    }}
-                                  >
-                                    <small
-                                      className="fw-bold"
-                                      style={{ fontSize: "10px" }}
-                                    >
-                                      Hot Game
-                                    </small>
-                                  </div>
-                                )}
-
                                 <div className="row align-items-center">
                                   <span
-                                    className="col-12 font-weight-bold text-primary text-wrap"
+                                    className="col-12 font-weight-bold text-primary text-wrap d-flex align-items-center flex-wrap"
                                     style={{
                                       fontSize: "16px",
                                       wordBreak: "break-word",
                                       whiteSpace: "normal",
+                                      gap: "6px",
                                     }}
                                   >
                                     <Link
@@ -220,7 +197,7 @@ const Inplay = () => {
                                           gameWithMarketData?.gameId,
                                           marketData?.marketId
                                         );
-                                      }} // Prevents dropdown collapse
+                                      }} 
                                       style={{
                                         textDecoration: "none",
                                         color: "#27a7e4",
@@ -230,19 +207,32 @@ const Inplay = () => {
                                       {capitalizeEachWord(
                                         marketData?.marketName
                                       ) ?? "Unknown"}{" "}
-                                      |{" "}
+                                      |
                                     </Link>
-                                    <span
-                                      className=""
-                                      style={{ color: "#b2b2b2" }}
-                                    >
+
+                                    <span style={{ color: "#b2b2b2" }}>
                                       {convertFormatDate(marketData.startTime)}
                                     </span>
+
+                                    {/*  Hot Game */}
+                                    {marketData.hotGame === true && (
+                                      <span
+                                        className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
+                                        style={{
+                                          height: "20px",
+                                          fontSize: "10px",
+                                          fontWeight: "bold",
+                                        }}
+                                      >
+                                        Hot Game
+                                      </span>
+                                    )}
                                   </span>
                                 </div>
                               </div>
                             )
                           )}
+
                         {gameWithMarketData.markets.length === 0 && (
                           <p
                             className="text-center pt-1 fw-bold"

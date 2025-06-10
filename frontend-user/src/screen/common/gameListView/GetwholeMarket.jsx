@@ -108,64 +108,59 @@ const GetwholeMarket = ({ currentGameTab }) => {
                       </div>
                     </div>
                     {gameWithMarketData &&
-                      gameWithMarketData.markets.map((marketData, index) => (
-                        <div
-                          key={index}
-                          className="row my-2 m-2"
-                          style={{
-                            borderRadius: "5px",
-                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                          }}
-                        >
-                          {marketData.hotGame === true && (
-                            <div
-                              className="blink_me bg-danger rounded-pill text-center text-white d-flex align-items-center justify-content-center "
-                              style={{
-                                width: "74px",
-                                height: "20px",
-                                marginLeft: "250px",
-                              }}
-                            >
-                              <small
-                                className="fw-bold"
-                                style={{ fontSize: "10px" }}
-                              >
-                                Hot Game
-                              </small>
-                            </div>
-                          )}
+  gameWithMarketData.markets.map((marketData, index) => (
+    <div
+      key={index}
+      className="row py-1 px-3"
+      style={{
+        borderRadius: "5px",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+      }}
+    >
+      <div className="row align-items-center">
+        <span
+          className="col-12 font-weight-bold text-primary text-wrap d-flex align-items-center flex-wrap"
+          style={{
+            fontSize: "16px",
+            wordBreak: "break-word",
+            whiteSpace: "normal",
+            gap: "6px",
+          }}
+        >
+          <Link
+            to={`/lottoPurchase/${marketData.marketId}`}
+            onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+            style={{
+              textDecoration: "none",
+              color: "#4682B4",
+              fontWeight: "bold",
+            }}
+          >
+            {capitalizeEachWord(marketData?.marketName)} |
+          </Link>
 
-                          <div className="row align-items-center">
-                            <span
-                              className="col-12 font-weight-bold text-primary text-wrap"
-                              style={{
-                                fontSize: "16px",
-                                wordBreak: "break-word",
-                                whiteSpace: "normal",
-                              }}
-                            >
-                              <Link
-                                to={`/lottoPurchase/${marketData.marketId}`}
-                                onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
-                                style={{
-                                  textDecoration: "none",
-                                  color: "#4682B4",
-                                  fontWeight: "bold",
-                                }}
-                              >
-                                {console.log(
-                                  "capitalizeEachWord",
-                                  capitalizeEachWord(marketData?.marketName)
-                                )}
-                                {capitalizeEachWord(marketData?.marketName)} |{" "}
-                              </Link>
-                              <span className="" style={{ color: "#b2b2b2" }}>
-                                {convertFormatDate(marketData.start_time)}
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+          <span style={{ color: "#b2b2b2" }}>
+            {convertFormatDate(marketData.start_time)}
+          </span>
+
+          {/* Hot Game badge directly after date */}
+          {marketData.hotGame === true && (
+            <span
+              className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
+              style={{
+                height: "20px",
+                fontSize: "10px",
+                fontWeight: "bold",
+              }}
+            >
+              Hot Game
+            </span>
+          )}
+        </span>
+      </div>
+    </div>
+  ))}
+
 
                     {gameWithMarketData.markets.length === 0 && (
                       <p
@@ -187,43 +182,26 @@ const GetwholeMarket = ({ currentGameTab }) => {
                       }}
                     >
                       {console.log("gamewith", gameWithMarketData)}
-                      {gameWithMarketData.gameName}
+                    <div className="px-1">{gameWithMarketData.gameName}</div>  
                     </div>
                     {gameWithMarketData &&
                       gameWithMarketData.markets.map((marketData, index) => (
                         <div
                           key={index}
-                          className="row my-2 m-2"
+                          className="row py-1 px-3"
                           style={{
                             borderRadius: "5px",
                             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
                           }}
                         >
-                          {marketData.hotGame === true && (
-                            <div
-                              className="blink_me bg-danger rounded-pill text-center text-white d-flex align-items-center justify-content-center "
-                              style={{
-                                width: "74px",
-                                height: "20px",
-                                marginLeft: "250px",
-                              }}
-                            >
-                              <small
-                                className="fw-bold"
-                                style={{ fontSize: "10px" }}
-                              >
-                                Hot Game
-                              </small>
-                            </div>
-                          )}
-
                           <div className="row align-items-center">
                             <span
-                              className="col-12 font-weight-bold  text-primary text-wrap"
+                              className="col-12 font-weight-bold text-primary text-wrap d-flex align-items-center flex-wrap"
                               style={{
                                 fontSize: "16px",
                                 wordBreak: "break-word",
                                 whiteSpace: "normal",
+                                gap: "6px",
                               }}
                             >
                               <Link
@@ -234,7 +212,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                     gameWithMarketData?.gameId,
                                     marketData?.marketId
                                   );
-                                }} // Prevents dropdown collapse
+                                }}
                                 style={{
                                   textDecoration: "none",
                                   color: "#4682B4",
@@ -243,15 +221,31 @@ const GetwholeMarket = ({ currentGameTab }) => {
                               >
                                 {capitalizeEachWord(marketData?.marketName) ??
                                   "Unknown"}{" "}
-                                |{" "}
+                                |
                               </Link>
-                              <span className="" style={{ color: "#b2b2b2" }}>
+
+                              <span style={{ color: "#b2b2b2" }}>
                                 {convertFormatDate(marketData.startTime)}
                               </span>
+
+                              {/* Show Hot Game badge after the date */}
+                              {marketData.hotGame === true && (
+                                <span
+                                  className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
+                                  style={{
+                                    height: "20px",
+                                    fontSize: "8px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Hot Game
+                                </span>
+                              )}
                             </span>
                           </div>
                         </div>
                       ))}
+
                     {gameWithMarketData.markets.length === 0 && (
                       <p
                         className="text-center pt-1 fw-bold"
