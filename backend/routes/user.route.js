@@ -32,6 +32,7 @@ import {
   updateFCMToken,
   getUserNotifications,
   getInPlayMarket,
+  updateNotificationRead,
 
 } from '../controller/user.controller.js';
 import { authorize } from '../middleware/auth.js';
@@ -155,4 +156,7 @@ export const UserRoute = (app) => {
   app.get('/api/user/get-notification', authorize([string.User]), getUserNotifications)
 
   app.get('/api/user/get-inplay-market', customErrorHandler, authorize([string.User]),  getInPlayMarket);
+
+  app.put('/api/user/notification-read', authorize([string.User]), updateNotificationRead);
+
 };
