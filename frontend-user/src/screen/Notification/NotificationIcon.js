@@ -10,7 +10,7 @@ import {
 } from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../utils/constant/stringConstant";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, collectionGroup, onSnapshot } from "firebase/firestore";
 
 const NotificationIcon = ({ isMobile }) => {
   const { store } = useAppContext();
@@ -140,37 +140,36 @@ const NotificationIcon = ({ isMobile }) => {
     }
   }, [store.user?.isLogin, accessTokenFromStore, isNotification]);
 
+  // useEffect(() => {
+  //   const unsubscribe = onSnapshot(collection(db, "lottery-notification"), (snapshot) => {
+  //     const messagesData = snapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       ...doc.data(),
+  //     }));
+
+  //     setIsNotification(messagesData);
+  //   });
+
+  //   return () => unsubscribe();
+  // }, []);
+
   useEffect(() => {
     const unsubscribe = onSnapshot(
-      collection(db, "lottery-notification"),
+      collectionGroup(db, "notifications"),
       (snapshot) => {
-        const messagesData = snapshot.docs.map((doc) => ({
+        const allNotifications = snapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data(),
+          parentId: doc.ref.parent.parent?.id, // Get the parent document ID
+          ...doc.data()
         }));
-
-        setIsNotification(messagesData);
+        setIsNotification(allNotifications);
       }
     );
 
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "color-game-notification"),
-      (snapshot) => {
-        const messagesData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        setIsNotification(messagesData);
-      }
-    );
-
-    return () => unsubscribe();
-  }, []);
+  console.log("isNotification", isNotification)
 
   if (!store.user?.isLogin) return null;
 
