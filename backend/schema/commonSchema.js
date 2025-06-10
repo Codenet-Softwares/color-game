@@ -874,3 +874,9 @@ export const validateHotGame = [
     .isBoolean()
     .withMessage('Status must be a boolean'),
 ];
+
+export const updateNotification = [
+  body("isRead")
+    .isBoolean()
+    .withMessage("isRead must be a boolean value"),
+];

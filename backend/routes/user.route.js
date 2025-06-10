@@ -43,6 +43,7 @@ import {
   createUserValidate,
   marketProfitLossValidate,
   runnerProfitLossValidate,
+  updateNotification,
   validateProfitLossInput,
   validateUserResetPassword,
 } from '../schema/commonSchema.js';
@@ -157,6 +158,6 @@ export const UserRoute = (app) => {
 
   app.get('/api/user/get-inplay-market', customErrorHandler, authorize([string.User]),  getInPlayMarket);
 
-  app.put('/api/user/notification-read', authorize([string.User]), updateNotificationRead);
+  app.put('/api/user/notification-read', updateNotification , customErrorHandler, authorize([string.User]), updateNotificationRead);
 
 };
