@@ -3,7 +3,11 @@ import { FaBell } from "react-icons/fa";
 import { getToken, onMessage } from "firebase/messaging";
 
 import { db, messaging } from "../Lottery/firebaseStore/lotteryFirebase";
-import { getUserNotifications, updateFCMToken } from "../../utils/apiService";
+import {
+  getUserNotifications,
+  markNotificationAsRead,
+  updateFCMToken,
+} from "../../utils/apiService";
 import { useAppContext } from "../../contextApi/context";
 import strings from "../../utils/constant/stringConstant";
 import { collection, onSnapshot } from "firebase/firestore";
@@ -13,7 +17,7 @@ const NotificationIcon = ({ isMobile }) => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState({});
-  const [isNotification, setIsNotification] = useState(null)
+  const [isNotification, setIsNotification] = useState(null);
 
   const accessTokenFromStore = JSON.parse(
     localStorage.getItem(strings.LOCAL_STORAGE_KEY)
@@ -42,6 +46,30 @@ const NotificationIcon = ({ isMobile }) => {
     });
 
     return grouped;
+  };
+
+  // Function to mark notification as read
+  const handleNotificationClick = async (notification) => {
+    if (notification.isRead) return;
+
+    try {
+      // Call API once to mark all unread notifications as read
+      await markNotificationAsRead({ isRead: true });
+
+      // Update local state to mark all unread notifications as read
+      setNotifications((prev) => {
+        const updated = {};
+        for (const [key, notifs] of Object.entries(prev)) {
+          updated[key] = notifs.map((n) => ({ ...n, isRead: true }));
+        }
+        return updated;
+      });
+
+      // Set unread count to 0
+      setNotificationCount(0);
+    } catch (error) {
+      console.error("Failed to mark notifications as read:", error);
+    }
   };
 
   // Request permission and get FCM token
@@ -113,14 +141,17 @@ const NotificationIcon = ({ isMobile }) => {
   }, [store.user?.isLogin, accessTokenFromStore, isNotification]);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "lottery-notification"), (snapshot) => {
-      const messagesData = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const unsubscribe = onSnapshot(
+      collection(db, "lottery-notification"),
+      (snapshot) => {
+        const messagesData = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
-      setIsNotification(messagesData);
-    });
+        setIsNotification(messagesData);
+      }
+    );
 
     return () => unsubscribe();
   }, []);
@@ -154,7 +185,14 @@ const NotificationIcon = ({ isMobile }) => {
           fontSize: "14px",
           padding: "5px 8px",
         }}
-        onClick={() => setShowNotifications(!showNotifications)}
+        onClick={async () => {
+          const toggled = !showNotifications;
+          setShowNotifications(toggled);
+
+          if (toggled) {
+            await handleNotificationClick({});
+          }
+        }}
         title="notifications"
       >
         <FaBell />
@@ -200,8 +238,9 @@ const NotificationIcon = ({ isMobile }) => {
                 >
                   {marketId === "general"
                     ? "General Updates"
-                    : `Market: ${notifs[0].message?.match(/"(.+?)"/)?.[1] || "Unknown"
-                    }`}
+                    : `Market: ${
+                        notifs[0].message?.match(/"(.+?)"/)?.[1] || "Unknown"
+                      }`}
                 </div>
 
                 {notifs.map((notification, index) => (
@@ -218,12 +257,12 @@ const NotificationIcon = ({ isMobile }) => {
                     <div className="text-primary small">
                       {notification.createdAt
                         ? new Date(notification.createdAt).toLocaleString(
-                          "en-IN",
-                          {
-                            dateStyle: "medium",
-                            timeStyle: "short",
-                          }
-                        )
+                            "en-IN",
+                            {
+                              dateStyle: "medium",
+                              timeStyle: "short",
+                            }
+                          )
                         : "Time not available"}
                     </div>
                   </div>
