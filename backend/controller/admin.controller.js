@@ -1178,7 +1178,8 @@ export const inActiveMarketStatus = async (req, res) => {
         marketId: marketId,
         message: message,
         type: "colorgame",
-        updatedAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
       { merge: true }
     );
@@ -1825,7 +1826,8 @@ export const approveResult = async (req, res) => {
         marketId: marketId,
         message: message,
         type: "colorgame",
-        updatedAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
       { merge: true }
     );
@@ -2899,7 +2901,8 @@ export const createTitleTextNotification = async (req, res) => {
           UserId: user.userId,
           message: message,
           type: "colorgame",
-          updatedAt: new Date().toISOString()
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
         },
         { merge: true }
       );
