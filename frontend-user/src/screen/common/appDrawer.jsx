@@ -209,8 +209,14 @@ function AppDrawer({
                   <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2 ">
                     ⚽ {gameObj?.gameName}
                     <span
-                      className={`dropdown-icon rounded px-1${isToggled ? "active" : ""}`}
-                      style={{ cursor: "pointer",color:"#89b621",border:"1px solid #89b621"}}
+                      className={`dropdown-icon rounded px-1${
+                        isToggled ? "active" : ""
+                      }`}
+                      style={{
+                        cursor: "pointer",
+                        color: "#89b621",
+                        border: "1px solid #89b621",
+                      }}
                     >
                       ▼
                     </span>
@@ -247,8 +253,9 @@ function AppDrawer({
                             display: "block",
                           }}
                         >
-                          
-                        <div className="px-4 game_text">➔ {capitalizeEachWord(marketObj.marketName)}</div> 
+                          <div className="px-4 game_text">
+                            ➔ {capitalizeEachWord(marketObj.marketName)}
+                          </div>
                         </Link>
                       </li>
                     ) : gameObj.gameName
@@ -260,7 +267,6 @@ function AppDrawer({
                         style={{
                           wordBreak: "break-word",
                           whiteSpace: "normal",
-                        
                         }}
                       >
                         {store.user.isLogin ? (
@@ -274,7 +280,10 @@ function AppDrawer({
                               display: "block",
                             }}
                           >
-                          <div className="px-4 game_text"> ➔ {marketObj.marketName}</div> 
+                            <div className="px-4 game_text">
+                              {" "}
+                              ➔ {marketObj.marketName}
+                            </div>
                           </Link>
                         ) : (
                           <Link

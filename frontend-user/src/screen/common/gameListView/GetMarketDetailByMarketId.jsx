@@ -407,9 +407,7 @@ const GetMarketDetailByMarketId = () => {
   return (
     <>
       <Layout />
-      <div
-        style={{ height: "106vh", marginTop: "85px" }}
-      >
+      <div style={{ height: "106vh", marginTop: "85px" }}>
         <AppDrawer showCarousel={true} isMobile={false} isHomePage={true}>
           {/* Background: Market Data and UI */}
           {user_marketWithRunnerData.marketName.length > 0 ? (
@@ -466,7 +464,9 @@ const GetMarketDetailByMarketId = () => {
                       .utc(user_marketWithRunnerData.startTime)
                       .format("DD MMM YYYY, HH:mm")}
                   </div>
-<div  style={{marginRight:"8px"}}>                    <strong>End Time:</strong>{" "}
+                  <div style={{ marginRight: "8px" }}>
+                    {" "}
+                    <strong>End Time:</strong>{" "}
                     {moment
                       .utc(user_marketWithRunnerData.endTime)
                       .format("DD MMM YYYY, HH:mm")}
