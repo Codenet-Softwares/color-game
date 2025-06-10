@@ -1139,6 +1139,9 @@ export const createBid = async (req, res) => {
       );
     }
 
+    console.log("Current Time:", currentTime);
+    console.log("Market End Time:", market.endTime);
+
     if (currentTime > market.endTime) {
       throw apiResponseErr(
         null,
@@ -2734,7 +2737,8 @@ export const getInPlayMarket = async (req, res) => {
 
       if (!gameMap.has(gameId)) {
         gameMap.set(gameId, {
-          gameName: market.Game?.gameName || "Unknown",
+          gameId: market.Game?.gameId || [],
+          gameName: market.Game?.gameName || [],
           markets: [],
         });
       }
