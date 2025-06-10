@@ -36,13 +36,12 @@ const Inplay = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleMarketId = (id) => {
+  const handleAllId = (gameId, marketId) => {
     dispatch({
       type: strings.placeBidding,
-      payload: { marketId: id },
+      payload: { gameId: gameId, marketId: marketId },
     });
   };
-
 
   async function user_getInPlayMarketData() {
     const response = await inPlayMarket_api();
@@ -131,7 +130,7 @@ const Inplay = () => {
                                       onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
                                       style={{
                                         textDecoration: "none",
-                                        color: "#27a7e4",
+                                        color: "#4682B4",
                                         fontWeight: "bold",
                                       }}
                                     >
@@ -216,6 +215,12 @@ const Inplay = () => {
                                       to={`/gameView/Colorgame/${marketData?.marketName}/${marketData?.marketId}`}
                                       onClick={(e) => {
                                         e.stopPropagation();
+                                        {
+                                          console.log(
+                                            "gameWithMarketData",
+                                            gameWithMarketData
+                                          );
+                                        }
                                         handleAllId(
                                           gameWithMarketData?.gameId,
                                           marketData?.marketId
@@ -223,7 +228,7 @@ const Inplay = () => {
                                       }} // Prevents dropdown collapse
                                       style={{
                                         textDecoration: "none",
-                                        color: "#27a7e4",
+                                        color: "#4682B4",
                                         fontWeight: "bold",
                                       }}
                                     >
