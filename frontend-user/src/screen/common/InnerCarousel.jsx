@@ -39,12 +39,12 @@ const InnerCarousel = () => {
         <div className="col-md-12">
           <div
             id="carouselExampleCaptions"
-            className={`carousel slide mt-1`}
+            className="carousel slide mt-1"
             data-bs-ride="carousel"
+            data-bs-interval="1000"
             style={{
               height: isMobile <= 435 ? "220px" : "350px",
               overflow: "hidden",
-              // backgroundSize: "contain",
               backgroundPosition: "center",
               objectFit: "cover",
             }}

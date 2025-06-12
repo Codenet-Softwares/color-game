@@ -71,7 +71,7 @@ function AppDrawer({
           return (
             <li
               key={gameObj.gameId}
-              className={`${
+              className={blink_me`${
                 gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ==
                 currentGameTab.toLowerCase().replace(/[\s\-_]/g, "")
                   ? "text-black bg-white"

@@ -122,13 +122,7 @@ const Inplay = () => {
                                       ) ?? "Unknown"}{" "}
                                       |
                                     </Link>
-
-                                    <span style={{ color: "#b2b2b2" }}>
-                                      {convertFormatDate(marketData.start_Time)}
-                                    </span>
-
-                                    {/* Hot Game badge appears right after date */}
-                                    {marketData.hotGame === true && (
+ {marketData.hotGame === true && (
                                       <span
                                         className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
                                         style={{
@@ -140,6 +134,12 @@ const Inplay = () => {
                                         Hot Game
                                       </span>
                                     )}
+                                    <span style={{ color: "#b2b2b2" }}>
+                                      {convertFormatDate(marketData.start_Time)}
+                                    </span>
+
+                                    {/* Hot Game badge appears right after date */}
+                                   
                                   </span>
                                 </div>
                               </div>
@@ -216,10 +216,6 @@ const Inplay = () => {
                                       |
                                     </Link>
 
-                                    <span style={{ color: "#b2b2b2" }}>
-                                      {convertFormatDate(marketData.startTime)}
-                                    </span>
-
                                     {/*  Hot Game */}
                                     {marketData.hotGame === true && (
                                       <span
@@ -233,6 +229,10 @@ const Inplay = () => {
                                         Hot Game
                                       </span>
                                     )}
+                                    <span style={{ color: "#b2b2b2" }}>
+                                      {convertFormatDate(marketData.startTime)}
+                                    </span>
+
                                   </span>
                                 </div>
                               </div>
