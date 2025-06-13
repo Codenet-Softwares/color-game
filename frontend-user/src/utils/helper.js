@@ -132,8 +132,7 @@ export const convertFormatDate = (dateStr) => {
   const hours = adjustedDate.getHours();
   const minutes = adjustedDate.getMinutes();
 
-  const ordinalSuffix = ["th", "st", "nd", "rd"][(day % 10) - 1] || "th";
-  const formattedTime = `${day}${ordinalSuffix} ${month} ${hours}:${minutes < 10 ? "0" + minutes : minutes
+  const formattedTime = `${day} ${month} ${hours}:${minutes < 10 ? "0" + minutes : minutes
     }`;
 
   return formattedTime;

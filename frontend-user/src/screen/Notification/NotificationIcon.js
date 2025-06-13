@@ -83,7 +83,7 @@ const NotificationIcon = ({ isMobile }) => {
             "BBrdxBcf-xma-KJVlwDAikMq_0p8O_rGH75t3c0giKx6AsUzUbKl9nmsuHGo1O0GwRWGH0F_1ldfBa0DpYmVacU";
           const token = await getToken(messaging, { vapidKey });
           if (token) {
-            // await updateFCMToken(token);
+            await updateFCMToken(token);
           }
         }
       };
