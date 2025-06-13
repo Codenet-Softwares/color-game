@@ -71,7 +71,7 @@ function AppDrawer({
           return (
             <li
               key={gameObj.gameId}
-              className={blink_me`${
+              className={`blink_me${
                 gameObj.gameName.toLowerCase().replace(/[\s\-_]/g, "") ==
                 currentGameTab.toLowerCase().replace(/[\s\-_]/g, "")
                   ? "text-black bg-white"
@@ -355,11 +355,14 @@ function AppDrawer({
                 : "col-lg-10"
             } `}
             style={{
-              overflowY: "none",
+              overflowY:  location?.pathname === "/home"
+                  ? "none"
+                  : "auto",
               height:
                 location?.pathname === "/lottery-home"
                   ? "calc(100vh - 5px)"
                   : "calc(100vh - 40px)",
+                  marginBottom:"10px"
             }}
           >
             <div

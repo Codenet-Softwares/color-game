@@ -153,7 +153,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
             </span>
           )}
           <span style={{ color: "#b2b2b2" }}>
-            {convertFormatDate(marketData.start_time)}
+            {convertFormatDate(marketData.end_time)}
           </span>
 
         </span>
@@ -237,7 +237,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                 </span>
                               )}
                               <span style={{ color: "#b2b2b2" }}>
-                                {convertFormatDate(marketData.startTime)}
+                                {convertFormatDate(marketData.endTime)}
                               </span>
 
                               {/* Show Hot Game badge after the date */}

@@ -230,7 +230,7 @@ const Inplay = () => {
                                       </span>
                                     )}
                                     <span style={{ color: "#b2b2b2" }}>
-                                      {convertFormatDate(marketData.startTime)}
+                                      {convertFormatDate(marketData.endTime)}
                                     </span>
 
                                   </span>
