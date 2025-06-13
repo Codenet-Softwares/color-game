@@ -368,7 +368,7 @@ const Update = ({ show, setShow, data, Update }) => {
                 value={newValue.startTime}
                 onChange={handleStartDatevalue} // Update startTime
                 dateFormat="DD-MM-YYYY"
-                timeFormat="HH:mm"
+                timeFormat="hh:mm A"
                 isValidTime={disablePastTimes}
               />
             </div>
@@ -381,7 +381,7 @@ const Update = ({ show, setShow, data, Update }) => {
                 value={newValue.endTime}
                 onChange={handleEndDatevalue} // Update endTime
                 dateFormat="DD-MM-YYYY"
-                timeFormat="HH:mm"
+                timeFormat="hh:mm A"
                 isValidTime={disablePastTimes}
               />
             </div>

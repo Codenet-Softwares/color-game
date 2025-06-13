@@ -150,7 +150,7 @@ const CreateMarket = ({ show, setShow, id }) => {
             value={startDatevalue}
             onChange={handleStartDatevalue}
             dateFormat="DD-MM-YYYY"
-            timeFormat="HH:mm"
+            timeFormat="hh:mm A"
             isValidDate={disablePastDates}
             isValidTime={disablePastTimes}
           />
@@ -163,7 +163,7 @@ const CreateMarket = ({ show, setShow, id }) => {
             value={endDatevalue}
             onChange={handleEndDatevalue}
             dateFormat="DD-MM-YYYY"
-            timeFormat="HH:mm"
+            timeFormat="hh:mm A"
             isValidDate={disablePastDates}
             isValidTime={disablePastTimes}
           />
