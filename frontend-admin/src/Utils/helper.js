@@ -18,7 +18,7 @@
 
 export const customErrorHandler = (error) => {
     const data = error?.response?.data;
-    const errorMessage = data?.message || data?.errMessage || "Something went wrong";
+    const errorMessage = data?.message || data?.errMessage || [];
 
     // Handle token mismatch or 401 unauthorized
     if (data?.responseCode === 401 || data?.errMessage === "Token mismatch. Unauthorized access.") {

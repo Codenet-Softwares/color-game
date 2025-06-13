@@ -1,5 +1,6 @@
 import "./home.css";
 import { dSlider, dHitGames, sGif } from "../../utils/dummyData";
+import { aAdvertisement } from "../../utils/dummyData";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../contextApi/context";
 import { useLocation, useNavigate } from "react-router-dom";

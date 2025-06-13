@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import { Form, InputGroup, Dropdown } from "react-bootstrap";
 import { FixedSizeGrid as Grid } from "react-window";
 import "./ReusableDropdown.css";
@@ -19,9 +19,19 @@ const ReusableDropdown = ({
     selected: "",
     showDropdown: false,
   });
+  const [isNumericOnly, setIsNumericOnly] = useState(false);
 
   const inputRef = useRef(null);
   const debouncedSearch = useDebounce(state.search, 300);
+
+  // Check if all options are numbers
+  useEffect(() => {
+    const allNumeric = options.every((option) => {
+      const str = option.toString();
+      return !isNaN(str) && !isNaN(parseFloat(str));
+    });
+    setIsNumericOnly(allNumeric);
+  }, [options]);
 
   const filteredOptions =
     typeof debouncedSearch === "string"
@@ -56,7 +66,7 @@ const ReusableDropdown = ({
       <InputGroup>
         <Form.Control
           ref={inputRef}
-          type="text"
+          type={isNumericOnly ? "number" : "text"}
           className={`dropdown-input ${touched && error ? "is-invalid" : ""}`} // Red border on error
           placeholder={`Select ${name}`} // Placeholder instead of label
           value={state.search}

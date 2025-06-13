@@ -139,10 +139,6 @@ const GetwholeMarket = ({ currentGameTab }) => {
             {capitalizeEachWord(marketData?.marketName)} |
           </Link>
 
-          <span style={{ color: "#b2b2b2" }}>
-            {convertFormatDate(marketData.start_time)}
-          </span>
-
           {/* Hot Game badge directly after date */}
           {marketData.hotGame === true && (
             <span
@@ -156,6 +152,10 @@ const GetwholeMarket = ({ currentGameTab }) => {
               Hot Game
             </span>
           )}
+          <span style={{ color: "#b2b2b2" }}>
+            {convertFormatDate(marketData.end_time)}
+          </span>
+
         </span>
       </div>
     </div>
@@ -205,6 +205,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                               }}
                             >
                               <Link
+                              className=""
                                 to={`/gameView/Colorgame/${marketData?.marketName}/${marketData?.marketId}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -223,13 +224,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                   "Unknown"}{" "}
                                 |
                               </Link>
-
-                              <span style={{ color: "#b2b2b2" }}>
-                                {convertFormatDate(marketData.startTime)}
-                              </span>
-
-                              {/* Show Hot Game badge after the date */}
-                              {marketData.hotGame === true && (
+    {marketData.hotGame === true && (
                                 <span
                                   className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
                                   style={{
@@ -241,6 +236,12 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                   Hot Game
                                 </span>
                               )}
+                              <span style={{ color: "#b2b2b2" }}>
+                                {convertFormatDate(marketData.endTime)}
+                              </span>
+
+                              {/* Show Hot Game badge after the date */}
+                          
                             </span>
                           </div>
                         </div>
