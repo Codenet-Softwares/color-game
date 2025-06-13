@@ -501,7 +501,7 @@ export const getAllGameData = async (req, res) => {
             // First prioritize hotGame === true, then sort by createdAt DESC
             if (b.hotGame === true && a.hotGame !== true) return 1;
             if (a.hotGame === true && b.hotGame !== true) return -1;
-            // return new Date(b.createdAt) - new Date(a.createdAt);
+            return new Date(a.createdAt) - new Date(b.createdAt); // ASC order
           })
           .map((market) => ({
             marketId: market.marketId,
@@ -2567,6 +2567,8 @@ export const updateFCMToken = async (req, res) => {
     const userId = req.user.userId;
     const { fcm_token } = req.body;
 
+    console.log("fcm_token", fcm_token);
+
     if(!fcm_token)
     {
         return res
@@ -2678,35 +2680,10 @@ export const getInPlayMarket = async (req, res) => {
       order: [["createdAt", "DESC"]],
     });
 
-    if (!existingMarket || existingMarket.length === 0) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            [],
-            true,
-            statusCode.success,
-            "No in-play markets found"
-          )
-        );
-    }
 
     const baseURL = process.env.LOTTERY_URL;
     const response = await axios.get(`${baseURL}/api/user/in-play-market`);
     const data = response.data?.data;
-
-    if (!data) {
-      return res
-        .status(statusCode.success)
-        .send(
-          apiResponseSuccess(
-            [],
-            true,
-            statusCode.success,
-            "No in-play markets found"
-          )
-        );
-    }
 
     const gameMap = new Map();
 
@@ -2766,6 +2743,19 @@ export const getInPlayMarket = async (req, res) => {
     }
 
     const finalData = Array.from(gameMap.values());
+
+        if (!finalData || finalData.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "No in-play markets found"
+          )
+        );
+    }
 
     return res
       .status(statusCode.success)
