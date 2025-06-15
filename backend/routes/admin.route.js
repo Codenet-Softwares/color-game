@@ -34,7 +34,7 @@ import {
   updateHotGameStatus,
   updateRunner,
 } from '../controller/admin.controller.js';
-import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket, validateDeleteSubAdmin, validateTitleText, validateHotGame } from '../schema/commonSchema.js';
+import { depositSchema, exUpdateBalanceSchema, winningSchema, suspendedMarketSchema, adminCreateValidate, validateRevokeWinningAnnouncement, validateLiveUsersBet, validateLiveGames, validateBetsAfterWin, validateSubAdmin, validateApproveResult, validatesDeleteBetAfterWin, validateAfterWinVoidMarket, validateDeleteSubAdmin, validateTitleText, validateHotGame, validUpdate } from '../schema/commonSchema.js';
 import { string, subAdminPermissions } from '../constructor/string.js';
 
 dotenv.config();
@@ -107,6 +107,6 @@ export const AdminRoute = (app) => {
 
     app.put('/api/update-hotGame-status', validateHotGame, customErrorHandler, authorize([string.Admin]), updateHotGameStatus);
 
-    app.put('/api/subadmin/edit-runner', authorize([string.subAdmin]), updateRunner)
+    app.put('/api/subadmin/edit-runner',validUpdate, customErrorHandler, authorize([string.subAdmin]), updateRunner)
 };
 
