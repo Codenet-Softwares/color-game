@@ -3008,6 +3008,24 @@ export const updateRunner = async (req, res) => {
     const { marketId, runnerName, runnerId} = req.body;
     const { adminId }  = req.user;
 
+    const existingRecord = await Runner.findAll({
+      where : { marketId, runnerId}
+    });
+
+    if(!existingRecord || existingRecord.length === 0)
+    {
+       return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "Runner not Found!",
+          )
+        );
+    }
+
     const existingMarkets = await ResultRequest.findAll({ where : { marketId, status : "Rejected" }});
 
   if (!existingMarkets) {

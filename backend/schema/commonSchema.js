@@ -880,3 +880,14 @@ export const updateNotification = [
     .isBoolean()
     .withMessage("isRead must be a boolean value"),
 ];
+
+export const validUpdate = [
+  body('marketId')
+    .notEmpty().withMessage('Market ID Is Required')
+    .isUUID().withMessage('Market ID must be a valid UUID'),
+  body('runnerId')
+    .notEmpty().withMessage('runnerId Is Required')
+    .isUUID().withMessage('runnerId must be a valid UUID'),
+  body('runnerName')
+  .notEmpty().withMessage('runnerName ID Is Required')
+]
