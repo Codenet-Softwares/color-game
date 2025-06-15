@@ -2445,6 +2445,7 @@ export const getSubAdminHistory = async (req, res) => {
       SELECT 
         marketName, 
         marketId, 
+        runnerId,
         runnerName, 
         declaredBy, 
         status, 
@@ -3008,7 +3009,7 @@ export const updateRunner = async (req, res) => {
     const { adminId }  = req.user;
 
     const existingMarkets = await ResultRequest.findAll({ where : { marketId, status : "Rejected" }});
-    
+
   if (!existingMarkets) {
       return res
         .status(statusCode.success)
