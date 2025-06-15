@@ -15,7 +15,7 @@ import OpenBets from "../../betHistory/components/openBets/OpenBets";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../Lottery/firebaseStore/lotteryFirebase";
 import Login from "../loginModal/loginModal";
-import { capitalizeEachWord } from "../../utils/helper";
+// import { capitalizeEachWord } from "../../utils/helper";
 
 function AppDrawer({
   children,
@@ -193,8 +193,8 @@ function AppDrawer({
 
         <ul className="overflow-auto list-group list-group-flush">
           <li onClick={() => handleNavigateToInPlay()}>
-            <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2">
-              ⚽ Inplay
+            <div className="game-wrapper text-dark fw-bold mt-2  px-2">
+              ⚽ In Play
             </div>
           </li>
           {user_allGames?.map((gameObj, index) => {
@@ -206,7 +206,7 @@ function AppDrawer({
                   className={isToggled ? "" : "MenuHead"}
                   onClick={() => handleToggle(gameObj.gameId)}
                 >
-                  <div className="game-wrapper text-dark fw-bold mt-2 text-uppercase px-2 py-2 ">
+                  <div className="game-wrapper text-dark fw-bold mt-2 px-2 py-2 ">
                     ⚽ {gameObj?.gameName}
                     <span
                       className={`dropdown-icon rounded px-1${
@@ -254,7 +254,7 @@ function AppDrawer({
                           }}
                         >
                           <div className="px-4 game_text">
-                            ➔ {capitalizeEachWord(marketObj.marketName)}
+                            ➔ {marketObj.marketName}
                           </div>
                         </Link>
                       </li>
@@ -280,7 +280,7 @@ function AppDrawer({
                               display: "block",
                             }}
                           >
-                          <div className="px-4 game_text"> ➔ {capitalizeEachWord(marketObj.marketName)}</div> 
+                          <div className="px-4 game_text"> ➔ {marketObj.marketName}</div> 
                           </Link>
                         ) : (
                           <Link
@@ -294,7 +294,7 @@ function AppDrawer({
                               display: "block",
                             }}
                           >
-                            {capitalizeEachWord(marketObj.marketName)}
+                            {marketObj.marketName}
                           </Link>
                         )}
                         {showLogin && (
@@ -331,9 +331,9 @@ function AppDrawer({
         <div className="row">
           {/* LEFT NAVBAR - md: 4, lg: 2 */}
           <div
-            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar px-1 scrollbar-aurora-blade   "
+            className="position-fixed d-none d-md-block col-md-4 col-lg-2 vertical-navbar px-0 scrollbar-aurora-blade   "
             style={{
-              height: "90vh",
+              height: "87vh",
               overflowY: "auto",
               zIndex: 1020,
               marginTop: isHomePage

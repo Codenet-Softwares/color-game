@@ -109,7 +109,7 @@ const AccountStatement = () => {
             <div className="card w-100 rounded border">
               {/* Card Header */}
               <div
-                className="card-header text-white p-2  text-center"
+                className="card-header text-white p-2  text-center border-top border-bottom-0 border-4 border-dark text-uppercase"
                 style={{ backgroundColor: "#2a4455" }}
               >
                 <b className="h5 fw-bold">&nbsp;&nbsp;Account Statement</b>
@@ -157,10 +157,10 @@ const AccountStatement = () => {
                         }}
                       >
                         <option value="live" selected>
-                          LIVE DATA
+                          Live Data
                         </option>
-                        <option value="backup">BACKUP DATA</option>
-                        <option value="olddata">OLD DATA</option>
+                        <option value="backup">Backup Data</option>
+                        <option value="olddata">Old Data</option>
                       </select>
                     </div>
                     {/* Start Date */}

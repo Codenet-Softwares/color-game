@@ -6,7 +6,7 @@ import strings from "../../../utils/constant/stringConstant";
 import { Link } from "react-router-dom";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../.././Lottery/firebaseStore/lotteryFirebase";
-import { capitalizeEachWord, convertFormatDate } from "../../../utils/helper";
+import {capitalizeEachWord, convertFormatDate } from "../../../utils/helper";
 
 const GetwholeMarket = ({ currentGameTab }) => {
   const [user_allGamesWithMarketData, setUser_allGamesWithMarketData] =
@@ -136,7 +136,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {capitalizeEachWord(marketData?.marketName)} |
+                                {marketData?.marketName} |
                               </Link>
 
                               {/* Hot Game badge directly after date */}
@@ -218,9 +218,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                   fontWeight: "bold",
                                 }}
                               >
-                                {capitalizeEachWord(marketData?.marketName) ??
-                                  "Unknown"}{" "}
-                                |
+                                {marketData?.marketName ?? "Unknown"} |
                               </Link>
                               {marketData.hotGame === true && (
                                 <span

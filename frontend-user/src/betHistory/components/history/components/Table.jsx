@@ -1,8 +1,8 @@
 import React from "react";
 import Pagination from "../../../../screen/common/Pagination";
-import { capitalizeEachWord, formatDateForUi } from "../../../../utils/helper";
+import { formatDateForUi } from "../../../../utils/helper";
 import ViewTicketsModal from "./ViewTicketsModal";
-
+import { capitalizeEachWord } from "../../../../utils/helper";
 const Table = ({
   renderNoDataFound,
   betHistoryData,
@@ -27,9 +27,9 @@ const Table = ({
   };
 
   return (
-    <div className="card shadow p-3 mb-5 bg-white rounded">
+    <div className="card shadow p-3 mb-5 bg-white rounded overflow-hidden ">
       <div
-        className="card-header"
+        className="card-header border-bottom-0 border-4 border-dark border-top border-0"
         style={{
           backgroundColor: "#273f4f",
           color: "white",
@@ -86,8 +86,8 @@ const Table = ({
                   <tbody>
                     {betHistoryData.history?.map((item, index) => (
                       <tr key={index} align="center">
-                        <td>{capitalizeEachWord(item.gameName)}</td>
-                        <td>{capitalizeEachWord(item.marketName)}</td>
+                        <td>{item.gameName}</td>
+                        <td>{item.marketName}</td>
                         <td>
                           {" "}
                           <div
@@ -127,10 +127,10 @@ const Table = ({
               ) : (
                 <>
                   <thead>
-                    <tr>
+                    <tr className="text-center">
                       <th scope="col">Sport Name</th>
                       <th scope="col">Event</th>
-                      <th scope="col">Market</th>
+                      <th scope="col">Market Name</th>
                       <th scope="col">Selection</th>
                       <th scope="col">Type</th>
                       <th scope="col">Odds Req.</th>
@@ -140,9 +140,9 @@ const Table = ({
                   </thead>
                   <tbody>
                     {betHistoryData.history?.map((item, index) => (
-                      <tr key={index} align="center">
-                        <td>{capitalizeEachWord(item?.gameName)}</td>
-                        <td>{capitalizeEachWord(item?.marketName)}</td>
+                      <tr key={index} align="center" >
+                        <td>{item?.gameName}</td>
+                        <td>{item?.marketName}</td>
                         <td>{"WINNER"}</td>
                         <td>{item?.runnerName}</td>
                         <td
@@ -151,7 +151,7 @@ const Table = ({
                             color: item?.type === "back" ? "blue" : "red",
                           }}
                         >
-                          {item?.type}
+                          {capitalizeEachWord(item?.type)}
                         </td>
                         <td>{item?.rate}</td>
                         <td className="fw-bold">{item?.value}</td>
