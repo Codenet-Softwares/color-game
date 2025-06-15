@@ -122,7 +122,7 @@ const Inplay = () => {
                                       ?? "Unknown"}{" "}
                                       |
                                     </Link>
- {marketData.hotGame === true && (
+                                    {marketData.hotGame === true && (
                                       <span
                                         className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
                                         style={{
@@ -135,11 +135,10 @@ const Inplay = () => {
                                       </span>
                                     )}
                                     <span style={{ color: "#b2b2b2" }}>
-                                      {convertFormatDate(marketData.start_Time)}
+                                      {convertFormatDate(marketData.end_Time)}
                                     </span>
 
                                     {/* Hot Game badge appears right after date */}
-                                   
                                   </span>
                                 </div>
                               </div>
@@ -203,7 +202,7 @@ const Inplay = () => {
                                           gameWithMarketData?.gameId,
                                           marketData?.marketId
                                         );
-                                      }} 
+                                      }}
                                       style={{
                                         textDecoration: "none",
                                         color: "#4682B4",
@@ -232,7 +231,6 @@ const Inplay = () => {
                                     <span style={{ color: "#b2b2b2" }}>
                                       {convertFormatDate(marketData.endTime)}
                                     </span>
-
                                   </span>
                                 </div>
                               </div>

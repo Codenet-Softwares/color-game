@@ -216,6 +216,17 @@ class AccountService {
       // },
     });
   }
+
+  EditRunnerRequest(data, user) {
+    return axios({
+      method: "PUT",
+      url: API_HOST + "/api/subadmin/edit-runner",
+      data: data,
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+  }
 }
 
 export default new AccountService();

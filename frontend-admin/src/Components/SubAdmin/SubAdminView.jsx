@@ -6,6 +6,7 @@ import GameService from "../../Services/GameService";
 import { useAuth } from "../../Utils/Auth";
 import { customErrorHandler } from "../../Utils/helper";
 import { toast } from "react-toastify";
+import WinningEditRequest from "../modal/WinningEditRequest";
 
 const SubAdminView = () => {
   const auth = useAuth();
@@ -21,6 +22,11 @@ const SubAdminView = () => {
     totalData: 0,
     runnerName: "",
     remarks: "",
+    modalOpen: false,
+    data: [],
+    marketId: "",
+    runnerId: "",
+    isRefresh: true,
   });
   const toggleAccordion = (index, status, runnerName, remarks) => {
     if (status === "Pending") {
@@ -34,6 +40,16 @@ const SubAdminView = () => {
       openRowIndex: prevState?.openRowIndex === index ? null : index,
       runnerName: runnerName,
       remarks: remarks,
+    }));
+  };
+
+  const openModalWithData = (data, marketId, runnerId) => {
+    setSubAdminHistory((prev) => ({
+      ...prev,
+      modalOpen: true,
+      data: data,
+      marketId: marketId,
+      runnerId: runnerId,
     }));
   };
 
@@ -79,6 +95,7 @@ const SubAdminView = () => {
     subAdminHistory.totalEntries,
     debouncedSearchTerm,
     statusFilter,
+    subAdminHistory.isRefresh,
   ]);
 
   const handleClearSearch = () => {
@@ -285,6 +302,34 @@ const SubAdminView = () => {
                                     ? "Hide Details"
                                     : "View Details"}
                                 </button>
+                                {subHistory.status === "Rejected" && (
+                                  <button
+                                    className="btn fw-bold btn-success mx-2"
+                                    onClick={() => {
+                                      openModalWithData(
+                                        subHistory.runnerName,
+                                        subHistory.marketId,
+                                        subHistory.runnerId
+                                      );
+                                    }}
+                                  >
+                                    Edit
+                                  </button>
+                                )}
+                                <WinningEditRequest
+                                  data={subAdminHistory?.data}
+                                  isOpen={subAdminHistory?.modalOpen}
+                                  onClose={() =>
+                                    setSubAdminHistory((prev) => ({
+                                      ...prev,
+                                      modalOpen: false,
+                                    }))
+                                  }
+                                  subAdminHistory={subAdminHistory}
+                                  setSubAdminHistory={setSubAdminHistory}
+                                  marketId={subAdminHistory.marketId}
+                                  runnerId={subAdminHistory.runnerId}
+                                />
                               </td>
                             </tr>
                             {subAdminHistory.openRowIndex === index && (
