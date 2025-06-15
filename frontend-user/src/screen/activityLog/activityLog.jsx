@@ -46,7 +46,7 @@ const ActivityLog = () => {
             <div className="col-12 col-md-10 col-lg-8 col-xl-6">
               <div className="card rounded">
                 <div
-                  className="card-header text-white p-2 text-uppercase text-center"
+                  className="card-header text-white p-2 text-uppercase text-center border-top border-bottom-0 border-4 border-dark "
                   style={{ backgroundColor: "#2A4455" }}
                 >
                   <b className="text-white">&nbsp;&nbsp;Activity Log</b>

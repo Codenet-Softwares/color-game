@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Pagination from "../common/Pagination";
-import { capitalizeEachWord } from "../../utils/helper";
+// import { capitalizeEachWord } from "../../utils/helper";
 
 const ProfitAndLossEvent = ({
   data,
@@ -70,7 +70,7 @@ const ProfitAndLossEvent = ({
       {/* card */}
       <div className="card w-100 rounded" style={{ marginTop: "100px", paddingBottom:"120px"}}>
         <div
-          className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
+          className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase border-bottom-0 border-4 border-dark border-top"
           style={{ backgroundColor: "#253b4a" }}
         >
           <b>&nbsp;&nbsp;Profit & Loss Events</b>
@@ -156,7 +156,7 @@ const ProfitAndLossEvent = ({
                         {data?.data?.length > 0 ? (
                           data?.data?.map((data, index) => (
                             <tr key={index} align="center">
-                              <td>{capitalizeEachWord(data?.gameName)}</td>
+                              <td>{data?.gameName}</td>
                               <td
                                 className="text-primary fw-bold"
                                 style={{ cursor: "pointer" }}
@@ -167,7 +167,7 @@ const ProfitAndLossEvent = ({
                                   );
                                 }}
                               >
-                                {capitalizeEachWord(data?.marketName)}
+                                {data?.marketName}
                               </td>
                               <td
                                 className={`fw-bold ${data?.totalProfitLoss > 0

@@ -41,7 +41,7 @@ const InnerCarousel = () => {
             id="carouselExampleCaptions"
             className="carousel slide mt-1"
             data-bs-ride="carousel"
-            data-bs-interval="1000"
+            data-bs-interval="2000"
             style={{
               height: isMobile <= 435 ? "220px" : "350px",
               overflow: "hidden",

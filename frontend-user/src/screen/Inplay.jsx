@@ -12,7 +12,7 @@ import { useAppContext } from "../contextApi/context";
 import AppDrawer from "./common/appDrawer";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "./Lottery/firebaseStore/lotteryFirebase";
-import { capitalizeEachWord, convertFormatDate } from "../utils/helper";
+import { convertFormatDate } from "../utils/helper";
 
 const Inplay = () => {
   const [inPlayMarket, setIsplayMarket] = useState([]);
@@ -117,9 +117,9 @@ const Inplay = () => {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      {capitalizeEachWord(
+                                      {
                                         marketData?.marketName
-                                      ) ?? "Unknown"}{" "}
+                                      ?? "Unknown"}{" "}
                                       |
                                     </Link>
  {marketData.hotGame === true && (
@@ -210,9 +210,9 @@ const Inplay = () => {
                                         fontWeight: "bold",
                                       }}
                                     >
-                                      {capitalizeEachWord(
+                                      {
                                         marketData?.marketName
-                                      ) ?? "Unknown"}{" "}
+                                      ?? "Unknown"}{" "}
                                       |
                                     </Link>
 
