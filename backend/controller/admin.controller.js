@@ -2999,5 +2999,70 @@ export const updateHotGameStatus = async(req, res) => {
     );
   }
 
+};
+
+
+export const updateRunner = async (req, res) => {
+  try {
+    const { marketId, runnerName, runnerId} = req.body;
+    const { adminId }  = req.user;
+
+    const existingMarkets = await ResultHistory.findAll({ where : { marketId, status : "Rejected" }});
+
+    console.log("existingMarkets",existingMarkets)
+
+  if (!existingMarkets || existingMarkets.length === 0) {
+      return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            [],
+            true,
+            statusCode.success,
+            "Market not Found!",
+          )
+        );
+    }
+    // Update the specific row (example update - modify as needed)
+    const [ updatedRow ] = await ResultRequest.update(
+      {
+        runnerName : runnerName,
+        runnerId : runnerId,
+        status: "Pending",
+        type : null,
+        remarks : null,
+        deletedAt : null,
+      },
+      {
+        where: {
+          marketId,
+          declaredById :adminId
+        }
+      }
+    );
+
+    if(updatedRow > 0)
+    {
+      await ResultHistory.destroy({
+        where : { marketId }
+      })
+    }
+
+     return res
+        .status(statusCode.success)
+        .send(
+          apiResponseSuccess(
+            updatedRow,
+            true,
+            statusCode.success,
+            "Result Update Successfull!",
+          )
+        );
+  } catch (error) {
+    console.log(error)
+      return res.status(statusCode.internalServerError).send(
+      apiResponseErr(null, false, statusCode.internalServerError, error.message)
+    );
+  }
 }
 
