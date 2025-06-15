@@ -108,59 +108,57 @@ const GetwholeMarket = ({ currentGameTab }) => {
                       </div>
                     </div>
                     {gameWithMarketData &&
-  gameWithMarketData.markets.map((marketData, index) => (
-    <div
-      key={index}
-      className="row py-1 px-3"
-      style={{
-        borderRadius: "5px",
-        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-      }}
-    >
-      <div className="row align-items-center">
-        <span
-          className="col-12 font-weight-bold text-primary text-wrap d-flex align-items-center flex-wrap"
-          style={{
-            fontSize: "16px",
-            wordBreak: "break-word",
-            whiteSpace: "normal",
-            gap: "6px",
-          }}
-        >
-          <Link
-            to={`/lottoPurchase/${marketData.marketId}`}
-            onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
-            style={{
-              textDecoration: "none",
-              color: "#4682B4",
-              fontWeight: "bold",
-            }}
-          >
-            {capitalizeEachWord(marketData?.marketName)} |
-          </Link>
+                      gameWithMarketData.markets.map((marketData, index) => (
+                        <div
+                          key={index}
+                          className="row py-1 px-3"
+                          style={{
+                            borderRadius: "5px",
+                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+                          }}
+                        >
+                          <div className="row align-items-center">
+                            <span
+                              className="col-12 font-weight-bold text-primary text-wrap d-flex align-items-center flex-wrap"
+                              style={{
+                                fontSize: "16px",
+                                wordBreak: "break-word",
+                                whiteSpace: "normal",
+                                gap: "6px",
+                              }}
+                            >
+                              <Link
+                                to={`/lottoPurchase/${marketData.marketId}`}
+                                onClick={(e) => e.stopPropagation()} // Prevents dropdown collapse
+                                style={{
+                                  textDecoration: "none",
+                                  color: "#4682B4",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                {capitalizeEachWord(marketData?.marketName)} |
+                              </Link>
 
-          {/* Hot Game badge directly after date */}
-          {marketData.hotGame === true && (
-            <span
-              className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
-              style={{
-                height: "20px",
-                fontSize: "10px",
-                fontWeight: "bold",
-              }}
-            >
-              Hot Game
-            </span>
-          )}
-          <span style={{ color: "#b2b2b2" }}>
-            {convertFormatDate(marketData.end_time)}
-          </span>
-
-        </span>
-      </div>
-    </div>
-  ))}
-
+                              {/* Hot Game badge directly after date */}
+                              {marketData.hotGame === true && (
+                                <span
+                                  className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
+                                  style={{
+                                    height: "20px",
+                                    fontSize: "10px",
+                                    fontWeight: "bold",
+                                  }}
+                                >
+                                  Hot Game
+                                </span>
+                              )}
+                              <span style={{ color: "#b2b2b2" }}>
+                                {convertFormatDate(marketData.end_time)}
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                      ))}
 
                     {gameWithMarketData.markets.length === 0 && (
                       <p
@@ -182,7 +180,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                       }}
                     >
                       {console.log("gamewith", gameWithMarketData)}
-                    <div className="px-1">{gameWithMarketData.gameName}</div>  
+                      <div className="px-1">{gameWithMarketData.gameName}</div>
                     </div>
                     {gameWithMarketData &&
                       gameWithMarketData.markets.map((marketData, index) => (
@@ -205,7 +203,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                               }}
                             >
                               <Link
-                              className=""
+                                className=""
                                 to={`/gameView/Colorgame/${marketData?.marketName}/${marketData?.marketId}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -224,7 +222,7 @@ const GetwholeMarket = ({ currentGameTab }) => {
                                   "Unknown"}{" "}
                                 |
                               </Link>
-    {marketData.hotGame === true && (
+                              {marketData.hotGame === true && (
                                 <span
                                   className="blink_me bg-danger rounded-pill text-white d-flex align-items-center justify-content-center px-2"
                                   style={{
@@ -241,7 +239,6 @@ const GetwholeMarket = ({ currentGameTab }) => {
                               </span>
 
                               {/* Show Hot Game badge after the date */}
-                          
                             </span>
                           </div>
                         </div>

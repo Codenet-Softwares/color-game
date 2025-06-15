@@ -381,7 +381,6 @@ const RunnerView = () => {
                           </a>
                         )}
 
-                        {runner.isBidding && (
                           <a
                             // key={runner.runnerId}
                             className="dropdown-item fw-bold"
@@ -392,7 +391,6 @@ const RunnerView = () => {
                             <i className="ti-arrow-circle-right"></i>
                             &nbsp;Announce Win for {runner.runnerName}
                           </a>
-                        )}
 
                         {auth?.user?.roles === "admin" && (
                           <a
