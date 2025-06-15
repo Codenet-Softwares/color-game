@@ -3007,11 +3007,9 @@ export const updateRunner = async (req, res) => {
     const { marketId, runnerName, runnerId} = req.body;
     const { adminId }  = req.user;
 
-    const existingMarkets = await ResultHistory.findAll({ where : { marketId, status : "Rejected" }});
-
-    console.log("existingMarkets",existingMarkets)
-
-  if (!existingMarkets || existingMarkets.length === 0) {
+    const existingMarkets = await ResultRequest.findAll({ where : { marketId, status : "Rejected" }});
+    
+  if (!existingMarkets) {
       return res
         .status(statusCode.success)
         .send(
@@ -3037,7 +3035,8 @@ export const updateRunner = async (req, res) => {
         where: {
           marketId,
           declaredById :adminId
-        }
+        },
+         paranoid: false
       }
     );
 
