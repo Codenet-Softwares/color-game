@@ -8,7 +8,7 @@ import "./LotteryUserPurchase.css";
 import useLotteryData from "../../customHook/useLotteryData";
 import CountdownTimerLotto from "../../../globlaCommon/CountdownTimerLotto";
 import SearchResultsNew from "./SearchResultsNew";
-import { capitalizeEachWord } from "../../../utils/helper";
+// import { capitalizeEachWord } from "../../../utils/helper";
 
 const LotteryUserPurchase = ({ MarketId }) => {
   const { lotteryData, handleSubmit, handleBuy, handleBack, DROPDOWN_FIELDS } =
@@ -55,7 +55,7 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   whiteSpace: "normal",
                 }}
               >
-                {capitalizeEachWord(lotteryData.marketName)}
+                {lotteryData.marketName}
               </span>
               <div className="time-display-container ">
                 <div className="time-box">
@@ -117,7 +117,6 @@ const LotteryUserPurchase = ({ MarketId }) => {
                   <button
                     type="submit"
                     className="text-uppercase text-white submit-btn"
-                    // disabled={isSubmitting || lotteryData?.isSuspend}
                   >
                     {isSubmitting ? "Processing..." : "Search"}
                   </button>

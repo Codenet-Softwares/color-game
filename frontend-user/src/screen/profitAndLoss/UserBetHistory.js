@@ -1,7 +1,6 @@
 import React from "react";
 import Pagination from "../common/Pagination";
-import { capitalizeEachWord } from "../../utils/helper";
-
+// import { capitalizeEachWord } from "../../utils/helper";
 const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
 
 
@@ -30,7 +29,7 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
     <div className="card w-100 rounded" style={{ marginTop: "100px" }}>
       {/* Header section with title and back button */}
       <div
-        className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase"
+        className="card-header text-white p-2 d-flex justify-content-between align-items-center text-uppercase border-bottom-0 border-4 border-dark border-top"
         style={{ backgroundColor: "#253b4a" }}
       >
         <b>&nbsp;&nbsp;Bet History</b>
@@ -62,21 +61,12 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
           </button>
         </div>
       </div>
-
-
-
-
       {/* Main table section that displays bet history */}
       <div className="table-responsive">
-        <table className="table lms_table_active3 table-bordered text-center">
+        <table className="table lms_table_active3 table-bordered text-center" >
           <thead>
             {/* Table header */}
-            <tr
-              style={{
-                backgroundColor: "#e6e9ed",
-                color: "#5562a3",
-              }}
-            >
+            <tr>
               <th>
                 Sport Name
               </th>
@@ -113,25 +103,25 @@ const UserBetHistory = ({ data, SetComponent, handlePageChange }) => {
           <tbody>
             {data?.data?.length > 0 ? (
               data?.data?.map((data, index) => (
-                <tr key={index} align="center">
-                  <td>{capitalizeEachWord(data?.gameName)}</td>
+                <tr key={index} align="center" className="PL_table_bg">
+                  <td style={{background:"#72BBEF"}}>{data?.gameName}</td>
                   <td
                     className="fw-bold"
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: "pointer",background:"#72BBEF" }}
                   >
-                    {capitalizeEachWord(data?.marketName)}
+                    {data?.marketName}
                   </td>
-                  <td>{"Winner"}</td>
-                  <td>{data?.runnerName}</td>
-                  <td>{data?.type}</td>
-                  <td>{data?.rate}</td>
-                  <td>{data?.value}</td>
-                  <td>
+                  <td style={{background:"#72BBEF"}}>{"Winner"}</td>
+                  <td style={{background:"#72BBEF"}}>{data?.runnerName}</td>
+                  <td style={{background:"#72BBEF"}}>{data?.type}</td>
+                  <td style={{background:"#72BBEF"}}>{data?.rate}</td>
+                  <td style={{background:"#72BBEF"}}>{data?.value}</td>
+                  <td style={{background:"#72BBEF"}}>
                     <span className="text-success mx-1">{data?.bidAmount}</span>
                     <span className="text-danger">(-{data?.value})</span>
                   </td>
-                  <td>{formatDate(data?.placeDate)}</td>
-                  <td>{formatDate(data?.matchDate)}</td>
+                  <td style={{background:"#72BBEF"}}>{formatDate(data?.placeDate)}</td>
+                  <td style={{background:"#72BBEF"}}>{formatDate(data?.matchDate)}</td>
                 </tr>
               ))
             ) : (

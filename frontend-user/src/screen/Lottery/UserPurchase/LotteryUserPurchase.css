@@ -34,7 +34,7 @@
   margin-bottom: 20px;
 }
 .submit-btn {
-  width: 60%;
+  /* width: 60%; */
   background: #4682b4;
   border: none;
   padding: 10px;
@@ -367,9 +367,6 @@
   }
 }
 
-.submit-btn {
-  width: 60%;
-}
 @media (max-width: 498px) {
   .form-container {
     margin-top: 40px;

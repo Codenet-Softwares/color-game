@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { GetResultMarket, GetWiningResult } from "../../utils/apiService";
 import { format } from "date-fns";
 import "./NewResult.css";
-import { capitalizeEachWord } from "../../utils/helper";
+// import { capitalizeEachWord } from "../../utils/helper";
 
 const NewResult = () => {
   const [markets, setMarkets] = useState([]);
@@ -155,7 +155,7 @@ const NewResult = () => {
                       }`}
                     onClick={() => setSelectedMarket(market)}
                   >
-                    {capitalizeEachWord(market.marketName)}
+                    {market.marketName}
                   </button>
                 ))
               ) : (
@@ -182,7 +182,7 @@ const NewResult = () => {
               <h2 className="text-center fw-bold text-white">
                 Results For{" "}
                 <span className="text-decoration-underline">
-                  {capitalizeEachWord(selectedMarket?.marketName) || "Selected Market"}
+                  {selectedMarket?.marketName|| "Selected Market"}
                 </span>
               </h2>
 

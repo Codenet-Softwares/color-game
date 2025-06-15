@@ -13,7 +13,7 @@ const OpenBets = ({ betHistoryData, handleBetHistorySelectionMenu }) => {
           textAlign: "center",
         }}
       >
-        <h5 className="card-title text-uppercase fw-bold">Open Bets</h5>
+        <h5 className="card-title text-uppercase fw-bold mt-2">Open Bets</h5>
       </div>
     <div
       className="card border-bottom-0 rounded-0 px-0 "
