@@ -25,6 +25,7 @@ const SubAdminView = () => {
     modalOpen: false,
     data: [],
     marketId: "",
+    runnerId: "",
     isRefresh: true,
   });
   const toggleAccordion = (index, status, runnerName, remarks) => {
@@ -42,12 +43,13 @@ const SubAdminView = () => {
     }));
   };
 
-  const openModalWithData = (data, marketId) => {
+  const openModalWithData = (data, marketId, runnerId) => {
     setSubAdminHistory((prev) => ({
       ...prev,
       modalOpen: true,
       data: data,
       marketId: marketId,
+      runnerId: runnerId,
     }));
   };
 
@@ -93,6 +95,7 @@ const SubAdminView = () => {
     subAdminHistory.totalEntries,
     debouncedSearchTerm,
     statusFilter,
+    subAdminHistory.isRefresh,
   ]);
 
   const handleClearSearch = () => {
@@ -305,7 +308,8 @@ const SubAdminView = () => {
                                     onClick={() => {
                                       openModalWithData(
                                         subHistory.runnerName,
-                                        subHistory.marketId
+                                        subHistory.marketId,
+                                        subHistory.runnerId
                                       );
                                     }}
                                   >
@@ -324,6 +328,7 @@ const SubAdminView = () => {
                                   subAdminHistory={subAdminHistory}
                                   setSubAdminHistory={setSubAdminHistory}
                                   marketId={subAdminHistory.marketId}
+                                  runnerId={subAdminHistory.runnerId}
                                 />
                               </td>
                             </tr>

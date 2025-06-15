@@ -219,8 +219,8 @@ class AccountService {
 
   EditRunnerRequest(data, user) {
     return axios({
-      method: "POST",
-      url: API_HOST + "",
+      method: "PUT",
+      url: API_HOST + "/api/subadmin/edit-runner",
       data: data,
       headers: {
         Authorization: `Bearer ${user.token}`,

@@ -9,6 +9,7 @@ const WinningEditRequest = ({
   onClose,
   data,
   marketId,
+  runnerId,
   subAdminHistory,
   setSubAdminHistory,
 }) => {
@@ -37,7 +38,7 @@ const WinningEditRequest = ({
 
     auth.showLoader();
     AccountServices.EditRunnerRequest(
-      { marketId: marketId, name: editedValue.trim() },
+      { marketId: marketId, runnerName: editedValue.trim(), runnerId: runnerId },
       auth.user
     )
       .then((response) => {
